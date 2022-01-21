@@ -8,9 +8,13 @@ use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IRequest;
 use OCP\Util;
 
-class PageController extends Controller {
-  public function __construct(IRequest $request) {
-    parent::__construct(Application::APP_ID, $request);
+class PageController extends Controller
+{
+  public function __construct(
+    string $appName
+    , IRequest $request
+  ) {
+    parent::__construct($appName, $request);
   }
 
   /**
@@ -20,8 +24,8 @@ class PageController extends Controller {
    * Render default template
    */
   public function index() {
-    Util::addScript(Application::APP_ID, 'cafevdbmembers-main');
+    Util::addScript($this->appName, 'cafevdbmembers-main');
 
-    return new TemplateResponse(Application::APP_ID, 'main');
+    return new TemplateResponse($this->appName, 'main');
   }
 }

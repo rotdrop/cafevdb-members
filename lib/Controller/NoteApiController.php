@@ -8,7 +8,8 @@ use OCP\AppFramework\ApiController;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\IRequest;
 
-class NoteApiController extends ApiController {
+class NoteApiController extends ApiController
+{
   /** @var NoteService */
   private $service;
 
@@ -17,10 +18,13 @@ class NoteApiController extends ApiController {
 
   use Errors;
 
-  public function __construct(IRequest $request,
-                NoteService $service,
-                $userId) {
-    parent::__construct(Application::APP_ID, $request);
+  public function __construct(
+    string $appName
+    , IRequest $request
+    , NoteService $service
+    , $userId
+  ) {
+    parent::__construct($appName, $request);
     $this->service = $service;
     $this->userId = $userId;
   }
