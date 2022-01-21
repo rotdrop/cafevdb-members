@@ -2,28 +2,50 @@
 # later. See the COPYING file.
 app_name=$(notdir $(CURDIR))
 build_tools_directory=$(CURDIR)/build/tools
-composer=$(shell which composer 2> /dev/null)
+COMPOSER_SYSTEM=$(shell which composer 2> /dev/null)
+ifeq (, $(COMPOSER_SYSTEM))
+COMPOSER_TOOL=php $(build_tools_directory)/composer.phar
+else
+COMPOSER_TOOL=$(COMPOSER_SYSTEM)
+endif
+COMPOSER_OPTIONS=--prefer-dist
 
 all: dev-setup lint build-js-production test
 
 # Dev env management
 dev-setup: clean clean-dev composer npm-init
 
+composer.json: composer.json.in
+	cp composer.json.in composer.json
 
-# Installs and updates the composer dependencies. If composer is not installed
-# a copy is fetched from the web
-composer:
-ifeq (, $(composer))
-	@echo "No composer command available, downloading a copy from the web"
+stamp.composer-core-versions: composer.lock
+	date > stamp.composer-core-versions
+
+composer.lock: DRY:=
+composer.lock: composer.json composer.json.in
+	rm -f composer.lock
+	$(COMPOSER_TOOL) install $(COMPOSER_OPTIONS)
+	env DRY=$(DRY) dev-scripts/tweak-composer-json.sh || {\
+ rm -f composer.lock;\
+ $(COMPOSER_TOOL) install $(COMPOSER_OPTIONS);\
+}
+
+.PHONY: comoser-download
+composer-download:
 	mkdir -p $(build_tools_directory)
 	curl -sS https://getcomposer.org/installer | php
 	mv composer.phar $(build_tools_directory)
-	php $(build_tools_directory)/composer.phar install --prefer-dist
-	php $(build_tools_directory)/composer.phar update --prefer-dist
-else
-	composer install --prefer-dist
-	composer update --prefer-dist
-endif
+
+# Installs and updates the composer dependencies. If composer is not installed
+# a copy is fetched from the web
+.PHONY: composer
+composer: stamp.composer-core-versions
+	$(COMPOSER_TOOL) install $(COMPOSER_OPTIONS)
+
+.PHONY: composer-suggest
+composer-suggest: composer-wrapped-suggest
+	@echo -e "\n*** Regular Composer Suggestions ***\n"
+	$(COMPOSER_TOOL) suggest --all
 
 npm-init:
 	npm ci
