@@ -9,3 +9,6 @@ js/*hot-update.*
 **~
 stamp*
 composer.json
+composer.lock
+package-lock.json
+js/**

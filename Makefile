@@ -51,8 +51,10 @@ composer-suggest: composer-wrapped-suggest
 	@echo -e "\n*** Regular Composer Suggestions ***\n"
 	$(COMPOSER_TOOL) suggest --all
 
-npm-init:
+npm-init: package.json webpack.config.js Makefile
+	{ [ -d package-lock.json ] && [ test -d node_modules ]; } || npm install
 	npm ci
+	touch package-lock.json
 
 npm-update:
 	npm update
