@@ -6,7 +6,9 @@
       "php"
     ],
     "php-path-list": [
-      "."
+      ".",
+      "../../3rdparty",
+      "../../lib"
     ],
     "ignore-ruleset": [
       "# like .gitignore file ",
