@@ -20,4 +20,10 @@
             <route>cafevdbmembers.page.index</route>
         </navigation>
     </navigations>
+    <settings>
+      <admin>OCA\CAFeVDBMembers\Settings\Admin</admin>
+      <admin-section>OCA\CAFeVDBMembers\Settings\AdminSection</admin-section>
+      <personal>OCA\CAFeVDBMembers\Settings\Personal</personal>
+      <personal-section>OCA\CAFeVDBMembers\Settings\PersonalSection</personal-section>
+    </settings>
 </info>
