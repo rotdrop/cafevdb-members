@@ -1,19 +1,16 @@
 {
   "name": "cafevdbmembers",
-  "description": "A simple Nextcloud app tutorial for building a notes app",
-  "version": "19.0.0",
-  "author": "Julius Härtl <jus@bitgrid.net",
-  "contributors": [
-    "John Molakvoæ <skjnldsv@protonmail.com>"
-  ],
+  "description": "Expose a member's data record for the respective member",
+  "version": "0.0.1",
+  "author": "Claus-Justus Heine <himself@claus-justus-heine.de>",
   "bugs": {
-    "url": "https://github.com/nextcloud/app-tutorial/issues"
+    "url": "https://github.com/rotdrop/cafevdb-members.git"
   },
   "repository": {
-    "url": "https://github.com/nextcloud/app-tutorial",
+    "url": "https://github.com/rotdrop/cafevdb-members.git",
     "type": "git"
   },
-  "homepage": "https://github.com/nextcloud/app-tutorial",
+  "homepage": "https://github.com/rotdrop/cafevdb-members.git",
   "license": "agpl",
   "private": true,
   "scripts": {

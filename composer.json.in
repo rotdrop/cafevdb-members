@@ -1,12 +1,12 @@
 {
-    "name": "nextcloud/app-tutorial",
-    "description": "Nextcloud App Tutorial",
+    "name": "CAFeVDB Members",
+    "description": "CAFeV DB Member's Connector",
     "type": "project",
     "license": "AGPL",
     "authors": [
         {
-            "name": "Bernhard Posselt",
-            "email": "dev@bernhard-posselt.com"
+            "name": "Claus-Justus Heine",
+            "email": "himself@claus-justus-heine.de"
         }
     ],
     "require": {
