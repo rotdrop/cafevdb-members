@@ -2,8 +2,6 @@
 
 require_once __DIR__ . '/../../../tests/bootstrap.php';
 
-require_once __DIR__ . "/../vendor/autoload.php";
-$installedVersions = __DIR__ . "/../vendor/composer/InstalledVersions.php";
-if (file_exists($installedVersions)) {
-  require_once $installedVersions;
-}
+$infoXml = new \SimpleXMLElement(file_get_contents(__DIR__ . '/../appinfo/info.xml'));
+$app = (string)$infoXml->id;
+\OC_App::registerAutoloading($app, __DIR__ . '/..');
