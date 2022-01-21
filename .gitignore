@@ -8,3 +8,4 @@ js/*hot-update.*
 .phpunit.result.cache
 **~
 stamp*
+composer.json
