@@ -1,7 +1,11 @@
 # This file is licensed under the Affero General Public License version 3 or
 # later. See the COPYING file.
 app_name=$(notdir $(CURDIR))
-build_tools_directory=$(CURDIR)/build/tools
+SRCDIR=.
+ABSSRCDIR=$(CURDIR)
+BUILDDIR=./build
+ABSBUILDDIR=$(CURDIR)/build
+build_tools_directory=$(BUILDDIR)/tools
 COMPOSER_SYSTEM=$(shell which composer 2> /dev/null)
 ifeq (, $(COMPOSER_SYSTEM))
 COMPOSER_TOOL=php $(build_tools_directory)/composer.phar
@@ -80,9 +84,32 @@ stylelint:
 stylelint-fix:
 	npm run stylelint:fix
 
-# Cleaning
-clean:
-	rm -rf js/*
+#@@ Removes WebPack builds
+webpack-clean:
+	rm -rf ./js/*
+	rm -rf ./css/*
+.PHONY: webpack-clean
+
+#@@ Removes build files
+clean: ## Tidy up local environment
+	rm -rf $(BUILDDIR)
+.PHONY: clean
+
+#@@ Same as clean but also removes dependencies installed by composer, bower and npm
+distclean: clean ## Clean even more, calls clean
+	rm -rf vendor*
+	rm -rf node_modules
+.PHONY: distclean
+
+#@@ Really delete everything but the bare source files
+realclean: distclean
+	rm -f composer*.lock
+	rm -f composer.json
+	rm -f stamp.composer-core-versions
+	rm -f package-lock.json
+	rm -f *.html
+	rm -f stats.json
+.PHONY: realclean
 
 clean-dev:
 	rm -rf node_modules
