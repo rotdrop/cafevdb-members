@@ -1,3 +1,10 @@
-const stylelintConfig = require('@nextcloud/stylelint-config')
+const nextcloudStylelintConfig = require('@nextcloud/stylelint-config')
 
-module.exports = stylelintConfig
+module.exports = {
+  extends: [
+    '@nextcloud/stylelint-config',
+  ],
+  rules: {
+    indentation: 2,
+  },
+}
