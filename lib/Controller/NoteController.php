@@ -1,9 +1,9 @@
 <?php
 
-namespace OCA\NotesTutorial\Controller;
+namespace OCA\CAFeVDBMembers\Controller;
 
-use OCA\NotesTutorial\AppInfo\Application;
-use OCA\NotesTutorial\Service\NoteService;
+use OCA\CAFeVDBMembers\AppInfo\Application;
+use OCA\CAFeVDBMembers\Service\NoteService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\IRequest;

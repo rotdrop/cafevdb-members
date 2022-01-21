@@ -1,15 +1,15 @@
 <?php
 
-namespace OCA\NotesTutorial\Tests\Unit\Controller;
+namespace OCA\CAFeVDBMembers\Tests\Unit\Controller;
 
 use PHPUnit\Framework\TestCase;
 
 use OCP\AppFramework\Http;
 use OCP\IRequest;
 
-use OCA\NotesTutorial\Service\NoteNotFound;
-use OCA\NotesTutorial\Service\NoteService;
-use OCA\NotesTutorial\Controller\NoteController;
+use OCA\CAFeVDBMembers\Service\NoteNotFound;
+use OCA\CAFeVDBMembers\Service\NoteService;
+use OCA\CAFeVDBMembers\Controller\NoteController;
 
 class NoteControllerTest extends TestCase {
   protected $controller;

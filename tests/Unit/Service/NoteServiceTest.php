@@ -1,15 +1,15 @@
 <?php
 
-namespace OCA\NotesTutorial\Tests\Unit\Service;
+namespace OCA\CAFeVDBMembers\Tests\Unit\Service;
 
-use OCA\NotesTutorial\Service\NoteNotFound;
+use OCA\CAFeVDBMembers\Service\NoteNotFound;
 use PHPUnit\Framework\TestCase;
 
 use OCP\AppFramework\Db\DoesNotExistException;
 
-use OCA\NotesTutorial\Db\Note;
-use OCA\NotesTutorial\Service\NoteService;
-use OCA\NotesTutorial\Db\NoteMapper;
+use OCA\CAFeVDBMembers\Db\Note;
+use OCA\CAFeVDBMembers\Service\NoteService;
+use OCA\CAFeVDBMembers\Db\NoteMapper;
 
 class NoteServiceTest extends TestCase {
   private $service;

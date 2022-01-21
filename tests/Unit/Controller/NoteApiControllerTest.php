@@ -1,8 +1,8 @@
 <?php
 
-namespace OCA\NotesTutorial\Tests\Unit\Controller;
+namespace OCA\CAFeVDBMembers\Tests\Unit\Controller;
 
-use OCA\NotesTutorial\Controller\NoteApiController;
+use OCA\CAFeVDBMembers\Controller\NoteApiController;
 
 class NoteApiControllerTest extends NoteControllerTest {
   public function setUp(): void {

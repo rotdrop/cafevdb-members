@@ -1,6 +1,6 @@
 <?php
 
-namespace OCA\NotesTutorial\Db;
+namespace OCA\CAFeVDBMembers\Db;
 
 use JsonSerializable;
 
