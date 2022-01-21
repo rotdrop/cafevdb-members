@@ -68,7 +68,7 @@ class EntityManager extends EntityManagerDecorator
     $this->entityManager = $this->wrapped;
   }
 
-  private function createSimpleConfiguration():array
+  private function createConfiguration():array
   {
     $cache = null;
     $useSimpleAnnotationReader = false;
@@ -107,29 +107,32 @@ class EntityManager extends EntityManagerDecorator
     return [ $config, new \OCA\CAFEVDB\Wrapped\Doctrine\Common\EventManager(), ];
   }
 
-  private function connectionParameters($params = null) {
+  private function connectionParameters($params = []) {
     $connectionParams = [
-      'dbname' => $this->cloudConfig->getAppValue($this->appName, 'database', $this->cloudConfig->getSystemValue('dbname') . '_' . $this->appName),
+      // 'dbname' => $this->cloudConfig->getAppValue(
+      //   $this->appName,
+      //   'database',
+      //   $this->cloudConfig->getSystemValue('dbname') . '_' . $this->appName
+      // ),
+      'database' => 'nextcloud_cafevdb', // @todo make it configurable
       'user' => $this->cloudConfig->getSystemValue('dbuser'),
       'password' => $this->cloudConfig->getSystemvalue('dbpassword'),
       'host' => $this->cloudConfig->getSystemValue('dbhost'),
     ];
     $driverParams = [
       'driver' => 'pdo_mysql',
-      'wrapperClass' => DatabaseConnection::class,
     ];
     $charSetParams = [
-      'collate' => 'utf8mb4_bin',
+      'collate' => 'utf8mb4_unicode_520_ci',
       'charset' => 'utf8mb4',
     ];
-    !is_array($params) && ($params = []);
     $connectionParams = array_merge($connectionParams, $params, $driverParams, $charSetParams);
     return $connectionParams;
   }
 
   private function getEntityManager($params = [])
   {
-    list($config, $eventManager) = $this->createSimpleConfiguration();
+    list($config, $eventManager) = $this->createConfiguration();
 
     if (self::DEV_MODE) {
       $config->setAutoGenerateProxyClasses(true);
