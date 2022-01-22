@@ -44,7 +44,8 @@ class Admin implements ISettings
       $this->appName,
       self::TEMPLATE, [
         'appName' => $this->appName,
-      ]);
+      ],
+      'blank');
   }
 
   /**

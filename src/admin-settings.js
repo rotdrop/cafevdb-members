@@ -1,4 +1,3 @@
-<?php
 /**
  * @copyright Copyright (c) 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
@@ -20,6 +19,17 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-script($appName, $appName . '-personal-settings');
-?>
-<div id="personal-settings"></div>
+import { generateFilePath } from '@nextcloud/router'
+
+import Vue from 'vue'
+import AdminSettings from './AdminSettings'
+
+// eslint-disable-next-line
+__webpack_public_path__ = generateFilePath(appName, '', 'js/')
+
+Vue.mixin({ methods: { t, n } })
+
+export default new Vue({
+  el: '#admin-settings',
+  render: h => h(AdminSettings),
+})
