@@ -12,17 +12,21 @@ use OCA\CAFeVDBMembers\Service\NoteService;
 use OCA\CAFeVDBMembers\Controller\NoteController;
 
 class NoteControllerTest extends TestCase {
+  protected $appName;
   protected $controller;
   protected $service;
   protected $userId = 'john';
   protected $request;
 
   public function setUp(): void {
+    $infoXml = new \SimpleXMLElement(file_get_contents(__DIR__ . '/../../../appinfo/info.xml'));
+    $this->appName = (string)$infoXml->id;
+
     $this->request = $this->getMockBuilder(IRequest::class)->getMock();
     $this->service = $this->getMockBuilder(NoteService::class)
       ->disableOriginalConstructor()
       ->getMock();
-    $this->controller = new NoteController($this->request, $this->service, $this->userId);
+    $this->controller = new NoteController($this->appName, $this->request, $this->service, $this->userId);
   }
 
   public function testUpdate() {
