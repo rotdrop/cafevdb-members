@@ -23,7 +23,7 @@ class NoteController extends Controller {
     , NoteService $service
     , $userId
   ) {
-    parent::__construct($this>appName, $request);
+    parent::__construct($this->appName, $request);
     $this->service = $service;
     $this->userId = $userId;
   }
