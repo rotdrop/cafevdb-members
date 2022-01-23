@@ -1,5 +1,5 @@
 <template>
-  <SettingsSection :title="t('cafevdbmembers', 'CAFeVDB Database Connector')">
+  <SettingsSection :title="t('cafevdbmembers', 'CAFeVDB Database Connector, Personal Settings')">
     <SettingsInputText
       :id="'test-input'"
       v-model="inputTest"
@@ -12,7 +12,7 @@
 <script>
 import SettingsSection from '@nextcloud/vue/dist/Components/SettingsSection'
 import SettingsInputText from './components/SettingsInputText'
-import { generateOcsUrl } from '@nextcloud/router'
+import { generateUrl } from '@nextcloud/router'
 import axios from '@nextcloud/axios'
 
 export default {
@@ -31,14 +31,15 @@ export default {
   },
   methods: {
     async getData() {
-      const response = await axios.get(generateOcsUrl('apps/provisioning_api/api/v1/config/apps/cafevdbmembers/input_test'), {})
+      const response = await axios.get(generateUrl('apps/cafevdbmembers/settings/personal/inputTest'), {})
       console.info('RESPONSE', response)
-      this.inputTest = response.data.ocs.data.data
+      this.inputTest = response.data.value
       console.info('VALUE', this.inputTest)
     },
-    saveInputTest() {
+    async saveInputTest() {
       console.info('SAVE INPUTTEST', this.inputTest)
-      OCP.AppConfig.setValue('cafevdbmembers', 'input_test', this.inputTest)
+      const response = await axios.post(generateUrl('apps/cafevdbmembers/settings/personal/inputTest'), { value: this.inputTest })
+      console.info('RESPONSE', response)
     },
   },
 }
