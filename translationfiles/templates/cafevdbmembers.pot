@@ -1,0 +1,76 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the Nextcloud package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Nextcloud 3.14159\n"
+"Report-Msgid-Bugs-To: translations\\@example.com\n"
+"POT-Creation-Date: 2022-01-24 00:34+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: lib/Settings/AdminSection.php:69
+#: lib/Settings/PersonalSection.php:69
+msgid "Camerata DB Members"
+msgstr ""
+
+#: specialAppInfoFakeDummyForL10nScript.php:2
+msgid "CAFeVDB Members"
+msgstr ""
+
+#: specialAppInfoFakeDummyForL10nScript.php:3
+msgid "CAFeV DB Member's Connector"
+msgstr ""
+
+#: specialAppInfoFakeDummyForL10nScript.php:4
+msgid "Expose a member's data record for the respective member"
+msgstr ""
+
+#: specialVueFakeDummyForL10nScript.js:1
+#: specialVueFakeDummyForL10nScript.js:2
+msgid "New note"
+msgstr ""
+
+#: specialVueFakeDummyForL10nScript.js:3
+msgid "Cancel note creation"
+msgstr ""
+
+#: specialVueFakeDummyForL10nScript.js:4
+msgid "Delete note"
+msgstr ""
+
+#: specialVueFakeDummyForL10nScript.js:5
+msgid "Save"
+msgstr ""
+
+#: specialVueFakeDummyForL10nScript.js:6
+msgid "Create a note to get started"
+msgstr ""
+
+#: specialVueFakeDummyForL10nScript.js:7
+msgid "Could not fetch notes"
+msgstr ""
+
+#: specialVueFakeDummyForL10nScript.js:8
+msgid "Could not create the note"
+msgstr ""
+
+#: specialVueFakeDummyForL10nScript.js:9
+msgid "Could not update the note"
+msgstr ""
+
+#: specialVueFakeDummyForL10nScript.js:10
+msgid "Note deleted"
+msgstr ""
+
+#: specialVueFakeDummyForL10nScript.js:11
+msgid "Could not delete the note"
+msgstr ""
