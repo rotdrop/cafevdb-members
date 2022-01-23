@@ -1,7 +1,7 @@
 /**
- * @copyright Copyright (c) 2018 John Molakvoæ <skjnldsv@protonmail.com>
+ * @copyright Copyright (c) 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
- * @author John Molakvoæ <skjnldsv@protonmail.com>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * @license AGPL-3.0-or-later
  *
@@ -19,8 +19,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
-import { generateFilePath } from '@nextcloud/router'
 
+import { generateFilePath } from '@nextcloud/router'
 import Vue from 'vue'
 import App from './App'
 
