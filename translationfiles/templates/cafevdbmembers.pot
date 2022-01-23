@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2022-01-24 00:34+0100\n"
+"POT-Creation-Date: 2022-01-24 00:55+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -35,42 +35,60 @@ msgid "Expose a member's data record for the respective member"
 msgstr ""
 
 #: specialVueFakeDummyForL10nScript.js:1
+msgid "CAFeVDB Database Connector, Admin Settings"
+msgstr ""
+
 #: specialVueFakeDummyForL10nScript.js:2
-msgid "New note"
+#: specialVueFakeDummyForL10nScript.js:16
+msgid "Test Input"
 msgstr ""
 
 #: specialVueFakeDummyForL10nScript.js:3
-msgid "Cancel note creation"
+#: specialVueFakeDummyForL10nScript.js:17
+msgid "Test Hint"
 msgstr ""
 
 #: specialVueFakeDummyForL10nScript.js:4
-msgid "Delete note"
-msgstr ""
-
 #: specialVueFakeDummyForL10nScript.js:5
-msgid "Save"
+msgid "New note"
 msgstr ""
 
 #: specialVueFakeDummyForL10nScript.js:6
-msgid "Create a note to get started"
+msgid "Cancel note creation"
 msgstr ""
 
 #: specialVueFakeDummyForL10nScript.js:7
-msgid "Could not fetch notes"
+msgid "Delete note"
 msgstr ""
 
 #: specialVueFakeDummyForL10nScript.js:8
-msgid "Could not create the note"
+msgid "Save"
 msgstr ""
 
 #: specialVueFakeDummyForL10nScript.js:9
-msgid "Could not update the note"
+msgid "Create a note to get started"
 msgstr ""
 
 #: specialVueFakeDummyForL10nScript.js:10
-msgid "Note deleted"
+msgid "Could not fetch notes"
 msgstr ""
 
 #: specialVueFakeDummyForL10nScript.js:11
+msgid "Could not create the note"
+msgstr ""
+
+#: specialVueFakeDummyForL10nScript.js:12
+msgid "Could not update the note"
+msgstr ""
+
+#: specialVueFakeDummyForL10nScript.js:13
+msgid "Note deleted"
+msgstr ""
+
+#: specialVueFakeDummyForL10nScript.js:14
 msgid "Could not delete the note"
+msgstr ""
+
+#: specialVueFakeDummyForL10nScript.js:15
+msgid "CAFeVDB Database Connector, Personal Settings"
 msgstr ""
