@@ -1,5 +1,5 @@
 const path = require('path')
-const webpack = require('webpack');
+const webpack = require('webpack')
 const webpackConfig = require('@nextcloud/webpack-vue-config')
 const fs = require('fs')
 const xml2js = require('xml2js')
@@ -23,5 +23,10 @@ webpackConfig.entry = {
 webpackConfig.plugins.push(new webpack.DefinePlugin({
   APP_NAME: JSON.stringify(appName),
 }))
+
+webpackConfig.module.rules.push({
+  test: /\.xml$/i,
+  use: 'xml-loader',
+})
 
 module.exports = webpackConfig

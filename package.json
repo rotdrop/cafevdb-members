@@ -43,6 +43,7 @@
     "@nextcloud/eslint-config": "^6.1.2",
     "@nextcloud/stylelint-config": "^2.1.2",
     "@nextcloud/webpack-vue-config": "^4.3.2",
-    "xml2js": "*"
+    "xml2js": "*",
+    "xml-loader": "^1.2.1"
   }
 }
