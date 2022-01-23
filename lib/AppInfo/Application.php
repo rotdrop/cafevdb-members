@@ -27,6 +27,7 @@ use OCP\AppFramework\App;
 use OCP\AppFramework\Bootstrap\IBootstrap;
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
 use OCP\AppFramework\Bootstrap\IBootContext;
+use OCP\AppFramework\Services\IInitialState;
 
 class Application extends App implements IBootstrap
 {
@@ -43,6 +44,9 @@ class Application extends App implements IBootstrap
   // Called later than "register".
   public function boot(IBootContext $context): void
   {
+    $context->injectFn(function(IInitialState $initialState) {
+      $initialState->provideInitialState('testValue', '*** INITIAL STATE OF TEST VALUE ***');
+    });
   }
 
   // Called earlier than boot, so anything initialized in the
