@@ -4,7 +4,6 @@ OC.L10N.register(
     "Post to end-point \"%s\" not implemented." : "POST-Anfragen an \"%s\" sind nicht implementiert.",
     "Post to base-url of app \"%s\" not allowed." : "POST-Anfragen an die Basis-Adresse der App \"%s\" sind nicht erlaubt.",
     "Get from end-point \"%s\" not implemented." : "GET-Anfragen an \"%s\" sind nicht implementiert.",
-    "Sorry, not yet implemented!" : "'Tschuldigung, noch nicht implementiert!",
     "Camerata DB Members" : "Camerata DB Mitglieder",
     "Error, caught an exception." : "Fehler, \"Ausnahme\" \"aufgefangen\".",
     "Caused by previous exception" : "Verursacht durch eine vorhergehende Ausnahme",
