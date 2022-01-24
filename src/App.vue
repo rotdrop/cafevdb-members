@@ -9,9 +9,10 @@
                         @click="dummyClick" />
     </AppNavigation>
     <AppContent>
-      <div id="data-display" class="emptycontent">
-        <div class="icon-file" />
+      <div class="data-display">
+        <!-- <div class="icon-file" /> -->
         <h2>{{ t(appName, 'Dummy Text') }}</h2>
+        <pre>{{ JSON.stringify(memberData, null, 2) }}</pre>
       </div>
     </AppContent>
   </div>
@@ -38,7 +39,7 @@ export default {
   },
   data() {
     return {
-      musicians: {},
+      memberData: {},
       loading: true,
     }
   },
@@ -49,7 +50,7 @@ export default {
     console.info('MOUNTED')
     try {
       const response = await axios.get(generateUrl('/apps/' + appName + '/member'))
-      this.musicians = response.data
+      this.memberData = response.data
     } catch (e) {
       console.error('ERROR', e)
       let message = t(appName, 'reason unknown')
@@ -68,14 +69,19 @@ export default {
   },
 }
 </script>
-<style scoped>
-  #app-content > div {
+<style lang="scss" scoped>
+  #app-content-vue > div {
     width: 100%;
     height: 100%;
     padding: 20px;
     display: flex;
     flex-direction: column;
     flex-grow: 1;
+    &.data-display {
+      h2 {
+        margin-left:44px;
+      }
+    }
   }
 
   input[type='text'] {
