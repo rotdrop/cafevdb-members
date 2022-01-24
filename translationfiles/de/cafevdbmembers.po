@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2022-01-24 00:50+0100\n"
-"PO-Revision-Date: 2022-01-24 00:55+0100\n"
+"POT-Creation-Date: 2022-01-24 14:24+0100\n"
+"PO-Revision-Date: 2022-01-24 14:21+0100\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -15,9 +15,36 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+#: lib/Controller/CatchAllController.php:64
+#, php-format
+msgid "Post to end-point \"%s\" not implemented."
+msgstr "POST-Anfragen an \"%s\" sind nicht implementiert."
+
+#: lib/Controller/CatchAllController.php:67
+#, php-format
+msgid "Post to base-url of app \"%s\" not allowed."
+msgstr "POST-Anfragen an die Basis-Adresse der App \"%s\" sind nicht erlaubt."
+
+#: lib/Controller/CatchAllController.php:80
+#, php-format
+msgid "Get from end-point \"%s\" not implemented."
+msgstr "GET-Anfragen an \"%s\" sind nicht implementiert."
+
+#: lib/Controller/MemberDataController.php:64
+msgid "Sorry, not yet implemented!"
+msgstr "'Tschuldigung, noch nicht implementiert!"
+
 #: lib/Settings/AdminSection.php:69 lib/Settings/PersonalSection.php:69
 msgid "Camerata DB Members"
 msgstr "Camerata DB Mitglieder"
+
+#: lib/Traits/ResponseTrait.php:76
+msgid "Error, caught an exception."
+msgstr "Fehler, \"Ausnahme\" \"aufgefangen\"."
+
+#: lib/Traits/ResponseTrait.php:77
+msgid "Caused by previous exception"
+msgstr "Verursacht durch eine vorhergehende Ausnahme"
 
 #: specialAppInfoFakeDummyForL10nScript.php:2
 msgid "CAFeVDB Members"
@@ -35,54 +62,30 @@ msgstr "Stelle die Mitgliedsdaten dem jeweiligen Mitglied zur Verfügung"
 msgid "CAFeVDB Database Connector, Admin Settings"
 msgstr "CAFeVDB Datenbank Integration, Administrator-Einstellungen"
 
-#: specialVueFakeDummyForL10nScript.js:2 specialVueFakeDummyForL10nScript.js:16
+#: specialVueFakeDummyForL10nScript.js:2 specialVueFakeDummyForL10nScript.js:9
 msgid "Test Input"
 msgstr "Test-Eingabe"
 
-#: specialVueFakeDummyForL10nScript.js:3 specialVueFakeDummyForL10nScript.js:17
+#: specialVueFakeDummyForL10nScript.js:3 specialVueFakeDummyForL10nScript.js:10
 msgid "Test Hint"
 msgstr "Test-Hinweis"
 
-#: specialVueFakeDummyForL10nScript.js:4 specialVueFakeDummyForL10nScript.js:5
-msgid "New note"
-msgstr ""
+#: specialVueFakeDummyForL10nScript.js:4
+msgid "Dummy New Button"
+msgstr "Platzhalter \"Neu Knopf\""
+
+#: specialVueFakeDummyForL10nScript.js:5
+msgid "Dummy Text"
+msgstr "Platzhalter Text"
 
 #: specialVueFakeDummyForL10nScript.js:6
-msgid "Cancel note creation"
-msgstr ""
+msgid "reason unknown"
+msgstr "Grund unbekannt"
 
 #: specialVueFakeDummyForL10nScript.js:7
-msgid "Delete note"
-msgstr ""
+msgid "Could not fetch musician(s): {message}"
+msgstr "Konnte den oder die Musiker nicht abfragen: {message}"
 
 #: specialVueFakeDummyForL10nScript.js:8
-msgid "Save"
-msgstr ""
-
-#: specialVueFakeDummyForL10nScript.js:9
-msgid "Create a note to get started"
-msgstr ""
-
-#: specialVueFakeDummyForL10nScript.js:10
-msgid "Could not fetch notes"
-msgstr ""
-
-#: specialVueFakeDummyForL10nScript.js:11
-msgid "Could not create the note"
-msgstr ""
-
-#: specialVueFakeDummyForL10nScript.js:12
-msgid "Could not update the note"
-msgstr ""
-
-#: specialVueFakeDummyForL10nScript.js:13
-msgid "Note deleted"
-msgstr ""
-
-#: specialVueFakeDummyForL10nScript.js:14
-msgid "Could not delete the note"
-msgstr ""
-
-#: specialVueFakeDummyForL10nScript.js:15
 msgid "CAFeVDB Database Connector, Personal Settings"
 msgstr "CAFeVDB Datenbank Integration, perönliche Einstellungen"

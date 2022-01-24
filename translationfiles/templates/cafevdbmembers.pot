@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2022-01-24 00:55+0100\n"
+"POT-Creation-Date: 2022-01-24 14:24+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,9 +17,36 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+#: lib/Controller/CatchAllController.php:64
+#, php-format
+msgid "Post to end-point \"%s\" not implemented."
+msgstr ""
+
+#: lib/Controller/CatchAllController.php:67
+#, php-format
+msgid "Post to base-url of app \"%s\" not allowed."
+msgstr ""
+
+#: lib/Controller/CatchAllController.php:80
+#, php-format
+msgid "Get from end-point \"%s\" not implemented."
+msgstr ""
+
+#: lib/Controller/MemberDataController.php:64
+msgid "Sorry, not yet implemented!"
+msgstr ""
+
 #: lib/Settings/AdminSection.php:69
 #: lib/Settings/PersonalSection.php:69
 msgid "Camerata DB Members"
+msgstr ""
+
+#: lib/Traits/ResponseTrait.php:76
+msgid "Error, caught an exception."
+msgstr ""
+
+#: lib/Traits/ResponseTrait.php:77
+msgid "Caused by previous exception"
 msgstr ""
 
 #: specialAppInfoFakeDummyForL10nScript.php:2
@@ -39,56 +66,31 @@ msgid "CAFeVDB Database Connector, Admin Settings"
 msgstr ""
 
 #: specialVueFakeDummyForL10nScript.js:2
-#: specialVueFakeDummyForL10nScript.js:16
+#: specialVueFakeDummyForL10nScript.js:9
 msgid "Test Input"
 msgstr ""
 
 #: specialVueFakeDummyForL10nScript.js:3
-#: specialVueFakeDummyForL10nScript.js:17
+#: specialVueFakeDummyForL10nScript.js:10
 msgid "Test Hint"
 msgstr ""
 
 #: specialVueFakeDummyForL10nScript.js:4
+msgid "Dummy New Button"
+msgstr ""
+
 #: specialVueFakeDummyForL10nScript.js:5
-msgid "New note"
+msgid "Dummy Text"
 msgstr ""
 
 #: specialVueFakeDummyForL10nScript.js:6
-msgid "Cancel note creation"
+msgid "reason unknown"
 msgstr ""
 
 #: specialVueFakeDummyForL10nScript.js:7
-msgid "Delete note"
+msgid "Could not fetch musician(s): {message}"
 msgstr ""
 
 #: specialVueFakeDummyForL10nScript.js:8
-msgid "Save"
-msgstr ""
-
-#: specialVueFakeDummyForL10nScript.js:9
-msgid "Create a note to get started"
-msgstr ""
-
-#: specialVueFakeDummyForL10nScript.js:10
-msgid "Could not fetch notes"
-msgstr ""
-
-#: specialVueFakeDummyForL10nScript.js:11
-msgid "Could not create the note"
-msgstr ""
-
-#: specialVueFakeDummyForL10nScript.js:12
-msgid "Could not update the note"
-msgstr ""
-
-#: specialVueFakeDummyForL10nScript.js:13
-msgid "Note deleted"
-msgstr ""
-
-#: specialVueFakeDummyForL10nScript.js:14
-msgid "Could not delete the note"
-msgstr ""
-
-#: specialVueFakeDummyForL10nScript.js:15
 msgid "CAFeVDB Database Connector, Personal Settings"
 msgstr ""
