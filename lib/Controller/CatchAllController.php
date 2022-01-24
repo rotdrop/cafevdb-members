@@ -78,7 +78,5 @@ class CatchAllController extends Controller
     $request = implode('/', array_filter($parts));
     return self::grumble(
       $this->l->t('Get from end-point "%s" not implemented.', $request));
-    }
   }
-
 }

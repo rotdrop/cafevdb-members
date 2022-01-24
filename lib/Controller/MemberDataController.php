@@ -25,6 +25,8 @@
 
 namespace OCA\CAFeVDBMembers\Controller;
 
+use Psr\Log\LoggerInterface;
+
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\IRequest;
@@ -33,9 +35,11 @@ use OCP\IL10N;
 use OCA\CAFeVDBMembers\AppInfo\Application;
 use OCA\CAFeVDBMembers\Service\NoteService;
 use OCA\CAFeVDBMembers\Database\ORM\EntityManager;
+use OCA\CAFeVDBMembers\Database\ORM\Entities;
 
 class MemberDataController extends Controller
 {
+  use \OCA\CAFeVDBMembers\Traits\LoggerTrait;
   use \OCA\CAFeVDBMembers\Traits\ResponseTrait;
 
   /** @var string */
@@ -44,16 +48,22 @@ class MemberDataController extends Controller
   /** @var IL10N */
   private $l;
 
+  /** @var EntityManager */
+  private $entityManager;
+
   public function __construct(
     string $appName
     , IRequest $request
     , $userId
     , IL10N $l10n
+    , LoggerInterface $logger
     , EntityManager $entityManager
   ) {
     parent::__construct($this->appName, $request);
     $this->userId = $userId;
     $this->l = $l10n;
+    $this->logger = $logger;
+    $this->entityManager = $entityManager;
   }
 
   /**
@@ -61,6 +71,16 @@ class MemberDataController extends Controller
    */
   public function get()
   {
-    return self::grumble($this->l->t('Sorry, not yet implemented!'));
+    $musicians = $this->entityManager->getRepository(Entities\Musician::class)->findAll();
+    $this->logInfo('NUMBER OF MUSICIANS ' . count($musicians));
+    if (count($musicians) == 0) {
+      return self::grumble($this->l->t('No member-data found for user-id "%s".', $this->userId));
+    } else if (count($musicians) > 1) {
+      return self::grumble($this->l_>t('More than one musiciand found for user-id "%s".', $this->userId));
+    }
+    /** @var Entities\Musician $musician */
+    $musician = $musicians[0];
+    $this->logInfo('NAME ' . $musician['publicName']);
+    return self::dataResponse($musician->toArray());
   }
 }

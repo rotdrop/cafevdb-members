@@ -57,6 +57,7 @@ trait ArrayTrait
   public function __wakeup()
   {
     $this->arrayCTOR();
+    $this->keys[] = 'publicName';
   }
 
   public function toArray()

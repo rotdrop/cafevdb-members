@@ -43,7 +43,7 @@ return [
     ],
     [
       'name' => 'member_data#get',
-      'url' => '/musicians',
+      'url' => '/member',
       'verb' => 'GET',
     ],
     /**
@@ -65,7 +65,7 @@ return [
       ],
     ],
     [
-      'name' => 'catch_all#post',
+      'name' => 'catch_all#get',
       'postfix' => 'get',
       'url' => '/{a}/{b}/{c}/{d}/{e}/{f}/{g}',
       'verb' => 'GET',

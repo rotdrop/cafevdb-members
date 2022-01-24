@@ -249,8 +249,8 @@ class EntityManager extends EntityManagerDecorator
     $namingStrategy = new UnderscoreNamingStrategy(CASE_LOWER);
     $config->setNamingStrategy($namingStrategy);
 
-    $quoteStrategy = new ReservedWordQuoteStrategy();
-    $config->setQuoteStrategy($quoteStrategy);
+    // $quoteStrategy = new ReservedWordQuoteStrategy();
+    // $config->setQuoteStrategy($quoteStrategy);
 
     // obtaining the entity manager
     $entityManager = \Doctrine\ORM\EntityManager::create($this->connectionParameters($params), $config, $eventManager);

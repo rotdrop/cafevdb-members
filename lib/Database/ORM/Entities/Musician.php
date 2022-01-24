@@ -28,18 +28,21 @@ namespace OCA\CAFeVDBMembers\Database\ORM\Entities;
 use Doctrine\ORM\Mapping as ORM;
 
 use OCA\CAFeVDBMembers\Database\ORM as CAFEVDB;
-//use OCA\CAFeVDBMembers\Database\
+use OCA\CAFeVDBMembers\Database\DBAL\Types;
 
 /**
  * Musician
  *
  * @ORM\Table(name="PersonalizedMusiciansView")
  * @ORM\Entity
+ * @ORM\HasLifecycleCallbacks
  */
 class Musician implements \ArrayAccess, \JsonSerializable
 {
   use CAFEVDB\Traits\ArrayTrait;
-  // use CAFEVDB\Traits\UuidTrait;
+  use CAFEVDB\Traits\CreatedAt;
+  use CAFEVDB\Traits\UpdatedAt;
+  use CAFEVDB\Traits\UuidTrait;
   // use CAFEVDB\Traits\GetByUuidTrait;
   // use \OCA\CAFEVDB\Traits\DateTimeTrait;
 
@@ -191,7 +194,6 @@ class Musician implements \ArrayAccess, \JsonSerializable
 
   public function __construct() {
     $this->__wakeup();
-
     $this->memberStatus = Types\EnumMemberStatus::REGULAR();
   }
 
@@ -641,5 +643,13 @@ class Musician implements \ArrayAccess, \JsonSerializable
     return array_merge($this->toArray(), [
       'publicName' => $this->getPublicName(true),
     ]);
+  }
+
+  /**
+   * @ORM\PostLoad
+   */
+  public function postLoad()
+  {
+    $this->__wakeup();
   }
 }

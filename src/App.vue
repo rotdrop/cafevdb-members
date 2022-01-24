@@ -48,7 +48,7 @@ export default {
   async mounted() {
     console.info('MOUNTED')
     try {
-      const response = await axios.get(generateUrl('/apps/' + appName + '/musicians'))
+      const response = await axios.get(generateUrl('/apps/' + appName + '/member'))
       this.musicians = response.data
     } catch (e) {
       console.error('ERROR', e)
