@@ -47,7 +47,7 @@ composer: stamp.composer-core-versions
 	$(COMPOSER_TOOL) install $(COMPOSER_OPTIONS)
 
 .PHONY: composer-suggest
-composer-suggest: composer-wrapped-suggest
+composer-suggest:
 	@echo -e "\n*** Regular Composer Suggestions ***\n"
 	$(COMPOSER_TOOL) suggest --all
 
