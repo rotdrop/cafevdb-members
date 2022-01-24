@@ -23,11 +23,14 @@
 
 namespace OCA\CAFeVDBMembers\Database\ORM;
 
+use Psr\Log\LoggerInterface;
+
 use OCP\AppFramework\IAppContainer;
 use OCP\IConfig;
 
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Tools\Setup;
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Tools\Setup;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\DBAL\Event\ConnectionEventArgs;
 use Doctrine\ORM\Decorator\EntityManagerDecorator;
 use Doctrine\DBAL\Connection as DatabaseConnection;
 
@@ -38,6 +41,8 @@ use Doctrine\DBAL\Connection as DatabaseConnection;
  */
 class EntityManager extends EntityManagerDecorator
 {
+  use \OCA\CAFeVDBMembers\Traits\LoggerTrait;
+
   const ENTITY_PATHS = [
     __DIR__ . "/Entities",
   ];
@@ -56,16 +61,29 @@ class EntityManager extends EntityManagerDecorator
   /** @var IAppContainer */
   private $appContainer;
 
+  /** @var string */
+  private $userId;
+
+  /** @var bool */
+  private $typesBound = false;
+
   public function __construct(
     $appname
+    , $userId
     , IAppContainer $appContainer
     , IConfig $cloudConfig
+    , LoggerInterface $logger
   ) {
     $this->appName = $appName;
+    $this->userId = $userId;
     $this->appContainer = $appContainer;
     $this->cloudConfig = $cloudConfig;
+    $this->logger = $logger;
     parent::__construct($this->getEntityManager());
     $this->entityManager = $this->wrapped;
+    if ($this->connected()) {
+      $this->registerTypes();
+    }
   }
 
   private function createConfiguration():array
@@ -93,14 +111,15 @@ class EntityManager extends EntityManagerDecorator
       }
     });
 
-    // mysql set names UTF-8 if required
-    $eventManager->addEventSubscriber(new \OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Event\Listeners\MysqlSessionInit());
+    // mysql set names UTF-8 if required, should be obsolete
+    // $eventManager->addEventSubscriber(new \OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Event\Listeners\MysqlSessionInit());
 
     $eventManager->addEventListener([
-      \OCA\CAFEVDB\Wrapped\Doctrine\ORM\Tools\ToolEvents::postGenerateSchema,
-      ORM\Events::loadClassMetadata,
-      ORM\Events::preUpdate,
-      ORM\Events::postUpdate,
+      // \OCA\CAFEVDB\Wrapped\Doctrine\ORM\Tools\ToolEvents::postGenerateSchema,
+      // ORM\Events::loadClassMetadata,
+      // ORM\Events::preUpdate,
+      // ORM\Events::postUpdate,
+      Events::postConnect,
     ], $this);
 
 
@@ -130,6 +149,86 @@ class EntityManager extends EntityManagerDecorator
     return $connectionParams;
   }
 
+  /**
+   * Check for a valid database connection.
+   *
+   * @return bool
+   */
+  public function connected():bool
+  {
+    $connection = $this->getConnection();
+    if (empty($connection)) {
+      return false;
+    }
+    $params = $connection->getParams();
+    $impossible = false;
+    foreach ([ 'host', 'user', 'password', 'dbname' ] as $key) {
+      if (empty($params[$key])) {
+        $impossible = true;
+      }
+    }
+    if ($impossible) {
+      $this->logError('Unable to access database, connection parameters are unset');
+      return false;
+    }
+    try {
+      if (!$connection->ping()) {
+        if (!$connection->connect()) {
+          $this->logError('db cannot connect');
+          return false;
+        }
+      }
+    } catch (\Throwable $t) {
+      $this->logException($t);
+      return false;
+    }
+    return true;
+  }
+
+  private function registerTypes()
+  {
+    if ($this->typesBound) {
+      return;
+    }
+    $types = [
+      Types\EnumMemberStatus::class => 'enum',
+      Types\UuidType::class => 'binary',
+    ];
+
+    $connection = $this->entityManager->getConnection();
+    try {
+      $platform = $connection->getDatabasePlatform();
+      foreach ($types as $phpType => $sqlType) {
+        if ($sqlType == 'enum') {
+          $typeName = substr(strrchr($phpType, '\\'), 1);
+          Types\EnumType::registerEnumType($typeName, $phpType);
+
+          // variant in lower case
+          $blah = strtolower($typeName);
+          Types\EnumType::registerEnumType($blah, $phpType);
+          $platform->registerDoctrineTypeMapping($sqlType, $blah);
+
+        } else {
+          $instance = new $phpType;
+          $typeName = $instance->getName();
+          Type::addType($typeName, $phpType);
+        }
+        if (!empty($sqlType)) {
+          $platform->registerDoctrineTypeMapping($sqlType, $typeName);
+        }
+      }
+
+      // Override datetime stuff
+      Type::overrideType('datetime', Carbon\Doctrine\DateTimeType::class);
+      Type::overrideType('datetime_immutable', Carbon\Doctrine\DateTimeImmutableType::class);
+      Type::overrideType('datetimetz', Carbon\Doctrine\DateTimeType::class);
+      Type::overrideType('datetimetz_immutable', Carbon\Doctrine\DateTimeImmutableType::class);
+      $this->typesBound = true;
+    } catch (\Throwable $t) {
+      $this->logException($t);
+    }
+  }
+
   private function getEntityManager($params = [])
   {
     list($config, $eventManager) = $this->createConfiguration();
@@ -149,5 +248,12 @@ class EntityManager extends EntityManagerDecorator
     \Doctrine\ORM\EntityManager::create($this->connectionParameters($params), $config, $eventManager);
 
     return $entityManager;
+  }
+
+  public function postConnect(ConnectionEventArgs $args)
+  {
+    if (!empty($this->userId)) {
+      $args->getConnection()->executeStatement("SET @CLOUD_USER_ID = '" . $this->userId . "'");
+    }
   }
 }

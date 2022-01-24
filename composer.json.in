@@ -10,7 +10,12 @@
     }
   ],
   "require": {
-    "doctrine/orm": "^2.10.0"
+    "doctrine/orm": "^2.10.0",
+    "acelaya/doctrine-enum-type": "^2.5",
+    "myclabs/php-enum": "^1.8",
+    "nesbot/carbon": "^2.46",
+    "ramsey/uuid-doctrine": "^1.6",
+    "ramsey/uuid": "^4"
   },
   "require-dev": {
     "phpunit/phpunit": "*",
