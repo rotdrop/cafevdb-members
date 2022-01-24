@@ -11,6 +11,7 @@
   ],
   "require": {
     "doctrine/orm": "^2.10.0",
+    "symfony/cache": "*",
     "acelaya/doctrine-enum-type": "^2.5",
     "myclabs/php-enum": "^1.8",
     "nesbot/carbon": "^2.46",

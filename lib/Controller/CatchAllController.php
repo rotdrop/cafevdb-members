@@ -53,7 +53,6 @@ class CatchAllController extends Controller
 
   /**
    * @NoAdminRequired
-   * @NoGroupMemberRequired
    * @NoCSRFRequired
    */
   public function post($a, $b, $c, $d, $e, $f, $g)
@@ -71,7 +70,6 @@ class CatchAllController extends Controller
 
   /**
    * @NoAdminRequired
-   * @NoGroupMemberRequired
    * @NoCSRFRequired
    */
   public function get($a, $b, $c, $d, $e, $f, $g)

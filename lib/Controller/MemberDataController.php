@@ -25,25 +25,42 @@
 
 namespace OCA\CAFeVDBMembers\Controller;
 
-use OCA\CAFeVDBMembers\AppInfo\Application;
-use OCA\CAFeVDBMembers\Service\NoteService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\IRequest;
+use OCP\IL10N;
 
-class NoteController extends Controller
+use OCA\CAFeVDBMembers\AppInfo\Application;
+use OCA\CAFeVDBMembers\Service\NoteService;
+use OCA\CAFeVDBMembers\Database\ORM\EntityManager;
+
+class MemberDataController extends Controller
 {
   use \OCA\CAFeVDBMembers\Traits\ResponseTrait;
 
   /** @var string */
   private $userId;
 
+  /** @var IL10N */
+  private $l;
+
   public function __construct(
     string $appName
     , IRequest $request
     , $userId
+    , IL10N $l10n
+    , EntityManager $entityManager
   ) {
     parent::__construct($this->appName, $request);
     $this->userId = $userId;
+    $this->l = $l10n;
+  }
+
+  /**
+   * @NoAdminRequired
+   */
+  public function get()
+  {
+    return self::grumble($this->l->t('Sorry, not yet implemented!'));
   }
 }

@@ -41,6 +41,11 @@ return [
       'url' => '/settings/personal/{setting}',
       'verb' => 'GET',
     ],
+    [
+      'name' => 'member_data#get',
+      'url' => '/musicians',
+      'verb' => 'GET',
+    ],
     /**
      * Attempt a catch all ...
      */

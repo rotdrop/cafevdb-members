@@ -32,7 +32,13 @@ use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\DBAL\Event\ConnectionEventArgs;
 use Doctrine\ORM\Decorator\EntityManagerDecorator;
+use Doctrine\ORM\Mapping\UnderscoreNamingStrategy;
 use Doctrine\DBAL\Connection as DatabaseConnection;
+use Doctrine\DBAL\Types\Type;
+
+use OCA\CAFeVDBMembers\Database\ORM\Mapping\ReservedWordQuoteStrategy;
+use OCA\CAFeVDBMembers\Database\DBAL\Types;
+use MyCLabs\Enum\Enum as EnumType;
 
 /**
  * Use this as the actual EntityManager in order to be able to
@@ -68,7 +74,7 @@ class EntityManager extends EntityManagerDecorator
   private $typesBound = false;
 
   public function __construct(
-    $appname
+    $appName
     , $userId
     , IAppContainer $appContainer
     , IConfig $cloudConfig
@@ -91,7 +97,7 @@ class EntityManager extends EntityManagerDecorator
     $cache = null;
     $useSimpleAnnotationReader = false;
     $config = Setup::createAnnotationMetadataConfiguration(self::ENTITY_PATHS, self::DEV_MODE, self::PROXY_DIR, $cache, $useSimpleAnnotationReader);
-    $config->setEntityListenerResolver(new class($this->appContainer) extends ORM\Mapping\DefaultEntityListenerResolver {
+    $config->setEntityListenerResolver(new class($this->appContainer) extends \Doctrine\ORM\Mapping\DefaultEntityListenerResolver {
 
       private $appContainer;
 
@@ -111,6 +117,8 @@ class EntityManager extends EntityManagerDecorator
       }
     });
 
+    $eventManager = new \Doctrine\Common\EventManager();
+
     // mysql set names UTF-8 if required, should be obsolete
     // $eventManager->addEventSubscriber(new \OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Event\Listeners\MysqlSessionInit());
 
@@ -119,11 +127,10 @@ class EntityManager extends EntityManagerDecorator
       // ORM\Events::loadClassMetadata,
       // ORM\Events::preUpdate,
       // ORM\Events::postUpdate,
-      Events::postConnect,
+      \Doctrine\DBAL\Events::postConnect,
     ], $this);
 
-
-    return [ $config, new \OCA\CAFEVDB\Wrapped\Doctrine\Common\EventManager(), ];
+    return [ $config, $eventManager, ];
   }
 
   private function connectionParameters($params = []) {
@@ -133,7 +140,7 @@ class EntityManager extends EntityManagerDecorator
       //   'database',
       //   $this->cloudConfig->getSystemValue('dbname') . '_' . $this->appName
       // ),
-      'database' => 'nextcloud_cafevdb', // @todo make it configurable
+      'dbname' => 'cafevdb_musicians_insurances', // @todo make it configurable
       'user' => $this->cloudConfig->getSystemValue('dbuser'),
       'password' => $this->cloudConfig->getSystemvalue('dbpassword'),
       'host' => $this->cloudConfig->getSystemValue('dbhost'),
@@ -172,7 +179,7 @@ class EntityManager extends EntityManagerDecorator
       return false;
     }
     try {
-      if (!$connection->ping()) {
+      if (!$connection->isConnected()) {
         if (!$connection->connect()) {
           $this->logError('db cannot connect');
           return false;
@@ -219,10 +226,10 @@ class EntityManager extends EntityManagerDecorator
       }
 
       // Override datetime stuff
-      Type::overrideType('datetime', Carbon\Doctrine\DateTimeType::class);
-      Type::overrideType('datetime_immutable', Carbon\Doctrine\DateTimeImmutableType::class);
-      Type::overrideType('datetimetz', Carbon\Doctrine\DateTimeType::class);
-      Type::overrideType('datetimetz_immutable', Carbon\Doctrine\DateTimeImmutableType::class);
+      Type::overrideType('datetime', \Carbon\Doctrine\DateTimeType::class);
+      Type::overrideType('datetime_immutable', \Carbon\Doctrine\DateTimeImmutableType::class);
+      Type::overrideType('datetimetz', \Carbon\Doctrine\DateTimeType::class);
+      Type::overrideType('datetimetz_immutable', \Carbon\Doctrine\DateTimeImmutableType::class);
       $this->typesBound = true;
     } catch (\Throwable $t) {
       $this->logException($t);
@@ -245,7 +252,8 @@ class EntityManager extends EntityManagerDecorator
     $quoteStrategy = new ReservedWordQuoteStrategy();
     $config->setQuoteStrategy($quoteStrategy);
 
-    \Doctrine\ORM\EntityManager::create($this->connectionParameters($params), $config, $eventManager);
+    // obtaining the entity manager
+    $entityManager = \Doctrine\ORM\EntityManager::create($this->connectionParameters($params), $config, $eventManager);
 
     return $entityManager;
   }
