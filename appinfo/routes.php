@@ -1,26 +1,26 @@
 <?php
 
 return [
-  'resources' => [
-    'note' => [
-      'url' => '/notes',
-    ],
-    'note_api' => [
-      'url' => '/api/0.1/notes',
-    ],
-  ],
+  // 'resources' => [
+  //   'note' => [
+  //     'url' => '/notes',
+  //   ],
+  //   'note_api' => [
+  //     'url' => '/api/0.1/notes',
+  //   ],
+  // ],
   'routes' => [
     [
       'name' => 'page#index',
       'url' => '/',
       'verb' => 'GET',
     ],
-    [
-      'name' => 'note_api#preflighted_cors',
-      'url' => '/api/0.1/{path}',
-      'verb' => 'OPTIONS',
-      'requirements' => ['path' => '.+'],
-    ],
+    // [
+    //   'name' => 'note_api#preflighted_cors',
+    //   'url' => '/api/0.1/{path}',
+    //   'verb' => 'OPTIONS',
+    //   'requirements' => ['path' => '.+'],
+    // ],
     [
       'name' => 'settings#set_admin',
       'url' => '/settings/admin/{setting}',
@@ -40,6 +40,39 @@ return [
       'name' => 'settings#get_personal',
       'url' => '/settings/personal/{setting}',
       'verb' => 'GET',
+    ],
+    /**
+     * Attempt a catch all ...
+     */
+    [
+      'name' => 'catch_all#post',
+      'postfix' => 'post',
+      'url' => '/{a}/{b}/{c}/{d}/{e}/{f}/{g}',
+      'verb' => 'POST',
+      'defaults' => [
+        'a' => '',
+        'b' => '',
+        'c' => '',
+        'd' => '',
+        'e' => '',
+        'f' => '',
+        'g' => '',
+      ],
+    ],
+    [
+      'name' => 'catch_all#post',
+      'postfix' => 'get',
+      'url' => '/{a}/{b}/{c}/{d}/{e}/{f}/{g}',
+      'verb' => 'GET',
+      'defaults' => [
+        'a' => '',
+        'b' => '',
+        'c' => '',
+        'd' => '',
+        'e' => '',
+        'f' => '',
+        'g' => '',
+      ],
     ],
   ],
 ];

@@ -1,220 +1,69 @@
 <template>
-  <div id="content" class="app-cafevdbmembers">
+  <div id="content" :class="'app-' + appName">
     <AppNavigation>
       <AppNavigationNew v-if="!loading"
-                        :text="t('cafevdbmembers', 'New note')"
+                        :text="t(appName, 'Dummy New Button')"
                         :disabled="false"
-                        button-id="new-cafevdbmembers-button"
+                        :button-id="appName + '-new-button'"
                         button-class="icon-add"
-                        @click="newNote" />
-      <ul>
-        <AppNavigationItem v-for="note in notes"
-                           :key="note.id"
-                           :title="note.title ? note.title : t('cafevdbmembers', 'New note')"
-                           :class="{active: currentNoteId === note.id}"
-                           @click="openNote(note)">
-          <template slot="actions">
-            <ActionButton v-if="note.id === -1"
-                          icon="icon-close"
-                          @click="cancelNewNote(note)">
-              {{ t('cafevdbmembers', 'Cancel note creation') }}
-            </ActionButton>
-            <ActionButton v-else
-                          icon="icon-delete"
-                          @click="deleteNote(note)">
-              {{ t('cafevdbmembers', 'Delete note') }}
-            </ActionButton>
-          </template>
-        </AppNavigationItem>
-      </ul>
+                        @click="dummyClick" />
     </AppNavigation>
     <AppContent>
-      <div v-if="currentNote">
-        <input ref="title"
-               v-model="currentNote.title"
-               type="text"
-               :disabled="updating">
-        <textarea ref="content" v-model="currentNote.content" :disabled="updating" />
-        <input type="button"
-               class="primary"
-               :value="t('cafevdbmembers', 'Save')"
-               :disabled="updating || !savePossible"
-               @click="saveNote">
-      </div>
-      <div v-else id="emptycontent">
+      <div id="data-display" class="emptycontent">
         <div class="icon-file" />
-        <h2>{{ t('cafevdbmembers', 'Create a note to get started') }}</h2>
+        <h2>{{ t(appName, 'Dummy Text') }}</h2>
       </div>
     </AppContent>
   </div>
 </template>
 
 <script>
-import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
+import { appName } from './config.js'
+
 import AppContent from '@nextcloud/vue/dist/Components/AppContent'
 import AppNavigation from '@nextcloud/vue/dist/Components/AppNavigation'
-import AppNavigationItem from '@nextcloud/vue/dist/Components/AppNavigationItem'
 import AppNavigationNew from '@nextcloud/vue/dist/Components/AppNavigationNew'
 
 import '@nextcloud/dialogs/styles/toast.scss'
 import { generateUrl } from '@nextcloud/router'
-import { showError, showSuccess } from '@nextcloud/dialogs'
+import { showError, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
 import axios from '@nextcloud/axios'
 
 export default {
   name: 'App',
   components: {
-    ActionButton,
     AppContent,
     AppNavigation,
-    AppNavigationItem,
     AppNavigationNew,
   },
   data() {
     return {
-      notes: [],
-      currentNoteId: null,
-      updating: false,
+      musicians: {},
       loading: true,
     }
-  },
-  computed: {
-    /**
-     * Return the currently selected note object
-     *
-     * @return {object | null}
-     */
-    currentNote() {
-      if (this.currentNoteId === null) {
-        return null
-      }
-      return this.notes.find((note) => note.id === this.currentNoteId)
-    },
-
-    /**
-     * Returns true if a note is selected and its title is not empty
-     *
-     * @return {boolean}
-     */
-    savePossible() {
-      return this.currentNote && this.currentNote.title !== ''
-    },
   },
   /**
    * Fetch list of notes when the component is loaded
    */
   async mounted() {
+    console.info('MOUNTED')
     try {
-      const response = await axios.get(generateUrl('/apps/cafevdbmembers/notes'))
-      this.notes = response.data
+      const response = await axios.get(generateUrl('/apps/' + appName + '/musicians'))
+      this.musicians = response.data
     } catch (e) {
-      console.error(e)
-      showError(t('cafevdbmembers', 'Could not fetch notes'))
+      console.error('ERROR', e)
+      let message = t(appName, 'reason unknown')
+      if (e.response && e.response.data && e.response.data.message) {
+        message = e.response.data.message
+        console.info('RESPONSE', e.response)
+      }
+      showError(t(appName, 'Could not fetch musician(s): {message}', { message }), { timeout: TOAST_PERMANENT_TIMEOUT })
     }
     this.loading = false
   },
-
   methods: {
-    /**
-     * Create a new note and focus the note content field automatically
-     *
-     * @param {object} note Note object
-     */
-    openNote(note) {
-      if (this.updating) {
-        return
-      }
-      this.currentNoteId = note.id
-      this.$nextTick(() => {
-        this.$refs.content.focus()
-      })
-    },
-    /**
-     * Action tiggered when clicking the save button
-     * create a new note or save
-     */
-    saveNote() {
-      if (this.currentNoteId === -1) {
-        this.createNote(this.currentNote)
-      } else {
-        this.updateNote(this.currentNote)
-      }
-    },
-    /**
-     * Create a new note and focus the note content field automatically
-     * The note is not yet saved, therefore an id of -1 is used until it
-     * has been persisted in the backend
-     */
-    newNote() {
-      if (this.currentNoteId !== -1) {
-        this.currentNoteId = -1
-        this.notes.push({
-          id: -1,
-          title: '',
-          content: '',
-        })
-        this.$nextTick(() => {
-          this.$refs.title.focus()
-        })
-      }
-    },
-    /**
-     * Abort creating a new note
-     */
-    cancelNewNote() {
-      this.notes.splice(this.notes.findIndex((note) => note.id === -1), 1)
-      this.currentNoteId = null
-    },
-    /**
-     * Create a new note by sending the information to the server
-     *
-     * @param {object} note Note object
-     */
-    async createNote(note) {
-      this.updating = true
-      try {
-        const response = await axios.post(generateUrl('/apps/cafevdbmembers/notes'), note)
-        const index = this.notes.findIndex((match) => match.id === this.currentNoteId)
-        this.$set(this.notes, index, response.data)
-        this.currentNoteId = response.data.id
-      } catch (e) {
-        console.error(e)
-        showError(t('cafevdbmembers', 'Could not create the note'))
-      }
-      this.updating = false
-    },
-    /**
-     * Update an existing note on the server
-     *
-     * @param {object} note Note object
-     */
-    async updateNote(note) {
-      this.updating = true
-      try {
-        await axios.put(generateUrl(`/apps/cafevdbmembers/notes/${note.id}`), note)
-      } catch (e) {
-        console.error(e)
-        showError(t('cafevdbmembers', 'Could not update the note'))
-      }
-      this.updating = false
-    },
-    /**
-     * Delete a note, remove it from the frontend and show a hint
-     *
-     * @param {object} note Note object
-     */
-    async deleteNote(note) {
-      try {
-        await axios.delete(generateUrl(`/apps/cafevdbmembers/notes/${note.id}`))
-        this.notes.splice(this.notes.indexOf(note), 1)
-        if (this.currentNoteId === note.id) {
-          this.currentNoteId = null
-        }
-        showSuccess(t('cafevdbmembers', 'Note deleted'))
-      } catch (e) {
-        console.error(e)
-        showError(t('cafevdbmembers', 'Could not delete the note'))
-      }
+    dummyClick() {
+      console.info('DUMMY CLICK')
     },
   },
 }
