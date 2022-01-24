@@ -1,5 +1,7 @@
 <?php
 /**
+ * Member's data base connector for CAFEVDB orchetra management app.
+ *
  * @copyright Copyright (c) 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
