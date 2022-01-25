@@ -199,8 +199,10 @@ class Musician implements \ArrayAccess, \JsonSerializable
 
   public function __wakeup()
   {
-    $this->arrayCTOR();
-    $this->keys[] = 'publicName';
+    if (empty($this->id)) {
+      $this->arrayCTOR();
+      $this->postLoad();
+    }
   }
 
   /**
@@ -650,6 +652,6 @@ class Musician implements \ArrayAccess, \JsonSerializable
    */
   public function postLoad()
   {
-    $this->__wakeup();
+    $this->keys[] = 'publicName';
   }
 }
