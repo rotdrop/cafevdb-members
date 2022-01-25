@@ -200,7 +200,6 @@ class Musician implements \ArrayAccess, \JsonSerializable
   public function __wakeup()
   {
     if (empty($this->id)) {
-      $this->arrayCTOR();
       $this->postLoad();
     }
   }
@@ -642,6 +641,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
 
   public function jsonSerialize():array
   {
+    return $this->toArray();
     return array_merge($this->toArray(), [
       'publicName' => $this->getPublicName(true),
     ]);
@@ -652,6 +652,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
    */
   public function postLoad()
   {
+    $this->arrayCTOR();
     $this->keys[] = 'publicName';
   }
 }
