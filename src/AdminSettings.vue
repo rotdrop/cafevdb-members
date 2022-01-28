@@ -68,8 +68,16 @@ export default {
   },
 }
 </script>
-<style scoped>
-  div.foo {
-    display:none;
+<style lang="scss" scoped>
+  .settings-section {
+    ::v-deep &__title {
+      padding-left:60px;
+      background-image:url('../img/cafevdbmembers.svg');
+      background-repeat:no-repeat;
+      background-origin:border-box;
+      background-size:45px;
+      background-position:left center;
+      height:30px;
+    }
   }
 </style>
