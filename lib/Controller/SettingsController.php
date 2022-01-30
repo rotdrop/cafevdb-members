@@ -51,7 +51,7 @@ class SettingsController extends Controller
   private $userId;
 
   /** @var GroupFoldersService */
-  private $groupFolderService;
+  private $groupFoldersService;
 
   /** @var string */
   private $appManagementGroup;
@@ -64,7 +64,7 @@ class SettingsController extends Controller
     , LoggerInterface $logger
     , IL10N $l10n
     , IConfig $config
-    , GroupFoldersService $groupFolderService
+    , GroupFoldersService $groupFoldersService
   ) {
     parent::__construct($appName, $request);
     $this->appManagementGroup = $appManagementGroup;
@@ -72,7 +72,7 @@ class SettingsController extends Controller
     $this->l = $l10n;
     $this->config = $config;
     $this->userId = $userId;
-    $this->groupFolderService = $groupFolderService;
+    $this->groupFoldersService = $groupFoldersService;
   }
 
   /**
@@ -92,10 +92,10 @@ class SettingsController extends Controller
       case self::MEMBER_ROOT_FOLDER_KEY:
         $oldRootFolder = empty($oldValue)
           ? null
-          : $this->groupFolderService->getFolder($oldValue);
+          : $this->groupFoldersService->getFolder($oldValue);
         $newRootFolder = empty($newValue)
           ? null
-          : $this->groupFolderService->getFolder($newValue);
+          : $this->groupFoldersService->getFolder($newValue);
 
         if (empty($newValue) && !empty($oldRootFolder)) {
           if (!$force) {
@@ -104,7 +104,7 @@ class SettingsController extends Controller
               'feedback' => $this->l->t('Really delete the old shared root-folder "/%1$s/"?', $oldValue),
             ]);
           }
-          $this->groupFolderService->deleteFolders('|^' . $oldValue . '.*|');
+          $this->groupFoldersService->deleteFolders('|^' . $oldValue . '.*|');
         }
 
         if ($oldValue != $newValue && !empty($newRootFolder)) {
@@ -115,7 +115,7 @@ class SettingsController extends Controller
             ]);
           }
 
-          $this->groupFolderService->deleteFolders('|^' . $newValue . '$|');
+          $this->groupFoldersService->deleteFolders('|^' . $newValue . '$|');
 
           $newRootFolder = null;
         }
@@ -123,9 +123,10 @@ class SettingsController extends Controller
         if (!empty($newValue)) {
           if (empty($oldRootFolder)) {
             // create a new one
-            $this->groupFolderService->createFolder($newValue, [ $this->appManagementGroup => GroupFoldersService::PERMISSION_ALL ], [ $this->appManagementGroup => GroupFoldersService::MANAGER_TYPE_GROUP ]);
-          } else {
+            $this->groupFoldersService->createFolder($newValue, [ $this->appManagementGroup => GroupFoldersService::PERMISSION_ALL ], [ $this->appManagementGroup => GroupFoldersService::MANAGER_TYPE_GROUP ]);
+          } else if ($oldValue != $newValue) {
             // rename and/or check permissions
+            $this->groupFoldersService->changeMountPoint($oldValue, $newValue, moveChildren: true);
           }
         }
         break;

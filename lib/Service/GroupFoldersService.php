@@ -275,4 +275,48 @@ class GroupFoldersService
     ]);
   }
 
+  /**
+   * Change the given group-shared folder -- given by its old mount-point --
+   * to a new mount-point.
+   *
+   * @param string $mountPoint The old mount-point which determines the
+   * group-shared folder to act upon.
+   *
+   * @param string $targetMountPoint The destination mount-point. If the
+   * parent-directories of the destination mount-point do not exist then the
+   * shared folder will be hidden.
+   *
+   * @param bool $moveChildren If true and the old mount-point appears as prefix
+   * in other group-shared folders then change their respective mount-points
+   * as well.
+   */
+  public function changeMountPoint(string $mountPoint, string $targetMountPoint, bool $moveChildren = true)
+  {
+    $folderInfo = $this->getFolder($mountPoint);
+    if (empty($folderInfo)) {
+      throw new \RuntimeException($this->l->t('Shared folder for mount-point "%1$s" does not exist, cannot change its mount-point to "%2$s".', [ $mountPoint,  ]));
+    }
+    // POST BASE_URL/groupfolders/folders/FOLDER_ID/mountpoint
+    // DATA [ mountpoint => NEW_MOUNT_POINT ]
+
+    $route = implode('.', [ self::GROUP_FOLDERS_APP, 'Folder', 'renameFolder']);
+    $this->requestService->postToRoute($route, [
+      'id' => $folderInfo['id'],
+    ], [
+      'mountpoint' => $targetMountPoint,
+    ]);
+
+    if ($moveChildren)  {
+      $children = $this->searchFolders('|^' . $mountPoint . '/.*$|');
+      foreach ($children as $childInfo) {
+        $oldChildMount = $childInfo['mount_point'];
+        $newChildMount = $targetMountPoint . substr($oldChildMount, strlen($mountPoint));
+        try {
+          $this->changeMountPoint($oldChildMount, $newChildMount, moveChildren: false);
+        } catch (\Throwable $t) {
+          $this->logException($t, 'Failed to move child mount from ' . $oldChildMount . ' to ' . $newChildMount);
+        }
+      }
+    }
+  }
 }
