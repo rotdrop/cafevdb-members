@@ -49,6 +49,32 @@ class Application extends App implements IBootstrap
     $context->injectFn(function(IInitialState $initialState) {
       $initialState->provideInitialState('testValue', '*** INITIAL STATE OF TEST VALUE ***');
     });
+
+    // The following would restrict the settings to the sub-admins of the
+    // orechstra group only. Another approach would be to put the sub-admins
+    // into a separate group and use the ordinary admin-delegation to handle
+    // the restriction.
+    //
+    // $context->injectFn(function(
+    //   string $appManagementGroup
+    //   , \OCP\IUserSession $userSession
+    //   , \OCP\IGroupManager $groupManager
+    //   , \OCP\Group\ISubAdmin $groupSubAdmin
+    //   , \OCP\Settings\IManager $settingsManager
+    // ) {
+    //   /** @var \OCP\IUser $user */
+    //   $user = $userSession->getUser();
+
+    //   if (empty($user)
+    //       || empty($appManagementGroup)
+    //       || !$groupManager->isInGroup($user->getUID(), $appManagementGroup)
+    //       || !$groupSubAdmin->isSubAdminOfGroup($user, $groupManager->get($appManagementGroup))
+    //   ) {
+    //     return;
+    //   }
+    //   $settingsManager->registerSection('admin', \OCA\CAFeVDBMembers\Settings\AdminSection::class);
+    //   $settingsManager->registerSetting('admin', \OCA\CAFeVDBMembers\Settings\Admin::class);
+    // });
   }
 
   // Called earlier than boot, so anything initialized in the
