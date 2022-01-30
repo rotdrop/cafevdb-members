@@ -24,9 +24,9 @@
 namespace OCA\CAFeVDBMembers\Settings;
 
 use OCP\AppFramework\Http\TemplateResponse;
-use OCP\Settings\ISettings;
+use OCP\Settings\IDelegatedSettings;
 
-class Admin implements ISettings
+class Admin implements IDelegatedSettings
 {
   const TEMPLATE = "admin-settings";
 
@@ -67,6 +67,14 @@ class Admin implements ISettings
   public function getPriority() {
     // @@todo could be made a configure option.
     return 50;
+  }
+
+  public function getName(): ?string {
+    return null;
+  }
+
+  public function getAuthorizedAppConfig(): array {
+    return [];
   }
 }
 

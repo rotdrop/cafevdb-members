@@ -49,7 +49,16 @@ class SettingsController extends Controller
     $this->userId = $userId;
   }
 
-  public function setAdmin(string $setting, $value)
+  /**
+   * @AuthorizedAdminSetting(settings=OCA\GroupFolders\Settings\Admin)
+   *
+   * @param string $setting
+   *
+   * @param null|string $value
+   *
+   * @return DataResponse
+   */
+  public function setAdmin(string $setting, ?string $value):DataResponse
   {
     $oldValue = $this->config->getAppValue($this->appName, $setting);
     $this->config->setAppValue($this->appName, $setting, $value);
@@ -58,7 +67,14 @@ class SettingsController extends Controller
     ]);
   }
 
-  public function getAdmin(string $setting)
+  /**
+   * @AuthorizedAdminSetting(settings=OCA\GroupFolders\Settings\Admin)
+   *
+   * @param string $setting
+   *
+   * @return DataResponse
+   */
+  public function getAdmin(string $setting):DataResponse
   {
     return new DataResponse([
       'value' => $this->config->getAppValue($this->appName, $setting),
