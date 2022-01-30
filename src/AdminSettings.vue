@@ -24,11 +24,10 @@
 <template>
   <SettingsSection :title="t(appName, 'CAFeVDB Database Connector, Admin Settings')">
     <SettingsInputText
-      :id="'test-input'"
-      v-model="inputTest"
-      :label="t(appName, 'Test Input')"
-      :hint="t(appName, 'Test Hint')"
-      @update="saveInputTest" />
+      v-model="memberRootFolder"
+      :label="t(appName, 'Member-Data Root-Folder')"
+      :hint="t(appName, 'Specify the root folder below which all member-data will be mounted.')"
+      @update="saveTextInput(...arguments, 'memberRootFolder' /* @todo: how to pass v-model? */)" />
   </SettingsSection>
 </template>
 
@@ -37,6 +36,7 @@ import { appName } from './config.js'
 import SettingsSection from '@nextcloud/vue/dist/Components/SettingsSection'
 import SettingsInputText from './components/SettingsInputText'
 import { generateUrl } from '@nextcloud/router'
+import { showError, showSuccess } from '@nextcloud/dialogs'
 import axios from '@nextcloud/axios'
 
 export default {
@@ -47,7 +47,7 @@ export default {
   },
   data() {
     return {
-      inputTest: '',
+      memberRootFolder: '',
     }
   },
   created() {
@@ -55,15 +55,26 @@ export default {
   },
   methods: {
     async getData() {
-      const response = await axios.get(generateUrl('apps/' + appName + '/settings/admin/inputTest'), {})
+      const response = await axios.get(generateUrl('apps/' + appName + '/settings/admin/memberRootFolder'), {})
       console.info('RESPONSE', response)
-      this.inputTest = response.data.value
-      console.info('VALUE', this.inputTest)
+      this.memberRootFolder = response.data.value
+      console.info('VALUE', this.memberRootFolder)
     },
-    async saveInputTest() {
-      console.info('SAVE INPUTTEST', this.inputTest)
-      const response = await axios.post(generateUrl('apps/' + appName + '/settings/admin/inputTest'), { value: this.inputTest })
-      console.info('RESPONSE', response)
+    async saveTextInput(value, settingsKey) {
+      console.info('ARGS', arguments)
+      console.info('SAVE INPUTTEST', this.memberRootFolder)
+      try {
+        const response = await axios.post(generateUrl('apps/' + appName + '/settings/admin/' + settingsKey), { value })
+        showSuccess(t(appName, 'Successfully set value for {settingsKey} to {value}', { settingsKey, value }))
+        console.info('RESPONSE', response)
+      } catch (e) {
+        let message = t(appName, 'reason unknown')
+        if (e.response && e.response.data && e.response.data.message) {
+          message = e.response.data.message
+          console.info('RESPONSE', e.response)
+        }
+        showError(t(appName, 'Could set value for {settingsKey} to {value}', { settingsKey, value }), { timeout: TOAST_PERMANENT_TIMEOUT })
+      }
     },
   },
 }
