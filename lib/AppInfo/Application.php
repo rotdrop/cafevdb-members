@@ -31,6 +31,8 @@ use OCP\AppFramework\Services\IInitialState;
 
 class Application extends App implements IBootstrap
 {
+  const CAFEVDB_APP = 'cafevdb';
+
   /** @var string */
   protected $appName;
 
@@ -56,5 +58,10 @@ class Application extends App implements IBootstrap
     if ((@include_once __DIR__ . '/../../vendor/autoload.php') === false) {
       throw new \Exception('Cannot include autoload. Did you run install dependencies using composer?');
     }
+    $context->registerService('appManagementGroup', function($c) {
+      /** @var \OCP\IConfig $config */
+      $config = $c->get(\OCP\IConfig::class);
+      return $config->getAppValue(self::CAFEVDB_APP, 'usergroup');
+    });
   }
 }
