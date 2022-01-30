@@ -101,7 +101,7 @@ class GroupFoldersService
   public function getFolder(string $mountPoint, bool $reload = false):?array
   {
     $this->ensureFolders($reload);
-    $this->logInfo('SHARED FOLDERS: ' . print_r($this->sharedFolders, true));
+    $this->logDebug('SHARED FOLDERS: ' . print_r($this->sharedFolders, true));
     return $this->sharedFolders[$mountPoint]??null;
   }
 
@@ -118,7 +118,7 @@ class GroupFoldersService
     if ($mountRegexp[0] != $mountRegexp[-1]) {
       $mountRegexp = '|^' . $mountRegexp . '$|';
     }
-    $this->logInfo('MOUNT REGEXP ' . $mountRegexp);
+    $this->logDebug('MOUNT REGEXP ' . $mountRegexp);
     return array_filter($this->sharedFolders, function($folderInfo) use ($mountRegexp) {
       return preg_match($mountRegexp, $folderInfo['mount_point']);
     });
@@ -173,7 +173,6 @@ class GroupFoldersService
     // DATA mountpoint: WHATEVER
     $route = implode('.', [ self::GROUP_FOLDERS_APP, 'Folder', 'addFolder']);
     $result = $this->requestService->postToRoute($route, requestData: [ 'mountpoint' => $mountPoint ]);
-    $this->logInfO('CREATE FOLDER RESULT ' . print_r($result, true));
     $folderInfo = $this->getFolderById($result['id']);
 
     foreach ($groups as $groupId => $permissions) {

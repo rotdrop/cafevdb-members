@@ -141,7 +141,6 @@ class RequestService
     }
 
     $url = $this->urlGenerator->linkToRouteAbsolute($route, array_merge($routeParams, $urlParameters));
-    $this->logInfo('ROUTE URL ' . $url);
 
     $cookies = array();
     foreach($this->request->cookies as $name => $value) {
@@ -175,7 +174,7 @@ class RequestService
     }
     if (!empty($requestData)) {
       curl_setopt($c, CURLOPT_POSTFIELDS, $requestData);
-      $this->logInfo('CURL REQUEST DATA ' . $requestData);
+      $this->logDebug('CURL REQUEST DATA ' . $requestData);
     }
     if (count($cookies) > 0) {
       curl_setopt($c, CURLOPT_COOKIE, join("; ", $cookies));
@@ -194,7 +193,7 @@ class RequestService
         $this->l->t('Invalid response from API call: "%s"', print_r($result, true)));
     }
 
-    $this->logInfo('RESPONSE DATA ' . print_r($responseData, true));
+    $this->logDebug('RESPONSE DATA ' . print_r($responseData, true));
 
     // Some apps still return HTTP_STATUS_OK and code errors and success in
     // the old way instead of using HTTP-error-codes.
