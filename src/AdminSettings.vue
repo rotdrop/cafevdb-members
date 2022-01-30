@@ -36,7 +36,7 @@ import { appName } from './config.js'
 import SettingsSection from '@nextcloud/vue/dist/Components/SettingsSection'
 import SettingsInputText from './components/SettingsInputText'
 import { generateUrl } from '@nextcloud/router'
-import { showError, showSuccess } from '@nextcloud/dialogs'
+import { showError, showSuccess, showInfo, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
 import axios from '@nextcloud/axios'
 
 export default {
@@ -60,12 +60,30 @@ export default {
       this.memberRootFolder = response.data.value
       console.info('VALUE', this.memberRootFolder)
     },
-    async saveTextInput(value, settingsKey) {
+    async saveTextInput(value, settingsKey, force) {
+      const self = this
       console.info('ARGS', arguments)
       console.info('SAVE INPUTTEST', this.memberRootFolder)
+      console.info('THIS', this)
       try {
-        const response = await axios.post(generateUrl('apps/' + appName + '/settings/admin/' + settingsKey), { value })
-        showSuccess(t(appName, 'Successfully set value for {settingsKey} to {value}', { settingsKey, value }))
+        const response = await axios.post(generateUrl('apps/' + appName + '/settings/admin/' + settingsKey), { value, force })
+        const responseData = response.data;
+        if (responseData.status == 'unconfirmed') {
+          OC.dialogs.confirm(
+            responseData.feedback,
+            t(appName, 'Confirmation Required'),
+            function(answer) {
+              if (answer) {
+                self.saveTextInput(value, settingsKey, true);
+              } else {
+                showInfo(t(appName, 'Unconfirmed, reverting to old value.'))
+                self.getData()
+              }
+            },
+            true)
+        } else {
+          showSuccess(t(appName, 'Successfully set value for {settingsKey} to {value}', { settingsKey, value }))
+        }
         console.info('RESPONSE', response)
       } catch (e) {
         let message = t(appName, 'reason unknown')
@@ -73,7 +91,8 @@ export default {
           message = e.response.data.message
           console.info('RESPONSE', e.response)
         }
-        showError(t(appName, 'Could set value for {settingsKey} to {value}', { settingsKey, value }), { timeout: TOAST_PERMANENT_TIMEOUT })
+        showError(t(appName, 'Could not set value for {settingsKey} to {value}', { settingsKey, value }), { timeout: TOAST_PERMANENT_TIMEOUT })
+        self.getData()
       }
     },
   },

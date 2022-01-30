@@ -25,28 +25,54 @@
 
 namespace OCA\CAFeVDBMembers\Controller;
 
+use Psr\Log\LoggerInterface;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\IRequest;
 use OCP\IConfig;
+use OCP\IL10N;
+
+use OCA\CAFeVDBMembers\Service\GroupFoldersService;
 
 class SettingsController extends Controller
 {
+  use \OCA\CAFeVDBMembers\Traits\ResponseTrait;
+  use \OCA\CAFeVDBMembers\Traits\LoggerTrait;
+
+  const MEMBER_ROOT_FOLDER_KEY = 'memberRootFolder';
+
   /** @var IConfig */
   private $config;
+
+  /** @var IL10N */
+  private $l;
 
   /** @var string */
   private $userId;
 
+  /** @var GroupFoldersService */
+  private $groupFolderService;
+
+  /** @var string */
+  private $appManagementGroup;
+
   public function __construct(
     string $appName
+    , string $appManagementGroup
     , IRequest $request
-    , IConfig $config
     , $userId
+    , LoggerInterface $logger
+    , IL10N $l10n
+    , IConfig $config
+    , GroupFoldersService $groupFolderService
   ) {
     parent::__construct($appName, $request);
+    $this->appManagementGroup = $appManagementGroup;
+    $this->logger = $logger;
+    $this->l = $l10n;
     $this->config = $config;
     $this->userId = $userId;
+    $this->groupFolderService = $groupFolderService;
   }
 
   /**
@@ -58,10 +84,55 @@ class SettingsController extends Controller
    *
    * @return DataResponse
    */
-  public function setAdmin(string $setting, ?string $value):DataResponse
+  public function setAdmin(string $setting, ?string $value, bool $force = false):DataResponse
   {
+    $newValue = $value;
     $oldValue = $this->config->getAppValue($this->appName, $setting);
-    $this->config->setAppValue($this->appName, $setting, $value);
+    switch ($setting) {
+      case self::MEMBER_ROOT_FOLDER_KEY:
+        $oldRootFolder = empty($oldValue)
+          ? null
+          : $this->groupFolderService->getFolder($oldValue);
+        $newRootFolder = empty($newValue)
+          ? null
+          : $this->groupFolderService->getFolder($newValue);
+
+        if (empty($newValue) && !empty($oldRootFolder)) {
+          if (!$force) {
+            return new DataResponse([
+              'status' => 'unconfirmed',
+              'feedback' => $this->l->t('Really delete the old shared root-folder "/%1$s/"?', $oldValue),
+            ]);
+          }
+          $this->groupFolderService->deleteFolders('|^' . $oldValue . '.*|');
+        }
+
+        if ($oldValue != $newValue && !empty($newRootFolder)) {
+          if (!$force) {
+            return new DataResponse([
+              'status' => 'unconfirmed',
+              'feedback' => $this->l->t('Destination "%1$s" already exists and is configured as shared folder, delete it?', $newValue),
+            ]);
+          }
+
+          $this->groupFolderService->deleteFolders('|^' . $newValue . '$|');
+
+          $newRootFolder = null;
+        }
+
+        if (!empty($newValue)) {
+          if (empty($oldRootFolder)) {
+            // create a new one
+            $this->groupFolderService->createFolder($newValue, [ $this->appManagementGroup => GroupFoldersService::PERMISSION_ALL ], [ $this->appManagementGroup => GroupFoldersService::MANAGER_TYPE_GROUP ]);
+          } else {
+            // rename and/or check permissions
+          }
+        }
+        break;
+      default:
+        return self::grumble($this->l->t('Unknown admin setting: "%1$s"', $setting));
+    }
+    $this->config->setAppValue($this->appName, $setting, $newValue);
     return new DataResponse([
       'oldValue' => $oldValue,
     ]);
