@@ -2,17 +2,18 @@
   <div id="content" :class="'app-' + appName">
     <AppNavigation>
       <AppNavigationNew v-if="!loading"
-                        :text="t(appName, 'Dummy New Button')"
+                        :text="t(appName, 'Placeholder Button')"
                         :disabled="false"
-                        :button-id="appName + '-new-button'"
+                        :button-id="appName + '-placeholder-button'"
                         button-class="icon-add"
                         @click="dummyClick" />
     </AppNavigation>
     <AppContent>
       <div class="data-display">
         <!-- <div class="icon-file" /> -->
-        <h2>{{ t(appName, 'Dummy Text') }}</h2>
-        <pre>{{ JSON.stringify(memberData, null, 2) }}</pre>
+        <h2>{{ t(appName, 'Placeholder Caption') }}</h2>
+        <div>{{ t(appName, 'This is currently only a placeholder for the future plan to make the personal data of the orchestra members available to just the respective orchestra member.') }}</div>
+        <!-- <pre>{{ JSON.stringify(memberData, null, 2) }}</pre> -->
       </div>
     </AppContent>
   </div>
@@ -58,12 +59,16 @@ export default {
         message = e.response.data.message
         console.info('RESPONSE', e.response)
       }
-      showError(t(appName, 'Could not fetch musician(s): {message}', { message }), { timeout: TOAST_PERMANENT_TIMEOUT })
+      // Ignore for the time being
+      if (this === false) {
+        showError(t(appName, 'Could not fetch musician(s): {message}', { message }), { timeout: TOAST_PERMANENT_TIMEOUT })
+      }
     }
     this.loading = false
   },
   methods: {
     dummyClick() {
+      alert(t(appName, 'You have mouse-clicked the placeholder-button ;)'))
       console.info('DUMMY CLICK')
     },
   },
