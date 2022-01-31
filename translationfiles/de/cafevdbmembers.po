@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2022-01-31 16:37+0100\n"
-"PO-Revision-Date: 2022-01-31 16:44+0100\n"
+"POT-Creation-Date: 2022-01-31 19:33+0100\n"
+"PO-Revision-Date: 2022-01-31 19:35+0100\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -50,7 +50,10 @@ msgstr "Den geteilten Wurzel-Ordner \"/%1$s/\" wirklich löschen?"
 msgid ""
 "Destination \"%1$s\" already exists and is configured as shared folder, "
 "delete it?"
-msgstr "Das Ziel \"%1$s\" existiert bereits und ist als gemeinsamer Ordner eingestellt und steht im Weg. Soll es gelöscht werden?\n\n"
+msgstr ""
+"Das Ziel \"%1$s\" existiert bereits und ist als gemeinsamer Ordner "
+"eingestellt und steht im Weg. Soll es gelöscht werden?\n"
+"\n"
 
 #: lib/Controller/SettingsController.php:144
 msgid "Successfully synchronized the shared-folder structure."
@@ -157,7 +160,8 @@ msgstr "Fehler diagnostiziert für Anfrage an interne Route \"%1$s\": %2$s"
 #: lib/Service/RequestService.php:221
 #, php-format
 msgid "Error response from call to internal route \"%1$s\": %2$s --  %3$s"
-msgstr "Fehler diagnostiziert für Anfrage an interne Route \"%1$s\": %2$s -- %3$s"
+msgstr ""
+"Fehler diagnostiziert für Anfrage an interne Route \"%1$s\": %2$s -- %3$s"
 
 #: lib/Settings/AdminSection.php:69 lib/Settings/PersonalSection.php:69
 msgid "Camerata DB Members"
@@ -193,7 +197,9 @@ msgstr "Mitglieder-Daten Wurzel-Verzeichnis"
 
 #: specialVueFakeDummyForL10nScript.js:3
 msgid "Specify the root folder below which all member-data will be mounted."
-msgstr "Das Wurzel-Verzeichnis, unterhalb dessen alle gemeinsam benutzten Mitglieder-Daten gespeichert werden."
+msgstr ""
+"Das Wurzel-Verzeichnis, unterhalb dessen alle gemeinsam benutzten Mitglieder-"
+"Daten gespeichert werden."
 
 #: specialVueFakeDummyForL10nScript.js:5
 msgid "Synchronize Folder-Structure"
@@ -209,48 +215,64 @@ msgstr "Bestätigung nicht erteilt, setze auf den alten Wert zurück."
 
 #: specialVueFakeDummyForL10nScript.js:8
 msgid "Successfully set value for {settingsKey} to {value}"
-msgstr "Der Wert für die Einstellung {settingKey} erfolgreich auf {value} gesetzt"
+msgstr ""
+"Der Wert für die Einstellung {settingKey} erfolgreich auf {value} gesetzt"
 
 #: specialVueFakeDummyForL10nScript.js:9 specialVueFakeDummyForL10nScript.js:12
-#: specialVueFakeDummyForL10nScript.js:16
+#: specialVueFakeDummyForL10nScript.js:17
 msgid "reason unknown"
 msgstr "Grund unbekannt"
 
 #: specialVueFakeDummyForL10nScript.js:10
 msgid "Could not set value for {settingsKey} to {value}: {message}"
-msgstr "Konnte den Wert für die Einstellung {settingsKey} nicht auf den Wert {value} setzen: {message}"
+msgstr ""
+"Konnte den Wert für die Einstellung {settingsKey} nicht auf den Wert {value} "
+"setzen: {message}"
 
 #: specialVueFakeDummyForL10nScript.js:11
 msgid ""
 "Successfully synchronized the shared-folder structure with the orchestra "
 "projects"
-msgstr "Die Dateiordner-Struktur für die gemeinsamen Daten wurde erfolgreich mit den Orchester-Projekten abgeglichen."
+msgstr ""
+"Die Dateiordner-Struktur für die gemeinsamen Daten wurde erfolgreich mit den "
+"Orchester-Projekten abgeglichen."
 
 #: specialVueFakeDummyForL10nScript.js:13
 msgid "Folder-structure could not be synchronized: {message}"
 msgstr "Die Dateiordner-Struktur konnte nicht abgeglichen werden: {message}"
 
 #: specialVueFakeDummyForL10nScript.js:14
-msgid "Dummy New Button"
-msgstr "Platzhalter \"Neu Knopf\""
+msgid "Placeholder Button"
+msgstr "Platzhalter-Knopf"
 
 #: specialVueFakeDummyForL10nScript.js:15
-msgid "Dummy Text"
-msgstr "Platzhalter Text"
+msgid "Placeholder Caption"
+msgstr "Platzhalter-Überschrift"
 
-#: specialVueFakeDummyForL10nScript.js:17
+#: specialVueFakeDummyForL10nScript.js:16
+msgid ""
+"This is currently only a placeholder for the future plan to make the "
+"personal data of the orchestra members available to just the respective "
+"orchestra member."
+msgstr "Diese Seite ist nur ein Platzhalter für noch zu implementierende Pläne, die persönlichen Daten für die jeweils angemeldete Person genau dieser Peron verfügbar zu machen."
+
+#: specialVueFakeDummyForL10nScript.js:18
 msgid "Could not fetch musician(s): {message}"
 msgstr "Konnte den oder die Musiker nicht abfragen: {message}"
 
-#: specialVueFakeDummyForL10nScript.js:18
-msgid "CAFeVDB Database Connector, Personal Settings"
-msgstr "CAFeVDB Datenbank Integration, perönliche Einstellungen"
-
 #: specialVueFakeDummyForL10nScript.js:19
+msgid "You have mouse-clicked the placeholder-button ;)"
+msgstr "Du hast mit dem Maus-Zeiger auf den Platzhalter-Knopf geklick ;)"
+
+#: specialVueFakeDummyForL10nScript.js:20
+msgid "CAFeVDB Database Connector, Personal Settings"
+msgstr "CAFeVDB Datenbank Integration, persönliche Einstellungen"
+
+#: specialVueFakeDummyForL10nScript.js:21
 msgid "Test Input"
 msgstr "Test-Eingabe"
 
-#: specialVueFakeDummyForL10nScript.js:20
+#: specialVueFakeDummyForL10nScript.js:22
 msgid "Test Hint"
 msgstr "Test-Hinweis"
 
@@ -258,7 +280,15 @@ msgstr "Test-Hinweis"
 msgid ""
 "Synchronize the hierarchy of shared folders below {root} with the projects "
 "of the {managementApp}-orchestra-management app."
-msgstr "Synchronisiere die Dateiordner-Struktur der gemeinsam benutzten Ordner unterhalb von {root} mit den Projekten der {managementApp}-Verwaltungs-App."
+msgstr ""
+"Synchronisiere die Dateiordner-Struktur der gemeinsam benutzten Ordner "
+"unterhalb von {root} mit den Projekten der {managementApp}-Verwaltungs-App."
+
+#~ msgid "Dummy New Button"
+#~ msgstr "Platzhalter \"Neu Knopf\""
+
+#~ msgid "Dummy Text"
+#~ msgstr "Platzhalter Text"
 
 #~ msgid "Sorry, not yet implemented!"
 #~ msgstr "'Tschuldigung, noch nicht implementiert!"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2022-01-31 16:44+0100\n"
+"POT-Creation-Date: 2022-01-31 19:38+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -199,7 +199,7 @@ msgstr ""
 
 #: specialVueFakeDummyForL10nScript.js:9
 #: specialVueFakeDummyForL10nScript.js:12
-#: specialVueFakeDummyForL10nScript.js:16
+#: specialVueFakeDummyForL10nScript.js:17
 msgid "reason unknown"
 msgstr ""
 
@@ -218,26 +218,37 @@ msgid "Folder-structure could not be synchronized: {message}"
 msgstr ""
 
 #: specialVueFakeDummyForL10nScript.js:14
-msgid "Dummy New Button"
+msgid "Placeholder Button"
 msgstr ""
 
 #: specialVueFakeDummyForL10nScript.js:15
-msgid "Dummy Text"
+msgid "Placeholder Caption"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:17
-msgid "Could not fetch musician(s): {message}"
+#: specialVueFakeDummyForL10nScript.js:16
+msgid ""
+"This is currently only a placeholder for the future plan to make the "
+"personal data of the orchestra members available to just the respective "
+"orchestra member."
 msgstr ""
 
 #: specialVueFakeDummyForL10nScript.js:18
-msgid "CAFeVDB Database Connector, Personal Settings"
+msgid "Could not fetch musician(s): {message}"
 msgstr ""
 
 #: specialVueFakeDummyForL10nScript.js:19
-msgid "Test Input"
+msgid "You have mouse-clicked the placeholder-button ;)"
 msgstr ""
 
 #: specialVueFakeDummyForL10nScript.js:20
+msgid "CAFeVDB Database Connector, Personal Settings"
+msgstr ""
+
+#: specialVueFakeDummyForL10nScript.js:21
+msgid "Test Input"
+msgstr ""
+
+#: specialVueFakeDummyForL10nScript.js:22
 msgid "Test Hint"
 msgstr ""
 
