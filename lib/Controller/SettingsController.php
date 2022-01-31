@@ -33,6 +33,7 @@ use OCP\IConfig;
 use OCP\IL10N;
 
 use OCA\CAFeVDBMembers\Service\GroupFoldersService;
+use OCA\CAFeVDBMembers\Service\ProjectGroupService;
 
 class SettingsController extends Controller
 {
@@ -40,6 +41,7 @@ class SettingsController extends Controller
   use \OCA\CAFeVDBMembers\Traits\LoggerTrait;
 
   const MEMBER_ROOT_FOLDER_KEY = 'memberRootFolder';
+  const SYNCHRONIZE_KEY = 'synchronize';
 
   /** @var IConfig */
   private $config;
@@ -53,6 +55,9 @@ class SettingsController extends Controller
   /** @var GroupFoldersService */
   private $groupFoldersService;
 
+  /** @var ProjectGroupService */
+  private $projectGroupService;
+
   /** @var string */
   private $appManagementGroup;
 
@@ -65,6 +70,7 @@ class SettingsController extends Controller
     , IL10N $l10n
     , IConfig $config
     , GroupFoldersService $groupFoldersService
+    , ProjectGroupService $projectGroupService
   ) {
     parent::__construct($appName, $request);
     $this->appManagementGroup = $appManagementGroup;
@@ -73,6 +79,7 @@ class SettingsController extends Controller
     $this->config = $config;
     $this->userId = $userId;
     $this->groupFoldersService = $groupFoldersService;
+    $this->projectGroupService = $projectGroupService;
   }
 
   /**
@@ -130,6 +137,16 @@ class SettingsController extends Controller
           }
         }
         break;
+      case self::SYNCHRONIZE_KEY:
+        try {
+          $this->projectGroupService->synchronizeFolderStructure();
+          return new DataResponse([
+            'message' => $this->l->t('Successfully synchronized the shared-folder structure.'),
+          ]);
+        } catch (\Throwabled $t) {
+          $this->logException($t);
+          return self::grumble($this->l->t('Synchronizing the shared-folder structure failed: %s', $t->getMessage));
+        }
       default:
         return self::grumble($this->l->t('Unknown admin setting: "%1$s"', $setting));
     }

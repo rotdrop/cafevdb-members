@@ -37,6 +37,9 @@ class GroupFoldersService
 
   const GROUP_FOLDERS_APP = 'groupfolders';
 
+  const SEARCH_TOPIC_MOUNT = 'mount';
+  const SEARCH_TOPIC_GROUP = 'group';
+
   const PERMISSION_WRITE = Constants::PERMISSION_READ|Constants::PERMISSION_UPDATE|Constants::PERMISSION_CREATE;
   const PERMISSION_READ = Constants::PERMISSION_READ;
   const PERMISSION_DELETE = Constants::PERMISSION_READ|Constants::PERMISSION_DELETE;
@@ -57,6 +60,21 @@ class GroupFoldersService
    * @var array
    *
    * All shared folders.
+   * ```
+   * [
+   *   'id' => ID,
+   *   'mount_point' => MOUNT_POINT,
+   *   'groups' => [
+   *     GROUP_ID => PERMISSIONS,
+   *   ],
+   *   'quota' => -3,
+   *   'size' => SIZE,
+   *   'acl' => true/false,
+   *   'manage' => [
+   *      [ 'type' => 'group'/'user', 'id' => MANAGER_ID, 'displayname' => DISPLAY_NAME ]
+   *   ]
+   * ]
+   * ```
    */
   private $sharedFolders = null;
 
@@ -81,6 +99,7 @@ class GroupFoldersService
     foreach ($folders as $id => $folderInfo) {
       $this->sharedFolders[$folderInfo['mount_point']] = $folderInfo;
     }
+    $this->logDebug('FOLDERS ' . print_r($this->sharedFolders, true));
   }
 
   private function ensureFolders(bool $reload = false)
@@ -108,20 +127,36 @@ class GroupFoldersService
   /**
    * Return all shared folders matching the given regexp.
    *
-   * @param string $mountRegexp
+   * @param string $regexp
+   *
+   * @param string $topic
    */
-  public function searchFolders(string $mountRegexp)
+  public function searchFolders(string $regexp, string $topic = self::SEARCH_TOPIC_MOUNT)
   {
     if ($this->sharedFolders === null) {
       $this->fetchFolders();
     }
-    if ($mountRegexp[0] != $mountRegexp[-1]) {
-      $mountRegexp = '|^' . $mountRegexp . '$|';
+    if ($regexp[0] != $regexp[-1]) {
+      $regexp = '|^' . $regexp . '$|';
     }
-    $this->logDebug('MOUNT REGEXP ' . $mountRegexp);
-    return array_filter($this->sharedFolders, function($folderInfo) use ($mountRegexp) {
-      return preg_match($mountRegexp, $folderInfo['mount_point']);
-    });
+    $this->logDebug('REGEXP ' . $regexp . ' / ' . $topic);
+    switch ($topic) {
+      case self::SEARCH_TOPIC_MOUNT:
+        return array_filter($this->sharedFolders, function($folderInfo) use ($regexp) {
+          return preg_match($regexp, $folderInfo['mount_point']);
+        });
+      case self::SEARCH_TOPIC_GROUP:
+        return array_filter($this->sharedFolders, function($folderInfo) use ($regexp) {
+          foreach (array_keys($folderInfo['groups']) as $group) {
+            if (preg_match($regexp, $group)) {
+              return true;
+            }
+            return false;
+          }
+        });
+      default:
+        throw new \RuntimeException($this->l->t('Unknown search topic "%1$s"', $topic));
+    }
   }
 
   public function deleteFolders(string $mountRegexp)
@@ -134,16 +169,21 @@ class GroupFoldersService
     }
   }
 
-
   public function getFolderById(int $id)
   {
     $folderInfo = $this->requestService->getFromRoute(
       implode('.', [ self::GROUP_FOLDERS_APP, 'Folder', 'getFolder']),
       routeParams: [ 'id' => $id ]
     );
-    if (isset($folderInfo['mount_point'])) {
+    if (isset($folderInfo['id']) && isset($folderInfo['mount_point'])) {
+      foreach ($this->sharedFolders as $mountPoint => $cachedInfo) {
+        if ($cachedInfo['id'] == $folderInfo['id']) {
+          unset($this->sharedFolders[$mountPoint]);
+        }
+      }
       $this->sharedFolders[$folderInfo['mount_point']] = $folderInfo;
     }
+    $this->logDebug('BY ID INFO ' . print_r($folderInfo, true));
     return $folderInfo;
   }
 
@@ -185,8 +225,8 @@ class GroupFoldersService
   }
 
   /**
-   * Add a single group to the given shared folder.
-   *
+   * Add a single group to the given shared folder. This is a no-op if the
+   * group including matching permissions is already there.
    */
   public function addGroupToFolder(string $mountPoint, string $groupId, int $permissions = self::DEFAULT_PERMISSIONS, bool $canManage = false)
   {
@@ -196,12 +236,15 @@ class GroupFoldersService
     if (empty($folderInfo)) {
       throw new \RuntimeException($this->l->t('Shared folder for mount-point "%1$s" does not exist, cannot add group "%2$s".', [ $mountPoint, $groupId ]));
     }
-    $route = implode('.', [ self::GROUP_FOLDERS_APP, 'Folder', 'addGroup']);
-    $this->requestService->postToRoute($route, [ 'id' => $folderInfo['id'] ], [ 'group' => $groupId ]);
-    $this->setGroupPermissions($mountPoint, $groupId, $permissions);
-    if ($canManage) {
-      $this->addManagerToFolder($mountPoint, $groupId, self::MANAGER_TYPE_GROUP);
+    if (!isset($folderInfo['groups'][$groupId])) {
+      $route = implode('.', [ self::GROUP_FOLDERS_APP, 'Folder', 'addGroup']);
+      $this->requestService->postToRoute($route, [ 'id' => $folderInfo['id'] ], [ 'group' => $groupId ]);
+      $folderInfo['groups'][$groupId] = self::DEFAULT_PERMISSIONS;
     }
+    if ($folderInfo['groups'][$groupid] != $permissions) {
+      $this->setGroupPermissions($mountPoint, $groupId, $permissions);
+    }
+    $this->changeFolderManager($mountPoint, $groupId, self::MANAGER_TYPE_GROUP, $canManage);
   }
 
   /**
@@ -221,6 +264,7 @@ class GroupFoldersService
       'id' => $folderInfo['id'],
       'group' => $groupId,
     ]);
+    unset($folderInfo[$mountPoint]['groups'][$groupId]);
   }
 
   private function changeFolderManager(string $mountPoint, string $managerId, string $type, bool $canManage)
@@ -235,16 +279,36 @@ class GroupFoldersService
     if (empty($folderInfo)) {
       throw new \RuntimeException($this->l->t('Shared folder for mount-point "%1$s" does not exist, cannot modify manager "%2$s".', [ $mountPoint, $managerId ]));
     }
-    $folderId = $folderInfo['id'];
-    $route = implode('.', [ self::GROUP_FOLDERS_APP, 'Folder', 'setACL']);
-    $this->requestService->postToRoute($route, [ 'id' => $folderId ], [ 'acl' => 1 ]);
 
-    $route = implode('.', [ self::GROUP_FOLDERS_APP, 'Folder', 'setManageACL']);
-    $this->requestService->postToRoute($route, [ 'id' => $folderId ], [
-      'mappingType' => $type,
-      'mappingId' => $managerId,
-      'manageAcl' => (int)$canManage,
-    ]);
+    $this->logDebug('FOLDER INFO ' . print_r($folderInfo, true));
+
+    // first check if anything needs to be done
+    $aclEnabled = !!($folderInfo['acl']??false);
+    $isManager = 0 < count(array_filter($folderInfo['manage']??[], function($manager) use ($managerId, $type) {
+      return $manager['type'] == $type && $manager['id'] == $managerId;
+    }));
+
+    if ($isManager == $canManage && ($canManage || $isManager == $canManage)) {
+      return;
+    }
+
+    $folderId = $folderInfo['id'];
+    if (!$aclEnabled) {
+      $route = implode('.', [ self::GROUP_FOLDERS_APP, 'Folder', 'setACL']);
+      $this->requestService->postToRoute($route, [ 'id' => $folderId ], [ 'acl' => 1 ]);
+    }
+
+    if ($isManager != $canManage) {
+      $route = implode('.', [ self::GROUP_FOLDERS_APP, 'Folder', 'setManageACL']);
+      $this->requestService->postToRoute($route, [ 'id' => $folderId ], [
+        'mappingType' => $type,
+        'mappingId' => $managerId,
+        'manageAcl' => (int)$canManage,
+      ]);
+    }
+    if (!$aclEnabled || $isManager != $canManage) {
+      $this->getFolderById($folderId);
+    }
   }
 
   public function addManagerToFolder(string $mountPoint, string $managerId, string $managerType)
@@ -266,13 +330,16 @@ class GroupFoldersService
     if (empty($folderInfo)) {
       throw new \RuntimeException($this->l->t('Shared folder for mount-point "%1$s" does not exist, cannot set permissions for group "%2$s".', [ $mountPoint, $groupId ]));
     }
-    $route = implode('.', [ self::GROUP_FOLDERS_APP, 'Folder', 'setPermissions']);
-    $this->requestService->postToRoute($route, [
-      'id' => $folderInfo['id'],
-      'group' => $groupId,
-    ], [
-      'permissions' => $permissions,
-    ]);
+    if (($folderInfo['groups'][$groupId]??0) != $permissions) {
+      $route = implode('.', [ self::GROUP_FOLDERS_APP, 'Folder', 'setPermissions']);
+      $this->requestService->postToRoute($route, [
+        'id' => $folderInfo['id'],
+        'group' => $groupId,
+      ], [
+        'permissions' => $permissions,
+      ]);
+      $this->sharedFolders[$mountPoint]['groups'][$groupId] = $permissions;
+    }
   }
 
   /**
@@ -292,6 +359,9 @@ class GroupFoldersService
    */
   public function changeMountPoint(string $mountPoint, string $targetMountPoint, bool $moveChildren = true)
   {
+    if ($mountPoint == $targetMountPoint) {
+      return;
+    }
     $folderInfo = $this->getFolder($mountPoint);
     if (empty($folderInfo)) {
       throw new \RuntimeException($this->l->t('Shared folder for mount-point "%1$s" does not exist, cannot change its mount-point to "%2$s".', [ $mountPoint,  ]));
@@ -305,6 +375,9 @@ class GroupFoldersService
     ], [
       'mountpoint' => $targetMountPoint,
     ]);
+    $this->sharedFolders[$targetMountPoint] = $this->sharedFolders[$mountPoint];
+    unset($this->sharedFolders[$mountPoint]);
+    $this->sharedFolders[$targetMountPoint]['mount_point'] = $targetMountPoint;
 
     if ($moveChildren)  {
       $children = $this->searchFolders('|^' . $mountPoint . '/.*$|');

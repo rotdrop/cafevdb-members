@@ -28,6 +28,11 @@
       :label="t(appName, 'Member-Data Root-Folder')"
       :hint="t(appName, 'Specify the root folder below which all member-data will be mounted.')"
       @update="saveTextInput(...arguments, 'memberRootFolder' /* @todo: how to pass v-model? */)" />
+    <button class="button primary"
+            :title="t(appName, 'Synchronize the hierarchy of shared folders below {root} with the projects of the {managementApp}-orchestra-management app.', { root: memberRootFolder + '/', managementApp: 'cafevdb' })"
+            @click="synchronizeFolders()">
+      {{ t(appName, 'Synchronize Folder-Structure') }}
+    </button>
   </SettingsSection>
 </template>
 
@@ -91,8 +96,22 @@ export default {
           message = e.response.data.message
           console.info('RESPONSE', e.response)
         }
-        showError(t(appName, 'Could not set value for {settingsKey} to {value}', { settingsKey, value }), { timeout: TOAST_PERMANENT_TIMEOUT })
+        showError(t(appName, 'Could not set value for {settingsKey} to {value}: {message}', { settingsKey, value, message }), { timeout: TOAST_PERMANENT_TIMEOUT })
         self.getData()
+      }
+    },
+    async synchronizeFolders() {
+      const self = this
+      try {
+        const response = await axios.post(generateUrl('apps/' + appName + '/settings/admin/synchronize'))
+        showSuccess(t(appName, 'Successfully synchronized the shared-folder structure with the orchestra projects'))
+      } catch (e) {
+        let message = t(appName, 'reason unknown')
+        if (e.response && e.response.data && e.response.data.message) {
+          message = e.response.data.message
+          console.info('RESPONSE', e.response)
+        }
+        showError(t(appName, 'Folder-structure could not be synchronized: {message}', { message }), { timeout: TOAST_PERMANENT_TIMEOUT })
       }
     },
   },

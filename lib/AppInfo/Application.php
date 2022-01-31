@@ -1,9 +1,7 @@
 <?php
 /**
  * @copyright Copyright (c) 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
- *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- *
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,7 +16,6 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 namespace OCA\CAFeVDBMembers\AppInfo;
@@ -28,6 +25,8 @@ use OCP\AppFramework\Bootstrap\IBootstrap;
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
 use OCP\AppFramework\Bootstrap\IBootContext;
 use OCP\AppFramework\Services\IInitialState;
+
+use OCA\CAFeVDBMembers\Listener\Registration as ListenerRegistration;
 
 class Application extends App implements IBootstrap
 {
@@ -89,5 +88,13 @@ class Application extends App implements IBootstrap
       $config = $c->get(\OCP\IConfig::class);
       return $config->getAppValue(self::CAFEVDB_APP, 'usergroup');
     });
+    $context->registerService('memberRootFolder', function($c) {
+      /** @var \OCP\IConfig $config */
+      $config = $c->get(\OCP\IConfig::class);
+      return $config->getAppValue($this->appName, 'memberRootFolder');
+    });
+
+    // Register listeners
+    ListenerRegistration::register($context);
   }
 }

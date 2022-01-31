@@ -105,6 +105,8 @@ class RequestService
       throw new \RuntimeException($this->l->t('Cannot call internal route while the session is open.'));
     }
 
+    $this->logDebug('CALL ROUTE ' . $route . ' ' . print_r($routeParams, true) . ' ' . print_r($requestData, true));
+
     $headers = [];
 
     $requestToken = \OCP\Util::callRegister();
