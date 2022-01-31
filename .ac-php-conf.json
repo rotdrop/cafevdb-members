@@ -8,7 +8,9 @@
     "php-path-list": [
       ".",
       "../../3rdparty",
-      "../../lib"
+      "../../lib",
+      "../cafevdb",
+      "../groupfolders"
     ],
     "ignore-ruleset": [
       "# like .gitignore file ",
@@ -18,6 +20,8 @@
       "/vendor/*.php",
       "# not need php_codesniffer",
       "/vendor/squizlabs/php_codesniffer/**/*.php",
+      "/build/**",
+      "/3rdparty/**",
       "#  -- end -- "
     ]
   }
