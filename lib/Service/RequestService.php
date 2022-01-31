@@ -212,13 +212,13 @@ class RequestService
       $data = $responseData['ocs']['data']??null;
       if ($meta === null || $data === null) {
         throw new \RuntimeException(
-          $this->l->t('Invalid OCS response from call to internal route "%1$s": $2%s', [
+          $this->l->t('Invalid OCS response from call to internal route "%1$s": %2$s', [
             $route, $responseData,
           ]));
       }
       if ($meta['statuscode'] !== 100) {
         throw new \RuntimeException(
-          $this->l->t('Error response from call to internal route "%1$s": $2$s --  $3%s', [
+          $this->l->t('Error response from call to internal route "%1$s": %2$s --  %3$s', [
             $route, $meta['status']??'unknwown status', $meta['message']??print_r($meta, true)
           ]));
       }

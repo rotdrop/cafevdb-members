@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2022-01-24 22:11+0100\n"
+"POT-Creation-Date: 2022-01-31 16:44+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,17 +17,17 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: lib/Controller/CatchAllController.php:64
+#: lib/Controller/CatchAllController.php:58
 #, php-format
 msgid "Post to end-point \"%s\" not implemented."
 msgstr ""
 
-#: lib/Controller/CatchAllController.php:67
+#: lib/Controller/CatchAllController.php:61
 #, php-format
 msgid "Post to base-url of app \"%s\" not allowed."
 msgstr ""
 
-#: lib/Controller/CatchAllController.php:80
+#: lib/Controller/CatchAllController.php:74
 #, php-format
 msgid "Get from end-point \"%s\" not implemented."
 msgstr ""
@@ -40,6 +40,108 @@ msgstr ""
 #: lib/Controller/MemberDataController.php:79
 #, php-format
 msgid "More than one musiciand found for user-id \"%s\"."
+msgstr ""
+
+#: lib/Controller/SettingsController.php:111
+#, php-format
+msgid "Really delete the old shared root-folder \"/%1$s/\"?"
+msgstr ""
+
+#: lib/Controller/SettingsController.php:121
+#, php-format
+msgid ""
+"Destination \"%1$s\" already exists and is configured as shared folder, "
+"delete it?"
+msgstr ""
+
+#: lib/Controller/SettingsController.php:144
+msgid "Successfully synchronized the shared-folder structure."
+msgstr ""
+
+#: lib/Controller/SettingsController.php:148
+#, php-format
+msgid "Synchronizing the shared-folder structure failed: %s"
+msgstr ""
+
+#: lib/Controller/SettingsController.php:151
+#, php-format
+msgid "Unknown admin setting: \"%1$s\""
+msgstr ""
+
+#: lib/Service/GroupFoldersService.php:158
+#, php-format
+msgid "Unknown search topic \"%1$s\""
+msgstr ""
+
+#: lib/Service/GroupFoldersService.php:209
+#, php-format
+msgid ""
+"Shared folder for mount-point \"%1$s\" already exists, cannot create it."
+msgstr ""
+
+#: lib/Service/GroupFoldersService.php:237
+#, php-format
+msgid ""
+"Shared folder for mount-point \"%1$s\" does not exist, cannot add group "
+"\"%2$s\"."
+msgstr ""
+
+#: lib/Service/GroupFoldersService.php:259
+#, php-format
+msgid ""
+"Shared folder for mount-point \"%1$s\" does not exist, cannot remove group "
+"\"%2$s\"."
+msgstr ""
+
+#: lib/Service/GroupFoldersService.php:280
+#, php-format
+msgid ""
+"Shared folder for mount-point \"%1$s\" does not exist, cannot modify manager "
+"\"%2$s\"."
+msgstr ""
+
+#: lib/Service/GroupFoldersService.php:331
+#, php-format
+msgid ""
+"Shared folder for mount-point \"%1$s\" does not exist, cannot set "
+"permissions for group \"%2$s\"."
+msgstr ""
+
+#: lib/Service/GroupFoldersService.php:367
+#, php-format
+msgid ""
+"Shared folder for mount-point \"%1$s\" does not exist, cannot change its "
+"mount-point to \"%2$s\"."
+msgstr ""
+
+#: lib/Service/RequestService.php:105
+msgid "Cannot call internal route while the session is open."
+msgstr ""
+
+#: lib/Service/RequestService.php:138
+#, php-format
+msgid ""
+"Supported data formats are \"%1$s\" and \"%2$s\", specified was \"%3$s\"."
+msgstr ""
+
+#: lib/Service/RequestService.php:195
+#, php-format
+msgid "Invalid response from API call: \"%s\""
+msgstr ""
+
+#: lib/Service/RequestService.php:204
+#, php-format
+msgid "Error response from call to internal route \"%1$s\": %2$s"
+msgstr ""
+
+#: lib/Service/RequestService.php:215
+#, php-format
+msgid "Invalid OCS response from call to internal route \"%1$s\": %2$s"
+msgstr ""
+
+#: lib/Service/RequestService.php:221
+#, php-format
+msgid "Error response from call to internal route \"%1$s\": %2$s --  %3$s"
 msgstr ""
 
 #: lib/Settings/AdminSection.php:69
@@ -72,31 +174,75 @@ msgid "CAFeVDB Database Connector, Admin Settings"
 msgstr ""
 
 #: specialVueFakeDummyForL10nScript.js:2
-#: specialVueFakeDummyForL10nScript.js:9
-msgid "Test Input"
+msgid "Member-Data Root-Folder"
 msgstr ""
 
 #: specialVueFakeDummyForL10nScript.js:3
+msgid "Specify the root folder below which all member-data will be mounted."
+msgstr ""
+
+#: specialVueFakeDummyForL10nScript.js:5
+msgid "Synchronize Folder-Structure"
+msgstr ""
+
+#: specialVueFakeDummyForL10nScript.js:6
+msgid "Confirmation Required"
+msgstr ""
+
+#: specialVueFakeDummyForL10nScript.js:7
+msgid "Unconfirmed, reverting to old value."
+msgstr ""
+
+#: specialVueFakeDummyForL10nScript.js:8
+msgid "Successfully set value for {settingsKey} to {value}"
+msgstr ""
+
+#: specialVueFakeDummyForL10nScript.js:9
+#: specialVueFakeDummyForL10nScript.js:12
+#: specialVueFakeDummyForL10nScript.js:16
+msgid "reason unknown"
+msgstr ""
+
 #: specialVueFakeDummyForL10nScript.js:10
+msgid "Could not set value for {settingsKey} to {value}: {message}"
+msgstr ""
+
+#: specialVueFakeDummyForL10nScript.js:11
+msgid ""
+"Successfully synchronized the shared-folder structure with the orchestra "
+"projects"
+msgstr ""
+
+#: specialVueFakeDummyForL10nScript.js:13
+msgid "Folder-structure could not be synchronized: {message}"
+msgstr ""
+
+#: specialVueFakeDummyForL10nScript.js:14
+msgid "Dummy New Button"
+msgstr ""
+
+#: specialVueFakeDummyForL10nScript.js:15
+msgid "Dummy Text"
+msgstr ""
+
+#: specialVueFakeDummyForL10nScript.js:17
+msgid "Could not fetch musician(s): {message}"
+msgstr ""
+
+#: specialVueFakeDummyForL10nScript.js:18
+msgid "CAFeVDB Database Connector, Personal Settings"
+msgstr ""
+
+#: specialVueFakeDummyForL10nScript.js:19
+msgid "Test Input"
+msgstr ""
+
+#: specialVueFakeDummyForL10nScript.js:20
 msgid "Test Hint"
 msgstr ""
 
 #: specialVueFakeDummyForL10nScript.js:4
-msgid "Dummy New Button"
-msgstr ""
-
-#: specialVueFakeDummyForL10nScript.js:5
-msgid "Dummy Text"
-msgstr ""
-
-#: specialVueFakeDummyForL10nScript.js:6
-msgid "reason unknown"
-msgstr ""
-
-#: specialVueFakeDummyForL10nScript.js:7
-msgid "Could not fetch musician(s): {message}"
-msgstr ""
-
-#: specialVueFakeDummyForL10nScript.js:8
-msgid "CAFeVDB Database Connector, Personal Settings"
+msgid ""
+"Synchronize the hierarchy of shared folders below {root} with the projects "
+"of the {managementApp}-orchestra-management app."
 msgstr ""
