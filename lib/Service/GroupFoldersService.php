@@ -241,7 +241,7 @@ class GroupFoldersService
       $this->requestService->postToRoute($route, [ 'id' => $folderInfo['id'] ], [ 'group' => $groupId ]);
       $folderInfo['groups'][$groupId] = self::DEFAULT_PERMISSIONS;
     }
-    if ($folderInfo['groups'][$groupid] != $permissions) {
+    if ($folderInfo['groups'][$groupId]??0 != $permissions) {
       $this->setGroupPermissions($mountPoint, $groupId, $permissions);
     }
     $this->changeFolderManager($mountPoint, $groupId, self::MANAGER_TYPE_GROUP, $canManage);
