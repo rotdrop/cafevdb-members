@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2022-01-31 19:38+0100\n"
+"POT-Creation-Date: 2022-02-07 22:40+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -42,28 +42,29 @@ msgstr ""
 msgid "More than one musiciand found for user-id \"%s\"."
 msgstr ""
 
-#: lib/Controller/SettingsController.php:111
+#: lib/Controller/SettingsController.php:112
 #, php-format
 msgid "Really delete the old shared root-folder \"/%1$s/\"?"
 msgstr ""
 
-#: lib/Controller/SettingsController.php:121
+#: lib/Controller/SettingsController.php:122
 #, php-format
 msgid ""
 "Destination \"%1$s\" already exists and is configured as shared folder, "
 "delete it?"
 msgstr ""
 
-#: lib/Controller/SettingsController.php:144
+#: lib/Controller/SettingsController.php:145
 msgid "Successfully synchronized the shared-folder structure."
 msgstr ""
 
-#: lib/Controller/SettingsController.php:148
+#: lib/Controller/SettingsController.php:149
 #, php-format
 msgid "Synchronizing the shared-folder structure failed: %s"
 msgstr ""
 
-#: lib/Controller/SettingsController.php:151
+#: lib/Controller/SettingsController.php:152
+#: lib/Controller/SettingsController.php:188
 #, php-format
 msgid "Unknown admin setting: \"%1$s\""
 msgstr ""
@@ -73,45 +74,61 @@ msgstr ""
 msgid "Unknown search topic \"%1$s\""
 msgstr ""
 
-#: lib/Service/GroupFoldersService.php:209
+#: lib/Service/GroupFoldersService.php:210
 #, php-format
 msgid ""
 "Shared folder for mount-point \"%1$s\" already exists, cannot create it."
 msgstr ""
 
-#: lib/Service/GroupFoldersService.php:237
+#: lib/Service/GroupFoldersService.php:238
 #, php-format
 msgid ""
 "Shared folder for mount-point \"%1$s\" does not exist, cannot add group "
 "\"%2$s\"."
 msgstr ""
 
-#: lib/Service/GroupFoldersService.php:259
+#: lib/Service/GroupFoldersService.php:260
 #, php-format
 msgid ""
 "Shared folder for mount-point \"%1$s\" does not exist, cannot remove group "
 "\"%2$s\"."
 msgstr ""
 
-#: lib/Service/GroupFoldersService.php:280
+#: lib/Service/GroupFoldersService.php:281
 #, php-format
 msgid ""
 "Shared folder for mount-point \"%1$s\" does not exist, cannot modify manager "
 "\"%2$s\"."
 msgstr ""
 
-#: lib/Service/GroupFoldersService.php:331
+#: lib/Service/GroupFoldersService.php:332
 #, php-format
 msgid ""
 "Shared folder for mount-point \"%1$s\" does not exist, cannot set "
 "permissions for group \"%2$s\"."
 msgstr ""
 
-#: lib/Service/GroupFoldersService.php:367
+#: lib/Service/GroupFoldersService.php:368
 #, php-format
 msgid ""
 "Shared folder for mount-point \"%1$s\" does not exist, cannot change its "
 "mount-point to \"%2$s\"."
+msgstr ""
+
+#: lib/Service/ProjectGroupService.php:83
+#, php-format
+msgid "Group %1$s does not start with the correct prefix \"%2$s\"."
+msgstr ""
+
+#: lib/Service/ProjectGroupService.php:124
+msgid "projects"
+msgstr ""
+
+#: lib/Service/ProjectGroupService.php:197
+#, php-format
+msgid ""
+"Unable to make sure the the group-shared folder \"%1$s\" for group \"%2$s\" "
+"exists."
 msgstr ""
 
 #: lib/Service/RequestService.php:105
@@ -169,90 +186,136 @@ msgstr ""
 msgid "Expose a member's data record for the respective member"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:1
+#. TRANSLATORS src/AdminSettings.vue:25
+#: specialVueFakeDummyForL10nScript.js:2
 msgid "CAFeVDB Database Connector, Admin Settings"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:2
+#. TRANSLATORS src/AdminSettings.vue:28
+#: specialVueFakeDummyForL10nScript.js:4
 msgid "Member-Data Root-Folder"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:3
+#. TRANSLATORS src/AdminSettings.vue:29
+#: specialVueFakeDummyForL10nScript.js:6
 msgid "Specify the root folder below which all member-data will be mounted."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:5
+#. TRANSLATORS src/AdminSettings.vue:36
+#: specialVueFakeDummyForL10nScript.js:8
+msgid "Remove the status feedback from the last sync."
+msgstr ""
+
+#. TRANSLATORS src/AdminSettings.vue:38
+#: specialVueFakeDummyForL10nScript.js:10
+msgid "Ok"
+msgstr ""
+
+#. TRANSLATORS src/AdminSettings.vue:51
+#: specialVueFakeDummyForL10nScript.js:14
 msgid "Synchronize Folder-Structure"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:6
+#. TRANSLATORS src/AdminSettings.vue:123
+#: specialVueFakeDummyForL10nScript.js:16
 msgid "Confirmation Required"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:7
+#. TRANSLATORS src/AdminSettings.vue:128
+#: specialVueFakeDummyForL10nScript.js:18
 msgid "Unconfirmed, reverting to old value."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:8
+#. TRANSLATORS src/AdminSettings.vue:134
+#: specialVueFakeDummyForL10nScript.js:20
 msgid "Successfully set value for {settingsKey} to {value}"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:9
-#: specialVueFakeDummyForL10nScript.js:12
-#: specialVueFakeDummyForL10nScript.js:17
+#. TRANSLATORS src/AdminSettings.vue:138
+#. TRANSLATORS src/App.vue:57
+#: specialVueFakeDummyForL10nScript.js:22
+#: specialVueFakeDummyForL10nScript.js:30
+#: specialVueFakeDummyForL10nScript.js:44
 msgid "reason unknown"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:10
+#. TRANSLATORS src/AdminSettings.vue:143
+#: specialVueFakeDummyForL10nScript.js:24
 msgid "Could not set value for {settingsKey} to {value}: {message}"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:11
+#. TRANSLATORS src/AdminSettings.vue:156
+#: specialVueFakeDummyForL10nScript.js:26
+msgid "Synchronizing for group {group}"
+msgstr ""
+
+#. TRANSLATORS src/AdminSettings.vue:157
+#: specialVueFakeDummyForL10nScript.js:28
+msgid "{current} of {totals}"
+msgstr ""
+
+#. TRANSLATORS src/AdminSettings.vue:166
+#: specialVueFakeDummyForL10nScript.js:32
+msgid "Folder for {group} could not be created: {message}"
+msgstr ""
+
+#. TRANSLATORS src/AdminSettings.vue:173
+#: specialVueFakeDummyForL10nScript.js:34
 msgid ""
-"Successfully synchronized the shared-folder structure with the orchestra "
-"projects"
+"Failed at group {group} after {numFolders} have been processed successfully, "
+"{remainingFolders} are remaining."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:13
-msgid "Folder-structure could not be synchronized: {message}"
+#. TRANSLATORS src/AdminSettings.vue:175
+#: specialVueFakeDummyForL10nScript.js:36
+msgid "All done, folder structure for all {numFolders} folders is up to date."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:14
+#. TRANSLATORS src/App.vue:5
+#: specialVueFakeDummyForL10nScript.js:38
 msgid "Placeholder Button"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:15
+#. TRANSLATORS src/App.vue:14
+#: specialVueFakeDummyForL10nScript.js:40
 msgid "Placeholder Caption"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:16
+#. TRANSLATORS src/App.vue:15
+#: specialVueFakeDummyForL10nScript.js:42
 msgid ""
 "This is currently only a placeholder for the future plan to make the "
 "personal data of the orchestra members available to just the respective "
 "orchestra member."
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:18
+#. TRANSLATORS src/App.vue:64
+#: specialVueFakeDummyForL10nScript.js:46
 msgid "Could not fetch musician(s): {message}"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:19
+#. TRANSLATORS src/App.vue:71
+#: specialVueFakeDummyForL10nScript.js:48
 msgid "You have mouse-clicked the placeholder-button ;)"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:20
+#. TRANSLATORS src/PersonalSettings.vue:25
+#: specialVueFakeDummyForL10nScript.js:50
 msgid "CAFeVDB Database Connector, Personal Settings"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:21
+#. TRANSLATORS src/PersonalSettings.vue:29
+#: specialVueFakeDummyForL10nScript.js:52
 msgid "Test Input"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:22
+#. TRANSLATORS src/PersonalSettings.vue:30
+#: specialVueFakeDummyForL10nScript.js:54
 msgid "Test Hint"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:4
+#. TRANSLATORS src/AdminSettings.vue:49
+#: specialVueFakeDummyForL10nScript.js:12
 msgid ""
 "Synchronize the hierarchy of shared folders below {root} with the projects "
 "of the {managementApp}-orchestra-management app."
