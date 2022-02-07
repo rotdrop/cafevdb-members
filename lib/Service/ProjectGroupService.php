@@ -37,6 +37,10 @@ class ProjectGroupService
 
   const GROUP_ID_PREFIX = 'cafevdb:';
 
+  const MANAGEMENT_PERMISSIONS = GroupFoldersService::PERMISSION_ALL;
+  const GROUP_LEAF_PERMISSIONS = GroupFoldersService::PERMISSION_DELETE|GroupFoldersService::PERMISSION_WRITE;
+  const GROUP_PARENT_PERMISSIONS = GroupFoldersService::PERMISSION_READ;
+
   /** @var IL10N */
   private $l;
 
@@ -80,17 +84,25 @@ class ProjectGroupService
       // $mountPoint = $this->getProjectFolderMountPoint($group->getDisplayName(), $yearMount);
       $this->ensureProjectFolder($group);
     }
+
+    // remove empty "year" folders
+    $this->removeOrphanFolders();
   }
 
-  public function getProjectFolderMountPoint(string $projectName, ?string &$yearMount = null):string
+  public function getProjectFolderMountPoint(string $projectName, array &$parentMounts = null):string
   {
     $projectYear = substr($projectName, -4);
     if (preg_match('/^\d{4}$/', $projectYear) !== 1) {
-      $yearMount = $this->memberRootFolder;
+      $parentMounts = [ $this->memberRootFolder ];
     } else {
-      $yearMount = $this->memberRootFolder . '/' . $projectYear;
+      $parentMounts = [ $this->memberRootFolder, $this->l->t('projects'), $projectYear ];
     }
-    $leafMountPoint = $yearMount . '/' . $projectName;
+    $leafMountPoint = implode('/', $parentMounts) . '/' . $projectName;
+    $previousMounts = [];
+    foreach ($parentMounts as &$parentMount) {
+      $previousMounts[] = $parentMount;
+      $parentMount = implode('/', $previousMounts);
+    }
     return $leafMountPoint;
   }
 
@@ -106,66 +118,72 @@ class ProjectGroupService
   {
     $groupId = $group->getGID();
     $groupName = $group->getDisplayName();
-    $leafMountPoint = $this->getProjectFolderMountPoint($groupName, $yearMount);
+    $leafMountPoint = $this->getProjectFolderMountPoint($groupName, $parentMounts);
 
-    // add read-access to the root-folder
-    $this->groupFoldersService->addGroupToFolder(
-      $this->memberRootFolder,
-      $groupId,
-      GroupFoldersService::PERMISSION_READ,
-      canManage: false);
-
-    if ($yearMount != $this->memberRootFolder) {
-      // add read-access to the year-folder
-      $yearFolder = $this->groupFoldersService->getFolder($yearMount);
-      $yearPermissions = GroupFoldersService::PERMISSION_READ;
-      if (empty($yearFolder)) {
+    // ensure all parent mounts exist and are readable by the respective project-group
+    foreach ($parentMounts as $parentMount) {
+      $parentFolder = $this->groupFoldersService->getFolder($parentMount);
+      if (empty($parentFolder)) {
         $this->groupFoldersService->createFolder(
-          $yearMount, [
-            $groupId => $yearPermissions,
-            $this->appManagementGroup => GroupFoldersService::DEFAULT_PERMISSIONS,
+          $parentMount, [
+            $groupId => self::GROUP_PARENT_PERMISSIONS,
+            $this->appManagementGroup => self::MANAGEMENT_PERMISSIONS,
           ], [
             $this->appManagementGroup => GroupFoldersService::MANAGER_TYPE_GROUP
           ]);
       } else {
-        // add read-access to the year-folder if not already
+        // add read-access to the parent-folder if not already
         $this->logDebug('ADD ' . $groupId);
         $this->groupFoldersService->addGroupToFolder(
-          $yearMount,
+          $parentMount,
           $groupId,
-          GroupFoldersService::PERMISSION_READ,
+          self::GROUP_PARENT_PERMISSIONS,
           canManage: false);
         $this->logDebug('ADD ' . $this->appManagementGroup);
         $this->groupFoldersService->addGroupToFolder(
-          $yearMount,
+          $parentMount,
           $this->appManagementGroup,
-          GroupFoldersService::DEFAULT_PERMISSIONS,
+          self::MANAGEMENT_PERMISSIONS,
           canManage: true);
       }
     }
 
-    $leafPermissions = GroupFoldersService::PERMISSION_DELETE|GroupFoldersService::PERMISSION_WRITE;
+    // finally ensure the leaf-folder is there and is writable by the project group
     $leafFolder = $this->groupFoldersService->getFolder($leafMountPoint);
     if (empty($leafFolder)) {
-      $this->groupFoldersService->createFolder(
-        $leafMountPoint, [
-          $groupId => $leafPermissions,
-          $this->appManagementGroup => GroupFoldersService::DEFAULT_PERMISSIONS,
-        ], [
-          $this->appManagementGroup => GroupFoldersService::MANAGER_TYPE_GROUP
-        ]);
-    } else {
+      $groupFolders = $this->searchWritableGroupFolders($group);
+      if (count($groupFolders) == 1) {
+        // just rename it
+        $groupFolder = array_shift($groupFolders);
+        $this->groupFoldersService->changeMountPoint($groupFolder['mount_point'], $leafMountPoint, moveChildren: true);
+      } else {
+        $this->groupFoldersService->createFolder(
+          $leafMountPoint, [
+            $groupId => self::GROUP_LEAF_PERMISSIONS,
+            $this->appManagementGroup => self::MANAGEMENT_PERMISSIONS,
+          ], [
+            $this->appManagementGroup => GroupFoldersService::MANAGER_TYPE_GROUP
+          ]);
+      }
+    }
+    $leafFolder = $this->groupFoldersService->getFolder($leafMountPoint);
+    if (empty($leafFolder)) {
+      throw new \RuntimeException($this->l->t('Unable to make sure the the group-shared folder "%1$s" for group "%2$s" exists.', [ $leafMountPoint, $group->getDisplayName() ]));
+    }
+    if ($leafFolder['groups'][$groupId] != self::GROUP_LEAF_PERMISSIONS) {
       // add write-access to the leaf-folder, this lazily just performs the necessary steps.
       $this->groupFoldersService->addGroupToFolder(
         $leafMountPoint,
         $groupId,
-        GroupFoldersService::PERMISSION_DELETE|GroupFoldersService::PERMISSION_WRITE,
+        self::GROUP_LEAF_PERMISSIONS,
         canManage: false);
+    }
+    if ($leafFolder['groups'][$this->appManagementGroup] != self::MANAGEMENT_PERMISSIONS) {
       // add write-access to the leaf-folder, this lazily just performs the necessary steps.
       $this->groupFoldersService->addGroupToFolder(
         $leafMountPoint,
         $this->appManagementGroup,
-        GroupFoldersService::DEFAULT_PERMISSIONS,
+        self::MANAGEMENT_PERMISSIONS,
         canManage: true);
     }
 
@@ -179,10 +197,29 @@ class ProjectGroupService
       if (!str_starts_with($mountPoint, $this->memberRootFolder)) {
         continue;
       }
-      if ($mountPoint != $leafMountPoint && $mountPoint != $yearMount) {
+      if ($mountPoint !== $leafMountPoint && array_search($mountPoint, $parentMounts) === false) {
         $this->groupFoldersService->removeGroupFromFolder($mountPoint, $groupId);
+        // maybe the contents should be moved to the current mount
       }
     }
+  }
+
+  /**
+   * Search all folders for which the given group has write-access. Ideally,
+   * this is just one. If so, this folder can simply be renamed when changing
+   * the internal folder structure.
+   */
+  private function searchWritableGroupFolders(IGroup $group)
+  {
+    $groupId = $group->getGID();
+    $groupFolders = [];
+    foreach ($this->groupFoldersService->searchFolders($groupId, GroupFoldersService::SEARCH_TOPIC_GROUP) as $folderInfo) {
+      if (($folderInfo['groups'][$groupId] & self::GROUP_LEAF_PERMISSIONS) != GroupFoldersService::PERMISSION_READ) {
+        $groupFolders[] = $folderInfo;
+
+      }
+    }
+    return $groupFolders;
   }
 
   /**
@@ -212,7 +249,7 @@ class ProjectGroupService
       }
     }
     foreach ($cleanList as $folderInfo) {
-      this->groupFoldersService->deleteFolders($folderInfo['mount_point']);
+      $this->groupFoldersService->deleteFolders($folderInfo['mount_point']);
     }
   }
 
