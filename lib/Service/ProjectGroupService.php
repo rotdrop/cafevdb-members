@@ -73,20 +73,47 @@ class ProjectGroupService
   }
 
   /** Make sure all folders for all projects exist */
-  public function synchronizeFolderStructure()
+  public function synchronizeFolderStructure(string $gid = null)
   {
-    /** @var IGroup $group */
-    foreach ($this->groupManager->search('') as $group) {
-      if (!str_starts_with($group->getGID(), self::GROUP_ID_PREFIX)) {
-        continue;
+    if (empty($gid)) {
+      throw new \InvalidArgumentException($this->l->t('Syncing all groups in one run is no longer supported.'));
+      $groups = $this->getProjectGroups();
+    } else{
+      if (!$this->isProjectGroup($gid)) {
+        throw new \InvalidArgumentException(
+          $this->l->t('Group %1$s does not start with the correct prefix "%2$s".', [
+            $gid, self::GROUP_ID_PREFIX,
+          ]));
       }
+      $groups = [ $this->groupManager->get($gid) ];
+    }
+
+    /** @var IGroup $group */
+    foreach ($groups as $group) {
       $this->logDebug('Should handle ' . $group->getGID() . ' / ' . $group->getDisplayName());
-      // $mountPoint = $this->getProjectFolderMountPoint($group->getDisplayName(), $yearMount);
       $this->ensureProjectFolder($group);
     }
 
     // remove empty "year" folders
     $this->removeOrphanFolders();
+  }
+
+  private function isProjectGroup(string $gid)
+  {
+    return str_starts_with($gid, self::GROUP_ID_PREFIX);
+  }
+
+  /** Returns the list of the cafevdb created user groups */
+  public function getProjectGroups()
+  {
+    $groups = [];
+    /** @var IGroup $group */
+    foreach ($this->groupManager->search('') as $group) {
+      if ($this->isProjectGroup($group->getGID())) {
+        $groups[] = $group;
+      }
+    }
+    return $groups;
   }
 
   public function getProjectFolderMountPoint(string $projectName, array &$parentMounts = null):string
@@ -240,8 +267,8 @@ class ProjectGroupService
     }
     foreach ($allFolders as $index => $folderInfo) {
       $mountPoint = $folderInfo['mount_point'];
-      $groupYear = substr($mountPoint, -4);
-      if (preg_match('/^\d{4}$/', $groupYear) !== 1) {
+      $groupYear = substr($mountPoint, -5);
+      if (preg_match('|^/\d{4}$|', $groupYear) !== 1) {
         continue;
       }
       if (!isset($parents[$mountPoint])) {

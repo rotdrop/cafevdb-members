@@ -41,6 +41,7 @@ class SettingsController extends Controller
   use \OCA\CAFeVDBMembers\Traits\LoggerTrait;
 
   const MEMBER_ROOT_FOLDER_KEY = 'memberRootFolder';
+  const FOLDER_GROUPS_KEY = 'memberFolderGroups';
   const SYNCHRONIZE_KEY = 'synchronize';
 
   /** @var IConfig */
@@ -139,7 +140,7 @@ class SettingsController extends Controller
         break;
       case self::SYNCHRONIZE_KEY:
         try {
-          $this->projectGroupService->synchronizeFolderStructure();
+          $this->projectGroupService->synchronizeFolderStructure($value);
           return new DataResponse([
             'message' => $this->l->t('Successfully synchronized the shared-folder structure.'),
           ]);
@@ -165,9 +166,26 @@ class SettingsController extends Controller
    */
   public function getAdmin(string $setting):DataResponse
   {
-    return new DataResponse([
-      'value' => $this->config->getAppValue($this->appName, $setting),
-    ]);
+    $result = null;
+    switch ($setting) {
+      case self::MEMBER_ROOT_FOLDER_KEY:
+        return new DataResponse([
+          'value' => $this->config->getAppValue($this->appName, $setting),
+        ]);
+      case self::FOLDER_GROUPS_KEY:
+        $groups = [];
+        /** @var \OCP\IGroup $group */
+        foreach ($this->projectGroupService->getProjectGroups() as $group) {
+          $groups[] = [
+            'gid' => $group->getGID(),
+            'displayName' => $group->getDisplayName(),
+          ];
+        }
+        return new DataResponse([
+          'value' => $groups,
+        ]);
+    }
+    return self::grumble($this->l->t('Unknown admin setting: "%1$s"', $setting));
   }
 
   /**
