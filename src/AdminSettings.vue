@@ -34,7 +34,7 @@
         <button v-if="syncFinished"
                 class="button primary sync-clear"
                 :title="t(appName, 'Remove the status feedback from the last sync.')"
-                @click="hideProgressIfReady()">
+                @click="hideProgressFeedback()">
           {{ t(appName, 'Ok') }}
         </button>
         <span class="flex-spacer" />
@@ -156,7 +156,7 @@ export default {
         this.syncLabel = t(appName, 'Synchronizing for group {group}', { group: group.displayName })
         this.syncCounter = t(appName, '{current} of {totals}', { current: this.syncDone + 1, totals: this.syncTotals })
         try {
-          const response = await axios.post(generateUrl('apps/' + appName + '/settings/admin/synchronize', { value: group.gid }))
+          const response = await axios.post(generateUrl('apps/' + appName + '/settings/admin/synchronize'), { value: group.gid })
         } catch (e) {
           let message = t(appName, 'reason unknown')
           if (e.response && e.response.data && e.response.data.message) {
@@ -174,11 +174,9 @@ export default {
             { group: group.displayName, numFolders: this.syncDone, remainingFolders: this.syncTotals - this.syncDone } )
         : t(appName, 'All done, folder structure for all {numFolders} folders is up to date.', { numFolders: this.syncTotals })
     },
-    hideProgressIfReady() {
-      if (this.syncDone >= this.syncTotals) {
-        this.synchronizing = false
-        this.syncFailure = false
-      }
+    hideProgressFeedback() {
+      this.synchronizing = false
+      this.syncFailure = false
     },
   },
 }
