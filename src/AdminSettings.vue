@@ -45,6 +45,7 @@
                    size="medium" />
     </div>
     <button v-else
+            type="button"
             class="button primary"
             :title="t(appName, 'Synchronize the hierarchy of shared folders below {root} with the projects of the {managementApp}-orchestra-management app.', { root: memberRootFolder + '/', managementApp: 'cafevdb' })"
             @click="synchronizeFolders()">
