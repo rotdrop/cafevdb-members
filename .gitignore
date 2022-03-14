@@ -12,3 +12,4 @@ composer.json
 composer.lock
 package-lock.json
 js/**
+lib/Database/ORM/Proxies/**
