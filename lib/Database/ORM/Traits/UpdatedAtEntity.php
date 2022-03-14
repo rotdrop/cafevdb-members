@@ -25,35 +25,38 @@
 
 namespace OCA\CAFeVDBMembers\Database\ORM\Traits;
 
-trait CreatedAt
+use Gedmo\Mapping\Annotation as Gedmo;
+
+trait UpdatedAtEntity
 {
   use \OCA\CAFeVDBMembers\Traits\DateTimeTrait;
 
   /**
    * @var \DateTimeImmutable
+   * @ORM\Column(type="datetime_immutable", nullable=true)
    */
-  private $created;
+  private $updated;
 
   /**
-   * Sets created.
+   * Sets updated.
    *
-   * @param string|int|\DateTimeInterface $created
+   * @param string|int|\DateTimeInterface $updated
    *
    * @return self
    */
-  public function setCreated($created)
+  public function setUpdated($updated)
   {
-    $this->created = self::convertToDateTime($created);
+    $this->updated = self::convertToDateTime($updated);
     return $this;
   }
 
   /**
-   * Returns created.
+   * Returns updated.
    *
    * @return \DateTimeImmutable
    */
-  public function getCreated()
+  public function getUpdated():?\DateTimeInterface
   {
-    return $this->created;
+    return $this->updated;
   }
 }

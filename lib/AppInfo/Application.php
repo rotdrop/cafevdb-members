@@ -26,11 +26,16 @@ use OCP\AppFramework\Bootstrap\IRegistrationContext;
 use OCP\AppFramework\Bootstrap\IBootContext;
 use OCP\AppFramework\Services\IInitialState;
 
+use Psr\Container\ContainerInterface;
+
 use OCA\CAFeVDBMembers\Listener\Registration as ListenerRegistration;
 
 class Application extends App implements IBootstrap
 {
   const CAFEVDB_APP = 'cafevdb';
+
+  const DEFAULT_LOCALE_KEY = 'DefaultLocale';
+  const DEFAULT_LOCALE = 'en_US';
 
   /** @var string */
   protected $appName;
@@ -93,6 +98,11 @@ class Application extends App implements IBootstrap
       $config = $c->get(\OCP\IConfig::class);
       return $config->getAppValue($this->appName, 'memberRootFolder');
     });
+
+    $context->registerService(ucfirst(self::DEFAULT_LOCALE_KEY), function(ContainerInterface $container) {
+      return self::DEFAULT_LOCALE;
+    });
+    $context->registerServiceAlias(lcfirst(self::DEFAULT_LOCALE), ucfirst(self::DEFAULT_LOCALE));
 
     // Register listeners
     ListenerRegistration::register($context);

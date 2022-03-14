@@ -13,7 +13,7 @@
         <!-- <div class="icon-file" /> -->
         <h2>{{ t(appName, 'Placeholder Caption') }}</h2>
         <div>{{ t(appName, 'This is currently only a placeholder for the future plan to make the personal data of the orchestra members available to just the respective orchestra member.') }}</div>
-        <!-- <pre>{{ JSON.stringify(memberData, null, 2) }}</pre> -->
+        <pre>{{ JSON.stringify(memberData, null, 2) }}</pre>
       </div>
     </AppContent>
   </div>

@@ -43,6 +43,7 @@ class SettingsController extends Controller
   const MEMBER_ROOT_FOLDER_KEY = 'memberRootFolder';
   const FOLDER_GROUPS_KEY = 'memberFolderGroups';
   const SYNCHRONIZE_KEY = 'synchronize';
+  const USER_VIEWS_DATABASE_KEY = 'cloudUserViewsDatabase';
 
   /** @var IConfig */
   private $config;
@@ -148,6 +149,8 @@ class SettingsController extends Controller
           $this->logException($t);
           return self::grumble($this->l->t('Synchronizing the shared-folder structure failed: %s', $t->getMessage()));
         }
+      case self::USER_VIEWS_DATABASE_KEY:
+        break;
       default:
         return self::grumble($this->l->t('Unknown admin setting: "%1$s"', $setting));
     }
@@ -168,6 +171,7 @@ class SettingsController extends Controller
   {
     $result = null;
     switch ($setting) {
+      case self::USER_VIEWS_DATABASE_KEY:
       case self::MEMBER_ROOT_FOLDER_KEY:
         return new DataResponse([
           'value' => $this->config->getAppValue($this->appName, $setting),

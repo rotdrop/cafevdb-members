@@ -14,12 +14,12 @@
   <dependencies>
     <nextcloud min-version="23" max-version="23"/>
   </dependencies>
-  <!-- <navigations> -->
-  <!--   <navigation> -->
-  <!--     <name>CAFeVDB Members</name> -->
-  <!--     <route>cafevdbmembers.page.index</route> -->
-  <!--   </navigation> -->
-  <!-- </navigations> -->
+  <navigations>
+    <navigation>
+      <name>CAFeVDB Members</name>
+      <route>cafevdbmembers.page.index</route>
+    </navigation>
+  </navigations>
   <settings>
     <admin>OCA\CAFeVDBMembers\Settings\Admin</admin>
     <admin-section>OCA\CAFeVDBMembers\Settings\AdminSection</admin-section>

@@ -26,6 +26,8 @@
 namespace OCA\CAFeVDBMembers\Database\ORM\Entities;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 use OCA\CAFeVDBMembers\Database\ORM as CAFEVDB;
 use OCA\CAFeVDBMembers\Database\DBAL\Types;
@@ -40,11 +42,10 @@ use OCA\CAFeVDBMembers\Database\DBAL\Types;
 class Musician implements \ArrayAccess, \JsonSerializable
 {
   use CAFEVDB\Traits\ArrayTrait;
-  use CAFEVDB\Traits\CreatedAt;
-  use CAFEVDB\Traits\UpdatedAt;
+  use CAFEVDB\Traits\TimestampableEntity;
   use CAFEVDB\Traits\UuidTrait;
-  // use CAFEVDB\Traits\GetByUuidTrait;
-  // use \OCA\CAFEVDB\Traits\DateTimeTrait;
+  // use CAFEVDB\Traits\GetByUuidTrait; used for participant fields.
+  use \OCA\CAFeVDBMembers\Traits\DateTimeTrait;
 
   /**
    * @var int
@@ -95,7 +96,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
    *
    * We use the semi-official nickName.surName, e.g. katha.puff.
    *
-   * @ORM\Column(type="string", length=256, unique=true, nullable=true, options={"collation"="ascii_bin"})
+   * @ORM\Column(type="string", length=256, unique=true, nullable=true)
    */
   private $userIdSlug;
 
@@ -105,7 +106,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
    * Meant for per-user authentication which might be used for future
    * extensions.
    *
-   * @ORM\Column(type="string", length=256, unique=false, nullable=true, options={"collation"="ascii_bin"})
+   * @ORM\Column(type="string", length=256, unique=false, nullable=true)
    */
   private $userPassphrase;
 
@@ -126,21 +127,21 @@ class Musician implements \ArrayAccess, \JsonSerializable
   /**
    * @var string
    *
-   * @ORM\Column(type="string", length=2, nullable=true, options={"fixed" = true, "collation"="ascii_general_ci"})
+   * @ORM\Column(type="string", length=2, nullable=true)
    */
   private $country;
 
   /**
    * @var int|null
    *
-   * @ORM\Column(type="string", length=32, nullable=true, options={"collation"="ascii_general_ci"})
+   * @ORM\Column(type="string", length=32, nullable=true)
    */
   private $postalCode;
 
   /**
    * @var string
    *
-   * @ORM\Column(type="string", length=2, nullable=true, options={"fixed" = true, "collation"="ascii_general_ci"})
+   * @ORM\Column(type="string", length=2, nullable=true)
    */
   private $language;
 
@@ -175,7 +176,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
   /**
    * @var Types\EnumMemberStatus|null
    *
-   * @ORM\Column(type="EnumMemberStatus", nullable=false, options={"default"="regular","comment"="passive, soloist, conductor and temporary are excluded from mass-email. soloist and conductor are even excluded from ""per-project"" email unless explicitly selected."})
+   * @ORM\Column(type="EnumMemberStatus", nullable=false)
    */
   private $memberStatus;
 
@@ -187,10 +188,37 @@ class Musician implements \ArrayAccess, \JsonSerializable
   private $remarks;
 
   /**
-   * @var \DateTimeImmutable
-   * @ORM\Column(type="datetime_immutable", nullable=true)
+   * @var bool|null
+   *
+   * Set to true if for whatever reason the user remains undeleted in the
+   * musician-database but its cloud-account needs to be deactivated, for
+   * instance to prevent abuse after a password breach or things like that.
+   *
+   * This only affects the cloud-account of DB-musicians. It can be set by
+   * admins and group-admins through the cloud admin UI.
+   *
+   * @ORM\Column(type="boolean", nullable=true)
    */
-  private $updated;
+  private $cloudAccountDeactivated;
+
+  /**
+   * @var bool|null
+   *
+   * Set to true if the cloud user-account should not be generated at
+   * all. This differs from $cloudAccountDeactivated in that with
+   * "...Disabled" the musician is not even exported as user account, while
+   * the "...Deactivated" flag can be changed by the cloud administrator.
+   *
+   * Not that deleted users are also not exported to the cloud.
+   *
+   * @ORM\Column(type="boolean", nullable=true)
+   */
+  private $cloudAccountDisabled;
+
+  /**
+   * @ORM\OneToMany(targetEntity="MusicianInstrument", mappedBy="musician")
+   */
+  private $instruments;
 
   public function __construct() {
     $this->__wakeup();
@@ -199,9 +227,8 @@ class Musician implements \ArrayAccess, \JsonSerializable
 
   public function __wakeup()
   {
-    if (empty($this->id)) {
-      $this->postLoad();
-    }
+    $this->arrayCTOR();
+    $this->keys[] = 'publicName';
   }
 
   /**
@@ -527,6 +554,78 @@ class Musician implements \ArrayAccess, \JsonSerializable
   }
 
   /**
+   * Set cloudAccountDisabled.
+   *
+   * @param null|bool $cloudAccountDisabled
+   *
+   * @return Musician
+   */
+  public function setCloudAccountDisabled(?bool $cloudAccountDisabled):Musician
+  {
+    $this->CloudAccountDisabled = $cloudAccountDisabled;
+
+    return $this;
+  }
+
+  /**
+   * Get cloudAccountDisabled.
+   *
+   * @return null|bool
+   */
+  public function getCloudAccountDisabled():?bool
+  {
+    return $this->cloudAccountDisabled;
+  }
+
+  /**
+   * Set cloudAccountDeactivated.
+   *
+   * @param null|bool $cloudAccountDeactivated
+   *
+   * @return Musician
+   */
+  public function setCloudAccountDeactivated(?bool $cloudAccountDeactivated):Musician
+  {
+    $this->CloudAccountDeactivated = $cloudAccountDeactivated;
+
+    return $this;
+  }
+
+  /**
+   * Get cloudAccountDeactivated.
+   *
+   * @return null|bool
+   */
+  public function getCloudAccountDeactivated():?bool
+  {
+    return $this->cloudAccountDeactivated;
+  }
+
+  /**
+   * Set instruments.
+   *
+   * @param Collection $instruments
+   *
+   * @return Musician
+   */
+  public function setInstruments(Collection $instruments):Musician
+  {
+    $this->instruments = $instruments;
+
+    return $this;
+  }
+
+  /**
+   * Get instruments.
+   *
+   * @return Collection
+   */
+  public function getInstruments():Collection
+  {
+    return $this->instruments;
+  }
+
+  /**
    * Set displayName.
    *
    * @param string|null $displayName
@@ -649,10 +748,12 @@ class Musician implements \ArrayAccess, \JsonSerializable
 
   /**
    * @ORM\PostLoad
+   *
+   * __wakeup() is not called when loading entities. Here we add a "virtual"
+   * array key for the \ArrayAccess implementation.
    */
   public function postLoad()
   {
-    $this->arrayCTOR();
-    $this->keys[] = 'publicName';
+    $this->__wakeup();
   }
 }

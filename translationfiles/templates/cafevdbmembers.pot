@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2022-02-07 22:40+0100\n"
+"POT-Creation-Date: 2022-03-13 23:29+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -42,29 +42,29 @@ msgstr ""
 msgid "More than one musiciand found for user-id \"%s\"."
 msgstr ""
 
-#: lib/Controller/SettingsController.php:112
+#: lib/Controller/SettingsController.php:113
 #, php-format
 msgid "Really delete the old shared root-folder \"/%1$s/\"?"
 msgstr ""
 
-#: lib/Controller/SettingsController.php:122
+#: lib/Controller/SettingsController.php:123
 #, php-format
 msgid ""
 "Destination \"%1$s\" already exists and is configured as shared folder, "
 "delete it?"
 msgstr ""
 
-#: lib/Controller/SettingsController.php:145
+#: lib/Controller/SettingsController.php:146
 msgid "Successfully synchronized the shared-folder structure."
 msgstr ""
 
-#: lib/Controller/SettingsController.php:149
+#: lib/Controller/SettingsController.php:150
 #, php-format
 msgid "Synchronizing the shared-folder structure failed: %s"
 msgstr ""
 
-#: lib/Controller/SettingsController.php:152
-#: lib/Controller/SettingsController.php:188
+#: lib/Controller/SettingsController.php:155
+#: lib/Controller/SettingsController.php:192
 #, php-format
 msgid "Unknown admin setting: \"%1$s\""
 msgstr ""
@@ -74,57 +74,61 @@ msgstr ""
 msgid "Unknown search topic \"%1$s\""
 msgstr ""
 
-#: lib/Service/GroupFoldersService.php:210
+#: lib/Service/GroupFoldersService.php:209
 #, php-format
 msgid ""
 "Shared folder for mount-point \"%1$s\" already exists, cannot create it."
 msgstr ""
 
-#: lib/Service/GroupFoldersService.php:238
+#: lib/Service/GroupFoldersService.php:237
 #, php-format
 msgid ""
 "Shared folder for mount-point \"%1$s\" does not exist, cannot add group "
 "\"%2$s\"."
 msgstr ""
 
-#: lib/Service/GroupFoldersService.php:260
+#: lib/Service/GroupFoldersService.php:259
 #, php-format
 msgid ""
 "Shared folder for mount-point \"%1$s\" does not exist, cannot remove group "
 "\"%2$s\"."
 msgstr ""
 
-#: lib/Service/GroupFoldersService.php:281
+#: lib/Service/GroupFoldersService.php:280
 #, php-format
 msgid ""
 "Shared folder for mount-point \"%1$s\" does not exist, cannot modify manager "
 "\"%2$s\"."
 msgstr ""
 
-#: lib/Service/GroupFoldersService.php:332
+#: lib/Service/GroupFoldersService.php:331
 #, php-format
 msgid ""
 "Shared folder for mount-point \"%1$s\" does not exist, cannot set "
 "permissions for group \"%2$s\"."
 msgstr ""
 
-#: lib/Service/GroupFoldersService.php:368
+#: lib/Service/GroupFoldersService.php:367
 #, php-format
 msgid ""
 "Shared folder for mount-point \"%1$s\" does not exist, cannot change its "
 "mount-point to \"%2$s\"."
 msgstr ""
 
-#: lib/Service/ProjectGroupService.php:83
+#: lib/Service/ProjectGroupService.php:79
+msgid "Syncing all groups in one run is no longer supported."
+msgstr ""
+
+#: lib/Service/ProjectGroupService.php:84
 #, php-format
 msgid "Group %1$s does not start with the correct prefix \"%2$s\"."
 msgstr ""
 
-#: lib/Service/ProjectGroupService.php:124
+#: lib/Service/ProjectGroupService.php:125
 msgid "projects"
 msgstr ""
 
-#: lib/Service/ProjectGroupService.php:197
+#: lib/Service/ProjectGroupService.php:198
 #, php-format
 msgid ""
 "Unable to make sure the the group-shared folder \"%1$s\" for group \"%2$s\" "
@@ -211,78 +215,90 @@ msgstr ""
 msgid "Ok"
 msgstr ""
 
-#. TRANSLATORS src/AdminSettings.vue:51
+#. TRANSLATORS src/AdminSettings.vue:52
 #: specialVueFakeDummyForL10nScript.js:14
 msgid "Synchronize Folder-Structure"
 msgstr ""
 
-#. TRANSLATORS src/AdminSettings.vue:123
+#. TRANSLATORS src/AdminSettings.vue:56
 #: specialVueFakeDummyForL10nScript.js:16
+msgid "Personalized Views Database"
+msgstr ""
+
+#. TRANSLATORS src/AdminSettings.vue:57
+#: specialVueFakeDummyForL10nScript.js:18
+msgid ""
+"The name of the data-base which holds the personalized single-row views "
+"which contain the data for the currently logged-on user."
+msgstr ""
+
+#. TRANSLATORS src/AdminSettings.vue:135
+#: specialVueFakeDummyForL10nScript.js:20
 msgid "Confirmation Required"
 msgstr ""
 
-#. TRANSLATORS src/AdminSettings.vue:128
-#: specialVueFakeDummyForL10nScript.js:18
+#. TRANSLATORS src/AdminSettings.vue:140
+#: specialVueFakeDummyForL10nScript.js:22
 msgid "Unconfirmed, reverting to old value."
 msgstr ""
 
-#. TRANSLATORS src/AdminSettings.vue:134
-#: specialVueFakeDummyForL10nScript.js:20
-msgid "Successfully set value for {settingsKey} to {value}"
+#. TRANSLATORS src/AdminSettings.vue:146
+#: specialVueFakeDummyForL10nScript.js:24
+msgid "Successfully set value for \"{settingsKey}\" to \"{value}\""
 msgstr ""
 
-#. TRANSLATORS src/AdminSettings.vue:138
+#. TRANSLATORS src/AdminSettings.vue:150
 #. TRANSLATORS src/App.vue:57
-#: specialVueFakeDummyForL10nScript.js:22
-#: specialVueFakeDummyForL10nScript.js:30
-#: specialVueFakeDummyForL10nScript.js:44
+#: specialVueFakeDummyForL10nScript.js:26
+#: specialVueFakeDummyForL10nScript.js:34
+#: specialVueFakeDummyForL10nScript.js:48
 msgid "reason unknown"
 msgstr ""
 
-#. TRANSLATORS src/AdminSettings.vue:143
-#: specialVueFakeDummyForL10nScript.js:24
-msgid "Could not set value for {settingsKey} to {value}: {message}"
+#. TRANSLATORS src/AdminSettings.vue:155
+#: specialVueFakeDummyForL10nScript.js:28
+msgid "Could not set value for \"{settingsKey}\" to \"{value}\": {message}"
 msgstr ""
 
-#. TRANSLATORS src/AdminSettings.vue:156
-#: specialVueFakeDummyForL10nScript.js:26
+#. TRANSLATORS src/AdminSettings.vue:168
+#: specialVueFakeDummyForL10nScript.js:30
 msgid "Synchronizing for group {group}"
 msgstr ""
 
-#. TRANSLATORS src/AdminSettings.vue:157
-#: specialVueFakeDummyForL10nScript.js:28
+#. TRANSLATORS src/AdminSettings.vue:169
+#: specialVueFakeDummyForL10nScript.js:32
 msgid "{current} of {totals}"
 msgstr ""
 
-#. TRANSLATORS src/AdminSettings.vue:166
-#: specialVueFakeDummyForL10nScript.js:32
-msgid "Folder for {group} could not be created: {message}"
-msgstr ""
-
-#. TRANSLATORS src/AdminSettings.vue:173
-#: specialVueFakeDummyForL10nScript.js:34
-msgid ""
-"Failed at group {group} after {numFolders} have been processed successfully, "
-"{remainingFolders} are remaining."
-msgstr ""
-
-#. TRANSLATORS src/AdminSettings.vue:175
+#. TRANSLATORS src/AdminSettings.vue:178
 #: specialVueFakeDummyForL10nScript.js:36
+msgid "Folder for \"{group}\" could not be created: {message}"
+msgstr ""
+
+#. TRANSLATORS src/AdminSettings.vue:185
+#: specialVueFakeDummyForL10nScript.js:38
+msgid ""
+"Failed at group \"{group}\" after {numFolders} have been processed "
+"successfully, {remainingFolders} are remaining."
+msgstr ""
+
+#. TRANSLATORS src/AdminSettings.vue:187
+#: specialVueFakeDummyForL10nScript.js:40
 msgid "All done, folder structure for all {numFolders} folders is up to date."
 msgstr ""
 
 #. TRANSLATORS src/App.vue:5
-#: specialVueFakeDummyForL10nScript.js:38
+#: specialVueFakeDummyForL10nScript.js:42
 msgid "Placeholder Button"
 msgstr ""
 
 #. TRANSLATORS src/App.vue:14
-#: specialVueFakeDummyForL10nScript.js:40
+#: specialVueFakeDummyForL10nScript.js:44
 msgid "Placeholder Caption"
 msgstr ""
 
 #. TRANSLATORS src/App.vue:15
-#: specialVueFakeDummyForL10nScript.js:42
+#: specialVueFakeDummyForL10nScript.js:46
 msgid ""
 "This is currently only a placeholder for the future plan to make the "
 "personal data of the orchestra members available to just the respective "
@@ -290,31 +306,31 @@ msgid ""
 msgstr ""
 
 #. TRANSLATORS src/App.vue:64
-#: specialVueFakeDummyForL10nScript.js:46
+#: specialVueFakeDummyForL10nScript.js:50
 msgid "Could not fetch musician(s): {message}"
 msgstr ""
 
 #. TRANSLATORS src/App.vue:71
-#: specialVueFakeDummyForL10nScript.js:48
+#: specialVueFakeDummyForL10nScript.js:52
 msgid "You have mouse-clicked the placeholder-button ;)"
 msgstr ""
 
 #. TRANSLATORS src/PersonalSettings.vue:25
-#: specialVueFakeDummyForL10nScript.js:50
+#: specialVueFakeDummyForL10nScript.js:54
 msgid "CAFeVDB Database Connector, Personal Settings"
 msgstr ""
 
 #. TRANSLATORS src/PersonalSettings.vue:29
-#: specialVueFakeDummyForL10nScript.js:52
+#: specialVueFakeDummyForL10nScript.js:56
 msgid "Test Input"
 msgstr ""
 
 #. TRANSLATORS src/PersonalSettings.vue:30
-#: specialVueFakeDummyForL10nScript.js:54
+#: specialVueFakeDummyForL10nScript.js:58
 msgid "Test Hint"
 msgstr ""
 
-#. TRANSLATORS src/AdminSettings.vue:49
+#. TRANSLATORS src/AdminSettings.vue:50
 #: specialVueFakeDummyForL10nScript.js:12
 msgid ""
 "Synchronize the hierarchy of shared folders below {root} with the projects "

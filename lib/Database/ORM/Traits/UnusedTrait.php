@@ -25,35 +25,28 @@
 
 namespace OCA\CAFeVDBMembers\Database\ORM\Traits;
 
-trait UpdatedAt
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Simple trait that adds two convenience methods provided the
+ * underlying class has a "usage()" method where a return value > 0
+ * indicates the number of items using the class.
+ */
+trait UnusedTrait
 {
-  use \OCA\CAFeVDBMembers\Traits\DateTimeTrait;
-
   /**
-   * @var \DateTimeImmutable
+   * Return a boolean to indicate that this field is no longer used.
    */
-  private $updated;
-
-  /**
-   * Sets updated.
-   *
-   * @param string|int|\DateTimeInterface $updated
-   *
-   * @return self
-   */
-  public function setUpdated($updated)
+  public function unused():bool
   {
-    $this->updated = self::convertToDateTime($updated);
-    return $this;
+    return $this->usage() == 0;
   }
 
   /**
-   * Returns updated.
-   *
-   * @return \DateTimeImmutable
+   * Return a boolean to indicate that this field is used.
    */
-  public function getUpdated():?\DateTimeInterface
+  public function inUse():bool
   {
-    return $this->updated;
+    return !$this->unused();
   }
 }

@@ -27,6 +27,7 @@ use Psr\Log\LoggerInterface;
 
 use OCP\AppFramework\IAppContainer;
 use OCP\IConfig;
+use OCP\IL10N;
 
 use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\EntityManagerInterface;
@@ -35,6 +36,12 @@ use Doctrine\ORM\Decorator\EntityManagerDecorator;
 use Doctrine\ORM\Mapping\UnderscoreNamingStrategy;
 use Doctrine\DBAL\Connection as DatabaseConnection;
 use Doctrine\DBAL\Types\Type;
+use Symfony\Component\Cache\Adapter\ArrayAdapter;
+use Doctrine\Common\Cache\ArrayCache;
+use Doctrine\Common\Cache\Psr6\CacheAdapter;
+use Doctrine\Common\Cache\Psr6\DoctrineProvider;
+use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Annotations\PsrCachedReader;
 
 use OCA\CAFeVDBMembers\Database\ORM\Mapping\ReservedWordQuoteStrategy;
 use OCA\CAFeVDBMembers\Database\DBAL\Types;
@@ -67,6 +74,9 @@ class EntityManager extends EntityManagerDecorator
   /** @var IAppContainer */
   private $appContainer;
 
+  /** @var IL10N */
+  private $l;
+
   /** @var string */
   private $userId;
 
@@ -78,14 +88,21 @@ class EntityManager extends EntityManagerDecorator
     , $userId
     , IAppContainer $appContainer
     , IConfig $cloudConfig
+    , IL10N $l10n
     , LoggerInterface $logger
   ) {
     $this->appName = $appName;
     $this->userId = $userId;
     $this->appContainer = $appContainer;
     $this->cloudConfig = $cloudConfig;
+    $this->l = $l10n;
     $this->logger = $logger;
-    parent::__construct($this->getEntityManager());
+    try {
+      parent::__construct($this->getEntityManager());
+    } catch (\Throwable $t) {
+      $this->logException($t);
+      throw $t;
+    }
     $this->entityManager = $this->wrapped;
     if ($this->connected()) {
       $this->registerTypes();
@@ -119,9 +136,6 @@ class EntityManager extends EntityManagerDecorator
 
     $eventManager = new \Doctrine\Common\EventManager();
 
-    // mysql set names UTF-8 if required, should be obsolete
-    // $eventManager->addEventSubscriber(new \OCA\CAFEVDB\Wrapped\Doctrine\DBAL\Event\Listeners\MysqlSessionInit());
-
     $eventManager->addEventListener([
       // \OCA\CAFEVDB\Wrapped\Doctrine\ORM\Tools\ToolEvents::postGenerateSchema,
       // ORM\Events::loadClassMetadata,
@@ -133,14 +147,90 @@ class EntityManager extends EntityManagerDecorator
     return [ $config, $eventManager, ];
   }
 
-  private function connectionParameters($params = []) {
+  private function createGedmoConfiguration($config, $eventManager):array
+  {
+    // standard annotation reader
+    $annotationReader = new AnnotationReader;
+    $cache = new ArrayAdapter();
+    $cachedAnnotationReader = new PsrCachedReader($annotationReader, $cache);
+
+    // create a driver chain for metadata reading
+    $driverChain = new \Doctrine\Persistence\Mapping\Driver\MappingDriverChain();
+
+    // load superclass metadata mapping only, into driver chain
+    // also registers Gedmo annotations.NOTE: you can personalize it
+    \Gedmo\DoctrineExtensions::registerAbstractMappingIntoDriverChainORM(
+      $driverChain, // our metadata driver chain, to hook into
+      $cachedAnnotationReader // our cached annotation reader
+    );
+    //<<< Further annotations can go here
+    // \MediaMonks\Doctrine\DoctrineExtensions::registerAnnotations();
+    // CJH\Setup::registerAnnotations();
+    //>>>
+
+    // now we want to register our application entities,
+    // for that we need another metadata driver used for Entity namespace
+    $annotationDriver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver(
+      $cachedAnnotationReader, // our cached annotation reader
+      self::ENTITY_PATHS, // paths to look in
+    );
+
+    // NOTE: driver for application Entity can be different, Yaml, Xml or whatever
+    // register annotation driver for our application Entity namespace
+    $driverChain->addDriver($annotationDriver, 'OCA\CAFeVDBMembers\Database\ORM\Entities');
+
+    // general ORM configuration
+    //$config = new \OCA\CAFEVDB\Wrapped\Doctrine\ORM\Configuration;
+    $config->setProxyDir(self::PROXY_DIR);
+    $config->setProxyNamespace('OCA\CAFeVDBMembers\Database\ORM\Proxies');
+    $config->setAutoGenerateProxyClasses(self::DEV_MODE); // this can be based on production config.
+
+    // register metadata driver
+    $config->setMetadataDriverImpl($driverChain);
+
+    // use our already initialized cache driver
+    $config->setMetadataCache($cache);
+    $config->setQueryCacheImpl(DoctrineProvider::wrap($cache));
+
+    // gedmo extension listeners
+
+    // soft deletable
+    $softDeletableListener = new \Gedmo\SoftDeleteable\SoftDeleteableListener();
+    $softDeletableListener->setAnnotationReader($cachedAnnotationReader);
+    $eventManager->addEventSubscriber($softDeletableListener);
+    $config->addFilter('soft-deleteable', \Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter::class);
+
+    // translatable
+    $translatableListener = $this->appContainer->get(Listeners\GedmoTranslatableListener::class);
+    // current translation locale should be set from session or hook later into the listener
+    // most important, before entity manager is flushed
+    $translatableListener->setTranslatableLocale($this->l->getLanguageCode());
+    $translatableListener->setDefaultLocale($this->appContainer->get('DefaultLocale'));
+    $translatableListener->setTranslationFallback(true);
+    $translatableListener->setPersistDefaultLocaleTranslation(true);
+    $translatableListener->setAnnotationReader($cachedAnnotationReader);
+    $eventManager->addEventSubscriber($translatableListener);
+
+    $config->setDefaultQueryHint(
+      \Doctrine\ORM\Query::HINT_CUSTOM_OUTPUT_WALKER,
+      \Gedmo\Translatable\Query\TreeWalker\TranslationWalker::class
+    );
+    $config->setDefaultQueryHint(
+      \Gedmo\Translatable\TranslatableListener::HINT_TRANSLATABLE_LOCALE,
+      $this->l->getLanguageCode()
+    );
+    $config->setDefaultQueryHint(
+      \Gedmo\Translatable\TranslatableListener::HINT_FALLBACK,
+      1 // fallback to default values in case if record is not translated
+    );
+
+    return [ $config, $eventManager, $annotationReader ];
+  }
+
+  private function connectionParameters($params = [])
+  {
     $connectionParams = [
-      // 'dbname' => $this->cloudConfig->getAppValue(
-      //   $this->appName,
-      //   'database',
-      //   $this->cloudConfig->getSystemValue('dbname') . '_' . $this->appName
-      // ),
-      'dbname' => 'cafevdb_musicians_insurances', // @todo make it configurable
+      'dbname' => $this->cloudConfig->getAppValue($this->appName, 'cloudUserViewsDatabase'),
       'user' => $this->cloudConfig->getSystemValue('dbuser'),
       'password' => $this->cloudConfig->getSystemvalue('dbpassword'),
       'host' => $this->cloudConfig->getSystemValue('dbhost'),
@@ -239,6 +329,7 @@ class EntityManager extends EntityManagerDecorator
   private function getEntityManager($params = [])
   {
     list($config, $eventManager) = $this->createConfiguration();
+    list($config, $eventManager, ) = $this->createGedmoConfiguration($config, $eventManager);
 
     if (self::DEV_MODE) {
       $config->setAutoGenerateProxyClasses(true);
@@ -261,6 +352,7 @@ class EntityManager extends EntityManagerDecorator
   public function postConnect(ConnectionEventArgs $args)
   {
     if (!empty($this->userId)) {
+      $this->logInfo('Setting CLOUD_USER_ID to ' . $this->userId);
       $args->getConnection()->executeStatement("SET @CLOUD_USER_ID = '" . $this->userId . "'");
     }
   }

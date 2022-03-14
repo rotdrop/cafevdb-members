@@ -10,13 +10,14 @@
     }
   ],
   "require": {
-    "doctrine/orm": "^2.10.0",
-    "symfony/cache": "*",
     "acelaya/doctrine-enum-type": "^2.5",
+    "doctrine/orm": "^2.10.0",
+    "gedmo/doctrine-extensions": "3.6.x-dev",
     "myclabs/php-enum": "^1.8",
     "nesbot/carbon": "^2.46",
     "ramsey/uuid-doctrine": "^1.6",
-    "ramsey/uuid": "^4"
+    "ramsey/uuid": "^4",
+    "symfony/cache": "*"
   },
   "require-dev": {
     "phpunit/phpunit": "*",
@@ -29,6 +30,15 @@
       "php": "8.0"
     }
   },
+  "repositories": [
+    {
+      "type": "path",
+      "url": "3rdparty/gedmo-doctrine-extensions",
+      "options": {
+        "symlink": false
+      }
+    }
+  ],
   "scripts": {
     "lint": "find . -name \\*.php -not -path './vendor/*' -not -path './build/*' -print0 | xargs -0 -n1 php -l",
     "cs:check": "php-cs-fixer fix --dry-run --diff",

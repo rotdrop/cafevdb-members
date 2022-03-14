@@ -27,7 +27,7 @@
       v-model="memberRootFolder"
       :label="t(appName, 'Member-Data Root-Folder')"
       :hint="t(appName, 'Specify the root folder below which all member-data will be mounted.')"
-      @update="saveTextInput(...arguments, 'memberRootFolder' /* @todo: how to pass v-model? */)" />
+      @update="saveTextInput(...arguments, 'memberRootFolder')" />
     <div v-if="showSyncProgress">
       <div class="sync-status">
         <span class="sync-text">{{ syncText }}</span>
@@ -51,6 +51,11 @@
             @click="synchronizeFolders()">
       {{ t(appName, 'Synchronize Folder-Structure') }}
     </button>
+    <SettingsInputText
+      v-model="cloudUserViewsDatabase"
+      :label="t(appName, 'Personalized Views Database')"
+      :hint="t(appName, 'The name of the data-base which holds the personalized single-row views which contain the data for the currently logged-on user.')"
+      @update="saveTextInput(...arguments, 'cloudUserViewsDatabase')" />
   </SettingsSection>
 </template>
 
@@ -79,6 +84,7 @@ export default {
       syncDone: 0,
       synchronizing: false,
       syncLabel: '',
+      cloudUserViewsDatabase: '',
     }
   },
   created() {
@@ -106,6 +112,11 @@ export default {
       let response = await axios.get(generateUrl('apps/' + appName + '/settings/admin/memberRootFolder'), {})
       this.memberRootFolder = response.data.value
       console.info('ROOT FOLDER', this.memberRootFolder)
+
+      response = await axios.get(generateUrl('apps/' + appName + '/settings/admin/cloudUserViewsDatabase'), {})
+      this.cloudUserViewsDatabase = response.data.value
+      console.info('USER VIEWS DATABASE', this.cloudUserViewsDatabase)
+
       response = await axios.get(generateUrl('apps/' + appName + '/settings/admin/memberFolderGroups'), {})
       this.memberFolderGroups = response.data.value
       console.info('FOLDER GROUPS', this.memberFolderGroups)
@@ -132,7 +143,7 @@ export default {
             },
             true)
         } else {
-          showSuccess(t(appName, 'Successfully set value for {settingsKey} to {value}', { settingsKey, value }))
+          showSuccess(t(appName, 'Successfully set value for "{settingsKey}" to "{value}"', { settingsKey, value }))
         }
         console.info('RESPONSE', response)
       } catch (e) {
@@ -141,7 +152,7 @@ export default {
           message = e.response.data.message
           console.info('RESPONSE', e.response)
         }
-        showError(t(appName, 'Could not set value for {settingsKey} to {value}: {message}', { settingsKey, value, message }), { timeout: TOAST_PERMANENT_TIMEOUT })
+        showError(t(appName, 'Could not set value for "{settingsKey}" to "{value}": {message}', { settingsKey, value, message }), { timeout: TOAST_PERMANENT_TIMEOUT })
         self.getData()
       }
     },
@@ -164,14 +175,14 @@ export default {
             message = e.response.data.message
             console.info('RESPONSE', e.response)
           }
-          showError(t(appName, 'Folder for {group} could not be created: {message}', { group: group.displayName, message }), { timeout: TOAST_PERMANENT_TIMEOUT })
+          showError(t(appName, 'Folder for "{group}" could not be created: {message}', { group: group.displayName, message }), { timeout: TOAST_PERMANENT_TIMEOUT })
           this.syncFailure = true
           break;
         }
         ++this.syncDone
       }
       this.syncLabel = this.syncFailure
-        ? t(appName, 'Failed at group {group} after {numFolders} have been processed successfully, {remainingFolders} are remaining.',
+        ? t(appName, 'Failed at group "{group}" after {numFolders} have been processed successfully, {remainingFolders} are remaining.',
             { group: group.displayName, numFolders: this.syncDone, remainingFolders: this.syncTotals - this.syncDone } )
         : t(appName, 'All done, folder structure for all {numFolders} folders is up to date.', { numFolders: this.syncTotals })
     },

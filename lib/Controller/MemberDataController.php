@@ -80,7 +80,17 @@ class MemberDataController extends Controller
     }
     /** @var Entities\Musician $musician */
     $musician = $musicians[0];
-    $this->logInfo('NAME ' . $musician['publicName']);
-    return self::dataResponse($musician->toArray());
+
+    // THIS IS JUST PROVE OF CONCEPT
+
+    $this->logInfo('NAME ' . $musician->getPublicName() . ' #Instruments ' . $musician->getInstruments()->count());
+    $musicianData = $musician->toArray();
+    $musicianData['instruments'] = [];
+    /** @var Entities\MusicianInstrument $instrument */
+    foreach ($musician->getInstruments() as $instrument) {
+      $this->logInfo('Instrument ' . $instrument->getInstrument()->getName());
+      $musicianData['instruments'][] = $instrument->getInstrument()->toArray();
+    }
+    return self::dataResponse($musicianData);
   }
 }
