@@ -20,34 +20,15 @@
  *
  */
 
-import { appName } from './config.js'
-import { generateFilePath } from '@nextcloud/router'
-import { getRequestToken } from '@nextcloud/auth'
-import { sync } from 'vuex-router-sync'
-// import { translate, translatePlural } from '@nextcloud/l10n'
 import Vue from 'vue'
-import App from './App'
-import router from './router'
-import store from './store'
+import Vuex, { Store } from 'vuex'
 
-// CSP config for webpack dynamic chunk loading
-// eslint-disable-next-line
-__webpack_nonce__ = btoa(getRequestToken())
+import contactData from './contactData.js'
 
-// eslint-disable-next-line
-__webpack_public_path__ = generateFilePath(appName, '', 'js/')
-
-sync(store, router)
-
-// is really both needed? Prototype and mixin?
-Vue.mixin({ data() { return { appName } }, methods: { t, n } })
-// Vue.prototype.t = translate
-// Vue.prototype.n = translatePlural
-
-export default new Vue({
-  el: '#content',
-  name: 'BlahBlah',
-  router,
-  store,
-  render: h => h(App),
+Vue.use(Vuex)
+export default new Store({
+  modules: {
+    contactData,
+  },
+  strict: process.env.NODE_ENV !== 'production',
 })

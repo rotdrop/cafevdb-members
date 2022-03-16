@@ -15,6 +15,13 @@ return [
       'url' => '/',
       'verb' => 'GET',
     ],
+    [
+      'name' => 'page#index',
+      'url' => '/f/{path}',
+      'verb' => 'GET',
+      'requirements' => [ 'path' => '.+' ],
+      'postfix' => 'front',
+    ],
     // [
     //   'name' => 'note_api#preflighted_cors',
     //   'url' => '/api/0.1/{path}',
