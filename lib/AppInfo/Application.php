@@ -25,6 +25,7 @@ use OCP\AppFramework\Bootstrap\IBootstrap;
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
 use OCP\AppFramework\Bootstrap\IBootContext;
 use OCP\AppFramework\Services\IInitialState;
+use OCP\IConfig;
 
 use Psr\Container\ContainerInterface;
 
@@ -50,8 +51,11 @@ class Application extends App implements IBootstrap
   // Called later than "register".
   public function boot(IBootContext $context): void
   {
-    $context->injectFn(function(IInitialState $initialState) {
+    $context->injectFn(function(IInitialState $initialState, IConfig $config) {
       $initialState->provideInitialState('testValue', '*** INITIAL STATE OF TEST VALUE ***');
+      $initialState->provideInitialState('config', [
+        'orchestraName' => $config->getAppValue(self::CAFEVDB_APP, 'orchestra'),
+      ]);
     });
 
     // The following would restrict the settings to the sub-admins of the

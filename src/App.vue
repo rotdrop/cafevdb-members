@@ -42,7 +42,7 @@
         </template>
         <template #desc>
           <p>
-            {{ t(appName, '[ORCHESTRA NAME] Member Portal') }}
+            {{ t(appName, '{orchestraName} Orchestra Member Portal', { orchestraName, }) }}
           </p>
         </template>
       </EmptyContent>
@@ -51,6 +51,7 @@
 </template>
 
 <script>
+import { appName } from './config.js'
 import Content from '@nextcloud/vue/dist/Components/Content'
 import AppContent from '@nextcloud/vue/dist/Components/AppContent'
 import AppNavigation from '@nextcloud/vue/dist/Components/AppNavigation'
@@ -59,6 +60,10 @@ import AppNavigationSettings from '@nextcloud/vue/dist/Components/AppNavigationS
 import EmptyContent from '@nextcloud/vue/dist/Components/EmptyContent'
 
 import Icon from '../img/cafevdbmembers.svg'
+
+import { getInitialState } from './services/InitialStateService'
+
+const initialState = getInitialState()
 
 export default {
   name: 'App',
@@ -72,6 +77,7 @@ export default {
   },
   data() {
     return {
+      orchestraName: initialState?.orchestraName || t(appName, '[UNKNOWN]'),
       icon: Icon,
       loading: true,
     }
