@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2022-03-13 23:29+0100\n"
+"POT-Creation-Date: 2022-03-16 10:28+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -248,10 +248,10 @@ msgid "Successfully set value for \"{settingsKey}\" to \"{value}\""
 msgstr ""
 
 #. TRANSLATORS src/AdminSettings.vue:150
-#. TRANSLATORS src/App.vue:57
+#. TRANSLATORS src/views/PersonalProfile.vue:69
 #: specialVueFakeDummyForL10nScript.js:26
 #: specialVueFakeDummyForL10nScript.js:34
-#: specialVueFakeDummyForL10nScript.js:48
+#: specialVueFakeDummyForL10nScript.js:76
 msgid "reason unknown"
 msgstr ""
 
@@ -287,47 +287,102 @@ msgstr ""
 msgid "All done, folder structure for all {numFolders} folders is up to date."
 msgstr ""
 
-#. TRANSLATORS src/App.vue:5
+#. TRANSLATORS src/App.vue:7
 #: specialVueFakeDummyForL10nScript.js:42
-msgid "Placeholder Button"
+#: src/router/router.js:7
+msgid "Home"
 msgstr ""
 
-#. TRANSLATORS src/App.vue:14
+#. TRANSLATORS src/App.vue:12
+#. TRANSLATORS src/views/PersonalProfile.vue:27
 #: specialVueFakeDummyForL10nScript.js:44
-msgid "Placeholder Caption"
+#: specialVueFakeDummyForL10nScript.js:72
+#: src/router/router.js:15
+msgid "Personal Profile"
 msgstr ""
 
-#. TRANSLATORS src/App.vue:15
+#. TRANSLATORS src/App.vue:17
+#. TRANSLATORS src/views/BankAccounts.vue:27
 #: specialVueFakeDummyForL10nScript.js:46
+#: specialVueFakeDummyForL10nScript.js:64
+#: src/router/router.js:23
+msgid "Bank Accounts"
+msgstr ""
+
+#. TRANSLATORS src/App.vue:22
+#. TRANSLATORS src/views/InstrumentInsurances.vue:27
+#: specialVueFakeDummyForL10nScript.js:48
+#: specialVueFakeDummyForL10nScript.js:68
+#: src/router/router.js:31
+msgid "Instrument Insurances"
+msgstr ""
+
+#. TRANSLATORS src/App.vue:27
+#. TRANSLATORS src/views/Projects.vue:27
+#: specialVueFakeDummyForL10nScript.js:50
+#: specialVueFakeDummyForL10nScript.js:80
+#: src/router/router.js:39
+msgid "Projects"
+msgstr ""
+
+#. TRANSLATORS src/App.vue:33
+#: specialVueFakeDummyForL10nScript.js:52
+msgid "Example Settings"
+msgstr ""
+
+#. TRANSLATORS src/App.vue:45
+#: specialVueFakeDummyForL10nScript.js:54
+msgid "{orchestraName} Orchestra Member Portal"
+msgstr ""
+
+#. TRANSLATORS src/App.vue:80
+#: specialVueFakeDummyForL10nScript.js:56
+msgid "[UNKNOWN]"
+msgstr ""
+
+#. TRANSLATORS src/PersonalSettings.vue:25
+#: specialVueFakeDummyForL10nScript.js:58
+msgid "CAFeVDB Database Connector, Personal Settings"
+msgstr ""
+
+#. TRANSLATORS src/PersonalSettings.vue:29
+#: specialVueFakeDummyForL10nScript.js:60
+msgid "Test Input"
+msgstr ""
+
+#. TRANSLATORS src/PersonalSettings.vue:30
+#: specialVueFakeDummyForL10nScript.js:62
+msgid "Test Hint"
+msgstr ""
+
+#. TRANSLATORS src/views/BankAccounts.vue:28
+#. TRANSLATORS src/views/InstrumentInsurances.vue:28
+#. TRANSLATORS src/views/PersonalProfile.vue:28
+#. TRANSLATORS src/views/Projects.vue:28
+#: specialVueFakeDummyForL10nScript.js:66
+#: specialVueFakeDummyForL10nScript.js:70
+#: specialVueFakeDummyForL10nScript.js:74
+#: specialVueFakeDummyForL10nScript.js:82
 msgid ""
 "This is currently only a placeholder for the future plan to make the "
 "personal data of the orchestra members available to just the respective "
 "orchestra member."
 msgstr ""
 
-#. TRANSLATORS src/App.vue:64
-#: specialVueFakeDummyForL10nScript.js:50
+#. TRANSLATORS src/views/PersonalProfile.vue:76
+#: specialVueFakeDummyForL10nScript.js:78
 msgid "Could not fetch musician(s): {message}"
 msgstr ""
 
-#. TRANSLATORS src/App.vue:71
-#: specialVueFakeDummyForL10nScript.js:52
-msgid "You have mouse-clicked the placeholder-button ;)"
-msgstr ""
-
-#. TRANSLATORS src/PersonalSettings.vue:25
-#: specialVueFakeDummyForL10nScript.js:54
-msgid "CAFeVDB Database Connector, Personal Settings"
-msgstr ""
-
-#. TRANSLATORS src/PersonalSettings.vue:29
-#: specialVueFakeDummyForL10nScript.js:56
-msgid "Test Input"
-msgstr ""
-
-#. TRANSLATORS src/PersonalSettings.vue:30
-#: specialVueFakeDummyForL10nScript.js:58
-msgid "Test Hint"
+#. TRANSLATORS src/views/Projects.vue:27
+#. TRANSLATORS src/views/PersonalProfile.vue:27
+#. TRANSLATORS src/views/InstrumentInsurances.vue:27
+#. TRANSLATORS src/views/BankAccounts.vue:27
+#: specialVueFakeDummyForL10nScript.js:80
+#: specialVueFakeDummyForL10nScript.js:72
+#: specialVueFakeDummyForL10nScript.js:68
+#: specialVueFakeDummyForL10nScript.js:64
+msgid "To be implemented: {view}"
 msgstr ""
 
 #. TRANSLATORS src/AdminSettings.vue:50

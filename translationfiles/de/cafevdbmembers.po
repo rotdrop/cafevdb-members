@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2022-03-13 23:24+0100\n"
-"PO-Revision-Date: 2022-03-13 23:27+0100\n"
+"POT-Creation-Date: 2022-03-16 10:24+0100\n"
+"PO-Revision-Date: 2022-03-16 10:27+0100\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -132,7 +132,7 @@ msgstr ""
 
 #: lib/Service/ProjectGroupService.php:79
 msgid "Syncing all groups in one run is no longer supported."
-msgstr ""
+msgstr "Alle Gruppen auf einmal zu aktualisieren wird nicht mehr unterstützt."
 
 #: lib/Service/ProjectGroupService.php:84
 #, php-format
@@ -253,7 +253,9 @@ msgstr "Datenbank für die personalisierten Tabellen-Ansichten"
 msgid ""
 "The name of the data-base which holds the personalized single-row views "
 "which contain the data for the currently logged-on user."
-msgstr "Der Name der Datenbank für die personalisierten Tabellen-Ansichten, die die persönlichen Daten des gerade angemeldeten Users enthalten."
+msgstr ""
+"Der Name der Datenbank für die personalisierten Tabellen-Ansichten, die die "
+"persönlichen Daten des gerade angemeldeten Users enthalten."
 
 #. TRANSLATORS src/AdminSettings.vue:135
 #: specialVueFakeDummyForL10nScript.js:20
@@ -268,20 +270,24 @@ msgstr "Bestätigung nicht erteilt, setze auf den alten Wert zurück."
 #. TRANSLATORS src/AdminSettings.vue:146
 #: specialVueFakeDummyForL10nScript.js:24
 msgid "Successfully set value for \"{settingsKey}\" to \"{value}\""
-msgstr "Der Wert für die Einstellung \"{settingsKey}\" wurde erfolgreich auf \"{value}\" gesetzt"
+msgstr ""
+"Der Wert für die Einstellung \"{settingsKey}\" wurde erfolgreich auf "
+"\"{value}\" gesetzt"
 
 #. TRANSLATORS src/AdminSettings.vue:150
-#. TRANSLATORS src/App.vue:57
+#. TRANSLATORS src/views/PersonalProfile.vue:69
 #: specialVueFakeDummyForL10nScript.js:26
 #: specialVueFakeDummyForL10nScript.js:34
-#: specialVueFakeDummyForL10nScript.js:48
+#: specialVueFakeDummyForL10nScript.js:76
 msgid "reason unknown"
 msgstr "Grund unbekannt"
 
 #. TRANSLATORS src/AdminSettings.vue:155
 #: specialVueFakeDummyForL10nScript.js:28
 msgid "Could not set value for \"{settingsKey}\" to \"{value}\": {message}"
-msgstr "Konnte den Wert für die Einstellung \"{settingsKey}\" nicht auf den Wert \"{value}\" setzen: {message}"
+msgstr ""
+"Konnte den Wert für die Einstellung \"{settingsKey}\" nicht auf den Wert "
+"\"{value}\" setzen: {message}"
 
 #. TRANSLATORS src/AdminSettings.vue:168
 #: specialVueFakeDummyForL10nScript.js:30
@@ -296,14 +302,19 @@ msgstr "{current} von {totals}"
 #. TRANSLATORS src/AdminSettings.vue:178
 #: specialVueFakeDummyForL10nScript.js:36
 msgid "Folder for \"{group}\" could not be created: {message}"
-msgstr "Der Dateiordner für die Gruppe \"{group}\" konnte wohl nicht erzeugt werden: {message}"
+msgstr ""
+"Der Dateiordner für die Gruppe \"{group}\" konnte wohl nicht erzeugt werden: "
+"{message}"
 
 #. TRANSLATORS src/AdminSettings.vue:185
 #: specialVueFakeDummyForL10nScript.js:38
 msgid ""
 "Failed at group \"{group}\" after {numFolders} have been processed "
 "successfully, {remainingFolders} are remaining."
-msgstr "Fehlschlag bei der Gruppe \"{group}\", nachdem {numFolders} erfolgreich abgearbeitet wurden, es verbleiben {remainingFolders}, die noch nicht bearbeitet wurden."
+msgstr ""
+"Fehlschlag bei der Gruppe \"{group}\", nachdem {numFolders} erfolgreich "
+"abgearbeitet wurden, es verbleiben {remainingFolders}, die noch nicht "
+"bearbeitet wurden."
 
 #. TRANSLATORS src/AdminSettings.vue:187
 #: specialVueFakeDummyForL10nScript.js:40
@@ -312,18 +323,77 @@ msgstr ""
 "Alles fertig, die Verzeichnisstruktur für all {numFolders} Gruppen ist auf "
 "dem neuesten Stand."
 
-#. TRANSLATORS src/App.vue:5
-#: specialVueFakeDummyForL10nScript.js:42
-msgid "Placeholder Button"
-msgstr "Platzhalter-Knopf"
+#. TRANSLATORS src/App.vue:7
+#: specialVueFakeDummyForL10nScript.js:42 src/router/router.js:7
+msgid "Home"
+msgstr "Startseite"
 
-#. TRANSLATORS src/App.vue:14
+#. TRANSLATORS src/App.vue:12
+#. TRANSLATORS src/views/PersonalProfile.vue:27
 #: specialVueFakeDummyForL10nScript.js:44
-msgid "Placeholder Caption"
-msgstr "Platzhalter-Überschrift"
+#: specialVueFakeDummyForL10nScript.js:72 src/router/router.js:15
+msgid "Personal Profile"
+msgstr "Persönliches Profil"
 
-#. TRANSLATORS src/App.vue:15
+#. TRANSLATORS src/App.vue:17
+#. TRANSLATORS src/views/BankAccounts.vue:27
 #: specialVueFakeDummyForL10nScript.js:46
+#: specialVueFakeDummyForL10nScript.js:64 src/router/router.js:23
+msgid "Bank Accounts"
+msgstr "Bankverbindungen"
+
+#. TRANSLATORS src/App.vue:22
+#. TRANSLATORS src/views/InstrumentInsurances.vue:27
+#: specialVueFakeDummyForL10nScript.js:48
+#: specialVueFakeDummyForL10nScript.js:68 src/router/router.js:31
+msgid "Instrument Insurances"
+msgstr "Instrumentenversicherungen"
+
+#. TRANSLATORS src/App.vue:27
+#. TRANSLATORS src/views/Projects.vue:27
+#: specialVueFakeDummyForL10nScript.js:50
+#: specialVueFakeDummyForL10nScript.js:80 src/router/router.js:39
+msgid "Projects"
+msgstr "Projekte"
+
+#. TRANSLATORS src/App.vue:33
+#: specialVueFakeDummyForL10nScript.js:52
+msgid "Example Settings"
+msgstr "Beispiel-Einstellungen"
+
+#. TRANSLATORS src/App.vue:45
+#: specialVueFakeDummyForL10nScript.js:54
+msgid "{orchestraName} Orchestra Member Portal"
+msgstr "{orchestraName} Orchester Mitglieder Portal"
+
+#. TRANSLATORS src/App.vue:80
+#: specialVueFakeDummyForL10nScript.js:56
+msgid "[UNKNOWN]"
+msgstr "[UNBEKANNT]"
+
+#. TRANSLATORS src/PersonalSettings.vue:25
+#: specialVueFakeDummyForL10nScript.js:58
+msgid "CAFeVDB Database Connector, Personal Settings"
+msgstr "CAFeVDB Datenbank Integration, persönliche Einstellungen"
+
+#. TRANSLATORS src/PersonalSettings.vue:29
+#: specialVueFakeDummyForL10nScript.js:60
+msgid "Test Input"
+msgstr "Test-Eingabe"
+
+#. TRANSLATORS src/PersonalSettings.vue:30
+#: specialVueFakeDummyForL10nScript.js:62
+msgid "Test Hint"
+msgstr "Test-Hinweis"
+
+#. TRANSLATORS src/views/BankAccounts.vue:28
+#. TRANSLATORS src/views/InstrumentInsurances.vue:28
+#. TRANSLATORS src/views/PersonalProfile.vue:28
+#. TRANSLATORS src/views/Projects.vue:28
+#: specialVueFakeDummyForL10nScript.js:66
+#: specialVueFakeDummyForL10nScript.js:70
+#: specialVueFakeDummyForL10nScript.js:74
+#: specialVueFakeDummyForL10nScript.js:82
 msgid ""
 "This is currently only a placeholder for the future plan to make the "
 "personal data of the orchestra members available to just the respective "
@@ -333,30 +403,21 @@ msgstr ""
 "persönlichen Daten für die jeweils angemeldete Person genau dieser Peron "
 "verfügbar zu machen."
 
-#. TRANSLATORS src/App.vue:64
-#: specialVueFakeDummyForL10nScript.js:50
+#. TRANSLATORS src/views/PersonalProfile.vue:76
+#: specialVueFakeDummyForL10nScript.js:78
 msgid "Could not fetch musician(s): {message}"
 msgstr "Konnte den oder die Musiker nicht abfragen: {message}"
 
-#. TRANSLATORS src/App.vue:71
-#: specialVueFakeDummyForL10nScript.js:52
-msgid "You have mouse-clicked the placeholder-button ;)"
-msgstr "Du hast mit dem Maus-Zeiger auf den Platzhalter-Knopf geklick ;)"
-
-#. TRANSLATORS src/PersonalSettings.vue:25
-#: specialVueFakeDummyForL10nScript.js:54
-msgid "CAFeVDB Database Connector, Personal Settings"
-msgstr "CAFeVDB Datenbank Integration, persönliche Einstellungen"
-
-#. TRANSLATORS src/PersonalSettings.vue:29
-#: specialVueFakeDummyForL10nScript.js:56
-msgid "Test Input"
-msgstr "Test-Eingabe"
-
-#. TRANSLATORS src/PersonalSettings.vue:30
-#: specialVueFakeDummyForL10nScript.js:58
-msgid "Test Hint"
-msgstr "Test-Hinweis"
+#. TRANSLATORS src/views/Projects.vue:27
+#. TRANSLATORS src/views/PersonalProfile.vue:27
+#. TRANSLATORS src/views/InstrumentInsurances.vue:27
+#. TRANSLATORS src/views/BankAccounts.vue:27
+#: specialVueFakeDummyForL10nScript.js:80
+#: specialVueFakeDummyForL10nScript.js:72
+#: specialVueFakeDummyForL10nScript.js:68
+#: specialVueFakeDummyForL10nScript.js:64
+msgid "To be implemented: {view}"
+msgstr "Muss noch implementiert werden: {view}"
 
 #. TRANSLATORS src/AdminSettings.vue:50
 #: specialVueFakeDummyForL10nScript.js:12
@@ -366,6 +427,15 @@ msgid ""
 msgstr ""
 "Synchronisiere die Dateiordner-Struktur der gemeinsam benutzten Ordner "
 "unterhalb von {root} mit den Projekten der {managementApp}-Verwaltungs-App."
+
+#~ msgid "Placeholder Button"
+#~ msgstr "Platzhalter-Knopf"
+
+#~ msgid "Placeholder Caption"
+#~ msgstr "Platzhalter-Überschrift"
+
+#~ msgid "You have mouse-clicked the placeholder-button ;)"
+#~ msgstr "Du hast mit dem Maus-Zeiger auf den Platzhalter-Knopf geklick ;)"
 
 #~ msgid ""
 #~ "Successfully synchronized the shared-folder structure with the orchestra "
