@@ -130,43 +130,41 @@ export default {
   padding: 4px 0;
   border-bottom: 1px solid #ccc;
   background-color: transparent;
+}
 
-  ~ .focus-border {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background-color: indigo;
-    transition: 0.4s;
-  }
+.effect ~ .focus-border {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: indigo;
+  transition: 0.4s;
+}
 
-  &:focus, &:focus-within, &.has-content {
-    ~ .focus-border {
-      width: 100%;
-      transition: 0.4s;
-    }
-  }
+.effect:focus ~ .focus-border,
+.has-content.effect ~ .focus-border {
+  width: 100%;
+  transition: 0.4s;
+}
 
-  ~ label {
-    position: absolute;
-    left: 0;
-    width: 100%;
-    top: -1.3rem;
-    color: #aaa;
-    transition: 0.3s;
-    z-index: -1;
-    letter-spacing: 0.5px;
-  }
+.effect ~ label {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  top: -1.3rem;
+  color: #aaa;
+  transition: 0.3s;
+  z-index: -1;
+  letter-spacing: 0.5px;
+}
 
-  &:focus, &:focus-within, &.has-content {
-    ~ label {
-      top: -1rem;
-      font-size: 0.8rem;
-      color: indigo;
-      transition: 0.3s;
-    }
-  }
+.effect:focus ~ label,
+.has-content.effect ~ label {
+  top: -1rem;
+  font-size: 0.8rem;
+  color: indigo;
+  transition: 0.3s;
 }
 
 ::placeholder {
