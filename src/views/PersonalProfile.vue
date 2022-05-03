@@ -32,58 +32,66 @@
                    :readonly="readonly" />
         <InputText v-model="memberData.surName"
                    :label="t(appName, 'Sur Name')"
-                   :placeholder="t(appName, 'e.g. Smith')" />
+                   :placeholder="t(appName, 'e.g. Smith')"
+                   :readonly="readonly" />
       </div>
       <div class="input-row">
         <InputText v-model="memberData.nickName"
                    :label="t(appName, 'Nick Name')"
                    :placeholder="t(appName, 'e.g. Jonny')"
-                   readonly />
+                   :readonly="readonly" />
       </div>
       <div class="input-row">
         <InputText v-model="memberData.street"
                    :label="t(appName, 'Street')"
-                   :placeholder="t(appName, 'e.g. Underhill')" />
+                   :placeholder="t(appName, 'e.g. Underhill')"
+                   :readonly="readonly" />
         <InputText v-model="memberData.streetNumber"
                    type="number"
                    :label="t(appName, 'Number')"
-                   :placeholder="t(appName, 'e.g. 13')" />
+                   :placeholder="t(appName, 'e.g. 13')"
+                   :readonly="readonly" />
       </div>
       <div class="input-row">
         <InputText v-model="memberData.postalCode"
-                   type="number"
+                   type="text"
                    :label="t(appName, 'Postal Code')"
-                   :placeholder="t(appName, 'e.g. 4711')" />
+                   :placeholder="t(appName, 'e.g. 4711')"
+                   :readonly="readonly" />
         <InputText v-model="memberData.city"
                    :label="t(appName, 'City')"
-                   :placeholder="t(appName, 'e.g. Bagend')" />
+                   :placeholder="t(appName, 'e.g. Bagend')"
+                   :readonly="readonly" />
       </div>
       <div class="input-row">
         <InputText v-model="memberData.country"
                    class="country"
                    :label="t(appName, 'Country')"
-                   :placeholder="t(appName, 'e.g. The Shire')" />
+                   :placeholder="t(appName, 'e.g. The Shire')"
+                   :readonly="readonly" />
         <InputText v-model="memberData.birthday"
                    type="date"
                    class="birthday"
                    :label="t(appName, 'Birthday')"
-                   :placeholder="t(appName, 'e.g. 01.01.1970')" />
+                   :placeholder="t(appName, 'e.g. 01.01.1970')"
+                   :readonly="readonly" />
       </div>
       <div class="input-row">
         <InputText v-model="memberData.email"
                    :label="t(appName, 'Email')"
                    :placeholder="t(appName, 'e.g. me@you.tld')"
-                   readonly />
+                   :readonly="readonly"
+                   icon="email" />
       </div>
       <div class="input-row">
         <InputText v-model="memberData.mobilePhone"
                    :label="t(appName, 'Mobile Phone')"
                    :placeholder="t(appName, 'e.g. +12 34 5678 901234')"
-                   readonly />
+                   :readonly="readonly" />
         <InputText v-model="memberData.fixedLinePhone"
                    :label="t(appName, 'Fixed Line Phone')"
                    :placeholder="t(appName, 'e.g. +12 34 5678 901234')"
-                   readonly />
+                   :readonly="readonly" />
       </div>
       <div>{{ t(appName, 'This is currently only a placeholder for the future plan to make the personal data of the orchestra members available to just the respective orchestra member.') }}</div>
       <pre>{{ JSON.stringify(memberData, null, 2) }}</pre>
@@ -111,7 +119,7 @@ export default {
     return {
       memberData: {},
       loading: true,
-      readonly: false,
+      readonly: true,
     }
   },
   computed: {
@@ -130,7 +138,7 @@ export default {
         Vue.set(this.memberData, key, value)
       }
       console.info('BIRTHDAY', this.memberData.birthday)
-      Vue.set(this.memberData, 'birthday', this.memberData.birthday.date.split(' ')[0])
+      Vue.set(this.memberData, 'birthday', new Date(this.memberData.birthday.date.split(' ')[0]))
       console.info('BIRTHDAY', this.memberData.birthday)
     } catch (e) {
       console.error('ERROR', e)
@@ -160,6 +168,11 @@ export default {
     &.input-type-number {
       flex: 1 0 5%;
       min-width:5em;
+    }
+    &.input-type-date {
+      flex: 0 0 234px;
+      width:234px;
+      min-width:210px;
     }
   }
 }

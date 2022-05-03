@@ -30,6 +30,7 @@
     "@nextcloud/initial-state": "^1.2.1",
     "@nextcloud/router": "^2.0.0",
     "@nextcloud/vue": "^4.3.0",
+    "material-icons": "^1.10.9",
     "vue": "^2.6.14",
     "vue-router": "^3.5.2",
     "vuex": "^3.6.2",
@@ -48,7 +49,7 @@
     "@nextcloud/eslint-config": "^6.1.2",
     "@nextcloud/stylelint-config": "^2.1.2",
     "@nextcloud/webpack-vue-config": "^4.3.2",
-    "xml2js": "*",
-    "xml-loader": "^1.2.1"
+    "xml-loader": "^1.2.1",
+    "xml2js": "*"
   }
 }

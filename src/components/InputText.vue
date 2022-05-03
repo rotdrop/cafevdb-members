@@ -1,5 +1,11 @@
+<script>
+/**
+ * From: https://swina.github.io/2019/02/how-to-create-a-simple-reusable-vue-input-text-component/
+ * and modified quite a bit ..
+ */
+</script>
 <template>
-  <div :class="'input__container input-type-' + type">
+  <div :class="['input__container', 'input-type-' + type, { readonly }]">
     <div :class="'input-effect ' + filled">
       <DatetimePicker v-if="isDatePickerType"
                       class="effect"
@@ -7,8 +13,9 @@
                       :value="value"
                       :data-foo="value"
                       :placeholder="placeholder + ' ' + value"
-                      :disabled="disabled"
+                      :disabled="disabled || readonly"
                       :input-class="['effect', 'mx-input', { focusable: isFocusable }]"
+                      :readonly="readonly"
                       v-bind="$attrs"
                       @focus="show = !show;"
                       @blur="show = !show;"
@@ -19,11 +26,12 @@
              :placeholder="placeholder"
              :disabled="disabled"
              :class="['effect', has_icon, { focusable: isFocusable }]"
+             :readonly="readonly"
              v-bind="$attrs"
              @focus="show = !show;"
              @blur="show = !show;"
              @input="$emit('input', $event.target.value);">
-      <label :style="{ color: color }">{{ label }}</label>
+      <label :style="{ color: color }"><span>{{ label }}</span><span class="readonly-indicator"><LockIcon /></span></label>
       <span class="focus-border" :style="focus_border" />
     </div>
     <span v-if="show" class="input__hint">{{ hint }}</span>
@@ -33,13 +41,19 @@
 
 <script>
 import DatetimePicker from '@nextcloud/vue/dist/Components/DatetimePicker'
+import LockIcon from 'vue-material-design-icons/Lock.vue'
+import 'vue-material-design-icons/styles.css'
+import 'material-icons/iconfont/material-icons.css'
+
 export default {
   components: {
     DatetimePicker,
+    LockIcon,
   },
   props: {
     type: { type: String, required: true, default: 'text' },
     disabled: { type: Boolean, required: false, default: false },
+    readonly: { type: Boolean, required: false, default: false },
     value: { type: String, required: false, default: '' },
     label: { type: String, required: false, default: '' },
     hint: { type: String, required: false, default: '' },
@@ -108,7 +122,7 @@ export default {
 .input__icon {
   position: relative;
   left: 0rem;
-  top: -3rem;
+  top: -3.3rem;
   opacity: 0.3;
 }
 
@@ -126,10 +140,23 @@ export default {
 }
 
 .effect {
-  border: 0;
-  padding: 4px 0;
-  border-bottom: 1px solid #ccc;
-  background-color: transparent;
+  &:not(input) {
+    padding:0;
+    margin:0;
+    border:0;
+    width:100%;
+  }
+  &, ::v-deep .mx-input-wrapper input.effect.mx-input {
+    border: 0;
+    padding: 4px 0;
+    border-bottom: 1px solid #ccc;
+    background-color: transparent;
+    box-shadow:none;
+    &:hover {
+      border-color: var(--color-primary-element);
+      outline: none;
+    }
+  }
 
   ~ .focus-border {
     position: absolute;
@@ -141,13 +168,6 @@ export default {
     transition: 0.4s;
   }
 
-  &:focus, &:focus-within, &.has-content {
-    ~ .focus-border {
-      width: 100%;
-      transition: 0.4s;
-    }
-  }
-
   ~ label {
     position: absolute;
     left: 0;
@@ -157,9 +177,28 @@ export default {
     transition: 0.3s;
     z-index: -1;
     letter-spacing: 0.5px;
+    .readonly-indicator {
+      position:absolute;
+      top:-0.3em;
+      display:none;
+      height:1em;
+      width:1em;
+    }
+  }
+
+  &.readonly, &:read-only {
+    ~ label {
+      .readonly-indicator {
+        display:inline;
+      }
+    }
   }
 
   &:focus, &:focus-within, &.has-content {
+    ~ .focus-border {
+      width: 100%;
+      transition: 0.4s;
+    }
     ~ label {
       top: -1rem;
       font-size: 0.8rem;
@@ -180,6 +219,7 @@ input {
     box-sizing: border-box;
     letter-spacing: 1px;
     outline: none;
+    margin-bottom:0;
   }
 }
 
