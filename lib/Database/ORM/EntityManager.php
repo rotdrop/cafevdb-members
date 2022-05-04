@@ -45,6 +45,7 @@ use Doctrine\Common\Annotations\PsrCachedReader;
 
 use OCA\CAFeVDBMembers\Database\ORM\Mapping\ReservedWordQuoteStrategy;
 use OCA\CAFeVDBMembers\Database\DBAL\Types;
+use OCA\CAFeVDBMembers\Database\DBAL\Logging\CloudLogger;
 use MyCLabs\Enum\Enum as EnumType;
 
 /**
@@ -77,6 +78,9 @@ class EntityManager extends EntityManagerDecorator
   /** @var IL10N */
   private $l;
 
+  /** @var CloudLogger */
+  private $sqlLogger;
+
   /** @var string */
   private $userId;
 
@@ -90,6 +94,7 @@ class EntityManager extends EntityManagerDecorator
     , IConfig $cloudConfig
     , IL10N $l10n
     , LoggerInterface $logger
+    , CloudLogger $sqlLogger
   ) {
     $this->appName = $appName;
     $this->userId = $userId;
@@ -97,6 +102,7 @@ class EntityManager extends EntityManagerDecorator
     $this->cloudConfig = $cloudConfig;
     $this->l = $l10n;
     $this->logger = $logger;
+    $this->sqlLogger = $sqlLogger;
     try {
       parent::__construct($this->getEntityManager());
     } catch (\Throwable $t) {
@@ -342,6 +348,8 @@ class EntityManager extends EntityManagerDecorator
 
     // $quoteStrategy = new ReservedWordQuoteStrategy();
     // $config->setQuoteStrategy($quoteStrategy);
+
+    $config->setSQLLogger($this->sqlLogger);
 
     // obtaining the entity manager
     $entityManager = \Doctrine\ORM\EntityManager::create($this->connectionParameters($params), $config, $eventManager);
