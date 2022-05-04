@@ -42,7 +42,8 @@
 <script>
 import DatetimePicker from '@nextcloud/vue/dist/Components/DatetimePicker'
 import LockIcon from 'vue-material-design-icons/Lock.vue'
-import 'vue-material-design-icons/styles.css'
+// The following would interfere with the rest of NC:
+// import 'vue-material-design-icons/styles.css'
 import 'material-icons/iconfont/material-icons.css'
 
 export default {
