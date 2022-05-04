@@ -36,8 +36,9 @@ use OCA\CAFeVDBMembers\Database\DBAL\Types;
 /**
  * Instruments
  *
- * @ORM\Table(name="PersonalizedInstrumentsView")
+ * @ORM\Table(name="PersonalizedInstrumentFamiliesView")
  * @ORM\Entity
+ * @ORM\HasLifecycleCallbacks
  * @Gedmo\TranslationEntity(class="TableFieldTranslation")
  */
 class InstrumentFamily implements \ArrayAccess
@@ -138,5 +139,15 @@ class InstrumentFamily implements \ArrayAccess
   public function usage():int
   {
     return $this->instruments->count();
+  }
+
+  /**
+   * @ORM\PostLoad
+   *
+   * __wakeup() is not called when loading entities
+   */
+  public function postLoad()
+  {
+    $this->__wakeup();
   }
 }
