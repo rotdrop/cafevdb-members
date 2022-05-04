@@ -24,7 +24,7 @@
 <template>
   <Content :class="'app-' + appName" :app-name="'app-' + appName">
     <div>
-      <h2>{{ t(appName, 'To be implemented: {view}', { view: t(appName, 'Personal Profile'), }) }}</h2>
+      <h2>{{ t(appName, 'Personal Profile') }}</h2>
       <div class="input-row">
         <InputText v-model="memberData.firstName"
                    :label="t(appName, 'First Name')"
@@ -93,7 +93,7 @@
                    :placeholder="t(appName, 'e.g. +12 34 5678 901234')"
                    :readonly="readonly" />
       </div>
-      <div>{{ t(appName, 'This is currently only a placeholder for the future plan to make the personal data of the orchestra members available to just the respective orchestra member.') }}</div>
+      <div>{{ t(appName, 'DEBUG: all data') }}</div>
       <pre>{{ JSON.stringify(memberData, null, 2) }}</pre>
     </div>
   </Content>
