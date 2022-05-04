@@ -24,7 +24,7 @@
 <template>
   <Content :class="'app-' + appName" :app-name="'app-' + appName">
     <div>
-      <h2>{{ t(appName, 'Personal Profile') }}</h2>
+      <h2>{{ t(appName, 'Personal Profile of {publicName}', { publicName: memberData.personalPublicName }) }}</h2>
       <div class="input-row">
         <InputText v-model="memberData.firstName"
                    :label="t(appName, 'First Name')"
