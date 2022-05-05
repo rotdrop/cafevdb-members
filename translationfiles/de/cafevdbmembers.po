@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2022-03-16 10:24+0100\n"
-"PO-Revision-Date: 2022-03-16 10:27+0100\n"
+"POT-Creation-Date: 2022-05-06 00:34+0200\n"
+"PO-Revision-Date: 2022-05-06 00:42+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -275,10 +275,10 @@ msgstr ""
 "\"{value}\" gesetzt"
 
 #. TRANSLATORS src/AdminSettings.vue:150
-#. TRANSLATORS src/views/PersonalProfile.vue:69
+#. TRANSLATORS src/views/PersonalProfile.vue:162
 #: specialVueFakeDummyForL10nScript.js:26
 #: specialVueFakeDummyForL10nScript.js:34
-#: specialVueFakeDummyForL10nScript.js:76
+#: specialVueFakeDummyForL10nScript.js:126
 msgid "reason unknown"
 msgstr "Grund unbekannt"
 
@@ -329,9 +329,7 @@ msgid "Home"
 msgstr "Startseite"
 
 #. TRANSLATORS src/App.vue:12
-#. TRANSLATORS src/views/PersonalProfile.vue:27
-#: specialVueFakeDummyForL10nScript.js:44
-#: specialVueFakeDummyForL10nScript.js:72 src/router/router.js:15
+#: specialVueFakeDummyForL10nScript.js:44 src/router/router.js:15
 msgid "Personal Profile"
 msgstr "Persönliches Profil"
 
@@ -352,7 +350,7 @@ msgstr "Instrumentenversicherungen"
 #. TRANSLATORS src/App.vue:27
 #. TRANSLATORS src/views/Projects.vue:27
 #: specialVueFakeDummyForL10nScript.js:50
-#: specialVueFakeDummyForL10nScript.js:80 src/router/router.js:39
+#: specialVueFakeDummyForL10nScript.js:130 src/router/router.js:39
 msgid "Projects"
 msgstr "Projekte"
 
@@ -388,12 +386,10 @@ msgstr "Test-Hinweis"
 
 #. TRANSLATORS src/views/BankAccounts.vue:28
 #. TRANSLATORS src/views/InstrumentInsurances.vue:28
-#. TRANSLATORS src/views/PersonalProfile.vue:28
 #. TRANSLATORS src/views/Projects.vue:28
 #: specialVueFakeDummyForL10nScript.js:66
 #: specialVueFakeDummyForL10nScript.js:70
-#: specialVueFakeDummyForL10nScript.js:74
-#: specialVueFakeDummyForL10nScript.js:82
+#: specialVueFakeDummyForL10nScript.js:132
 msgid ""
 "This is currently only a placeholder for the future plan to make the "
 "personal data of the orchestra members available to just the respective "
@@ -403,17 +399,146 @@ msgstr ""
 "persönlichen Daten für die jeweils angemeldete Person genau dieser Peron "
 "verfügbar zu machen."
 
-#. TRANSLATORS src/views/PersonalProfile.vue:76
+#. TRANSLATORS src/views/PersonalProfile.vue:27
+#: specialVueFakeDummyForL10nScript.js:72
+msgid "Personal Profile of {publicName}"
+msgstr "Persönliches Profil von {publicName}"
+
+#. TRANSLATORS src/views/PersonalProfile.vue:30
+#: specialVueFakeDummyForL10nScript.js:74
+msgid "First Name"
+msgstr "Vorname"
+
+#. TRANSLATORS src/views/PersonalProfile.vue:31
+#: specialVueFakeDummyForL10nScript.js:76
+msgid "e.g. Jonathan"
+msgstr "z.B. Otto"
+
+#. TRANSLATORS src/views/PersonalProfile.vue:34
 #: specialVueFakeDummyForL10nScript.js:78
+msgid "Sur Name"
+msgstr "Nachname"
+
+#. TRANSLATORS src/views/PersonalProfile.vue:35
+#: specialVueFakeDummyForL10nScript.js:80
+msgid "e.g. Smith"
+msgstr "z.B. Mustermensch"
+
+#. TRANSLATORS src/views/PersonalProfile.vue:40
+#: specialVueFakeDummyForL10nScript.js:82
+msgid "Nick Name"
+msgstr "Rufname"
+
+#. TRANSLATORS src/views/PersonalProfile.vue:41
+#: specialVueFakeDummyForL10nScript.js:84
+msgid "e.g. Jonny"
+msgstr "z.B. Hannes"
+
+#. TRANSLATORS src/views/PersonalProfile.vue:46
+#: specialVueFakeDummyForL10nScript.js:86
+msgid "Street"
+msgstr "Straße"
+
+#. TRANSLATORS src/views/PersonalProfile.vue:47
+#: specialVueFakeDummyForL10nScript.js:88
+msgid "e.g. Underhill"
+msgstr "z.B. Mühlengasse"
+
+#. TRANSLATORS src/views/PersonalProfile.vue:51
+#: specialVueFakeDummyForL10nScript.js:90
+msgid "Number"
+msgstr "Hausnummer"
+
+#. TRANSLATORS src/views/PersonalProfile.vue:52
+#: specialVueFakeDummyForL10nScript.js:92
+msgid "e.g. 13"
+msgstr "z.B. 13"
+
+#. TRANSLATORS src/views/PersonalProfile.vue:58
+#: specialVueFakeDummyForL10nScript.js:94
+msgid "Postal Code"
+msgstr "Postleitzahl"
+
+#. TRANSLATORS src/views/PersonalProfile.vue:59
+#: specialVueFakeDummyForL10nScript.js:96
+msgid "e.g. 4711"
+msgstr "z.B. 4711"
+
+#. TRANSLATORS src/views/PersonalProfile.vue:62
+#: specialVueFakeDummyForL10nScript.js:98
+msgid "City"
+msgstr "Wohnort"
+
+#. TRANSLATORS src/views/PersonalProfile.vue:63
+#: specialVueFakeDummyForL10nScript.js:100
+msgid "e.g. Bagend"
+msgstr "z.B. Neustadt"
+
+#. TRANSLATORS src/views/PersonalProfile.vue:69
+#: specialVueFakeDummyForL10nScript.js:102
+msgid "Country"
+msgstr "Land"
+
+#. TRANSLATORS src/views/PersonalProfile.vue:70
+#: specialVueFakeDummyForL10nScript.js:104
+msgid "e.g. The Shire"
+msgstr "z.B. Auenland"
+
+#. TRANSLATORS src/views/PersonalProfile.vue:75
+#: specialVueFakeDummyForL10nScript.js:106
+msgid "Birthday"
+msgstr "Geburtstag"
+
+#. TRANSLATORS src/views/PersonalProfile.vue:76
+#: specialVueFakeDummyForL10nScript.js:108
+msgid "e.g. 01.01.1970"
+msgstr "z.B. 01.01.1970"
+
+#. TRANSLATORS src/views/PersonalProfile.vue:81
+#: specialVueFakeDummyForL10nScript.js:110
+msgid "Email"
+msgstr "Email"
+
+#. TRANSLATORS src/views/PersonalProfile.vue:82
+#: specialVueFakeDummyForL10nScript.js:112
+msgid "e.g. me@you.tld"
+msgstr "z.B. ich@du.tld"
+
+#. TRANSLATORS src/views/PersonalProfile.vue:88
+#: specialVueFakeDummyForL10nScript.js:114
+msgid "Mobile Phone"
+msgstr "Mobilfunk"
+
+#. TRANSLATORS src/views/PersonalProfile.vue:89
+#: specialVueFakeDummyForL10nScript.js:116
+#: specialVueFakeDummyForL10nScript.js:120
+msgid "e.g. +12 34 5678 901234"
+msgstr "z.B. +12 34 5678 901234"
+
+#. TRANSLATORS src/views/PersonalProfile.vue:92
+#: specialVueFakeDummyForL10nScript.js:118
+msgid "Fixed Line Phone"
+msgstr "Festnetz"
+
+#. TRANSLATORS src/views/PersonalProfile.vue:99
+#: specialVueFakeDummyForL10nScript.js:122
+msgid "Instruments"
+msgstr "Instrumente"
+
+#. TRANSLATORS src/views/PersonalProfile.vue:106
+#: specialVueFakeDummyForL10nScript.js:124
+msgid "DEBUG: all data"
+msgstr "DEBUG: alles"
+
+#. TRANSLATORS src/views/PersonalProfile.vue:169
+#: specialVueFakeDummyForL10nScript.js:128
 msgid "Could not fetch musician(s): {message}"
 msgstr "Konnte den oder die Musiker nicht abfragen: {message}"
 
 #. TRANSLATORS src/views/Projects.vue:27
-#. TRANSLATORS src/views/PersonalProfile.vue:27
 #. TRANSLATORS src/views/InstrumentInsurances.vue:27
 #. TRANSLATORS src/views/BankAccounts.vue:27
-#: specialVueFakeDummyForL10nScript.js:80
-#: specialVueFakeDummyForL10nScript.js:72
+#: specialVueFakeDummyForL10nScript.js:130
 #: specialVueFakeDummyForL10nScript.js:68
 #: specialVueFakeDummyForL10nScript.js:64
 msgid "To be implemented: {view}"
