@@ -23,7 +23,7 @@
 </script>
 <template>
   <Content :class="'app-' + appName" :app-name="'app-' + appName">
-    <div>
+    <div class="page-container">
       <h2>{{ t(appName, 'Personal Profile of {publicName}', { publicName: memberData.personalPublicName }) }}</h2>
       <div class="input-row">
         <InputText v-model="memberData.firstName"
@@ -93,6 +93,16 @@
                    :placeholder="t(appName, 'e.g. +12 34 5678 901234')"
                    :readonly="readonly" />
       </div>
+      <div class="input-row">
+        <InputText v-model="memberData.selectedInstruments"
+                   type="multiselect"
+                   :label="t(appName, 'Instruments')"
+                   :options="memberData.instruments"
+                   track-by="id"
+                   option-label="name"
+                   :readonly="readonly"
+                   :multiple="true" />
+      </div>
       <div>{{ t(appName, 'DEBUG: all data') }}</div>
       <pre>{{ JSON.stringify(memberData, null, 2) }}</pre>
     </div>
@@ -117,7 +127,10 @@ export default {
   },
   data() {
     return {
-      memberData: {},
+      memberData: {
+        selectedInstruments: [],
+        instruments: [],
+      },
       loading: true,
       readonly: true,
     }
@@ -140,6 +153,10 @@ export default {
       console.info('BIRTHDAY', this.memberData.birthday)
       Vue.set(this.memberData, 'birthday', new Date(this.memberData.birthday.date.split(' ')[0]))
       console.info('BIRTHDAY', this.memberData.birthday)
+      Vue.set(this.memberData, 'selectedInstruments', [])
+      for (const instrument of this.memberData.instruments) {
+        this.memberData.selectedInstruments.push(instrument);
+      }
     } catch (e) {
       console.error('ERROR', e)
       let message = t(appName, 'reason unknown')
@@ -159,6 +176,10 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.page-container {
+  padding-left:0.5rem;
+}
+
 .input-row {
   display:flex;
   flex-wrap:wrap;

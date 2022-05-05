@@ -6,20 +6,31 @@
 </script>
 <template>
   <div :class="['input__container', 'input-type-' + type, { readonly }]">
-    <div :class="'input-effect ' + filled">
+    <div :class="['input-effect', filled, { readonly }]">
       <DatetimePicker v-if="isDatePickerType"
                       class="effect"
                       :type="isDatePickerType"
                       :value="value"
                       :data-foo="value"
                       :placeholder="placeholder + ' ' + value"
-                      :disabled="disabled || readonly"
                       :input-class="['effect', 'mx-input', { focusable: isFocusable }]"
+                      :disabled="disabled || readonly"
                       :readonly="readonly"
                       v-bind="$attrs"
                       @focus="show = !show;"
                       @blur="show = !show;"
                       @input="$emit('input', $event.target ? $event.target.value : $event);" />
+      <Multiselect v-else-if="isMultiselectType"
+                   class="effect"
+                   :value="value"
+                   :placeholder="placeholder"
+                   :disabled="disabled || readonly"
+                   :readonly="readonly"
+                   :label="optionLabel"
+                   v-bind="$attrs"
+                   v-on="$listeners"
+                   @focus="show = !show;"
+                   @blur="show = !show;" />
       <input v-else
              :type="type"
              :value="value"
@@ -41,6 +52,7 @@
 
 <script>
 import DatetimePicker from '@nextcloud/vue/dist/Components/DatetimePicker'
+import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
 import LockIcon from 'vue-material-design-icons/Lock.vue'
 // The following would interfere with the rest of NC:
 // import 'vue-material-design-icons/styles.css'
@@ -48,6 +60,7 @@ import 'material-icons/iconfont/material-icons.css'
 
 export default {
   components: {
+    Multiselect,
     DatetimePicker,
     LockIcon,
   },
@@ -61,6 +74,7 @@ export default {
     icon: { type: String, required: false, default: '' },
     placeholder: { type: String, required: false, default: '' },
     color: { type: String, required: false, default: 'indigo' },
+    optionLabel: { type: String, required: false, default: '' },
   },
   data: () => ({
     show: false,
@@ -82,6 +96,9 @@ export default {
       return {
         'background-color': this.color,
       }
+    },
+    isMultiselectType() {
+      return this.type === 'multiselect'
     },
     isDatePickerType() {
       switch (this.type) {
@@ -117,13 +134,13 @@ export default {
   float: left;
   width: 100%;
   margin: 1.5rem 0rem 1.5rem 0;
-  position: relative;
-} /* necessary to give position: relative to parent. */
+  position: relative;  /* necessary to give position: relative to parent. */
+}
 
 .input__icon {
   position: relative;
   left: 0rem;
-  top: -3.3rem;
+  top: -3.5rem;
   opacity: 0.3;
 }
 
@@ -140,6 +157,26 @@ export default {
   padding-left: 2rem !important;
 }
 
+.input-effect.readonly {
+  .effect {
+    ~ label {
+      .readonly-indicator {
+        display:inline;
+      }
+    }
+  }
+}
+
+input.effect {
+  &:read-only {
+    ~ label {
+      .readonly-indicator {
+        display:inline;
+      }
+    }
+  }
+}
+
 .effect {
   &:not(input) {
     padding:0;
@@ -147,7 +184,8 @@ export default {
     border:0;
     width:100%;
   }
-  &, ::v-deep .mx-input-wrapper input.effect.mx-input {
+  &,
+  ::v-deep .mx-input-wrapper input.effect.mx-input {
     border: 0;
     padding: 4px 0;
     border-bottom: 1px solid #ccc;
@@ -158,7 +196,25 @@ export default {
       outline: none;
     }
   }
-
+  ::v-deep &.multiselect {
+    max-height:37px;
+    &.multiselect--disabled {
+      &, & .multiselect__single {
+        background-color:transparent!important;
+      }
+    }
+    .multiselect__tags {
+      border: 0;
+      /* padding: 4px 0; */
+      border-bottom: 1px solid #ccc;
+      background-color: transparent;
+      box-shadow:none;
+      &:hover {
+        border-color: var(--color-primary-element);
+        outline: none;
+      }
+    }
+  }
   ~ .focus-border {
     position: absolute;
     bottom: 0;
@@ -187,7 +243,7 @@ export default {
     }
   }
 
-  &.readonly, &:read-only {
+  &.readonly {
     ~ label {
       .readonly-indicator {
         display:inline;
