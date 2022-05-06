@@ -221,6 +221,16 @@ class Musician implements \ArrayAccess, \JsonSerializable
   private $instruments;
 
   /**
+   * @ORM\OneToMany(targetEntity="ProjectParticipant", mappedBy="musician", indexBy="project_id", fetch="EXTRA_LAZY")
+   */
+  private $projectParticipation;
+
+  /**
+   * @ORM\OneToMany(targetEntity="ProjectInstrument", mappedBy="musician", fetch="EXTRA_LAZY")
+   */
+  private $projectInstruments;
+
+  /**
    * @ORM\OneToMany(targetEntity="SepaBankAccount", mappedBy="musician", fetch="EXTRA_LAZY")
    */
   private $sepaBankAccounts;
@@ -234,6 +244,8 @@ class Musician implements \ArrayAccess, \JsonSerializable
     $this->__wakeup();
     $this->memberStatus = Types\EnumMemberStatus::REGULAR();
     $this->instruments = new ArrayCollection;
+    $this->projectInstruments = new ArrayCollection();
+    $this->projectParticipation = new ArrayCollection();
     $this->sepaBankAccounts = new ArrayCollection;
     $this->sepaDebitMandates = new ArrayCollection;
   }
@@ -749,6 +761,103 @@ class Musician implements \ArrayAccess, \JsonSerializable
   public function getUserIdSlug():?string
   {
     return $this->userIdSlug;
+  }
+
+  /**
+   * Set projectInstruments.
+   *
+   * @param Collection $projectInstruments
+   *
+   * @return Musician
+   */
+  public function setProjectInstruments(Collection $projectInstruments):Musician
+  {
+    $this->projectInstruments = $projectInstruments;
+
+    return $this;
+  }
+
+  /**
+   * Get projectInstruments.
+   *
+   * @return Collection
+   */
+  public function getProjectInstruments():Collection
+  {
+    return $this->projectInstruments;
+  }
+
+  /**
+   * Set projectParticipation.
+   *
+   * @param Collection $projectParticipation
+   *
+   * @return Musician
+   */
+  public function setProjectParticipation(Collection $projectParticipation):Musician
+  {
+    $this->projectParticipation = $projectParticipation;
+
+    return $this;
+  }
+
+  /**
+   * Get projectParticipation.
+   *
+   * @return Collection
+   */
+  public function getProjectParticipation():Collection
+  {
+    return $this->projectParticipation;
+  }
+
+  /**
+   * Check whether the given project is contained in projectParticipation.
+   *
+   * @param int|Project $projectOrId
+   *
+   * @return bool
+   */
+  public function isMemberOf($projectOrId):bool
+  {
+    return !empty($this->getProjectParticipantOf($projectOrId));
+  }
+
+  /**
+   * Return the project-participant entity for the given project or null
+   *
+   * @param int|Project $projectOrId
+   *
+   * @return null|ProjectParticipant
+   */
+  public function getProjectParticipantOf($projectOrId):?ProjectParticipant
+  {
+    $projectId = ($projectOrId instanceof Project) ? $projectOrId->getId() : $projectOrId;
+    $participant = $this->projectParticipation->get($projectId);
+    if (!empty($participant)) {
+      return $participant;
+    }
+    // $matching = $this->projectParticipation->matching(DBUtil::criteriaWhere([
+    //   'project' => $projectId,
+    // ]));
+    //
+    // The infamous
+    //
+    // Cannot match on
+    // OCA\CAFEVDB\Database\Doctrine\ORM\Entities\ProjectParticipant::project
+    // with a non-object value. Matching objects by id is not
+    // compatible with matching on an in-memory collection, which
+    // compares objects by reference.
+    //
+    // Oh no.
+
+    $matching = $this->projectParticipation->filter(function($participant) use ($projectId) {
+      return $participant->getProject()->getId() == $projectId;
+    });
+    if ($matching->count() == 1) {
+      return $matching->first();
+    }
+    return null;
   }
 
   /**

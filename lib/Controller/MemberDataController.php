@@ -123,6 +123,67 @@ class MemberDataController extends Controller
       $musicianData['sepaBankAccounts'][] = $flatBankAccount;
     }
 
+    /** @var Entities\ProjectParticipant $participant */
+    $musicianData['projectParticipation'] = [];
+    foreach ($musician->getProjectParticipation() as $participant) {
+      $this->logInfo('PROJECT: ' . $participant->getProject()->getName());
+      $flatParticipant = $participant->toArray();
+      unset($flatParticipant['musician']);
+      $flatParticipant['musicianId'] = $musician->getId();
+      $flatParticipant['project'] = $participant->getProject()->toArray();
+      unset($flatParticipant['musicianInstruments']);
+      unset($flatParticipant['sepaBankAccount']);
+      unset($flatParticipant['sepaDebitMandate']);
+
+      /** @var Entities\ProjectInstrument $projectInstrument */
+      $flatParticipant['projectInstruments'] = [];
+      foreach ($participant->getProjectInstruments() as $projectInstrument) {
+        $instrument = $projectInstrument->getInstrument();
+        $flatInstrument = $instrument->toArray();
+        unset($flatInstrument['projectInstruments']);
+        $flatInstrument['voice'] = $projectInstrument->getVoice();
+        $flatInstrument['sectionLeader'] = $projectInstrument->getSectionLeader();
+        // unset most of the instrument, too much Data
+        unset($flatInstrument['families']);
+        unset($flatInstrument['sortOrder']);
+        unset($flatInstrument['deleted']);
+        unset($flatInstrument['musicianInstruments']);
+
+        $flatParticipant['projectInstruments'][] = $flatInstrument;
+      }
+      $musicianData['projectParticipation'][] = $flatParticipant;
+    }
+
+    usort($musicianData['projectParticipation'], function($pp1, $pp2) {
+      $p1 = $pp1['project'];
+      $p2 = $pp2['project'];
+      $t1 = $p1['type'];
+      $t2 = $p2['type'];
+      if ($t1 == $t2) {
+        $y1 = $p1['year'];
+        $y2 = $p2['year'];
+        if ($y1 == $y2) {
+          return strcmp($p1['name'], $p2['name']);
+        } else {
+          return $y2 < $y1 ? -1 : 1;
+        }
+      } else {
+        if ($t1 == 'template') {
+          return 1;
+        } else if ($t1 == 'permanent') {
+          return -1;
+        } else {
+          // $t1 == 'temporary'
+          if ($t2 == 'template') {
+            return -1;
+          } else {
+            // $t2 == 'permanent'
+            return 1;
+          }
+        }
+      }
+    });
+
     return self::dataResponse($musicianData);
   }
 }
