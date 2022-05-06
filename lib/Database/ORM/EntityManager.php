@@ -294,6 +294,7 @@ class EntityManager extends EntityManagerDecorator
       return;
     }
     $types = [
+      Types\EnumProjectTemporalType::class => 'enum',
       Types\EnumMemberStatus::class => 'enum',
       Types\UuidType::class => 'binary',
     ];

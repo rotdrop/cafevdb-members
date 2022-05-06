@@ -26,7 +26,6 @@
 namespace OCA\CAFeVDBMembers\Database\ORM\Traits;
 
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
 
 use OCA\CAFeVDBMembers\Database\ORM as CAFEVDB;
 

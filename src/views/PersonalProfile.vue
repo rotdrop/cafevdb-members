@@ -103,8 +103,15 @@
                    :readonly="readonly"
                    :multiple="true" />
       </div>
-      <div>{{ t(appName, 'DEBUG: all data') }}</div>
-      <pre>{{ JSON.stringify(memberData, null, 2) }}</pre>
+      <div class="debug-container">
+        <CheckboxRadioSwitch :checked.sync="debug">
+          {{ t(appName, 'Enable Debug') }}
+        </CheckboxRadioSwitch>
+        <div v-if="debug" class="debug">
+          <div>{{ t(appName, 'DEBUG: all data') }}</div>
+          <pre>{{ JSON.stringify(memberData, null, 2) }}</pre>
+        </div>
+      </div>
     </div>
   </Content>
 </template>
@@ -114,6 +121,7 @@ import InputText from '../components/InputText'
 
 import Vue from 'vue'
 import Content from '@nextcloud/vue/dist/Components/Content'
+import CheckboxRadioSwitch from '@nextcloud/vue/dist/Components/CheckboxRadioSwitch'
 import '@nextcloud/dialogs/styles/toast.scss'
 import { generateUrl } from '@nextcloud/router'
 import { showError, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
@@ -124,6 +132,7 @@ export default {
   components: {
     Content,
     InputText,
+    CheckboxRadioSwitch,
   },
   data() {
     return {
@@ -133,6 +142,7 @@ export default {
       },
       loading: true,
       readonly: true,
+      debug: false,
     }
   },
   computed: {

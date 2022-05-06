@@ -216,13 +216,26 @@ class Musician implements \ArrayAccess, \JsonSerializable
   private $cloudAccountDisabled;
 
   /**
-   * @ORM\OneToMany(targetEntity="MusicianInstrument", mappedBy="musician")
+   * @ORM\OneToMany(targetEntity="MusicianInstrument", mappedBy="musician", fetch="EXTRA_LAZY")
    */
   private $instruments;
+
+  /**
+   * @ORM\OneToMany(targetEntity="SepaBankAccount", mappedBy="musician", fetch="EXTRA_LAZY")
+   */
+  private $sepaBankAccounts;
+
+  /**
+   * @ORM\OneToMany(targetEntity="SepaDebitMandate", mappedBy="musician", fetch="EXTRA_LAZY")
+   */
+  private $sepaDebitMandates;
 
   public function __construct() {
     $this->__wakeup();
     $this->memberStatus = Types\EnumMemberStatus::REGULAR();
+    $this->instruments = new ArrayCollection;
+    $this->sepaBankAccounts = new ArrayCollection;
+    $this->sepaDebitMandates = new ArrayCollection;
   }
 
   public function __wakeup()
@@ -736,6 +749,54 @@ class Musician implements \ArrayAccess, \JsonSerializable
   public function getUserIdSlug():?string
   {
     return $this->userIdSlug;
+  }
+
+  /**
+   * Set sepaBankAccounts.
+   *
+   * @param Collection $sepaBankAccounts
+   *
+   * @return Musician
+   */
+  public function setSepaBankAccounts(Collection $sepaBankAccounts):Musician
+  {
+    $this->sepaBankAccounts = $sepaBankAccounts;
+
+    return $this;
+  }
+
+  /**
+   * Get sepaBankAccounts.
+   *
+   * @return Collection
+   */
+  public function getSepaBankAccounts():Collection
+  {
+    return $this->sepaBankAccounts;
+  }
+
+  /**
+   * Set sepaDebitMandates.
+   *
+   * @param Collection $sepaDebitMandates
+   *
+   * @return Musician
+   */
+  public function setSepaDebitMandates(Collection $sepaDebitMandates):Musician
+  {
+    $this->sepaDebitMandates = $sepaDebitMandates;
+
+    return $this;
+  }
+
+  /**
+   * Get sepaDebitMandates.
+   *
+   * @return Collection
+   */
+  public function getSepaDebitMandates():Collection
+  {
+    return $this->sepaDebitMandates;
   }
 
   public function jsonSerialize():array

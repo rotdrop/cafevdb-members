@@ -76,15 +76,14 @@ class MemberDataController extends Controller
     if (count($musicians) == 0) {
       return self::grumble($this->l->t('No member-data found for user-id "%s".', $this->userId));
     } else if (count($musicians) > 1) {
-      return self::grumble($this->l_>t('More than one musiciand found for user-id "%s".', $this->userId));
+      return self::grumble($this->l_>t('More than one musician found for user-id "%s".', $this->userId));
     }
     /** @var Entities\Musician $musician */
     $musician = $musicians[0];
 
-    // THIS IS JUST PROVE OF CONCEPT
-
     $this->logInfo('NAME ' . $musician->getPublicName() . ' #Instruments ' . $musician->getInstruments()->count());
     $musicianData = $musician->toArray();
+
     $musicianData['personalPublicName'] = $musician->getPublicName(firstNameFirst: true);
     $musicianData['instruments'] = [];
     /** @var Entities\Instrument $instrument */
@@ -102,6 +101,28 @@ class MemberDataController extends Controller
       }
       $musicianData['instruments'][] = $flatInstrument;
     }
+
+    /** @var Entities\SepaBankAccount $bankAccount */
+    $musicianData['sepaBankAccounts'] = [];
+    unset($musicianData['sepaDebitMandates']);
+    foreach ($musician->getSepaBankAccounts() as $bankAccount) {
+      $flatBankAccount = $bankAccount->toArray();
+      unset($flatBankAccount['musician']);
+      $flatBankAccount['musicianId'] = $musician->getId();
+      $flatBankAccount['sepaDebitMandates'] = [];
+      /** @var Entities\SepaDebitMandate $debitMandate */
+      foreach ($bankAccount->getSepaDebitMandates() as $debitMandate) {
+        $flatDebitMandate = $debitMandate->toArray();
+        unset($flatDebitMandate['sepaBankAccount']);
+        $flatDebitMandate['bankAccountSequence'] = $bankAccount->getSequence();
+        unset($flatDebitMandate['musician']);
+        $flatDebitMandate['musicianId'] = $musician->getId();
+        $flatDebitMandate['project'] = $debitMandate->getProject()->toArray();
+        $flatBankAccount['sepaDebitMandates'][] = $flatDebitMandate;
+      }
+      $musicianData['sepaBankAccounts'][] = $flatBankAccount;
+    }
+
     return self::dataResponse($musicianData);
   }
 }
