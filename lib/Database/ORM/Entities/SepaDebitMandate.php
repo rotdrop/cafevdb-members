@@ -383,7 +383,7 @@ class SepaDebitMandate implements \ArrayAccess
    *
    * @return \DateTimeInterface
    */
-  public function getLastUsedDate():\DateTimeInterface
+  public function getLastUsedDate():?\DateTimeInterface
   {
     return $this->lastUsedDate;
   }
