@@ -5,8 +5,8 @@
  */
 </script>
 <template>
-  <div :class="['input__container', 'input-type-' + type, { readonly }]">
-    <div :class="['input-effect', filled, { readonly }]">
+  <div :class="['input__container', 'input-type-' + type, { readonly, collapse }, has_hint ]">
+    <div :class="['input-effect', filled, { readonly, collapse }, has_hint ]">
       <DatetimePicker v-if="isDatePickerType"
                       class="effect"
                       :type="isDatePickerType"
@@ -75,6 +75,7 @@ export default {
     placeholder: { type: String, required: false, default: '' },
     color: { type: String, required: false, default: 'indigo' },
     optionLabel: { type: String, required: false, default: '' },
+    collapse: { type: Boolean, requried: false, default: true },
   },
   data: () => ({
     show: false,
@@ -91,6 +92,12 @@ export default {
         return 'input__has_icon'
       }
       return ''
+    },
+    has_hint() {
+      if (this.hint) {
+        return 'input__has_hint'
+      }
+      return 'input__no_hint'
     },
     focus_border() {
       return {
@@ -128,13 +135,11 @@ export default {
   width: 100%;
   padding: 0.5rem 0.5rem 0 0;
   text-align: left;
-}
-
-.input-effect {
-  float: left;
-  width: 100%;
-  margin: 1.5rem 0rem 1.5rem 0;
-  position: relative;  /* necessary to give position: relative to parent. */
+  &.input__no_hint.collapse {
+    .input__icon {
+      top: -2rem;
+    }
+  }
 }
 
 .input__icon {
@@ -153,18 +158,27 @@ export default {
   opacity: 0.6;
 }
 
-.input__has_icon {
-  padding-left: 2rem !important;
-}
-
-.input-effect.readonly {
-  .effect {
-    ~ label {
-      .readonly-indicator {
-        display:inline;
+.input-effect {
+  float: left;
+  width: 100%;
+  margin: 1.5rem 0rem 1.5rem 0;
+  position: relative;  /* necessary to give position: relative to parent. */
+  &.input__no_hint.collapse {
+    margin-bottom:0;
+  }
+  &.readonly {
+    .effect {
+      ~ label {
+        .readonly-indicator {
+          display:inline;
+        }
       }
     }
   }
+}
+
+.input__has_icon {
+  padding-left: 2rem !important;
 }
 
 input.effect {

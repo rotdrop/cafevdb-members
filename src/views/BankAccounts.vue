@@ -23,11 +23,12 @@
 </script>
 <template>
   <Content :class="'app-' + appName" :app-name="appName">
-    <div class="page-container">
+    <div v-if="loading" class="page-container loading" />
+    <div v-else class="page-container">
       <h2>
         {{ t(appName, 'Bank Accounts of {publicName} ({count})', { publicName: memberData.personalPublicName, count: showDeleted ? memberData.sepaBankAccounts.length : memberData.numActiveBankAccounts }) }}
       </h2>
-      <CheckboxRadioSwitch :checked.sync="showDeleted">
+      <CheckboxRadioSwitch v-if="haveDeleted" :checked.sync="showDeleted">
         {{ t(appName, 'show deleted') }}
       </CheckboxRadioSwitch>
       <ul v-for="account in memberData.sepaBankAccounts"
@@ -120,21 +121,24 @@ export default {
       loading: true,
       debug: false,
       showDeleted: false,
+      haveDeleted: false,
     }
   },
   async created() {
-    console.info('MOUNTED')
+    const self = this;
     try {
       const response = await axios.get(generateUrl('/apps/' + appName + '/member'))
       for (const [key, value] of Object.entries(response.data)) {
         Vue.set(this.memberData, key, value)
       }
       this.memberData.numDeletedBankAccounts = this.memberData.sepaBankAccounts.filter(account => !!account.deleted).length
+      this.haveDeleted = this.memberData.numDeletedBankAccounts > 0;
       this.memberData.numActiveBankAccounts = this.memberData.sepaBankAccounts.length - this.memberData.numDeletedBankAccounts
       this.memberData.sepaBankAccounts.forEach((account, index) => {
         // this.memberData.sepaBankAccounts[index].numDeletedDebitMandates = account.sepaDebitMandates.filter(mandate => !!account.deleted).length
         account.numDeletedDebitMandates = account.sepaDebitMandates.filter(mandate => !!mandate.deleted).length
         account.numActiveDebitMandates = account.sepaDebitMandates.length - account.numDeletedDebitMandates
+        self.haveDeleted = self.haveDeleted || (account.numDeletedDebitMandates > 0)
       })
     } catch (e) {
       console.error('ERROR', e)
@@ -165,6 +169,13 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.page-container {
+  padding-left:0.5rem;
+  &.loading {
+    width:100%;
+  }
+}
+
 .debug-container {
   width:100%;
 }

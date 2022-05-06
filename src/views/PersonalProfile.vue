@@ -23,7 +23,8 @@
 </script>
 <template>
   <Content :class="'app-' + appName" :app-name="'app-' + appName">
-    <div class="page-container">
+    <div v-if="loading" class="page-container loading" />
+    <div v-else class="page-container">
       <h2>{{ t(appName, 'Personal Profile of {publicName}', { publicName: memberData.personalPublicName }) }}</h2>
       <div class="input-row">
         <InputText v-model="memberData.firstName"
@@ -153,8 +154,7 @@ export default {
   /**
    *
    */
-  async mounted() {
-    console.info('MOUNTED')
+  async created() {
     try {
       const response = await axios.get(generateUrl('/apps/' + appName + '/member'))
       for (const [key, value] of Object.entries(response.data)) {
@@ -188,6 +188,9 @@ export default {
 <style lang="scss" scoped>
 .page-container {
   padding-left:0.5rem;
+  &.loading {
+    width:100%;
+  }
 }
 
 .input-row {
@@ -205,6 +208,9 @@ export default {
       width:234px;
       min-width:210px;
     }
+  }
+  ::v-deep .input-effect {
+    margin-bottom:0;
   }
 }
 </style>
