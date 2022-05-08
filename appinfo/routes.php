@@ -39,6 +39,11 @@ return [
       'verb' => 'GET',
     ],
     [
+      'name' => 'settings#get_app',
+      'url' => '/settings/app/{setting}',
+      'verb' => 'GET',
+    ],
+    [
       'name' => 'settings#set_personal',
       'url' => '/settings/personal/{setting}',
       'verb' => 'POST',

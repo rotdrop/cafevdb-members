@@ -54,7 +54,7 @@
                 <a class="list-item" href="#">
                   <div class="list-item-content">
                     <span class="label">{{ t(appName, 'Photos') }}</span>
-                    <span class="link"><a href="#">balh</a></span>
+                    <span class="link"><a :target="md5(projectPathUrl(participant.project))" :href="projectPathUrl(participant.project)">{{ projectPath(participant.project) }}</a></span>
                   </div>
                 </a>
               </li>
@@ -85,6 +85,7 @@ import '@nextcloud/dialogs/styles/toast.scss'
 import { generateUrl } from '@nextcloud/router'
 import { showError, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
 import axios from '@nextcloud/axios'
+import md5 from 'blueimp-md5'
 
 export default {
   name: 'Projects',
@@ -93,6 +94,13 @@ export default {
     CheckboxRadioSwitch,
     ListItem,
   },
+  mixins: [
+    {
+      methods: {
+        md5,
+      }
+    },
+  ],
   data() {
     return {
       memberData: {
@@ -100,6 +108,7 @@ export default {
       },
       loading: true,
       debug: false,
+      memberRootFolder: '',
     }
   },
   async created() {
@@ -120,9 +129,41 @@ export default {
         showError(t(appName, 'Could not fetch musician(s): {message}', { message }), { timeout: TOAST_PERMANENT_TIMEOUT })
       }
     }
+    try {
+      let response = await axios.get(generateUrl('apps/' + appName + '/settings/app/memberRootFolder'), {})
+      this.memberRootFolder = response.data.value
+      console.info('ROOT FOLDER', this.memberRootFolder)
+    } catch (e) {
+      console.error('ERROR', e)
+      let message = t(appName, 'reason unknown')
+      if (e.response && e.response.data && e.response.data.message) {
+        message = e.response.data.message
+        console.info('RESPONSE', e.response)
+      }
+      // Ignore for the time being
+      if (this === false) {
+        showError(t(appName, 'Could not fetch root-folder of member file space: {message}', { message }), { timeout: TOAST_PERMANENT_TIMEOUT })
+      }
+    }
+
     this.loading = false
   },
   methods: {
+    projectPath(project) {
+      const components = [
+        this.memberRootFolder,
+      ]
+      if (project.type === 'temporary') {
+        components.push(t(appName, 'projects'))
+        components.push(project.year)
+      }
+      components.push(project.name);
+      return '/' + components.join('/')
+    },
+    projectPathUrl(project) {
+      const path = this.projectPath(project)
+      return generateUrl('apps/files') + '?dir=' + path
+    }
   },
 }
 </script>

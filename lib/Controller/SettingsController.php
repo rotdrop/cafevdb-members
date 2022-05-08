@@ -192,6 +192,27 @@ class SettingsController extends Controller
     return self::grumble($this->l->t('Unknown admin setting: "%1$s"', $setting));
   }
 
+
+  /**
+   * Export some of the admin settings
+   *
+   * @NoAdminRequired
+   *
+   * @param string $setting
+   *
+   * @return DataResponse
+   */
+  public function getApp(string $setting):DataResponse
+  {
+    switch ($setting) {
+      case self::MEMBER_ROOT_FOLDER_KEY:
+      case self::FOLDER_GROUPS_KEY:
+        return $this->getAdmin($setting);
+      default:
+        return self::grumble($this->l->t('Unknown app setting: "%1$s"', $setting));
+    }
+  }
+
   /**
    * @NoAdminRequired
    */
