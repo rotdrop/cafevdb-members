@@ -51,10 +51,10 @@
                         :title="participant.projectInstruments[0].name"
                         :details="[participant.projectInstruments[0].voice > 0 ? t(appName, 'voice {voice}', { voice: participant.projectInstruments[0].voice }) : '', participant.projectInstruments[0].sectionLeader ? t(appName, 'section leader') : ''].filter(x => x.length > 0).join(', ')" />
               <li class="photos-link list-item__wrapper">
-                <a class="list-item" href="#">
+                <a class="list-item" :target="md5(projectPathUrl(participant.project))" :href="projectPathUrl(participant.project)">
                   <div class="list-item-content">
                     <span class="label">{{ t(appName, 'Photos') }}</span>
-                    <span class="link"><a :target="md5(projectPathUrl(participant.project))" :href="projectPathUrl(participant.project)">{{ projectPath(participant.project) }}</a></span>
+                    <span class="link">{{ projectPath(participant.project) }}</span>
                   </div>
                 </a>
               </li>
