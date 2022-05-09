@@ -33,7 +33,6 @@ use OCP\IRequest;
 use OCP\IL10N;
 
 use OCA\CAFeVDBMembers\AppInfo\Application;
-use OCA\CAFeVDBMembers\Service\NoteService;
 use OCA\CAFeVDBMembers\Database\ORM\EntityManager;
 use OCA\CAFeVDBMembers\Database\ORM\Entities;
 
