@@ -31,8 +31,7 @@
       <ul class="project-list">
         <ListItem v-for="participant in memberData.projectParticipation"
                   :key="participant.project.id"
-                  :title="t(appName, 'Project')"
-                  :details="participant.project.name"
+                  :title="participant.project.name"
                   :bold="true">
           <template #subtitle>
             <ul class="project-details">
