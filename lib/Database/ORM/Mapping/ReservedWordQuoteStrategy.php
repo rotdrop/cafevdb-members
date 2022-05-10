@@ -37,7 +37,7 @@ class ReservedWordQuoteStrategy implements QuoteStrategy
      * @param bool $force
      *
      * @return string
-     * @throws \OCA\CAFEVDB\Wrapped\Doctrine\DBAL\DBALException
+     * @throws \Doctrine\DBAL\DBALException
      */
     private function getQuotedName(AbstractPlatform $platform, $name, $force = false)
     {
