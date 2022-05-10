@@ -125,7 +125,6 @@ class MemberDataController extends Controller
     /** @var Entities\ProjectParticipant $participant */
     $musicianData['projectParticipation'] = [];
     foreach ($musician->getProjectParticipation() as $participant) {
-      $this->logInfo('PROJECT: ' . $participant->getProject()->getName());
       $flatParticipant = $participant->toArray();
       unset($flatParticipant['musician']);
       $flatParticipant['musicianId'] = $musician->getId();
