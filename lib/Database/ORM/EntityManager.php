@@ -344,6 +344,8 @@ class EntityManager extends EntityManagerDecorator
       }
 
       // Override datetime stuff
+      Type::overrideType('date', \Carbon\Doctrine\CarbonType::class);
+      Type::overrideType('date_immutable', \Carbon\Doctrine\CarbonImmutableType::class);
       Type::overrideType('datetime', \Carbon\Doctrine\DateTimeType::class);
       Type::overrideType('datetime_immutable', \Carbon\Doctrine\DateTimeImmutableType::class);
       Type::overrideType('datetimetz', \Carbon\Doctrine\DateTimeType::class);
