@@ -46,7 +46,6 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @ORM\Table(name="PersonalizedProjectInstrumentsView")
  * @ORM\Entity
- * @ORM\HasLifecycleCallbacks
  */
 class ProjectInstrument implements \ArrayAccess
 {
@@ -303,15 +302,5 @@ class ProjectInstrument implements \ArrayAccess
   public function getMusicianInstrument()
   {
     return $this->musicianInstrument;
-  }
-
-  /**
-   * @ORM\PostLoad
-   *
-   * __wakeup() is not called when loading entities
-   */
-  public function postLoad()
-  {
-    $this->__wakeup();
   }
 }

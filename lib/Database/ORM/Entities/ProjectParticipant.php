@@ -36,7 +36,6 @@ use Doctrine\Common\Collections\ArrayCollection;
  *
  * @ORM\Table(name="PersonalizedProjectParticipantsView")
  * @ORM\Entity
- * @ORM\HasLifecycleCallbacks
  */
 class ProjectParticipant implements \ArrayAccess
 {
@@ -64,19 +63,19 @@ class ProjectParticipant implements \ArrayAccess
    */
   private $registration = '0';
 
-  // /**
-  //  * Link to payments
-  //  *
-  //  * @ORM\OneToMany(targetEntity="ProjectPayment", mappedBy="projectParticipant")
-  //  */
-  // private $payments;
+  /**
+   * Link to payments
+   *
+   * @ORM\OneToMany(targetEntity="ProjectPayment", mappedBy="projectParticipant")
+   */
+  private $payments;
 
-  // /**
-  //  * Link to extra fields data
-  //  *
-  //  * @ORM\OneToMany(targetEntity="ProjectParticipantFieldDatum", indexBy="option_key", mappedBy="projectParticipant", cascade={"persist"}, fetch="EXTRA_LAZY")
-  //  */
-  // private $participantFieldsData;
+  /**
+   * Link to extra fields data
+   *
+   * @ORM\OneToMany(targetEntity="ProjectParticipantFieldDatum", indexBy="option_key", mappedBy="projectParticipant", cascade={"persist"}, fetch="EXTRA_LAZY")
+   */
+  private $participantFieldsData;
 
   // /**
   //  * @var \DateTimeImmutable
@@ -127,8 +126,8 @@ class ProjectParticipant implements \ArrayAccess
 
   public function __construct() {
     $this->arrayCTOR();
-    // $this->payments = new ArrayCollection();
-    // $this->participantFieldsData = new ArrayCollection();
+    $this->payments = new ArrayCollection();
+    $this->participantFieldsData = new ArrayCollection();
     $this->projectInstruments = new ArrayCollection();
   }
 
@@ -228,29 +227,29 @@ class ProjectParticipant implements \ArrayAccess
     return $this->projectInstruments;
   }
 
-  // /**
-  //  * Set participantFieldsData.
-  //  *
-  //  * @param Collection $participantFieldsData
-  //  *
-  //  * @return ProjectParticipant
-  //  */
-  // public function setParticipantFieldsData($participantFieldsData):ProjectParticipant
-  // {
-  //   $this->participantFieldsData = $participantFieldsData;
+  /**
+   * Set participantFieldsData.
+   *
+   * @param Collection $participantFieldsData
+   *
+   * @return ProjectParticipant
+   */
+  public function setParticipantFieldsData($participantFieldsData):ProjectParticipant
+  {
+    $this->participantFieldsData = $participantFieldsData;
 
-  //   return $this;
-  // }
+    return $this;
+  }
 
-  // /**
-  //  * Get participantFieldsData.
-  //  *
-  //  * @return Collection
-  //  */
-  // public function getParticipantFieldsData():Collection
-  // {
-  //   return $this->participantFieldsData;
-  // }
+  /**
+   * Get participantFieldsData.
+   *
+   * @return Collection
+   */
+  public function getParticipantFieldsData():Collection
+  {
+    return $this->participantFieldsData;
+  }
 
   // /**
   //  * Get participantFieldsDataChanged.
@@ -262,42 +261,42 @@ class ProjectParticipant implements \ArrayAccess
   //   return $this->participantFieldsDataChanged;
   // }
 
-  // /**
-  //  * Get one specific participant-field datum indexed by its key
-  //  *
-  //  * @param mixed $key Everything which can be converted to an UUID by
-  //  * Uuid::asUuid().
-  //  *
-  //  * @return null|ProjectParticipantFieldDatum
-  //  */
-  // public function getParticipantFieldsDatum($key):?ProjectParticipantFieldDatum
-  // {
-  //   return $this->getByUuid($this->participantFieldsData, $key, 'optionKey');
-  // }
+  /**
+   * Get one specific participant-field datum indexed by its key
+   *
+   * @param mixed $key Everything which can be converted to an UUID by
+   * Uuid::asUuid().
+   *
+   * @return null|ProjectParticipantFieldDatum
+   */
+  public function getParticipantFieldsDatum($key):?ProjectParticipantFieldDatum
+  {
+    return $this->getByUuid($this->participantFieldsData, $key, 'optionKey');
+  }
 
-  // /**
-  //  * Set payments.
-  //  *
-  //  * @param Collection $payments
-  //  *
-  //  * @return ProjectParticipant
-  //  */
-  // public function setPayments($payments):ProjectParticipant
-  // {
-  //   $this->payments = $payments;
+  /**
+   * Set payments.
+   *
+   * @param Collection $payments
+   *
+   * @return ProjectParticipant
+   */
+  public function setPayments($payments):ProjectParticipant
+  {
+    $this->payments = $payments;
 
-  //   return $this;
-  // }
+    return $this;
+  }
 
-  // /**
-  //  * Get payments.
-  //  *
-  //  * @return Collection
-  //  */
-  // public function getPayments():Collection
-  // {
-  //   return $this->payments;
-  // }
+  /**
+   * Get payments.
+   *
+   * @return Collection
+   */
+  public function getPayments():Collection
+  {
+    return $this->payments;
+  }
 
   /**
    * Set sepaBankAccount.
@@ -345,16 +344,6 @@ class ProjectParticipant implements \ArrayAccess
   public function getSepaDebitMandate():?SepaDebitMandate
   {
     return $this->sepaDebitMandate;
-  }
-
-  /**
-   * @ORM\PostLoad
-   *
-   * __wakeup() is not called when loading entities
-   */
-  public function postLoad()
-  {
-    $this->__wakeup();
   }
 
   // /**

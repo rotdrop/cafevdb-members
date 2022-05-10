@@ -43,7 +43,6 @@ use OCA\CAFeVDBMembers\Database\DBAL\Types;
  *
  * @ORM\Table(name="PersonalizedMusicianInstrumentsView")
  * @ORM\Entity
- * @ORM\HasLifecycleCallbacks
  */
 class MusicianInstrument implements \ArrayAccess
 {
@@ -155,16 +154,5 @@ class MusicianInstrument implements \ArrayAccess
   public function usage()
   {
     return 0; /* $this->projectInstruments->count(); */
-  }
-
-  /**
-   * @ORM\PostLoad
-   *
-   * __wakeup() is not called when loading entities. Here we add a "virtual"
-   * array key for the \ArrayAccess implementation.
-   */
-  public function postLoad()
-  {
-    $this->__wakeup();
   }
 }

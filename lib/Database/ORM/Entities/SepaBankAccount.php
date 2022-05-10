@@ -30,13 +30,13 @@ use OCA\CAFeVDBMembers\Database\ORM as CAFEVDB;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use MediaMonks\Doctrine\Mapping\Annotation as MediaMonks;
 
 /**
  * SepaBankAccount.
  *
  * @ORM\Table(name="PersonalizedSepaBankAccountsView")
  * @ORM\Entity
- * @ORM\HasLifecycleCallbacks
  */
 class SepaBankAccount implements \ArrayAccess
 {
@@ -77,7 +77,7 @@ class SepaBankAccount implements \ArrayAccess
    * shared encryption key and the respective orchestra member with its own key.
    *
    * @ORM\Column(type="string", length=2048, nullable=false, options={"collation"="ascii_bin"})
-   * _AT_MediaMonks\Transformable(name="encrypt", context="encryptionContext[]")
+   * @MediaMonks\Transformable(name="encrypt", context="encryptionContext[]")
    */
   private $iban;
 
@@ -85,7 +85,7 @@ class SepaBankAccount implements \ArrayAccess
    * @var string
    *
    * @ORM\Column(type="string", length=2048, nullable=false, options={"collation"="ascii_bin"})
-   * _AT_MediaMonks\Transformable(name="encrypt", context="encryptionContext[]")
+   * @MediaMonks\Transformable(name="encrypt", context="encryptionContext[]")
    */
   private $bic;
 
@@ -93,7 +93,7 @@ class SepaBankAccount implements \ArrayAccess
    * @var string
    *
    * @ORM\Column(type="string", length=2048, nullable=false, options={"collation"="ascii_bin"})
-   * _AT_MediaMonks\Transformable(name="encrypt", context="encryptionContext[]")
+   * @MediaMonks\Transformable(name="encrypt", context="encryptionContext[]")
    */
   private $blz;
 
@@ -101,7 +101,7 @@ class SepaBankAccount implements \ArrayAccess
    * @var string
    *
    * @ORM\Column(type="string", length=2048, nullable=false, options={"collation"="ascii_bin"})
-   * _AT_MediaMonks\Transformable(name="encrypt", context="encryptionContext[]")
+   * @MediaMonks\Transformable(name="encrypt", context="encryptionContext[]")
    */
   private $bankAccountOwner;
 
@@ -110,7 +110,7 @@ class SepaBankAccount implements \ArrayAccess
    *
    * In memory encryption context to support multi user encryption.
    */
-  // private $encryptionContext = [];
+  private $encryptionContext = [];
 
   /**
    * @var Collection
@@ -329,15 +329,5 @@ class SepaBankAccount implements \ArrayAccess
   public function getSepaDebitMandates():Collection
   {
     return $this->sepaDebitMandates;
-  }
-
-  /**
-   * @ORM\PostLoad
-   *
-   * __wakeup() is not called when loading entities
-   */
-  public function postLoad()
-  {
-    $this->__wakeup();
   }
 }

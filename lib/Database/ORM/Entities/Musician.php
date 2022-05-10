@@ -37,7 +37,6 @@ use OCA\CAFeVDBMembers\Database\DBAL\Types;
  *
  * @ORM\Table(name="PersonalizedMusiciansView")
  * @ORM\Entity
- * @ORM\HasLifecycleCallbacks
  */
 class Musician implements \ArrayAccess, \JsonSerializable
 {
@@ -231,6 +230,11 @@ class Musician implements \ArrayAccess, \JsonSerializable
   private $projectInstruments;
 
   /**
+   * @ORM\OneToMany(targetEntity="ProjectParticipantFieldDatum", mappedBy="musician", indexBy="option_key", fetch="EXTRA_LAZY")
+   */
+  private $projectParticipantFieldsData;
+
+  /**
    * @ORM\OneToMany(targetEntity="SepaBankAccount", mappedBy="musician", fetch="EXTRA_LAZY")
    */
   private $sepaBankAccounts;
@@ -240,14 +244,33 @@ class Musician implements \ArrayAccess, \JsonSerializable
    */
   private $sepaDebitMandates;
 
+  /**
+   * @ORM\OneToMany(targetEntity="CompositePayment", mappedBy="musician", orphanRemoval=true, fetch="EXTRA_LAZY")
+   */
+  private $payments;
+
+  /**
+   * @var Collection
+   *
+   * @ORM\ManyToMany(targetEntity="EncryptedFile", inversedBy="owners", indexBy="id", fetch="EXTRA_LAZY")
+   * @ORM\JoinTable(name="EncryptedFileOwners")
+   *
+   * The list of files owned by this musician. This is in particular important for
+   * encrypted files where the list of owners determines the encryption keys
+   * which are used to seal the data.
+   */
+  private $encryptedFiles;
+
   public function __construct() {
     $this->__wakeup();
     $this->memberStatus = Types\EnumMemberStatus::REGULAR();
     $this->instruments = new ArrayCollection;
     $this->projectInstruments = new ArrayCollection();
     $this->projectParticipation = new ArrayCollection();
+    $this->projectParticipantFieldsData = new ArrayCollection();
     $this->sepaBankAccounts = new ArrayCollection;
     $this->sepaDebitMandates = new ArrayCollection;
+    $this->payments = new ArrayCollection();
   }
 
   public function __wakeup()
@@ -651,6 +674,30 @@ class Musician implements \ArrayAccess, \JsonSerializable
   }
 
   /**
+   * Set encryptedFiles.
+   *
+   * @param Collection $encryptedFiles
+   *
+   * @return Musician
+   */
+  public function setEncryptedFiles(Collection $encryptedFiles):Musician
+  {
+    $this->encryptedFiles = $encryptedFiles;
+
+    return $this;
+  }
+
+  /**
+   * Get encryptedFiles.
+   *
+   * @return Collection
+   */
+  public function getEncryptedFiles():Collection
+  {
+    return $this->encryptedFiles;
+  }
+
+  /**
    * Set displayName.
    *
    * @param string|null $displayName
@@ -861,6 +908,30 @@ class Musician implements \ArrayAccess, \JsonSerializable
   }
 
   /**
+   * Set payments.
+   *
+   * @param Collection $payments
+   *
+   * @return Musician
+   */
+  public function setPayments($payments):Musician
+  {
+    $this->payments = $payments;
+
+    return $this;
+  }
+
+  /**
+   * Get payments.
+   *
+   * @return Collection
+   */
+  public function getPayments():Collection
+  {
+    return $this->payments;
+  }
+
+  /**
    * Set sepaBankAccounts.
    *
    * @param Collection $sepaBankAccounts
@@ -917,13 +988,39 @@ class Musician implements \ArrayAccess, \JsonSerializable
   }
 
   /**
-   * @ORM\PostLoad
+   * Set projectParticipantFieldsData.
    *
-   * __wakeup() is not called when loading entities. Here we add a "virtual"
-   * array key for the \ArrayAccess implementation.
+   * @param Collection $projectParticipantFieldsData
+   *
+   * @return Musician
    */
-  public function postLoad()
+  public function setProjectParticipantFieldsData($projectParticipantFieldsData):Musician
   {
-    $this->__wakeup();
+    $this->projectParticipantFieldsData = $projectParticipantFieldsData;
+
+    return $this;
+  }
+
+  /**
+   * Get projectParticipantFieldsData.
+   *
+   * @return Collection
+   */
+  public function getProjectParticipantFieldsData():Collection
+  {
+    return $this->projectParticipantFieldsData;
+  }
+
+  /**
+   * Get one specific participant-field datum indexed by its key
+   *
+   * @param mixed $key Everything which can be converted to an UUID by
+   * Uuid::asUuid().
+   *
+   * @return null|ProjectParticipantFieldDatum
+   */
+  public function getProjectParticipantFieldsDatum($key):?ProjectParticipantFieldDatum
+  {
+    return $this->getByUuid($this->projectParticipantFieldsData, $key, 'optionKey');
   }
 }

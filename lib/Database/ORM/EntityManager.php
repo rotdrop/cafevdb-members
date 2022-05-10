@@ -32,6 +32,7 @@ use OCP\IL10N;
 use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\DBAL\Event\ConnectionEventArgs;
+use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Doctrine\ORM\Decorator\EntityManagerDecorator;
 use Doctrine\ORM\Mapping\UnderscoreNamingStrategy;
 use Doctrine\DBAL\Connection as DatabaseConnection;
@@ -43,10 +44,13 @@ use Doctrine\Common\Cache\Psr6\DoctrineProvider;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\PsrCachedReader;
 
+use MyCLabs\Enum\Enum as EnumType;
+use MediaMonks\Doctrine\Transformable;
+
 use OCA\CAFeVDBMembers\Database\ORM\Mapping\ReservedWordQuoteStrategy;
 use OCA\CAFeVDBMembers\Database\DBAL\Types;
 use OCA\CAFeVDBMembers\Database\DBAL\Logging\CloudLogger;
-use MyCLabs\Enum\Enum as EnumType;
+
 
 /**
  * Use this as the actual EntityManager in order to be able to
@@ -62,6 +66,8 @@ class EntityManager extends EntityManagerDecorator
   ];
   const PROXY_DIR = __DIR__ . "/Proxies";
   const DEV_MODE = true;
+
+  const TRANSFORM_ENCRYPT = 'encrypt';
 
   /** @var EntityManagerInterface */
   private $entityManager;
@@ -148,6 +154,7 @@ class EntityManager extends EntityManagerDecorator
       // ORM\Events::preUpdate,
       // ORM\Events::postUpdate,
       \Doctrine\DBAL\Events::postConnect,
+      \Doctrine\ORM\Events::postLoad,
     ], $this);
 
     return [ $config, $eventManager, ];
@@ -170,7 +177,7 @@ class EntityManager extends EntityManagerDecorator
       $cachedAnnotationReader // our cached annotation reader
     );
     //<<< Further annotations can go here
-    // \MediaMonks\Doctrine\DoctrineExtensions::registerAnnotations();
+    \MediaMonks\Doctrine\DoctrineExtensions::registerAnnotations();
     // CJH\Setup::registerAnnotations();
     //>>>
 
@@ -205,6 +212,16 @@ class EntityManager extends EntityManagerDecorator
     $softDeletableListener->setAnnotationReader($cachedAnnotationReader);
     $eventManager->addEventSubscriber($softDeletableListener);
     $config->addFilter('soft-deleteable', \Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter::class);
+
+    // encryption
+    $transformerPool = new Transformable\Transformer\TransformerPool();
+    $transformerPool[self::TRANSFORM_ENCRYPT] = $this->appContainer->get(
+      Listeners\Encryption::class
+    );
+    $this->transformerPool = $transformerPool;
+    $transformableListener = new Transformable\TransformableSubscriber($transformerPool);
+    $transformableListener->setAnnotationReader($cachedAnnotationReader);
+    $eventManager->addEventSubscriber($transformableListener);
 
     // translatable
     $translatableListener = $this->appContainer->get(Listeners\GedmoTranslatableListener::class);
@@ -294,8 +311,11 @@ class EntityManager extends EntityManagerDecorator
       return;
     }
     $types = [
-      Types\EnumProjectTemporalType::class => 'enum',
+      Types\EnumFileType::class => 'enum',
       Types\EnumMemberStatus::class => 'enum',
+      Types\EnumParticipantFieldDataType::class => 'enum',
+      Types\EnumParticipantFieldMultiplicity::class => 'enum',
+      Types\EnumProjectTemporalType::class => 'enum',
       Types\UuidType::class => 'binary',
     ];
 
@@ -363,6 +383,14 @@ class EntityManager extends EntityManagerDecorator
     if (!empty($this->userId)) {
       $this->logInfo('Setting CLOUD_USER_ID to ' . $this->userId);
       $args->getConnection()->executeStatement("SET @CLOUD_USER_ID = '" . $this->userId . "'");
+    }
+  }
+
+  public function postLoad(LifecycleEventArgs $args)
+  {
+    $entity = $args->getObject();
+    if (\method_exists($entity, '__wakeup')) {
+      $entity->__wakeup();
     }
   }
 }

@@ -30,14 +30,13 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
 use OCA\CAFeVDBMembers\Database\ORM as CAFEVDB;
+use MediaMonks\Doctrine\Mapping\Annotation as MediaMonks;
 use OCA\CAFeVDBMembers\Database\DBAL\Types;
 
 /**
  * EncryptedFileData
  *
  * @ORM\Entity
- *
- * @ORM\HasLifecycleCallbacks
  */
 class EncryptedFileData extends FileData
 {
@@ -55,7 +54,7 @@ class EncryptedFileData extends FileData
   private $file;
 
   /**
-   * _AT_MediaMonks\Transformable(name="encrypt", override=true, context="encryptionContext")
+   * @MediaMonks\Transformable(name="encrypt", override=true, context="encryptionContext")
    */
   private $data;
 

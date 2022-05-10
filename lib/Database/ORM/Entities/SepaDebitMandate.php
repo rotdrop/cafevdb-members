@@ -36,7 +36,6 @@ use Doctrine\Common\Collections\ArrayCollection;
  *
  * @ORM\Table(name="PersonalizedSepaDebitMandatesView")
  * @ORM\Entity
- * @ORM\HasLifecycleCallbacks
  */
 class SepaDebitMandate implements \ArrayAccess
 {
@@ -155,20 +154,20 @@ class SepaDebitMandate implements \ArrayAccess
   //  */
   // private $writtenMandate;
 
-  // /**
-  //  * @var ProjectPayment
-  //  *
-  //  * Linke to the payments table.
-  //  *
-  //  * _AT_ORM\OneToMany(targetEntity="CompositePayment",
-  //  *                   mappedBy="sepaDebitMandate",
-  //  *                   fetch="EXTRA_LAZY")
-  //  */
-  // private $payments;
+  /**
+   * @var ProjectPayment
+   *
+   * Linke to the payments table.
+   *
+   * _AT_ORM\OneToMany(targetEntity="CompositePayment",
+   *                   mappedBy="sepaDebitMandate",
+   *                   fetch="EXTRA_LAZY")
+   */
+  private $payments;
 
   public function __construct() {
     $this->arrayCTOR();
-    // $this->payments = new ArrayCollection();
+    $this->payments = new ArrayCollection();
   }
 
   /**
@@ -412,6 +411,30 @@ class SepaDebitMandate implements \ArrayAccess
     return $this->nonRecurring;
   }
 
+  /**
+   * Set payments.
+   *
+   * @param Collection $payments
+   *
+   * @return SepaDebitMandate
+   */
+  public function setPayments(Collection $payments):SepaDebitMandate
+  {
+    $this->payments = $payments;
+
+    return $this;
+  }
+
+  /**
+   * Get payments.
+   *
+   * @return Collection
+   */
+  public function getPayments():Collection
+  {
+    return $this->payments;
+  }
+
   // /**
   //  * Set writtenMandate.
   //  *
@@ -445,14 +468,4 @@ class SepaDebitMandate implements \ArrayAccess
   // {
   //   return $this->payments->count();
   // }
-
-  /**
-   * @ORM\PostLoad
-   *
-   * __wakeup() is not called when loading entities
-   */
-  public function postLoad()
-  {
-    $this->__wakeup();
-  }
 }

@@ -41,8 +41,6 @@ use OCA\CAFeVDBMembers\Database\DBAL\Types;
  */
 class Image extends File
 {
-  use CAFEVDB\Traits\FactoryTrait;
-
   /**
    * @var FileData
    *

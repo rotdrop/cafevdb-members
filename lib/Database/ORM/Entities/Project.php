@@ -37,7 +37,6 @@ use OCA\CAFeVDBMembers\Database\DBAL\Types;
  *
  * @ORM\Table(name="PersonalizedProjectsView")
  * @ORM\Entity
- * @ORM\HasLifecycleCallbacks
  */
 class Project implements \ArrayAccess
 {
@@ -75,10 +74,39 @@ class Project implements \ArrayAccess
    */
   private $type = 'temporary';
 
+  /**
+   * @ORM\OneToMany(targetEntity="ProjectParticipant", mappedBy="project")
+   */
+  private $participants;
+
+  /**
+   * @ORM\OneToMany(targetEntity="ProjectParticipantField", mappedBy="project", indexBy="id", fetch="EXTRA_LAZY")
+   * @ORM\OrderBy({"displayOrder" = "DESC"})
+   */
+  private $participantFields;
+
+  /**
+   * @ORM\OneToMany(targetEntity="ProjectParticipantFieldDatum", mappedBy="project", fetch="EXTRA_LAZY")
+   */
+  private $participantFieldsData;
+
+  /**
+   * @ORM\OneToMany(targetEntity="SepaDebitMandate", mappedBy="project")
+   */
+  private $sepaDebitMandates;
+
+  /**
+   * @ORM\OneToMany(targetEntity="ProjectPayment", mappedBy="project")
+   */
+  private $payments;
+
   public function __construct() {
     $this->arrayCTOR();
-    // $this->sepaDebitMandates = new ArrayCollection();
-    // $this->payments = new ArrayCollection();
+    $this->participants = new ArrayCollection();
+    $this->participantFields = new ArrayCollection();
+    $this->participantFieldsData = new ArrayCollection();
+    $this->sepaDebitMandates = new ArrayCollection();
+    $this->payments = new ArrayCollection();
   }
 
   /**
@@ -176,12 +204,122 @@ class Project implements \ArrayAccess
   }
 
   /**
-   * @ORM\PostLoad
+   * Set participants.
    *
-   * __wakeup() is not called when loading entities
+   * @param ArrayCollection $participants
+   *
+   * @return Project
    */
-  public function postLoad()
+  public function setParticipants($participants):Project
   {
-    $this->__wakeup();
+    $this->participants = $participants;
+
+    return $this;
+  }
+
+  /**
+   * Get participants.
+   *
+   * @return Collection
+   */
+  public function getParticipants():Collection
+  {
+    return $this->participants;
+  }
+
+  /**
+   * Set participantFields.
+   *
+   * @param ArrayCollection $participantFields
+   *
+   * @return Project
+   */
+  public function setParticipantFields($participantFields):Project
+  {
+    $this->participantFields = $participantFields;
+
+    return $this;
+  }
+
+  /**
+   * Get participantFields.
+   *
+   * @return Collection
+   */
+  public function getParticipantFields():Collection
+  {
+    return $this->participantFields;
+  }
+
+  /**
+   * Set participantFieldsData.
+   *
+   * @param ArrayCollection $participantFieldsData
+   *
+   * @return Project
+   */
+  public function setParticipantFieldsData($participantFieldsData):Project
+  {
+    $this->participantFieldsData = $participantFieldsData;
+
+    return $this;
+  }
+
+  /**
+   * Get participantFieldsData.
+   *
+   * @return Collection
+   */
+  public function getParticipantFieldsData():Collection
+  {
+    return $this->participantFieldsData;
+  }
+
+  /**
+   * Set payments.
+   *
+   * @param ArrayCollection $payments
+   *
+   * @return Project
+   */
+  public function setPayments(Collection $payments):Project
+  {
+    $this->payments = $payments;
+
+    return $this;
+  }
+
+  /**
+   * Get payments.
+   *
+   * @return ArrayCollection
+   */
+  public function getPayments():Collection
+  {
+    return $this->payments;
+  }
+
+  /**
+   * Set sepaDebitMandates.
+   *
+   * @param ArrayCollection $sepaDebitMandates
+   *
+   * @return Project
+   */
+  public function setSepaDebitMandates($sepaDebitMandates):Project
+  {
+    $this->sepaDebitMandates = $sepaDebitMandates;
+
+    return $this;
+  }
+
+  /**
+   * Get sepaDebitMandates.
+   *
+   * @return Collection
+   */
+  public function getSepaDebitMandates():Collection
+  {
+    return $this->sepaDebitMandates;
   }
 }
