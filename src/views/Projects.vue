@@ -221,7 +221,8 @@ export default {
         flex-grow:1;
       }
       .link {
-        color: var(--color-text-lighter);
+        color: CornFlowerBlue;
+        text-decoration: underline;
         font-weight:normal;
         margin: 0 8px;
         * {
