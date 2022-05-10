@@ -40,7 +40,6 @@ use OCA\CAFeVDBMembers\Database\ORM as CAFEVDB;
 class InsuranceBroker implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
-  use CAFEVDB\Traits\FactoryTrait;
 
   /**
    * @var string

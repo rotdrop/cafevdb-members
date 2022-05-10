@@ -1028,4 +1028,28 @@ class Musician implements \ArrayAccess, \JsonSerializable
   {
     return $this->getByUuid($this->projectParticipantFieldsData, $key, 'optionKey');
   }
+
+  /**
+   * Set instrumentInsurances.
+   *
+   * @param Collection $instrumentInsurances
+   *
+   * @return Musician
+   */
+  public function setInstrumentInsurances($instrumentInsurances):Musician
+  {
+    $this->instrumentInsurances = $instrumentInsurances;
+
+    return $this;
+  }
+
+  /**
+   * Get instrumentInsurances.
+   *
+   * @return Collection
+   */
+  public function getInstrumentInsurances():Collection
+  {
+    return $this->instrumentInsurances;
+  }
 }

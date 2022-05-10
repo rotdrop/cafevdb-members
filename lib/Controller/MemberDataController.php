@@ -67,6 +67,10 @@ class MemberDataController extends Controller
 
   /**
    * @NoAdminRequired
+   *
+   * Get all the data of the given musician. This mess removes "circular"
+   * associations as we are really only interested into the data for this
+   * single person.
    */
   public function get()
   {
@@ -116,7 +120,7 @@ class MemberDataController extends Controller
         $flatDebitMandate['bankAccountSequence'] = $bankAccount->getSequence();
         unset($flatDebitMandate['musician']);
         $flatDebitMandate['musicianId'] = $musician->getId();
-        $flatDebitMandate['project'] = $debitMandate->getProject()->toArray();
+        $flatDebitMandate['project'] = $this->flattenProject($debitMandate->getProject());
         $flatBankAccount['sepaDebitMandates'][] = $flatDebitMandate;
       }
       $musicianData['sepaBankAccounts'][] = $flatBankAccount;
@@ -128,7 +132,7 @@ class MemberDataController extends Controller
       $flatParticipant = $participant->toArray();
       unset($flatParticipant['musician']);
       $flatParticipant['musicianId'] = $musician->getId();
-      $flatParticipant['project'] = $participant->getProject()->toArray();
+      $flatParticipant['project'] = $this->flattenProject($participant->getProject());
       unset($flatParticipant['musicianInstruments']);
       unset($flatParticipant['sepaBankAccount']);
       unset($flatParticipant['sepaDebitMandate']);
@@ -182,6 +186,30 @@ class MemberDataController extends Controller
       }
     });
 
+    /** @var Entities\InstrumentInsurance $insurance */
+    $musicianData['instrumentInsurances'] = [];
+    foreach ($musician->getInstrumentInsurances() as $insurance) {
+      $flatInsurance = $insurance->toArray();
+      unset($flatInsurance['musician']);
+      $flatInsurance['musicianId'] = $musician->getId();
+
+      $insuranceRate = $insurance->getInsuranceRate();
+      $flatInsurance['insuranceRate'] = $insuranceRate->toArray();
+      unset($flatInsurance['insuranceRate']['instrumentInsurances']);
+      $flatInsurance['insuranceRate']['broker'] = $insuranceRate->getBroker()->toArray();
+      unset($flatInsurance['insuranceRate']['broker']['insuranceRates']);
+      $musicianData['instrumentInsurances'][] = $flatInsurance;
+    }
+
     return self::dataResponse($musicianData);
+  }
+
+  private function flattenProject(Entities\Project $project)
+  {
+    $flatProject = $project->toArray();
+    foreach(['participants', 'participantFields', 'participantFieldsData', 'sepaDebitMandates', 'payments'] as $key) {
+      unset($flatProject[$key]);
+    }
+    return $flatProject;
   }
 }

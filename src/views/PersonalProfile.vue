@@ -160,9 +160,7 @@ export default {
       for (const [key, value] of Object.entries(response.data)) {
         Vue.set(this.memberData, key, value)
       }
-      console.info('BIRTHDAY', this.memberData.birthday)
-      Vue.set(this.memberData, 'birthday', new Date(this.memberData.birthday.date.split(' ')[0]))
-      console.info('BIRTHDAY', this.memberData.birthday)
+      Vue.set(this.memberData, 'birthday', new Date(this.memberData.birthday))
       Vue.set(this.memberData, 'selectedInstruments', [])
       for (const instrument of this.memberData.instruments) {
         this.memberData.selectedInstruments.push(instrument);

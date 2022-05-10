@@ -62,14 +62,14 @@ class InstrumentInsurance implements \ArrayAccess
   /**
    * @var bool
    *
-   * @ORM\Column(type="bool", nullable=false)
+   * @ORM\Column(type="boolean", nullable=false)
    */
   private $isDebitor;
 
   /**
    * @var bool
    *
-   * @ORM\Column(type="bool", nullable=false)
+   * @ORM\Column(type="boolean", nullable=false)
    */
   private $isHolder;
 
@@ -319,39 +319,27 @@ class InstrumentInsurance implements \ArrayAccess
   }
 
   /**
-   * Set billToParty.
+   * Set musician.
    *
-   * @param int $billToParty
+   * @param int $musician
    *
    * @return InstrumentInsurance
    */
-  public function setBillToParty($billToParty):InstrumentInsurance
+  public function setMusician($musician):InstrumentInsurance
   {
-    $this->billToParty = $billToParty;
+    $this->musician = $musician;
 
     return $this;
   }
 
   /**
-   * Get billToParty.
+   * Get musician.
    *
    * @return Musician
    */
-  public function getBillToParty():Musician
+  public function getMusician():Musician
   {
-    return $this->billToParty;
-  }
-
-  /**
-   * @ORM\PrePersist
-   * @ORM\PreUpdate
-   * @ORM\PreFlush
-   */
-  public function ensureBillToParty()
-  {
-    if (empty($this->billToParty) && !empty($this->instrumentHolder)) {
-      $this->billToParty = $this->instrumentHolder;
-    }
+    return $this->musician;
   }
 
   /**
@@ -399,5 +387,51 @@ class InstrumentInsurance implements \ArrayAccess
   public function getInsuranceRate():InsuranceRate
   {
     return $this->insuranceRate;
+  }
+
+  /**
+   * Set isDebitor.
+   *
+   * @param int $isDebitor
+   *
+   * @return InstrumentInsurance
+   */
+  public function setIsDebitor(IsDebitor $isDebitor):InstrumentInsurance
+  {
+    $this->isDebitor = $isDebitor;
+    return $this;
+  }
+
+  /**
+   * Get isDebitor.
+   *
+   * @return bool
+   */
+  public function getIsDebitor():bool
+  {
+    return $this->isDebitor;
+  }
+
+  /**
+   * Set isHolder.
+   *
+   * @param int $isHolder
+   *
+   * @return InstrumentInsurance
+   */
+  public function setIsHolder(IsHolder $isHolder):InstrumentInsurance
+  {
+    $this->isHolder = $isHolder;
+    return $this;
+  }
+
+  /**
+   * Get isHolder.
+   *
+   * @return bool
+   */
+  public function getIsHolder():bool
+  {
+    return $this->isHolder;
   }
 }
