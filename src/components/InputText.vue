@@ -12,7 +12,7 @@
                       :type="isDatePickerType"
                       :value="value"
                       :data-foo="value"
-                      :placeholder="placeholder + ' ' + value"
+                      :placeholder="placeholder"
                       :input-class="['effect', 'mx-input', { focusable: isFocusable }]"
                       :disabled="disabled || readonly"
                       :readonly="readonly"
