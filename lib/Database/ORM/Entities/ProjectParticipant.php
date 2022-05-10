@@ -73,7 +73,7 @@ class ProjectParticipant implements \ArrayAccess
   /**
    * Link to extra fields data
    *
-   * @ORM\OneToMany(targetEntity="ProjectParticipantFieldDatum", indexBy="option_key", mappedBy="projectParticipant", cascade={"persist"}, fetch="EXTRA_LAZY")
+   * @ORM\OneToMany(targetEntity="ProjectParticipantFieldDatum", indexBy="option_key", mappedBy="projectParticipant", fetch="EXTRA_LAZY")
    */
   private $participantFieldsData;
 

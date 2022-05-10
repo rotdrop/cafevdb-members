@@ -312,6 +312,7 @@ class EntityManager extends EntityManagerDecorator
     }
     $types = [
       Types\EnumFileType::class => 'enum',
+      Types\EnumGeographicalScope::class => 'enum',
       Types\EnumMemberStatus::class => 'enum',
       Types\EnumParticipantFieldDataType::class => 'enum',
       Types\EnumParticipantFieldMultiplicity::class => 'enum',

@@ -245,9 +245,14 @@ class Musician implements \ArrayAccess, \JsonSerializable
   private $sepaDebitMandates;
 
   /**
-   * @ORM\OneToMany(targetEntity="CompositePayment", mappedBy="musician", orphanRemoval=true, fetch="EXTRA_LAZY")
+   * @ORM\OneToMany(targetEntity="CompositePayment", mappedBy="musician", fetch="EXTRA_LAZY")
    */
   private $payments;
+
+  /**
+   * @ORM\OneToMany(targetEntity="InstrumentInsurance", mappedBy="musician", fetch="EXTRA_LAZY")
+   */
+  private $instrumentInsurances;
 
   /**
    * @var Collection
