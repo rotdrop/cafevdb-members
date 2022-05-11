@@ -79,7 +79,7 @@ class MemberDataController extends Controller
     if (count($musicians) == 0) {
       return self::grumble($this->l->t('No member-data found for user-id "%s".', $this->userId));
     } else if (count($musicians) > 1) {
-      return self::grumble($this->l_>t('More than one musician found for user-id "%s".', $this->userId));
+      return self::grumble($this->l->t('More than one musician found for user-id "%s".', $this->userId));
     }
     /** @var Entities\Musician $musician */
     $musician = $musicians[0];
