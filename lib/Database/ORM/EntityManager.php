@@ -50,7 +50,7 @@ use MediaMonks\Doctrine\Transformable;
 use OCA\CAFeVDBMembers\Database\ORM\Mapping\ReservedWordQuoteStrategy;
 use OCA\CAFeVDBMembers\Database\DBAL\Types;
 use OCA\CAFeVDBMembers\Database\DBAL\Logging\CloudLogger;
-
+use OCA\CAFEVDB\Crypto\AsymmetricKeyService;
 
 /**
  * Use this as the actual EntityManager in order to be able to
@@ -68,6 +68,8 @@ class EntityManager extends EntityManagerDecorator
   const DEV_MODE = true;
 
   const TRANSFORM_ENCRYPT = 'encrypt';
+
+  const ROW_ACCESS_TOKEN_KEY = 'rowAccessToken';
 
   /** @var EntityManagerInterface */
   private $entityManager;
@@ -384,8 +386,13 @@ class EntityManager extends EntityManagerDecorator
   public function postConnect(ConnectionEventArgs $args)
   {
     if (!empty($this->userId)) {
-      $this->logInfo('Setting CLOUD_USER_ID to ' . $this->userId);
       $args->getConnection()->executeStatement("SET @CLOUD_USER_ID = '" . $this->userId . "'");
+
+      /** @var AsymmetricKeyService $keyService */
+      $keyService = $this->appContainer->get(AsymmetricKeyService::class);
+      $rowAccessToken = $keyService->getSharedPrivateValue($this->userId, 'rowAccessToken');
+      $rowAccessTokenHash = \hash('sha512', $rowAccessToken);
+      $args->getConnection()->executeStatement("SET @ROW_ACCESS_TOKEN = '" . $rowAccessTokenHash . "'");
     }
   }
 
