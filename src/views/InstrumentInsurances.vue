@@ -26,6 +26,67 @@
     <div v-if="loading" class="page-container loading" />
     <div v-else class="page-container">
       <h2>{{ t(appName, 'Instrument Insurances of {publicName}', {publicName: memberData.personalPublicName }) }}</h2>
+      <CheckboxRadioSwitch v-if="haveDeleted" :checked.sync="showDeleted">
+        {{ t(appName, 'show deleted') }}
+      </CheckboxRadioSwitch>
+      <ul v-if="memberData.instrumentInsurances.forOthers.length + memberData.instrumentInsurances.byOthers.length > 0">
+        <ListItem v-if="memberData.instrumentInsurances.forOthers.length > 0"
+                  :title="t(appname, 'for others')"
+                  :details="t(appName, 'paid by me, instrument used by someone else')"
+                  :bold="true">
+          <template #subtitle>
+            <ul v-for="insurance in memberData.instrumentInsurances.forOthers"
+                :key="insurance.id"
+                class="insurance-list for-others">
+              <ListItem :title="insurance.object" />
+            </ul>
+          </template>
+        </ListItem>
+        <ListItem v-if="memberData.instrumentInsurances.byOthers.length > 0"
+                  :title="t(appname, 'by others')"
+                  :details="t(appName, 'paid by someone else, instrument used by me')"
+                  :bold="true">
+          <template #subtitle>
+            <ul v-for="insurance in memberData.instrumentInsurances.byOthers"
+                :key="insurance.id"
+                class="insurance-list by-others">
+              <ListItem :title="insurance.object" />
+            </ul>
+          </template>
+        </ListItem>
+        <ListItem v-if="memberData.instrumentInsurances.self.length > 0"
+                  :title="t(appname, 'by others')"
+                  :details="t(appName, 'paid by someone else, instrument used by me')"
+                  :bold="true">
+          <template #subtitle>
+            <ul v-for="insurance in memberData.instrumentInsurances.self"
+                :key="insurance.id"
+                class="insurance-list self">
+              <ListItem :title="insurance.object" />
+            </ul>
+          </template>
+        </ListItem>
+      </ul>
+      <ul v-for="insurance in memberData.instrumentInsurances.self"
+          v-else
+          :key="insurance.id"
+          class="insurance-list self">
+        <ListItem :title="insurance.object"
+                  :details="insurance.insuranceAmount + ' ' + currencySymbol">
+          <template #subtitle>
+            <ul class="insurance-details">
+              <ListItem :title="t(appName, 'manufacturer')" :details="insurance.manufacturer" />
+              <ListItem :title="t(appName, 'manufacturered')" :details="insurance.yearOfConstruction" />
+              <ListItem :title="t(appName, 'insurance broker')" :details="insurance.insuranceRate.broker.shortName" />
+              <ListItem :title="t(appName, 'insurance start')" :details="formatDate(insurance.startOfInsurance)" />
+              <ListItem :title="t(appName, 'geographical scope')" :details="t(appName, insurance.insuranceRate.geographicalScope)" />
+              <ListItem :title="t(appName, 'insurance rate')" :details="insurance.insuranceRate.rate*100.0 + '%'" />
+              <ListItem :title="t(appName, 'insurance fees')" :details="insurance.insuranceAmount * (1. + insurance.insuranceRate.rate) * (1. + taxRate)" />
+              <ListItem :title="t(appName, 'due date')" :details="formatDate(insurance.insuranceRate.dueDate, 'omit-year')" />
+            </ul>
+          </template>
+        </ListItem>
+      </ul>
       <div class="debug-container">
         <CheckboxRadioSwitch :checked.sync="debug">
           {{ t(appName, 'Enable Debug') }}
@@ -49,7 +110,12 @@ import '@nextcloud/dialogs/styles/toast.scss'
 import { generateUrl } from '@nextcloud/router'
 import { showError, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
 import axios from '@nextcloud/axios'
+import { getLocale, getCanonicalLocale, } from '@nextcloud/l10n'
 import moment from '@nextcloud/moment'
+
+import { getInitialState } from '../services/InitialStateService'
+
+const initialState = getInitialState()
 
 export default {
   name: 'InstrumentInsurances',
@@ -60,6 +126,13 @@ export default {
   },
   mixins: [
     {
+      data() {
+        return {
+          currencyCode: initialState.currencyCode,
+          currencySymbol: initialState.currencySymbol,
+          orchstraLocate: initialState.orchestraLocale,
+        }
+      },
       methods: {
         moment,
       },
@@ -67,9 +140,18 @@ export default {
   ],
   data() {
     return {
-      memberData: {},
+      memberData: {
+        instrumentInsurances: {
+          self: [],
+          forOthers: [],
+          byOthers: [],
+        },
+      },
+      taxRate: 0.19, // @todo make this configurable
       loading: true,
       debug: false,
+      showDeleted: false,
+      haveDeleted: false,
     }
   },
   async created() {
@@ -79,6 +161,25 @@ export default {
       for (const [key, value] of Object.entries(response.data)) {
         Vue.set(this.memberData, key, value)
       }
+      const ownInsurances = []; // holder === debitor
+      const insurancesForOthers = []; // debitor === thisMember, holder different
+      const insurancesByOthers = []; // holer === thisMember, debitor different
+      for (const insurance of this.memberData.instrumentInsurances) {
+        if (insurance.deleted) {
+          this.haveDeleted = true
+        }
+        if (insurance.isDebitor === insurance.isHolder) {
+          ownInsurances.push(insurance)
+        } else if (insurance.isDebitor) {
+          insurancesForOthers.push(insurance)
+        } else {
+          insurancesByOthers.push(insurance)
+        }
+      }
+      Vue.set(this.memberData, 'instrumentInsurances', {})
+      Vue.set(this.memberData.instrumentInsurances, 'forOthers', insurancesForOthers)
+      Vue.set(this.memberData.instrumentInsurances, 'byOthers', insurancesByOthers)
+      Vue.set(this.memberData.instrumentInsurances, 'self', ownInsurances)
     } catch (e) {
       console.error('ERROR', e)
       let message = t(appName, 'reason unknown')
@@ -90,7 +191,8 @@ export default {
       if (this === false) {
         showError(t(appName, 'Could not fetch musician(s): {message}', { message }), { timeout: TOAST_PERMANENT_TIMEOUT })
       }
-    }    this.loading = false
+    }
+    this.loading = false
   },
   methods: {
     formatDate(date, flavour) {
@@ -100,6 +202,11 @@ export default {
         case 'medium':
         case 'long':
           return moment(date).format('L');
+        case 'omit-year': {
+          const event = new Date(date);
+          const options = { month: 'short', day: 'numeric' };
+          return event.toLocaleString(getCanonicalLocale(), options);
+        }
       }
       return moment(data).format(flavour);
     },
