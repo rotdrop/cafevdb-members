@@ -88,7 +88,6 @@ import { appName } from '../config.js'
 import Vue from 'vue'
 import Content from '@nextcloud/vue/dist/Components/Content'
 import ListItem from '@nextcloud/vue/dist/Components/ListItem'
-import CounterBubble from '@nextcloud/vue/dist/Components/CounterBubble'
 import CheckboxRadioSwitch from '@nextcloud/vue/dist/Components/CheckboxRadioSwitch'
 import '@nextcloud/dialogs/styles/toast.scss'
 import { generateUrl } from '@nextcloud/router'
@@ -102,7 +101,6 @@ export default {
     Content,
     CheckboxRadioSwitch,
     ListItem,
-    CounterBubble,
   },
   mixins: [
     {
