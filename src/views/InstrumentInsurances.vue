@@ -29,60 +29,102 @@
       <CheckboxRadioSwitch v-if="haveDeleted" :checked.sync="showDeleted">
         {{ t(appName, 'show deleted') }}
       </CheckboxRadioSwitch>
-      <ul v-if="memberData.instrumentInsurances.forOthers.length + memberData.instrumentInsurances.byOthers.length > 0">
+      <ul class="insurance-sections">
+        <ListItem :title="t(appName, 'Summary')"
+                  :bold="true"
+                  class="summary">
+          <template #subtitle>
+            <ul class="insurance-summary">
+              <ListItem :title="t(appName, 'Total Insured Value')"
+                        :details="totalInsuredValue + ' ' + currencySymbol" />
+              <ListItem v-if="totalInsuredValue != totalPayableValue"
+                        :title="t(appName, 'Total Payable Value')"
+                        :details="totalPayableValue + ' ' + currencySymbol" />
+              <ListItem :title="t(appName, 'Yearly Insurance fees w/o taxes')"
+                        :details="totalPayableFees.toFixed(2) + ' ' + currencySymbol" />
+              <ListItem :title="t(appName, 'Yearly Insurance fees with {taxes}% taxes', { taxes: taxRate*100.0 })"
+                        :details="(totalPayableFees * (1.0 + taxRate)).toFixed(2) + ' ' + currencySymbol" />
+            </ul>
+          </template>
+        </ListItem>
         <ListItem v-if="memberData.instrumentInsurances.forOthers.length > 0"
-                  :title="t(appname, 'for others')"
+                  :title="t(appname, 'Paid for Others')"
                   :details="t(appName, 'paid by me, instrument used by someone else')"
                   :bold="true">
           <template #subtitle>
             <ul v-for="insurance in memberData.instrumentInsurances.forOthers"
                 :key="insurance.id"
                 class="insurance-list for-others">
-              <ListItem :title="insurance.object" />
+              <ListItem :title="insurance.object"
+                        :details="insurance.insuranceAmount + ' ' + currencySymbol"
+                        :bold="true">
+                <template #subtitle>
+                  <ul class="insurance-details">
+                    <ListItem :title="t(appName, 'manufacturer')" :details="insurance.manufacturer" />
+                    <ListItem :title="t(appName, 'manufacturered')" :details="insurance.yearOfConstruction" />
+                    <ListItem :title="t(appName, 'insurance broker')" :details="insurance.insuranceRate.broker.shortName" />
+                    <ListItem :title="t(appName, 'insurance start')" :details="formatDate(insurance.startOfInsurance)" />
+                    <ListItem :title="t(appName, 'geographical scope')" :details="t(appName, insurance.insuranceRate.geographicalScope)" />
+                    <ListItem :title="t(appName, 'insurance rate')" :details="insurance.insuranceRate.rate*100.0 + '%'" />
+                    <ListItem :title="t(appName, 'insurance fees')" :details="(insurance.insuranceAmount * insurance.insuranceRate.rate * (1. + taxRate)).toFixed(2) + ' ' + currencySymbol" />
+                    <ListItem :title="t(appName, 'due date')" :details="formatDate(insurance.insuranceRate.dueDate, 'omit-year')" />
+                  </ul>
+                </template>
+              </ListItem>
             </ul>
           </template>
         </ListItem>
         <ListItem v-if="memberData.instrumentInsurances.byOthers.length > 0"
-                  :title="t(appname, 'by others')"
+                  :title="t(appname, 'Paid by Others')"
                   :details="t(appName, 'paid by someone else, instrument used by me')"
                   :bold="true">
           <template #subtitle>
             <ul v-for="insurance in memberData.instrumentInsurances.byOthers"
                 :key="insurance.id"
                 class="insurance-list by-others">
-              <ListItem :title="insurance.object" />
+              <ListItem :title="insurance.object"
+                        :details="insurance.insuranceAmount + ' ' + currencySymbol"
+                        :bold="true">
+                <template #subtitle>
+                  <ul class="insurance-details">
+                    <ListItem :title="t(appName, 'manufacturer')" :details="insurance.manufacturer" />
+                    <ListItem :title="t(appName, 'manufacturered')" :details="insurance.yearOfConstruction" />
+                    <ListItem :title="t(appName, 'insurance broker')" :details="insurance.insuranceRate.broker.shortName" />
+                    <ListItem :title="t(appName, 'insurance start')" :details="formatDate(insurance.startOfInsurance)" />
+                    <ListItem :title="t(appName, 'geographical scope')" :details="t(appName, insurance.insuranceRate.geographicalScope)" />
+                    <ListItem :title="t(appName, 'insurance rate')" :details="insurance.insuranceRate.rate*100.0 + '%'" />
+                    <ListItem :title="t(appName, 'insurance fees')" :details="(insurance.insuranceAmount * insurance.insuranceRate.rate * (1. + taxRate)).toFixed(2) + ' ' + currencySymbol" />
+                    <ListItem :title="t(appName, 'due date')" :details="formatDate(insurance.insuranceRate.dueDate, 'omit-year')" />
+                  </ul>
+                </template>
+              </ListItem>
             </ul>
           </template>
         </ListItem>
         <ListItem v-if="memberData.instrumentInsurances.self.length > 0"
-                  :title="t(appname, 'by others')"
-                  :details="t(appName, 'paid by someone else, instrument used by me')"
+                  :title="haveOthers ? t(appName, 'Self Used and Paid') : t(appName, 'Insured Instruments')"
+                  :details="haveOthers ? t(appName, 'paid and used by myself') : ''"
                   :bold="true">
           <template #subtitle>
             <ul v-for="insurance in memberData.instrumentInsurances.self"
                 :key="insurance.id"
                 class="insurance-list self">
-              <ListItem :title="insurance.object" />
-            </ul>
-          </template>
-        </ListItem>
-      </ul>
-      <ul v-for="insurance in memberData.instrumentInsurances.self"
-          v-else
-          :key="insurance.id"
-          class="insurance-list self">
-        <ListItem :title="insurance.object"
-                  :details="insurance.insuranceAmount + ' ' + currencySymbol">
-          <template #subtitle>
-            <ul class="insurance-details">
-              <ListItem :title="t(appName, 'manufacturer')" :details="insurance.manufacturer" />
-              <ListItem :title="t(appName, 'manufacturered')" :details="insurance.yearOfConstruction" />
-              <ListItem :title="t(appName, 'insurance broker')" :details="insurance.insuranceRate.broker.shortName" />
-              <ListItem :title="t(appName, 'insurance start')" :details="formatDate(insurance.startOfInsurance)" />
-              <ListItem :title="t(appName, 'geographical scope')" :details="t(appName, insurance.insuranceRate.geographicalScope)" />
-              <ListItem :title="t(appName, 'insurance rate')" :details="insurance.insuranceRate.rate*100.0 + '%'" />
-              <ListItem :title="t(appName, 'insurance fees')" :details="insurance.insuranceAmount * (1. + insurance.insuranceRate.rate) * (1. + taxRate)" />
-              <ListItem :title="t(appName, 'due date')" :details="formatDate(insurance.insuranceRate.dueDate, 'omit-year')" />
+              <ListItem :title="insurance.object"
+                        :details="insurance.insuranceAmount + ' ' + currencySymbol"
+                        :bold="true">
+                <template #subtitle>
+                  <ul class="insurance-details">
+                    <ListItem :title="t(appName, 'manufacturer')" :details="insurance.manufacturer" />
+                    <ListItem :title="t(appName, 'manufacturered')" :details="insurance.yearOfConstruction" />
+                    <ListItem :title="t(appName, 'insurance broker')" :details="insurance.insuranceRate.broker.shortName" />
+                    <ListItem :title="t(appName, 'insurance start')" :details="formatDate(insurance.startOfInsurance)" />
+                    <ListItem :title="t(appName, 'geographical scope')" :details="t(appName, insurance.insuranceRate.geographicalScope)" />
+                    <ListItem :title="t(appName, 'insurance rate')" :details="insurance.insuranceRate.rate*100.0 + '%'" />
+                    <ListItem :title="t(appName, 'insurance fees')" :details="(insurance.insuranceAmount * insurance.insuranceRate.rate * (1. + taxRate)).toFixed(2) + ' ' + currencySymbol" />
+                    <ListItem :title="t(appName, 'due date')" :details="formatDate(insurance.insuranceRate.dueDate, 'omit-year')" />
+                  </ul>
+                </template>
+              </ListItem>
             </ul>
           </template>
         </ListItem>
@@ -148,10 +190,14 @@ export default {
         },
       },
       taxRate: 0.19, // @todo make this configurable
+      totalInsuredValue: 0.0,
+      totalPayableValue: 0.0,
+      totalPayableFees: 0.0,
       loading: true,
       debug: false,
       showDeleted: false,
       haveDeleted: false,
+      haveOthers: false,
     }
   },
   async created() {
@@ -164,9 +210,16 @@ export default {
       const ownInsurances = []; // holder === debitor
       const insurancesForOthers = []; // debitor === thisMember, holder different
       const insurancesByOthers = []; // holer === thisMember, debitor different
+      this.totalInsuredValue = 0.0;
       for (const insurance of this.memberData.instrumentInsurances) {
         if (insurance.deleted) {
           this.haveDeleted = true
+        } else {
+          this.totalInsuredValue += insurance.insuranceAmount
+          if (insurance.isDebitor) {
+            this.totalPayableValue += insurance.insuranceAmount
+            this.totalPayableFees += insurance.insuranceAmount * insurance.insuranceRate.rate
+          }
         }
         if (insurance.isDebitor === insurance.isHolder) {
           ownInsurances.push(insurance)
@@ -176,6 +229,7 @@ export default {
           insurancesByOthers.push(insurance)
         }
       }
+      this.haveOthers = (insurancesByOthers.length + insurancesForOthers.length) > 0;
       Vue.set(this.memberData, 'instrumentInsurances', {})
       Vue.set(this.memberData.instrumentInsurances, 'forOthers', insurancesForOthers)
       Vue.set(this.memberData.instrumentInsurances, 'byOthers', insurancesByOthers)
@@ -223,6 +277,15 @@ export default {
 
 .debug-container {
   width:100%;
+}
+
+.insurance-sections {
+  min-width:32rem;
+  ::v-deep > li:not(.summary) > .list-item {
+    &:hover, &:focus {
+      background-color:inherit;
+    }
+  }
 }
 
 ::v-deep {
