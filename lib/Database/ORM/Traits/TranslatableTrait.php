@@ -47,7 +47,7 @@ trait TranslatableTrait
   }
 
   /**
-   * Get the "locate" per-entity override locate for table field translations.
+   * Get the "locate" per-entity override locale for table field translations.
    */
   public function getLocale():?string
   {

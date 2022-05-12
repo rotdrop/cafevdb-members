@@ -24,6 +24,12 @@
 
 namespace OCA\CAFeVDBMembers\Database\ORM\Listeners;
 
+use Doctrine\Persistence\ObjectManager;
+use Gedmo\Translatable\Mapping\Event\TranslatableAdapter;
+
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities as TranslatedEntities;
+use OCA\CAFeVDBMembers\Database\ORM\Entities;
+
 use OCA\CAFEVDB\Service\L10N\BiDirectionalL10N;
 
 /**
@@ -33,6 +39,10 @@ use OCA\CAFEVDB\Service\L10N\BiDirectionalL10N;
  */
 class GedmoTranslatableListener extends \Gedmo\Translatable\TranslatableListener
 {
+  private const USE_OBJECT_CLASS = 'useObjectClass';
+  private const TRANSLATED_ENTITIES = TranslatedEntities::class;
+  private const OWN_ENTITIES = Entities::class;
+
   /** @var BiDirectionalL10N */
   private $musicL10n;
 
@@ -58,5 +68,30 @@ class GedmoTranslatableListener extends \Gedmo\Translatable\TranslatableListener
   {
     $originalValue = $this->musicL10n->backTranslate($translatedValue);
     return ($translatedValue !== $originalValue) ? $originalValue : null;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getConfiguration(ObjectManager $objectManager, $class)
+  {
+    $config = parent::getConfiguration($objectManager, $class);
+
+    // override the object class in order to find the entries in the
+    // translation table.
+
+    if (!empty($config[self::USE_OBJECT_CLASS])) {
+      $config[self::USE_OBJECT_CLASS] = str_replace(self::OWN_ENTITIES, self::TRANSLATED_ENTITIES, $config[self::USE_OBJECT_CLASS]);
+    }
+    return $config;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getTranslationClass(TranslatableAdapter $ea, $class)
+  {
+    $class = str_replace(self::TRANSLATED_ENTITIES, self::OWN_ENTITIES, $class);
+    return parent::getTranslationClass($ea, $class);
   }
 }
