@@ -32,6 +32,7 @@ use OCP\AppFramework\Http\ContentSecurityPolicy;
 
 trait ResponseTrait
 {
+  use UtilTrait;
 
   private function dataDownloadResponse($data, $fileName, $contentType)
   {

@@ -35,17 +35,22 @@ use OCP\IL10N;
 use OCA\CAFeVDBMembers\AppInfo\Application;
 use OCA\CAFeVDBMembers\Database\ORM\EntityManager;
 use OCA\CAFeVDBMembers\Database\ORM\Entities;
+use OCA\CAFeVDBMembers\Service\MemberDataService;
 
 class MemberDataController extends Controller
 {
   use \OCA\CAFeVDBMembers\Traits\LoggerTrait;
   use \OCA\CAFeVDBMembers\Traits\ResponseTrait;
+  use \OCA\CAFeVDBMembers\Traits\UtilTrait;
 
   /** @var string */
   private $userId;
 
   /** @var IL10N */
   private $l;
+
+  /** @var MemberDataService */
+  private $dataService;
 
   /** @var EntityManager */
   private $entityManager;
@@ -56,12 +61,14 @@ class MemberDataController extends Controller
     , $userId
     , IL10N $l10n
     , LoggerInterface $logger
+    // , MemberDataService $dataService
     , EntityManager $entityManager
   ) {
     parent::__construct($this->appName, $request);
     $this->userId = $userId;
     $this->l = $l10n;
     $this->logger = $logger;
+    $this->dataService = new MemberDataService($entityManager, $logger, $l10n);
     $this->entityManager = $entityManager;
   }
 
@@ -276,5 +283,45 @@ class MemberDataController extends Controller
       unset($flatProject[$key]);
     }
     return $flatProject;
+  }
+
+  /**
+   * @NoAdminRequired
+   *
+   * Download file-data. The download is always only for the currently logged
+   * on user.
+   *
+   * @param string $optionKey The UUID of the corresponding field-datum
+   */
+  public function download(string $optionKey)
+  {
+    $musicians = $this->entityManager->getRepository(Entities\Musician::class)->findAll();
+    $this->logInfo('NUMBER OF MUSICIANS ' . count($musicians));
+    if (count($musicians) == 0) {
+      return self::grumble($this->l->t('No member-data found for user-id "%s".', $this->userId));
+    } else if (count($musicians) > 1) {
+      return self::grumble($this->l->t('More than one musician found for user-id "%s".', $this->userId));
+    }
+
+    /** @var Entities\Musician $musician */
+    $musician = $musicians[0];
+
+    $fieldDatum = $musician->getProjectParticipantFieldsDatum($optionKey);
+    if (empty($fieldDatum)) {
+      return self::grumble($this->l->t('Unable to find data for the option-uuid "%s".', $optionKey));
+    }
+
+    $pathInfo = $this->dataService->participantFileInfo($fieldDatum);
+    if (empty($pathInfo)) {
+      return self::grumble($this->l->t('The option "%s" does not have any associated files.', $fieldDatum->getDataOption()->getLabel()));
+    }
+
+    // $pathInfo['file'] is already the file entity
+    /** @var Entities\File $file */
+    $file = $pathInfo['file'];
+    $mimeType = $file->getMimeType();
+    $fileName = $pathInfo['baseName'];
+
+    return $this->dataDownloadResponse($file->getFileData()->getData(), $fileName, $mimeType);
   }
 }
