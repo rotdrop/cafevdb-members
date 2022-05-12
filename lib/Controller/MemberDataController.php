@@ -129,6 +129,8 @@ class MemberDataController extends Controller
     /** @var Entities\ProjectParticipant $participant */
     $musicianData['projectParticipation'] = [];
     foreach ($musician->getProjectParticipation() as $participant) {
+      /** @var Entities\Project $project */
+      $project = $participant->getProject();
       $flatParticipant = $participant->toArray();
       unset($flatParticipant['musician']);
       $flatParticipant['musicianId'] = $musician->getId();
@@ -153,6 +155,67 @@ class MemberDataController extends Controller
 
         $flatParticipant['projectInstruments'][] = $flatInstrument;
       }
+
+      $projectFields = [];
+      /** @var Entities\ProjectParticipantField $projectField */
+      foreach ($project->getParticipantFields() as $projectField) {
+        $flatProjectField = $projectField->toArray();
+        unset($flatProjectField['project']);
+        unset($flatProjectField['dataOptions']);
+        $defaultValue = $projectField->getDefaultValue();
+        if (!empty($defaultValue)) {
+          $flatDefaultValue = array_filter($defaultValue->toArray());
+          foreach (['field', 'fieldData', 'payments'] as $key) {
+            unset($flatDefaultValue[$key]);
+          }
+        } else {
+          $flatDefaultValue = null;
+        }
+        $flatProjectField['defaultValue'] = $flatDefaultValue;
+        $flatProjectField['fieldData'] = [];
+        /** @var Entities\ProjectParticipantFieldDatum $projectDatum */
+        foreach ($projectField->getFieldData() as $projectDatum) {
+          $flatProjectDatum = $projectDatum->toArray();
+          unset($flatProjectDatum['musician']);
+          unset($flatProjectDatum['project']);
+          unset($flatProjectDatum['field']);
+          unset($flatProjectDatum['projectParticipant']);
+          $flatDataOption = array_filter($projectDatum->getDataOption()->toArray());
+          foreach (['field', 'fieldData', 'payments'] as $key) {
+            unset($flatDataOption[$key]);
+          }
+          $flatProjectDatum['dataOption'] = $flatDataOption;
+          $supportingDocument = $projectDatum->getSupportingDocument();
+          if (!empty($supportingDocument)) {
+            $flatProjectDatum['supportingDocument'] = $supportingDocument->getId();
+          }
+          $payments = [];
+          /** @var Entities\ProjectPayment $payment */
+          foreach ($projectDatum->getPayments() as $payment) {
+            $flatPayment = $payment->toArray();
+            foreach (['receivable', 'receivableOption', 'project', 'musician', 'projectParticipant'] as $key) {
+              unset($flatPayment[$key]);
+            }
+            $compositePayment = $payment->getCompositePayment();
+            $flatCompositePayment = $compositePayment->toArray();
+            foreach (['projectPayments', 'musician'] as $key) {
+              unset($flatCompositePayment[$key]);
+            }
+            $bankAccount = $compositePayment->getSepaBankAccount();
+            $flatCompositePayment['sepaBankAccount'] = empty($bankAccount) ? null : $bankAccount->getIban();
+            $debitMandate = $compositePayment->getSepaDebitMandate();
+            $flatCompositePayment['sepaDebitMandate'] = empty($debitMandate) ? null : $debitMandate->getMandateReference();
+            $flatPayment['compositePayment'] = array_filter($flatCompositePayment);
+            $payments[] = array_filter($flatPayment);
+          }
+          $flatProjectDatum['payments'] = $payments;
+          $flatProjectField['fieldData'][(string)$projectDatum->getOptionKey()] = array_filter($flatProjectDatum);
+        }
+        $projectFields[$projectField->getId()] = array_filter($flatProjectField);
+      }
+      $flatParticipant['participantFields'] = $projectFields;
+      unset($flatParticipant['participantFieldsData']);
+
       $musicianData['projectParticipation'][] = $flatParticipant;
     }
 
@@ -200,6 +263,8 @@ class MemberDataController extends Controller
       unset($flatInsurance['insuranceRate']['broker']['insuranceRates']);
       $musicianData['instrumentInsurances'][] = $flatInsurance;
     }
+
+    $this->logInfo('SIZE OF DATA ' . strlen(json_encode($musicianData)));
 
     return self::dataResponse($musicianData);
   }

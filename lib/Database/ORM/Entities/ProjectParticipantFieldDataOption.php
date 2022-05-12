@@ -46,6 +46,7 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   use CAFEVDB\Traits\TimestampableEntity;
   use \OCA\CAFeVDBMembers\Traits\DateTimeTrait;
   use CAFEVDB\Traits\SoftDeleteableEntity;
+  use CAFEVDB\Traits\TranslatableTrait;
 
   /**
    * @var ProjectParticipantField

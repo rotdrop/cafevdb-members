@@ -25,13 +25,14 @@
 
 namespace OCA\CAFeVDBMembers\Database\ORM\Entities;
 
-use OCA\CAFeVDBMembers\Database\ORM as CAFEVDB;
-use OCA\CAFeVDBMembers\Utils\Uuid;
-
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+
+use OCA\CAFeVDBMembers\Database\ORM as CAFEVDB;
+use OCA\CAFeVDBMembers\Utils\Uuid;
+use OCA\CAFeVDBMembers\Database\DBAL\Types;
 
 /**
  * ProjectParticipantFields
@@ -43,10 +44,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 class ProjectParticipantField implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
-  use CAFEVDB\Traits\TimestampableEntity;
   use \OCA\CAFeVDBMembers\Traits\DateTimeTrait;
   use CAFEVDB\Traits\SoftDeleteableEntity;
   use CAFEVDB\Traits\GetByUuidTrait;
+  use CAFEVDB\Traits\TranslatableTrait;
 
   /**
    * @var int

@@ -365,29 +365,29 @@ class CompositePayment implements \ArrayAccess
     return $this->sepaDebitMandate;
   }
 
-  /**
-   * Set sepaTransaction.
-   *
-   * @param string|null $sepaTransaction
-   *
-   * @return CompositePayment
-   */
-  public function setSepaTransaction(?SepaBulkTransaction $sepaTransaction):CompositePayment
-  {
-    $this->sepaTransaction = $sepaTransaction;
+  // /**
+  //  * Set sepaTransaction.
+  //  *
+  //  * @param string|null $sepaTransaction
+  //  *
+  //  * @return CompositePayment
+  //  */
+  // public function setSepaTransaction(?SepaBulkTransaction $sepaTransaction):CompositePayment
+  // {
+  //   $this->sepaTransaction = $sepaTransaction;
 
-    return $this;
-  }
+  //   return $this;
+  // }
 
-  /**
-   * Get sepaTransaction.
-   *
-   * @return SepaTransaction|null
-   */
-  public function getSepaTransaction():?SepaBulkTransaction
-  {
-    return $this->sepaTransaction;
-  }
+  // /**
+  //  * Get sepaTransaction.
+  //  *
+  //  * @return SepaTransaction|null
+  //  */
+  // public function getSepaTransaction():?SepaBulkTransaction
+  // {
+  //   return $this->sepaTransaction;
+  // }
 
   /**
    * Set notificationMessageId.
