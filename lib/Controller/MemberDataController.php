@@ -178,6 +178,7 @@ class MemberDataController extends Controller
         } else {
           $flatDefaultValue = null;
         }
+        $flatProjectField['untranslatedName'] = $projectField->getUntranslatedName();
         $flatProjectField['defaultValue'] = $flatDefaultValue;
         $flatProjectField['fieldData'] = [];
         /** @var Entities\ProjectParticipantFieldDatum $projectDatum */
@@ -187,14 +188,17 @@ class MemberDataController extends Controller
           unset($flatProjectDatum['project']);
           unset($flatProjectDatum['field']);
           unset($flatProjectDatum['projectParticipant']);
-          $flatDataOption = array_filter($projectDatum->getDataOption()->toArray());
+          $dataOption = $projectDatum->getDataOption();
+          $flatDataOption = array_filter($dataOption->toArray());
           foreach (['field', 'fieldData', 'payments'] as $key) {
             unset($flatDataOption[$key]);
           }
+          $flatDataOption['untranslatedLabel'] = $dataOption->getUntranslatedLabel();
           $flatProjectDatum['dataOption'] = $flatDataOption;
           $supportingDocument = $projectDatum->getSupportingDocument();
+          unset($flatProjectDatum['supportingDocument']);
           if (!empty($supportingDocument)) {
-            $flatProjectDatum['supportingDocument'] = $supportingDocument->getId();
+            $flatProjectDatum['supportingDocumentId'] = $supportingDocument->getId();
           }
           $payments = [];
           /** @var Entities\ProjectPayment $payment */

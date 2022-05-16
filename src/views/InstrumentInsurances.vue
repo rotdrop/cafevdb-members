@@ -44,6 +44,23 @@
                         :details="totalPayableFees.toFixed(2) + ' ' + currencySymbol" />
               <ListItem :title="t(appName, 'Yearly Insurance fees with {taxes}% taxes', { taxes: taxRate*100.0 })"
                         :details="(totalPayableFees * (1.0 + taxRate)).toFixed(2) + ' ' + currencySymbol" />
+              <li class="insurance-bills list-item__wrapper">
+                <a class="list-item" href="#">
+                  <div class="list-item-content">
+                    <span class="label">{{ t(appName, 'Yearly Insurance Bills') }}</span>
+                    <span class="menu">
+                      <Actions class="insurance-bill-list">
+                        <ActionLink v-for="receivable in insuranceBills"
+                                    :key="receivable.optionKey"
+                                    icon="icon-download"
+                                    :href="optionDownloadUrl(receivable.optionKey)">
+                          {{ receivable.dataOption.label }}
+                        </ActionLink>
+                      </Actions>
+                    </span>
+                  </div>
+                </a>
+              </li>
             </ul>
           </template>
         </ListItem>
@@ -59,16 +76,9 @@
                         :details="insurance.insuranceAmount + ' ' + currencySymbol"
                         :bold="true">
                 <template #subtitle>
-                  <ul class="insurance-details">
-                    <ListItem :title="t(appName, 'manufacturer')" :details="insurance.manufacturer" />
-                    <ListItem :title="t(appName, 'manufacturered')" :details="insurance.yearOfConstruction" />
-                    <ListItem :title="t(appName, 'insurance broker')" :details="insurance.insuranceRate.broker.shortName" />
-                    <ListItem :title="t(appName, 'insurance start')" :details="formatDate(insurance.startOfInsurance)" />
-                    <ListItem :title="t(appName, 'geographical scope')" :details="t(appName, insurance.insuranceRate.geographicalScope)" />
-                    <ListItem :title="t(appName, 'insurance rate')" :details="insurance.insuranceRate.rate*100.0 + '%'" />
-                    <ListItem :title="t(appName, 'insurance fees')" :details="(insurance.insuranceAmount * insurance.insuranceRate.rate * (1. + taxRate)).toFixed(2) + ' ' + currencySymbol" />
-                    <ListItem :title="t(appName, 'due date')" :details="formatDate(insurance.insuranceRate.dueDate, 'omit-year')" />
-                  </ul>
+                  <InsuranceDetails :insurance="insurance"
+                                    :tax-rate="taxRate"
+                                    :currency-symbol="currencySymbol" />
                 </template>
               </ListItem>
             </ul>
@@ -86,16 +96,9 @@
                         :details="insurance.insuranceAmount + ' ' + currencySymbol"
                         :bold="true">
                 <template #subtitle>
-                  <ul class="insurance-details">
-                    <ListItem :title="t(appName, 'manufacturer')" :details="insurance.manufacturer" />
-                    <ListItem :title="t(appName, 'manufacturered')" :details="insurance.yearOfConstruction" />
-                    <ListItem :title="t(appName, 'insurance broker')" :details="insurance.insuranceRate.broker.shortName" />
-                    <ListItem :title="t(appName, 'insurance start')" :details="formatDate(insurance.startOfInsurance)" />
-                    <ListItem :title="t(appName, 'geographical scope')" :details="t(appName, insurance.insuranceRate.geographicalScope)" />
-                    <ListItem :title="t(appName, 'insurance rate')" :details="insurance.insuranceRate.rate*100.0 + '%'" />
-                    <ListItem :title="t(appName, 'insurance fees')" :details="(insurance.insuranceAmount * insurance.insuranceRate.rate * (1. + taxRate)).toFixed(2) + ' ' + currencySymbol" />
-                    <ListItem :title="t(appName, 'due date')" :details="formatDate(insurance.insuranceRate.dueDate, 'omit-year')" />
-                  </ul>
+                  <InsuranceDetails :insurance="insurance"
+                                    :tax-rate="taxRate"
+                                    :currency-symbol="currencySymbol" />
                 </template>
               </ListItem>
             </ul>
@@ -113,16 +116,9 @@
                         :details="insurance.insuranceAmount + ' ' + currencySymbol"
                         :bold="true">
                 <template #subtitle>
-                  <ul class="insurance-details">
-                    <ListItem :title="t(appName, 'manufacturer')" :details="insurance.manufacturer" />
-                    <ListItem :title="t(appName, 'manufacturered')" :details="insurance.yearOfConstruction" />
-                    <ListItem :title="t(appName, 'insurance broker')" :details="insurance.insuranceRate.broker.shortName" />
-                    <ListItem :title="t(appName, 'insurance start')" :details="formatDate(insurance.startOfInsurance)" />
-                    <ListItem :title="t(appName, 'geographical scope')" :details="t(appName, insurance.insuranceRate.geographicalScope)" />
-                    <ListItem :title="t(appName, 'insurance rate')" :details="insurance.insuranceRate.rate*100.0 + '%'" />
-                    <ListItem :title="t(appName, 'insurance fees')" :details="(insurance.insuranceAmount * insurance.insuranceRate.rate * (1. + taxRate)).toFixed(2) + ' ' + currencySymbol" />
-                    <ListItem :title="t(appName, 'due date')" :details="formatDate(insurance.insuranceRate.dueDate, 'omit-year')" />
-                  </ul>
+                  <InsuranceDetails :insurance="insurance"
+                                    :tax-rate="taxRate"
+                                    :currency-symbol="currencySymbol" />
                 </template>
               </ListItem>
             </ul>
@@ -147,15 +143,17 @@ import { appName } from '../config.js'
 import Vue from 'vue'
 import Content from '@nextcloud/vue/dist/Components/Content'
 import ListItem from '@nextcloud/vue/dist/Components/ListItem'
+import Actions from '@nextcloud/vue/dist/Components/Actions'
+import ActionLink from '@nextcloud/vue/dist/Components/ActionLink'
 import CheckboxRadioSwitch from '@nextcloud/vue/dist/Components/CheckboxRadioSwitch'
+import InsuranceDetails from './InstrumentInsurances/InsuranceDetails'
 import '@nextcloud/dialogs/styles/toast.scss'
 import { generateUrl } from '@nextcloud/router'
 import { showError, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
 import axios from '@nextcloud/axios'
 import { getLocale, getCanonicalLocale, } from '@nextcloud/l10n'
-import moment from '@nextcloud/moment'
-
 import { getInitialState } from '../services/InitialStateService'
+import { getRequestToken } from '@nextcloud/auth'
 
 const initialState = getInitialState()
 
@@ -165,6 +163,9 @@ export default {
     Content,
     CheckboxRadioSwitch,
     ListItem,
+    Actions,
+    ActionLink,
+    InsuranceDetails,
   },
   mixins: [
     {
@@ -172,11 +173,8 @@ export default {
         return {
           currencyCode: initialState.currencyCode,
           currencySymbol: initialState.currencySymbol,
-          orchstraLocate: initialState.orchestraLocale,
+          orchestraLocale: initialState.orchestraLocale,
         }
-      },
-      methods: {
-        moment,
       },
     },
   ],
@@ -187,6 +185,7 @@ export default {
           self: [],
           forOthers: [],
           byOthers: [],
+          receivables: [],
         },
       },
       taxRate: 0.19, // @todo make this configurable
@@ -200,6 +199,11 @@ export default {
       haveOthers: false,
     }
   },
+  computed: {
+    insuranceBills() {
+      return this.memberData.instrumentInsurances.receivables.filter(x => x.supportingDocumentId)
+    },
+  },
   async created() {
     const self = this;
     try {
@@ -207,6 +211,8 @@ export default {
       for (const [key, value] of Object.entries(response.data)) {
         Vue.set(this.memberData, key, value)
       }
+
+      // extract insurances information
       const ownInsurances = []; // holder === debitor
       const insurancesForOthers = []; // debitor === thisMember, holder different
       const insurancesByOthers = []; // holer === thisMember, debitor different
@@ -234,6 +240,26 @@ export default {
       Vue.set(this.memberData.instrumentInsurances, 'forOthers', insurancesForOthers)
       Vue.set(this.memberData.instrumentInsurances, 'byOthers', insurancesByOthers)
       Vue.set(this.memberData.instrumentInsurances, 'self', ownInsurances)
+
+      const insuranceReceivables = [];
+      for (const participant of this.memberData.projectParticipation) {
+        if (participant.project.clubMembers) {
+          // extract insurance receivables and supporting documents
+          for (const [id, field] of Object.entries(participant.participantFields)) {
+            if (field.name === 'Instrument Insurance'
+                || field.untranslatedName === 'Instrument Insurance'
+                || field.name === t(appName, 'Instrument Insurance')
+                || field.untranslatedName === t(appName, 'Instrument Insurance')) {
+              console.info('INSURENCE FIELD ID', field.name, field.untranslatedName, field.id);
+              for (const [key, receivable] of Object.entries(field.fieldData)) {
+                insuranceReceivables.push(receivable)
+              }
+            }
+          }
+        }
+      }
+      insuranceReceivables.sort((left, right) => - parseInt(left.dataOption.data) + parseInt(right.dataOption.data))
+      Vue.set(this.memberData.instrumentInsurances, 'receivables', insuranceReceivables)
     } catch (e) {
       console.error('ERROR', e)
       let message = t(appName, 'reason unknown')
@@ -249,21 +275,10 @@ export default {
     this.loading = false
   },
   methods: {
-    formatDate(date, flavour) {
-      flavour = flavour || 'medium'
-      switch (flavour) {
-        case 'short':
-        case 'medium':
-        case 'long':
-          return moment(date).format('L');
-        case 'omit-year': {
-          const event = new Date(date);
-          const options = { month: 'short', day: 'numeric' };
-          return event.toLocaleString(getCanonicalLocale(), options);
-        }
-      }
-      return moment(data).format(flavour);
-    },
+    optionDownloadUrl(key) {
+      console.info('KEY', key)
+      return generateUrl('/apps/' + appName + '/download/member/' + key + '?requesttoken=' + encodeURIComponent(getRequestToken()))
+    }
   },
 }
 </script>
@@ -309,6 +324,25 @@ export default {
     }
     &.line-two {
       font-weight: normal;
+    }
+  }
+
+  .insurance-bills.list-item__wrapper {
+    .list-item {
+      padding: 2px 0 2px 8px;
+      .list-item-content {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        white-space: nowrap;
+        /* margin: 0 auto; */
+        .label {
+          flex-grow:1;
+        }
+        .menu {
+          margin: 0 8px;
+        }
+      }
     }
   }
 }

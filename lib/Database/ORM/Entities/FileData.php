@@ -37,7 +37,7 @@ use OCA\CAFeVDBMembers\Database\DBAL\Types;
  *
  * Simple data table for image blobs.
  *
- * @ORM\Table(name="PersonaliedFileDataView")
+ * @ORM\Table(name="PersonalizedFileDataView")
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="transformation", type="EnumDataTransformation")
  * @ORM\DiscriminatorMap({"generic"="FileData", "image"="ImageFileData", "encrypted"="EncryptedFileData"})

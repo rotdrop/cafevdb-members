@@ -70,9 +70,23 @@ class Project implements \ArrayAccess
   /**
    * @var Types\EnumProjectTemporalType
    *
-   * @ORM\Column(type="EnumProjectTemporalType", nullable=false, options={"default"="temporary"})
+   * @ORM\Column(type="EnumProjectTemporalType", nullable=false)
    */
   private $type = 'temporary';
+
+  /**
+   * @var bool
+   *
+   * @ORM\Column(type="boolean")
+   */
+  private $clubMembers;
+
+  /**
+   * @var bool
+   *
+   * @ORM\Column(type="boolean")
+   */
+  private $executiveBoard;
 
   /**
    * @ORM\OneToMany(targetEntity="ProjectParticipant", mappedBy="project")
@@ -321,5 +335,53 @@ class Project implements \ArrayAccess
   public function getSepaDebitMandates():Collection
   {
     return $this->sepaDebitMandates;
+  }
+
+  /**
+   * Set clubMembers.
+   *
+   * @param bool $clubMembers
+   *
+   * @return Project
+   */
+  public function setClubMembers(bool $clubMembers):Project
+  {
+    $this->clubMembers = $clubMembers;
+
+    return $this;
+  }
+
+  /**
+   * Get clubMembers.
+   *
+   * @return bool
+   */
+  public function getClubMembers():bool
+  {
+    return $this->clubMembers;
+  }
+
+  /**
+   * Set executiveBoard.
+   *
+   * @param bool $executiveBoard
+   *
+   * @return Project
+   */
+  public function setExecutiveBoard(bool $executiveBoard):Project
+  {
+    $this->executiveBoard = $executiveBoard;
+
+    return $this;
+  }
+
+  /**
+   * Get executiveBoard.
+   *
+   * @return bool
+   */
+  public function getExecutiveBoard():bool
+  {
+    return !empty($this->executiveBoard);
   }
 }

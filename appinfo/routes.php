@@ -58,6 +58,11 @@ return [
       'url' => '/member',
       'verb' => 'GET',
     ],
+    [
+      'name' => 'member_data#download',
+      'url' => '/download/member/{optionKey}',
+      'verb' => 'GET',
+    ],
     /**
      * Attempt a catch all ...
      */

@@ -27,6 +27,8 @@ use OCP\IL10N;
 
 use OCA\CAFeVDBMembers\Database\ORM\EntityManager;
 use OCA\CAFeVDBMembers\Database\ORM\Entities;
+use OCA\CAFeVDBMembers\Database\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
+use OCA\CAFeVDBMembers\Database\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 
 /**
  * Some support functions for giving access to the private data of a member.
