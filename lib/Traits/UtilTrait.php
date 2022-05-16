@@ -79,7 +79,7 @@ trait UtilTrait
     $locale = $this->l->getLocaleCode();
     $primary = locale_get_primary_language($locale);
     if ($primary == $locale) {
-      $locale = $lang.'_'.strtoupper($lang);
+      $locale = $locale.'_'.strtoupper($locale);
     }
     if (strpos($locale, '.') === false) {
       $locale .= '.UTF-8';
