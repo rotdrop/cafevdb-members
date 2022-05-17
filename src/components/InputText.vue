@@ -65,10 +65,10 @@ export default {
     LockIcon,
   },
   props: {
-    type: { type: String, required: true, default: 'text' },
+    type: { type: String, required: false, default: 'text' },
     disabled: { type: Boolean, required: false, default: false },
     readonly: { type: Boolean, required: false, default: false },
-    value: { type: String, required: false, default: '' },
+    value: { type: [String, Date, Array], required: false, default: '' },
     label: { type: String, required: false, default: '' },
     hint: { type: String, required: false, default: '' },
     icon: { type: String, required: false, default: '' },

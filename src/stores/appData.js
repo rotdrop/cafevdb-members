@@ -20,30 +20,11 @@
  *
  */
 
-const state = {
-  count: 0,
-}
+import { defineStore } from 'pinia'
 
-const mutations = {
-  increment(state) {
-    state.count++
-  },
-  reset(state) {
-    state.count = 0
-  },
-}
-
-const getters = {
-  count: state => state.count,
-}
-
-const actions = {
-  increment(context) {
-    context.commit('increment')
-  },
-  reset(context) {
-    context.commit('reset')
-  },
-}
-
-export default { state, mutations, getters, actions }
+// of course, total over-kill ... just playing around
+export const useAppDataStore = defineStore('app-data', {
+  state: () => ({
+    debug: false,
+  }),
+})

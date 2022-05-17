@@ -22,12 +22,15 @@
 import { appName } from './config.js'
 import { generateFilePath } from '@nextcloud/router'
 import { getRequestToken } from '@nextcloud/auth'
-import { sync } from 'vuex-router-sync'
+// import { sync } from 'vuex-router-sync'
 // import { translate, translatePlural } from '@nextcloud/l10n'
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-import store from './store'
+import { createPinia, PiniaVuePlugin } from 'pinia'
+
+Vue.use(PiniaVuePlugin)
+const pinia = createPinia()
 
 // CSP config for webpack dynamic chunk loading
 // eslint-disable-next-line
@@ -36,17 +39,12 @@ __webpack_nonce__ = btoa(getRequestToken())
 // eslint-disable-next-line
 __webpack_public_path__ = generateFilePath(appName, '', 'js/')
 
-sync(store, router)
-
-// is really both needed? Prototype and mixin?
-Vue.mixin({ data() { return { appName } }, methods: { t, n } })
-// Vue.prototype.t = translate
-// Vue.prototype.n = translatePlural
+Vue.mixin({ data() { return { appId: appName } }, methods: { t, n } })
 
 export default new Vue({
   el: '#content',
-  name: 'BlahBlah',
+  name: appName,
   router,
-  store,
+  pinia,
   render: h => h(App),
 })

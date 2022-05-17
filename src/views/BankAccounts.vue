@@ -22,44 +22,44 @@
  */
 </script>
 <template>
-  <Content :class="'app-' + appName" :app-name="appName">
+  <Content :class="'app-' + appId" :app-name="appId">
     <div v-if="loading" class="page-container loading" />
     <div v-else class="page-container">
       <h2>
-        {{ t(appName, 'Bank Accounts of {publicName} ({count})', { publicName: memberData.personalPublicName, count: showDeleted ? memberData.sepaBankAccounts.length : memberData.numActiveBankAccounts }) }}
+        {{ t(appId, 'Bank Accounts of {publicName} ({count})', { publicName: memberData.personalPublicName, count: showDeleted ? memberData.sepaBankAccounts.length : memberData.numActiveBankAccounts }) }}
       </h2>
       <CheckboxRadioSwitch v-if="haveDeleted" :checked.sync="showDeleted">
-        {{ t(appName, 'show deleted') }}
+        {{ t(appId, 'show deleted') }}
       </CheckboxRadioSwitch>
       <ul v-for="account in memberData.sepaBankAccounts"
           :key="account.sequence"
           class="sepa-bank-accounts-list">
         <ListItem v-if="showDeleted || !account.deleted"
-                  :title="t(appName, 'IBAN')"
+                  :title="t(appId, 'IBAN')"
                   :details="account.iban"
                   :bold="true">
           <template #subtitle>
             <ul class="sepa-bank-account-details">
-              <!-- <ListItem :title="t(appName, 'BIC')" :details="account.bic" /> -->
-              <ListItem :title="t(appName, 'owner')" :details="account.bankAccountOwner" />
-              <ListItem :title="t(appName, 'registered')" :details="formatDate(account.created)" />
-              <ListItem v-if="account.modified" :title="t(appName, 'modified')" :details="formatDate(account.modified)" />
-              <ListItem v-if="account.deleted" :title="t(appName, 'revoked')" :details="formatDate(account.deleted)" />
+              <!-- <ListItem :title="t(appId, 'BIC')" :details="account.bic" /> -->
+              <ListItem :title="t(appId, 'owner')" :details="account.bankAccountOwner" />
+              <ListItem :title="t(appId, 'registered')" :details="formatDate(account.created)" />
+              <ListItem v-if="account.modified" :title="t(appId, 'modified')" :details="formatDate(account.modified)" />
+              <ListItem v-if="account.deleted" :title="t(appId, 'revoked')" :details="formatDate(account.deleted)" />
               <ListItem v-if="(showDeleted && account.sepaDebitMandates) || (!showDeleted && account.numActiveDebitMandates > 0)"
-                        :title="t(appName, 'Debit Mandates ({count})', { count: showDeleted ? account.sepaDebitMandates.length : account.numActiveDebitMandates, })">
+                        :title="t(appId, 'Debit Mandates ({count})', { count: showDeleted ? account.sepaDebitMandates.length : account.numActiveDebitMandates, })">
                 <template #subtitle>
                   <ul v-for="mandate in account.sepaDebitMandates"
                       :key="mandate.sequence"
                       class="sepa-debit-mandates-list">
                     <ListItem v-if="showDeleted || !mandate.deleted"
-                              :title="t(appName, 'reference')"
+                              :title="t(appId, 'reference')"
                               :details="mandate.mandateReference">
                       <template v-if="true || showDeleted || !mandate.deleted" #subtitle>
                         <ul class="sepa-debit-mandate-details">
-                          <ListItem :title="t(appName, 'granted')" :details="formatDate(mandate.mandateDate.date)" />
-                          <ListItem v-if="mandate.lastUsedDate" :title="t(appName, 'last used')" :details="formatDate(mandate.lastUsedDate.date)" />
-                          <ListItem v-if="mandate.modified" :title="t(appName, 'modified')" :details="formatDate(mandate.modified)" />
-                          <ListItem v-if="mandate.deleted" :title="t(appName, 'revoked')" :details="formatDate(mandate.deleted)" />
+                          <ListItem :title="t(appId, 'granted')" :details="formatDate(mandate.mandateDate.date)" />
+                          <ListItem v-if="mandate.lastUsedDate" :title="t(appId, 'last used')" :details="formatDate(mandate.lastUsedDate.date)" />
+                          <ListItem v-if="mandate.modified" :title="t(appId, 'modified')" :details="formatDate(mandate.modified)" />
+                          <ListItem v-if="mandate.deleted" :title="t(appId, 'revoked')" :details="formatDate(mandate.deleted)" />
                         </ul>
                       </template>
                     </ListItem>
@@ -70,12 +70,12 @@
           </template>
         </ListItem>
       </ul>
-      <div class="debug-container">
+      <div v-if="debug" class="debug-container">
         <CheckboxRadioSwitch :checked.sync="debug">
-          {{ t(appName, 'Enable Debug') }}
+          {{ t(appId, 'Enable Debug') }}
         </CheckboxRadioSwitch>
-        <div v-if="debug" class="debug">
-          <div>{{ t(appName, 'DEBUG: all data') }}</div>
+        <div class="debug">
+          <div>{{ t(appId, 'DEBUG: all data') }}</div>
           <pre>{{ JSON.stringify(memberData, null, 2) }}</pre>
         </div>
       </div>
@@ -84,7 +84,7 @@
 </template>
 <script>
 
-import { appName } from '../config.js'
+import { appName as appId } from '../config.js'
 import Vue from 'vue'
 import Content from '@nextcloud/vue/dist/Components/Content'
 import ListItem from '@nextcloud/vue/dist/Components/ListItem'
@@ -93,21 +93,21 @@ import '@nextcloud/dialogs/styles/toast.scss'
 import { generateUrl } from '@nextcloud/router'
 import { showError, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
 import axios from '@nextcloud/axios'
-import moment from '@nextcloud/moment'
+import formatDate from '../mixins/formatDate.js'
+
+import { useAppDataStore } from '../stores/appData.js'
+import { mapWritableState } from 'pinia'
 
 export default {
   name: 'BankAccounts',
   components: {
     Content,
-    CheckboxRadioSwitch,
+    CheckboxRadioSwitch,    ...mapWritableState(useAppDataStore, ['debug']),
+
     ListItem,
   },
   mixins: [
-    {
-      methods: {
-        moment,
-      },
-    },
+    formatDate,
   ],
   data() {
     return {
@@ -117,15 +117,17 @@ export default {
         numDeletedBankAccounts: 0,
       },
       loading: true,
-      debug: false,
       showDeleted: false,
       haveDeleted: false,
     }
   },
+  computed: {
+    ...mapWritableState(useAppDataStore, ['debug']),
+  },
   async created() {
     const self = this;
     try {
-      const response = await axios.get(generateUrl('/apps/' + appName + '/member'))
+      const response = await axios.get(generateUrl('/apps/' + appId + '/member'))
       for (const [key, value] of Object.entries(response.data)) {
         Vue.set(this.memberData, key, value)
       }
@@ -140,30 +142,18 @@ export default {
       })
     } catch (e) {
       console.error('ERROR', e)
-      let message = t(appName, 'reason unknown')
+      let message = t(appId, 'reason unknown')
       if (e.response && e.response.data && e.response.data.message) {
         message = e.response.data.message
-        console.info('RESPONSE', e.response)
       }
       // Ignore for the time being
       if (this === false) {
-        showError(t(appName, 'Could not fetch musician(s): {message}', { message }), { timeout: TOAST_PERMANENT_TIMEOUT })
+        showError(t(appId, 'Could not fetch musician(s): {message}', { message }), { timeout: TOAST_PERMANENT_TIMEOUT })
       }
     }
     this.loading = false
   },
-  methods: {
-    formatDate(date, flavour) {
-      flavour = flavour || 'medium'
-      switch (flavour) {
-        case 'short':
-        case 'medium':
-        case 'long':
-          return moment(date).format('L');
-      }
-      return moment(data).format(flavour);
-    },
-  },
+  methods: {},
 }
 </script>
 <style lang="scss" scoped>
@@ -176,6 +166,8 @@ export default {
 
 .debug-container {
   width:100%;
+  max-width:32rem;
+  overflow:visible;
 }
 
 .sepa-bank-accounts-list {

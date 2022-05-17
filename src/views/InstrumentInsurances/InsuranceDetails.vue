@@ -23,18 +23,18 @@
 </script>
 <template>
   <ul class="insurance-details">
-    <ListItem :title="t(appName, 'manufacturer')" :details="insurance.manufacturer" />
-    <ListItem :title="t(appName, 'manufacturered')" :details="insurance.yearOfConstruction" />
-    <ListItem :title="t(appName, 'insurance broker')" :details="insurance.insuranceRate.broker.shortName" />
-    <ListItem :title="t(appName, 'insurance start')" :details="formatDate(insurance.startOfInsurance)" />
-    <ListItem :title="t(appName, 'geographical scope')" :details="t(appName, insurance.insuranceRate.geographicalScope)" />
-    <ListItem :title="t(appName, 'insurance rate')" :details="insurance.insuranceRate.rate*100.0 + '%'" />
-    <ListItem :title="t(appName, 'insurance fees')" :details="(insurance.insuranceAmount * insurance.insuranceRate.rate * (1. + taxRate)).toFixed(2) + ' ' + currencySymbol" />
-    <ListItem :title="t(appName, 'due date')" :details="formatDate(insurance.insuranceRate.dueDate, 'omit-year')" />
+    <ListItem :title="t(appId, 'manufacturer')" :details="insurance.manufacturer" />
+    <ListItem :title="t(appId, 'manufacturered')" :details="insurance.yearOfConstruction" />
+    <ListItem :title="t(appId, 'insurance broker')" :details="insurance.insuranceRate.broker.shortName" />
+    <ListItem :title="t(appId, 'insurance start')" :details="formatDate(insurance.startOfInsurance)" />
+    <ListItem :title="t(appId, 'geographical scope')" :details="t(appId, insurance.insuranceRate.geographicalScope)" />
+    <ListItem :title="t(appId, 'insurance rate')" :details="insurance.insuranceRate.rate*100.0 + '%'" />
+    <ListItem :title="t(appId, 'insurance fees')" :details="(insurance.insuranceAmount * insurance.insuranceRate.rate * (1. + taxRate)).toFixed(2) + ' ' + currencySymbol" />
+    <ListItem :title="t(appId, 'due date')" :details="formatDate(insurance.insuranceRate.dueDate, 'omit-year')" />
   </ul>
 </template>
 <script>
-import { appName } from '../../config.js'
+import { appId } from '../../config.js'
 import ListItem from '@nextcloud/vue/dist/Components/ListItem'
 import formatDate from '../../mixins/formatDate.js'
 export default {
