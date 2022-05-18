@@ -27,7 +27,17 @@ export const useMemberDataStore = defineStore('member-data', {
     memberData: {
       selectedInstruments: [],
       instruments: [],
+      sepaBankAccounts: [],
+      instrumentInsurances: {
+        self: [],
+        forOthers: [],
+        byOthers: [],
+        receivables: [],
+      },
+      projectParticipation: [],
     },
-    initialized: false,
+    initialized: {
+      loaded: false,
+    },
   }),
 })

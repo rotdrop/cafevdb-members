@@ -25,6 +25,7 @@ import { defineStore } from 'pinia'
 // of course, total over-kill ... just playing around
 export const useAppDataStore = defineStore('app-data', {
   state: () => ({
+    memberRootFolder: '',
     debug: false,
   }),
 })

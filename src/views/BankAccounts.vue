@@ -26,7 +26,7 @@
     <div v-if="loading" class="page-container loading" />
     <div v-else class="page-container">
       <h2>
-        {{ t(appId, 'Bank Accounts of {publicName} ({count})', { publicName: memberData.personalPublicName, count: showDeleted ? memberData.sepaBankAccounts.length : memberData.numActiveBankAccounts }) }}
+        {{ t(appId, 'Bank Accounts of {publicName} ({count})', { publicName: memberData.personalPublicName, count: showDeleted ? memberData.sepaBankAccounts.length : numActiveBankAccounts }) }}
       </h2>
       <CheckboxRadioSwitch v-if="haveDeleted" :checked.sync="showDeleted">
         {{ t(appId, 'show deleted') }}
@@ -96,29 +96,32 @@ import axios from '@nextcloud/axios'
 import formatDate from '../mixins/formatDate.js'
 
 import { useAppDataStore } from '../stores/appData.js'
+import { useMemberDataStore } from '../stores/memberData.js'
 import { mapWritableState } from 'pinia'
 
+const viewName = 'BankAccounts'
+
 export default {
-  name: 'BankAccounts',
+  name: viewName,
   components: {
     Content,
-    CheckboxRadioSwitch,    ...mapWritableState(useAppDataStore, ['debug']),
-
+    CheckboxRadioSwitch,
     ListItem,
+  },
+  setup() {
+    const memberData = useMemberDataStore()
+    return { memberData }
   },
   mixins: [
     formatDate,
   ],
   data() {
     return {
-      memberData: {
-        sepaBankAccounts: [],
-        numActiveBankAccounts: 0,
-        numDeletedBankAccounts: 0,
-      },
       loading: true,
       showDeleted: false,
       haveDeleted: false,
+      numActiveBankAccounts: 0,
+      numDeletedBankAccounts: 0,
     }
   },
   computed: {
@@ -127,19 +130,29 @@ export default {
   async created() {
     const self = this;
     try {
-      const response = await axios.get(generateUrl('/apps/' + appId + '/member'))
-      for (const [key, value] of Object.entries(response.data)) {
-        Vue.set(this.memberData, key, value)
+      if (!this.memberData.initialized.loaded) {
+        const response = await axios.get(generateUrl('/apps/' + appId + '/member'))
+        for (const [key, value] of Object.entries(response.data)) {
+          Vue.set(this.memberData, key, value)
+        }
+        this.memberData.initialized.loaded = true
       }
-      this.memberData.numDeletedBankAccounts = this.memberData.sepaBankAccounts.filter(account => !!account.deleted).length
-      this.haveDeleted = this.memberData.numDeletedBankAccounts > 0;
-      this.memberData.numActiveBankAccounts = this.memberData.sepaBankAccounts.length - this.memberData.numDeletedBankAccounts
+      if (!this.memberData.initialized[viewName]) {
+        this.memberData.sepaBankAccounts.forEach((account, index) => {
+          // this.memberData.sepaBankAccounts[index].numDeletedDebitMandates = account.sepaDebitMandates.filter(mandate => !!account.deleted).length
+          account.numDeletedDebitMandates = account.sepaDebitMandates.filter(mandate => !!mandate.deleted).length
+          account.numActiveDebitMandates = account.sepaDebitMandates.length - account.numDeletedDebitMandates
+        })
+        this.memberData.initialized[viewName] = true;
+      }
+
+      this.numDeletedBankAccounts = this.memberData.sepaBankAccounts.filter(account => !!account.deleted).length
+      this.haveDeleted = this.numDeletedBankAccounts > 0;
+      this.numActiveBankAccounts = this.memberData.sepaBankAccounts.length - this.numDeletedBankAccounts
       this.memberData.sepaBankAccounts.forEach((account, index) => {
-        // this.memberData.sepaBankAccounts[index].numDeletedDebitMandates = account.sepaDebitMandates.filter(mandate => !!account.deleted).length
-        account.numDeletedDebitMandates = account.sepaDebitMandates.filter(mandate => !!mandate.deleted).length
-        account.numActiveDebitMandates = account.sepaDebitMandates.length - account.numDeletedDebitMandates
         self.haveDeleted = self.haveDeleted || (account.numDeletedDebitMandates > 0)
       })
+
     } catch (e) {
       console.error('ERROR', e)
       let message = t(appId, 'reason unknown')

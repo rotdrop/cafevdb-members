@@ -157,10 +157,13 @@ import { getRequestToken } from '@nextcloud/auth'
 
 const initialState = getInitialState()
 import { useAppDataStore } from '../stores/appData.js'
+import { useMemberDataStore } from '../stores/memberData.js'
 import { mapWritableState } from 'pinia'
 
+const viewName ='InstrumentInsurances'
+
 export default {
-  name: 'InstrumentInsurances',
+  name: viewName,
   components: {
     Content,
     CheckboxRadioSwitch,
@@ -180,16 +183,12 @@ export default {
       },
     },
   ],
+  setup() {
+    const memberData = useMemberDataStore()
+    return { memberData }
+  },
   data() {
     return {
-      memberData: {
-        instrumentInsurances: {
-          self: [],
-          forOthers: [],
-          byOthers: [],
-          receivables: [],
-        },
-      },
       taxRate: 0.19, // @todo make this configurable
       totalInsuredValue: 0.0,
       totalPayableValue: 0.0,
@@ -208,27 +207,32 @@ export default {
   },
   async created() {
     const self = this;
-    try {
-      const response = await axios.get(generateUrl('/apps/' + appId + '/member'))
-      for (const [key, value] of Object.entries(response.data)) {
-        Vue.set(this.memberData, key, value)
+    if (!this.memberData.initialized.loaded) {
+      try {
+        const response = await axios.get(generateUrl('/apps/' + appId + '/member'))
+        for (const [key, value] of Object.entries(response.data)) {
+          Vue.set(this.memberData, key, value)
+        }
+        this.memberData.initialized.loaded = true
+      } catch (e) {
+        console.error('ERROR', e)
+        let message = t(appId, 'reason unknown')
+        if (e.response && e.response.data && e.response.data.message) {
+          message = e.response.data.message
+        }
+        // Ignore for the time being
+        if (this === false) {
+          showError(t(appId, 'Could not fetch musician(s): {message}', { message }), { timeout: TOAST_PERMANENT_TIMEOUT })
+        }
       }
+    }
 
+    if (!this.memberData.initialized[viewName]) {
       // extract insurances information
       const ownInsurances = []; // holder === debitor
       const insurancesForOthers = []; // debitor === thisMember, holder different
       const insurancesByOthers = []; // holer === thisMember, debitor different
-      this.totalInsuredValue = 0.0;
       for (const insurance of this.memberData.instrumentInsurances) {
-        if (insurance.deleted) {
-          this.haveDeleted = true
-        } else {
-          this.totalInsuredValue += insurance.insuranceAmount
-          if (insurance.isDebitor) {
-            this.totalPayableValue += insurance.insuranceAmount
-            this.totalPayableFees += insurance.insuranceAmount * insurance.insuranceRate.rate
-          }
-        }
         if (insurance.isDebitor === insurance.isHolder) {
           ownInsurances.push(insurance)
         } else if (insurance.isDebitor) {
@@ -237,7 +241,6 @@ export default {
           insurancesByOthers.push(insurance)
         }
       }
-      this.haveOthers = (insurancesByOthers.length + insurancesForOthers.length) > 0;
       Vue.set(this.memberData, 'instrumentInsurances', {})
       Vue.set(this.memberData.instrumentInsurances, 'forOthers', insurancesForOthers)
       Vue.set(this.memberData.instrumentInsurances, 'byOthers', insurancesByOthers)
@@ -261,17 +264,29 @@ export default {
       }
       insuranceReceivables.sort((left, right) => - parseInt(left.dataOption.data) + parseInt(right.dataOption.data))
       Vue.set(this.memberData.instrumentInsurances, 'receivables', insuranceReceivables)
-    } catch (e) {
-      console.error('ERROR', e)
-      let message = t(appId, 'reason unknown')
-      if (e.response && e.response.data && e.response.data.message) {
-        message = e.response.data.message
-      }
-      // Ignore for the time being
-      if (this === false) {
-        showError(t(appId, 'Could not fetch musician(s): {message}', { message }), { timeout: TOAST_PERMANENT_TIMEOUT })
+      this.memberData.initialized[viewName] = true;
+    }
+
+    this.totalInsuredValue = 0.0;
+    for (const insurance of this.memberData.instrumentInsurances.self.concat(
+      this.memberData.instrumentInsurances.forOthers,
+      this.memberData.instrumentInsurances.byOthers
+    )) {
+      if (insurance.deleted) {
+        this.haveDeleted = true
+      } else {
+        this.totalInsuredValue += insurance.insuranceAmount
+        if (insurance.isDebitor) {
+          this.totalPayableValue += insurance.insuranceAmount
+          this.totalPayableFees += insurance.insuranceAmount * insurance.insuranceRate.rate
+        }
       }
     }
+    this.haveOthers = (
+      this.memberData.instrumentInsurances.byOthers.length
+      +
+      this.memberData.instrumentInsurances.forOthers.length
+    ) > 0
     this.loading = false
   },
   methods: {

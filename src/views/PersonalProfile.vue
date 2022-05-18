@@ -132,23 +132,21 @@ import { useAppDataStore } from '../stores/appData.js'
 import { useMemberDataStore } from '../stores/memberData.js'
 import { mapWritableState } from 'pinia'
 
+const viewName = 'PersonalProfile'
+
 export default {
-  name: 'PersonalProfile',
+  name: viewName,
   components: {
     Content,
     InputText,
     CheckboxRadioSwitch,
   },
   setup() {
-    const memberDataStore = useMemberDataStore()
-    return { memberDataStore }
+    const memberData = useMemberDataStore()
+    return { memberData }
   },
   data() {
     return {
-      memberData: {
-        selectedInstruments: [],
-        instruments: [],
-      },
       loading: true,
       readonly: true,
     }
@@ -161,24 +159,20 @@ export default {
    */
   async created() {
     try {
-      const response = await axios.get(generateUrl('/apps/' + appId + '/member'))
-      for (const [key, value] of Object.entries(response.data)) {
-        Vue.set(this.memberData, key, value)
+      if (!this.memberData.initialized.loaded) {
+        const response = await axios.get(generateUrl('/apps/' + appId + '/member'))
+        for (const [key, value] of Object.entries(response.data)) {
+          Vue.set(this.memberData, key, value)
+        }
+        this.memberData.initialized.loaded = true
       }
-      Vue.set(this.memberData, 'birthday', new Date(this.memberData.birthday))
-      Vue.set(this.memberData, 'selectedInstruments', [])
-      for (const instrument of this.memberData.instruments) {
-        this.memberData.selectedInstruments.push(instrument);
-      }
-
-      //
-      for (const [key, value] of Object.entries(response.data)) {
-        Vue.set(this.memberDataStore, key, value)
-      }
-      Vue.set(this.memberDataStore, 'birthday', new Date(this.memberDataStore.birthday))
-      Vue.set(this.memberDataStore, 'selectedInstruments', [])
-      for (const instrument of this.memberDataStore.instruments) {
-        this.memberDataStore.selectedInstruments.push(instrument);
+      if (!this.memberData.initialized[viewName]) {
+        Vue.set(this.memberData, 'birthday', new Date(this.memberData.birthday))
+        Vue.set(this.memberData, 'selectedInstruments', [])
+        for (const instrument of this.memberData.instruments) {
+          this.memberData.selectedInstruments.push(instrument);
+        }
+        this.memberData.initialized[viewName] = true;
       }
     } catch (e) {
       console.error('ERROR', e)
@@ -203,6 +197,12 @@ export default {
   &.loading {
     width:100%;
   }
+}
+
+.debug-container {
+  width:100%;
+  max-width:32rem;
+  overflow:visible;
 }
 
 .input-row {

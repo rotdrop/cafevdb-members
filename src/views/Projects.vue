@@ -87,10 +87,13 @@ import axios from '@nextcloud/axios'
 import md5 from 'blueimp-md5'
 
 import { useAppDataStore } from '../stores/appData.js'
+import { useMemberDataStore } from '../stores/memberData.js'
 import { mapWritableState } from 'pinia'
 
+const viewName = 'Projects'
+
 export default {
-  name: 'Projects',
+  name: viewName,
   components: {
     Content,
     CheckboxRadioSwitch,
@@ -103,47 +106,52 @@ export default {
       }
     },
   ],
+  setup() {
+    const memberData = useMemberDataStore()
+    return { memberData }
+  },
   data() {
     return {
-      memberData: {
-        projectParticipation: [],
-      },
       loading: true,
-      memberRootFolder: '',
     }
   },
- computed: {
+  computed: {
     ...mapWritableState(useAppDataStore, ['debug']),
   },
   async created() {
-    try {
-      const response = await axios.get(generateUrl('/apps/' + appId + '/member'))
-      for (const [key, value] of Object.entries(response.data)) {
-        Vue.set(this.memberData, key, value)
-      }
-    } catch (e) {
-      console.error('ERROR', e)
-      let message = t(appId, 'reason unknown')
-      if (e.response && e.response.data && e.response.data.message) {
-        message = e.response.data.message
-      }
-      // Ignore for the time being
-      if (this === false) {
-        showError(t(appId, 'Could not fetch musician(s): {message}', { message }), { timeout: TOAST_PERMANENT_TIMEOUT })
+    if (!this.memberData.initialized.loaded) {
+      try {
+        const response = await axios.get(generateUrl('/apps/' + appId + '/member'))
+        for (const [key, value] of Object.entries(response.data)) {
+          Vue.set(this.memberData, key, value)
+        }
+        this.memberData.initialized.loaded = true
+      } catch (e) {
+        console.error('ERROR', e)
+        let message = t(appId, 'reason unknown')
+        if (e.response && e.response.data && e.response.data.message) {
+          message = e.response.data.message
+        }
+        // Ignore for the time being
+        if (this === false) {
+          showError(t(appId, 'Could not fetch musician(s): {message}', { message }), { timeout: TOAST_PERMANENT_TIMEOUT })
+        }
       }
     }
-    try {
-      let response = await axios.get(generateUrl('apps/' + appId + '/settings/app/memberRootFolder'), {})
-      this.memberRootFolder = response.data.value
-    } catch (e) {
-      console.error('ERROR', e)
-      let message = t(appId, 'reason unknown')
-      if (e.response && e.response.data && e.response.data.message) {
-        message = e.response.data.message
-      }
-      // Ignore for the time being
-      if (this === false) {
-        showError(t(appId, 'Could not fetch root-folder of member file space: {message}', { message }), { timeout: TOAST_PERMANENT_TIMEOUT })
+    if (this.memberRootFolder === '') {
+      try {
+        let response = await axios.get(generateUrl('apps/' + appId + '/settings/app/memberRootFolder'), {})
+        this.memberRootFolder = response.data.value
+      } catch (e) {
+        console.error('ERROR', e)
+        let message = t(appId, 'reason unknown')
+        if (e.response && e.response.data && e.response.data.message) {
+          message = e.response.data.message
+        }
+        // Ignore for the time being
+        if (this === false) {
+          showError(t(appId, 'Could not fetch root-folder of member file space: {message}', { message }), { timeout: TOAST_PERMANENT_TIMEOUT })
+        }
       }
     }
 
