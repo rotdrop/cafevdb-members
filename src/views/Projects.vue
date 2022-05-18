@@ -116,7 +116,7 @@ export default {
     }
   },
   computed: {
-    ...mapWritableState(useAppDataStore, ['debug']),
+    ...mapWritableState(useAppDataStore, ['debug', 'memberRootFolder']),
   },
   async created() {
     if (!this.memberData.initialized.loaded) {
