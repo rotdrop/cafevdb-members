@@ -143,6 +143,7 @@ import Content from '@nextcloud/vue/dist/Components/Content'
 import ListItem from '../components/ListItem'
 import Actions from '@nextcloud/vue/dist/Components/Actions'
 import ActionLink from '@nextcloud/vue/dist/Components/ActionLink'
+import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import CheckboxRadioSwitch from '@nextcloud/vue/dist/Components/CheckboxRadioSwitch'
 import AppSidebar from '@nextcloud/vue/dist/Components/AppSidebar'
 import AppSidebarTab from '@nextcloud/vue/dist/Components/AppSidebarTab'
@@ -167,6 +168,7 @@ export default {
     ListItem,
     Actions,
     ActionLink,
+    ActionButton,
     InsuranceDetails,
     AppSidebar,
     AppSidebarTab,
@@ -243,7 +245,9 @@ export default {
         }
       }
       insuranceReceivables.sort((left, right) => - parseInt(left.dataOption.data) + parseInt(right.dataOption.data))
+
       Vue.set(this.memberData.instrumentInsurances, 'receivables', insuranceReceivables)
+
       this.memberData.initialized[viewName] = true;
     }
 
@@ -299,49 +303,31 @@ export default {
       background-color:inherit;
     }
   }
-}
 
-::v-deep {
-  .list-item {
-    padding-right: 0;
-    ul .list-item {
-      padding-top:2px;
-      padding-bottom:2px;
-    }
-  }
-
-  .line-two__subtitle {
-    padding-right:0;
-  }
-
-  .line-one--bold {
-    &.line-one {
-      .line-one__details {
-        font-weight:inherit;
-      }
-    }
-    &.line-two {
-      font-weight: normal;
-    }
-  }
-
-  .insurance-bills.list-item__wrapper {
+  ::v-deep {
     .list-item {
-      padding: 2px 0 2px 8px;
-      .list-item-content {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        white-space: nowrap;
-        /* margin: 0 auto; */
-        .label {
-          flex-grow:1;
-        }
-        .menu {
-          margin: 0 8px;
-        }
+      padding-right: 0;
+      ul .list-item {
+        padding-top:2px;
+        padding-bottom:2px;
       }
     }
+
+    .line-two__subtitle {
+      padding-right:0;
+    }
+
+    .line-one--bold {
+      &.line-one {
+        .line-one__details {
+          font-weight:inherit;
+        }
+      }
+      &.line-two {
+        font-weight: normal;
+      }
+    }
+
   }
 }
 </style>
