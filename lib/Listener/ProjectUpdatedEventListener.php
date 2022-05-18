@@ -23,7 +23,7 @@ namespace OCA\CAFeVDBMembers\Listener;
 use OCP\AppFramework\IAppContainer;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
-use OCA\CAFEVDB\Events\ProjectUpdatedEvent as HandledEvent;
+use OCA\CAFEVDB\Events\PostProjectUpdatedEvent as HandledEvent;
 
 use OCA\CAFeVDBMembers\Service\ProjectGroupService;
 
