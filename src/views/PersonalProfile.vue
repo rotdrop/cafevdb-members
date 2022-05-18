@@ -158,33 +158,17 @@ export default {
    *
    */
   async created() {
-    try {
-      if (!this.memberData.initialized.loaded) {
-        const response = await axios.get(generateUrl('/apps/' + appId + '/member'))
-        for (const [key, value] of Object.entries(response.data)) {
-          Vue.set(this.memberData, key, value)
-        }
-        this.memberData.initialized.loaded = true
+    await this.memberData.initialize()
+
+    if (!this.memberData.initialized[viewName]) {
+      Vue.set(this.memberData, 'birthday', new Date(this.memberData.birthday))
+      Vue.set(this.memberData, 'selectedInstruments', [])
+      for (const instrument of this.memberData.instruments) {
+        this.memberData.selectedInstruments.push(instrument);
       }
-      if (!this.memberData.initialized[viewName]) {
-        Vue.set(this.memberData, 'birthday', new Date(this.memberData.birthday))
-        Vue.set(this.memberData, 'selectedInstruments', [])
-        for (const instrument of this.memberData.instruments) {
-          this.memberData.selectedInstruments.push(instrument);
-        }
-        this.memberData.initialized[viewName] = true;
-      }
-    } catch (e) {
-      console.error('ERROR', e)
-      let message = t(appId, 'reason unknown')
-      if (e.response && e.response.data && e.response.data.message) {
-        message = e.response.data.message
-      }
-      // Ignore for the time being
-      if (this === false) {
-        showError(t(appId, 'Could not fetch musician(s): {message}', { message }), { timeout: TOAST_PERMANENT_TIMEOUT })
-      }
+      this.memberData.initialized[viewName] = true;
     }
+
     this.loading = false
   },
   methods: {

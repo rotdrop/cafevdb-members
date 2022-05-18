@@ -128,42 +128,25 @@ export default {
     ...mapWritableState(useAppDataStore, ['debug']),
   },
   async created() {
-    const self = this;
-    try {
-      if (!this.memberData.initialized.loaded) {
-        const response = await axios.get(generateUrl('/apps/' + appId + '/member'))
-        for (const [key, value] of Object.entries(response.data)) {
-          Vue.set(this.memberData, key, value)
-        }
-        this.memberData.initialized.loaded = true
-      }
-      if (!this.memberData.initialized[viewName]) {
-        this.memberData.sepaBankAccounts.forEach((account, index) => {
-          // this.memberData.sepaBankAccounts[index].numDeletedDebitMandates = account.sepaDebitMandates.filter(mandate => !!account.deleted).length
-          account.numDeletedDebitMandates = account.sepaDebitMandates.filter(mandate => !!mandate.deleted).length
-          account.numActiveDebitMandates = account.sepaDebitMandates.length - account.numDeletedDebitMandates
-        })
-        this.memberData.initialized[viewName] = true;
-      }
+    await this.memberData.initialize()
 
-      this.numDeletedBankAccounts = this.memberData.sepaBankAccounts.filter(account => !!account.deleted).length
-      this.haveDeleted = this.numDeletedBankAccounts > 0;
-      this.numActiveBankAccounts = this.memberData.sepaBankAccounts.length - this.numDeletedBankAccounts
+    if (!this.memberData.initialized[viewName]) {
       this.memberData.sepaBankAccounts.forEach((account, index) => {
-        self.haveDeleted = self.haveDeleted || (account.numDeletedDebitMandates > 0)
+        // this.memberData.sepaBankAccounts[index].numDeletedDebitMandates = account.sepaDebitMandates.filter(mandate => !!account.deleted).length
+        account.numDeletedDebitMandates = account.sepaDebitMandates.filter(mandate => !!mandate.deleted).length
+        account.numActiveDebitMandates = account.sepaDebitMandates.length - account.numDeletedDebitMandates
       })
-
-    } catch (e) {
-      console.error('ERROR', e)
-      let message = t(appId, 'reason unknown')
-      if (e.response && e.response.data && e.response.data.message) {
-        message = e.response.data.message
-      }
-      // Ignore for the time being
-      if (this === false) {
-        showError(t(appId, 'Could not fetch musician(s): {message}', { message }), { timeout: TOAST_PERMANENT_TIMEOUT })
-      }
+      this.memberData.initialized[viewName] = true;
     }
+
+    this.numDeletedBankAccounts = this.memberData.sepaBankAccounts.filter(account => !!account.deleted).length
+    this.haveDeleted = this.numDeletedBankAccounts > 0;
+    this.numActiveBankAccounts = this.memberData.sepaBankAccounts.length - this.numDeletedBankAccounts
+    const self = this;
+    this.memberData.sepaBankAccounts.forEach((account, index) => {
+      self.haveDeleted = self.haveDeleted || (account.numDeletedDebitMandates > 0)
+    })
+
     this.loading = false
   },
   methods: {},

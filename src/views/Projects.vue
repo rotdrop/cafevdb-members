@@ -119,25 +119,8 @@ export default {
     ...mapWritableState(useAppDataStore, ['debug', 'memberRootFolder']),
   },
   async created() {
-    if (!this.memberData.initialized.loaded) {
-      try {
-        const response = await axios.get(generateUrl('/apps/' + appId + '/member'))
-        for (const [key, value] of Object.entries(response.data)) {
-          Vue.set(this.memberData, key, value)
-        }
-        this.memberData.initialized.loaded = true
-      } catch (e) {
-        console.error('ERROR', e)
-        let message = t(appId, 'reason unknown')
-        if (e.response && e.response.data && e.response.data.message) {
-          message = e.response.data.message
-        }
-        // Ignore for the time being
-        if (this === false) {
-          showError(t(appId, 'Could not fetch musician(s): {message}', { message }), { timeout: TOAST_PERMANENT_TIMEOUT })
-        }
-      }
-    }
+    await this.memberData.initialize()
+
     if (this.memberRootFolder === '') {
       try {
         let response = await axios.get(generateUrl('apps/' + appId + '/settings/app/memberRootFolder'), {})

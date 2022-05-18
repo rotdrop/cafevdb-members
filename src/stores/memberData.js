@@ -22,9 +22,16 @@
 
 import { defineStore } from 'pinia'
 
+import { appName as appId } from '../config.js'
+import Vue from 'vue'
+import '@nextcloud/dialogs/styles/toast.scss'
+import { generateUrl } from '@nextcloud/router'
+import { showError, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
+import axios from '@nextcloud/axios'
+
 export const useMemberDataStore = defineStore('member-data', {
-  state: () => ({
-    memberData: {
+  state: () => {
+    return {
       selectedInstruments: [],
       instruments: [],
       sepaBankAccounts: [],
@@ -35,9 +42,37 @@ export const useMemberDataStore = defineStore('member-data', {
         receivables: [],
       },
       projectParticipation: [],
+      initialized: {
+        loaded: false,
+      },
+    }
+  },
+  actions: {
+    async initialize() {
+      if (!this.initialized.loaded) {
+        this.$reset()
+        try {
+          const response = await axios.get(generateUrl('/apps/' + appId + '/member'))
+          for (const [key, value] of Object.entries(response.data)) {
+            Vue.set(this, key, value)
+          }
+          this.initialized.loaded = true
+        } catch (e) {
+          console.error('ERROR', e)
+          let message = t(appId, 'reason unknown')
+          if (e.response && e.response.data && e.response.data.message) {
+            message = e.response.data.message
+          }
+          // Ignore for the time being
+          if (this === false) {
+            showError(t(appId, 'Could not fetch musician(s): {message}', { message }), { timeout: TOAST_PERMANENT_TIMEOUT })
+          }
+        }
+      }
     },
-    initialized: {
-      loaded: false,
+    async load() {
+      this.$reset()
+      await this.initialize()
     },
-  }),
+  },
 })
