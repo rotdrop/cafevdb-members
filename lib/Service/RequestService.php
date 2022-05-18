@@ -28,6 +28,8 @@ use OCP\ISession;
 use Psr\Log\LoggerInterface;
 use OCP\IL10N;
 
+use OCA\CAFeVDBMembers\Exceptions;
+
 class RequestService
 {
   use \OCA\CAFeVDBMembers\Traits\LoggerTrait;
@@ -53,18 +55,40 @@ class RequestService
   /** @var IL10N */
   private $l;
 
+  /**
+   * @var bool
+   *
+   * Close the php-session if it is still open, just before actually
+   * posting to a route on the same server. The default is to close
+   * the session automatically if needed.
+   */
+  private $closeSession;
+
   public function __construct(
     IRequest $request
     , IURLGenerator $urlGenerator
     , ISession $session
     , LoggerInterface $logger
     , IL10N $l10n
+    , bool $closeSession = true
   ) {
     $this->request = $request;
     $this->urlGenerator = $urlGenerator;
     $this->session = $session;
     $this->logger = $logger;
     $this->l = $l10n;
+    $this->closeSession = $closeSession;
+  }
+
+  /**
+   * Set the close-session-behaviour.
+   *
+   * @param bool $value If true close the session just before actually
+   * calling out to a route on the same server.
+   */
+  public function setCloseSession(bool $value)
+  {
+    $this->closeSession = $value;
   }
 
   public function postToRoute(string $route,
@@ -102,10 +126,17 @@ class RequestService
                                     string $postType = self::JSON)
   {
     if (!$this->session->isClosed()) {
-      throw new \RuntimeException($this->l->t('Cannot call internal route while the session is open.'));
+      if ($this->closeSession) {
+        $this->session->close();
+      } else {
+        throw new Exceptions\SessionStillOpenException(
+          $this->l->t('Cannot call internal route while the session is open.'),
+          session: $this->session
+        );
+      }
     }
 
-    $this->logDebug('CALL ROUTE ' . $route . ' ' . print_r($routeParams, true) . ' ' . print_r($requestData, true));
+    $this->logInfo('CALL ROUTE ' . $route . ' ' . print_r($routeParams, true) . ' ' . print_r($requestData, true));
 
     $headers = [];
 

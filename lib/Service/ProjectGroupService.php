@@ -27,7 +27,7 @@ use OCP\IL10N;
 use OCP\IGroupManager;
 use OCP\IGroup;
 
-use OCA\CAFEVDB\Events\ProjectUpdatedEvent;
+use OCA\CAFEVDB\Events\PostProjectUpdatedEvent;
 use OCA\CAFEVDB\Events\BeforeProjectDeletedEvent;
 use OCA\CAFEVDB\Events\ProjectCreatedEvent;
 
@@ -140,11 +140,18 @@ class ProjectGroupService
 
   /**
    * Make sure a shared folder exists for the given group.
+   *
+   * @param IGroup $group
+   *
+   * @param null|string $forcedFolderName A forced folder-name. This
+   * is primarily used to make sure that the new group display name is
+   * used while renaming projects. If null the display name of the
+   * group is used.
    */
-  public function ensureProjectFolder(IGroup $group)
+  public function ensureProjectFolder(IGroup $group, ?string $forcedFolderName = null)
   {
     $groupId = $group->getGID();
-    $groupName = $group->getDisplayName();
+    $groupName = $forcedFolderName ?? $group->getDisplayName();
     $leafMountPoint = $this->getProjectFolderMountPoint($groupName, $parentMounts);
 
     // ensure all parent mounts exist and are readable by the respective project-group
@@ -280,7 +287,7 @@ class ProjectGroupService
     }
   }
 
-  public function handleProjectRenamed(ProjectUpdatedEvent $event)
+  public function handleProjectRenamed(PostProjectUpdatedEvent $event)
   {
     $groupId = $this->getProjectGroupId($event->getProjectId());
     $oldData = $event->getOldData();
@@ -291,10 +298,15 @@ class ProjectGroupService
       $folderInfo = $this->groupFoldersService->getFolder($oldMountPoint);
       if (!empty($folderInfo)) {
         $this->groupFoldersService->changeMountPoint($oldMountPoint, $newMountPoint);
+      } else {
+        $this->logInfo('No folder info for old mount-point ' . $oldMountPoint);
       }
       $group = $this->groupManager->get($groupId);
+      if ($group->getDisplayName() != $newData['name']) {
+        $this->logWarn('GROUP NAME IS STILL ' . $group->getDisplayName() . ' vs ' . $newData['name']);
+      }
       if (!empty($group)) {
-        $this->ensureProjectFolder($group);
+        $this->ensureProjectFolder($group, forcedFolderName: $newData['name']);
       } else {
         $this->logError('Cloud-group "' . $groupId . '" for project "' . $newData['name'] . ' does not exist.');
       }
