@@ -36,6 +36,7 @@
         </AppNavigationSettings>
       </template>
     </AppNavigation>
+
     <AppContent :class="{'icon-loading': loading}">
       <router-view v-show="!loading" :loading.sync="loading" />
       <EmptyContent v-if="isRoot" class="emp-content">
@@ -49,6 +50,15 @@
         </template>
       </EmptyContent>
     </AppContent>
+
+    <AppSidebar v-show="showSidebar"
+                title="blah"
+                :loading.sync="loading"
+                @close="closeSidebar">
+      <AppSidebarTab id="blah" icon="icon-settings" name="Settings">
+        Settings tab content
+      </AppSidebarTab>
+    </AppSidebar>
   </Content>
 </template>
 
@@ -60,12 +70,14 @@ import AppNavigation from '@nextcloud/vue/dist/Components/AppNavigation'
 import AppNavigationItem from '@nextcloud/vue/dist/Components/AppNavigationItem'
 import AppNavigationSettings from '@nextcloud/vue/dist/Components/AppNavigationSettings'
 import CheckboxRadioSwitch from '@nextcloud/vue/dist/Components/CheckboxRadioSwitch'
+import AppSidebar from '@nextcloud/vue/dist/Components/AppSidebar'
+import AppSidebarTab from '@nextcloud/vue/dist/Components/AppSidebarTab'
 import EmptyContent from '@nextcloud/vue/dist/Components/EmptyContent'
 
 import Icon from '../img/cafevdbmembers.svg'
 
 import { getInitialState } from './services/InitialStateService'
-import { useMemberDataStore } from './stores/memberData.js'
+// import { useMemberDataStore } from './stores/memberData.js'
 import { useAppDataStore } from './stores/appData.js'
 import { mapWritableState } from 'pinia'
 
@@ -81,28 +93,32 @@ export default {
     CheckboxRadioSwitch,
     Content,
     EmptyContent,
+    AppSidebar,
+    AppSidebarTab,
   },
   data() {
     return {
       orchestraName: initialState?.orchestraName || t(appId, '[UNKNOWN]'),
       icon: Icon,
-      loading: true,
+      loading: false,
+      showSidebar: false,
     }
   },
   computed: {
     isRoot() {
+      console.info('PATH', this.$route.path)
       return this.$route.path === '/'
     },
     ...mapWritableState(useAppDataStore, ['debug']),
-    ...mapWritableState(useMemberDataStore, ['memberData']),
+    // ...mapWritableState(useMemberDataStore, ['memberData']),
   },
-  /**
-   * Fetch list of notes when the component is loaded
-   */
-  async mounted() {
+  mounted() {
     this.loading = false
   },
   methods: {
+    closeSidebar() {
+      this.showSidebar = false
+    },
   },
 }
 </script>

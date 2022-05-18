@@ -49,14 +49,14 @@
               <ListItem v-else-if="participant.projectInstruments.length == 1"
                         :title="participant.projectInstruments[0].name"
                         :details="[participant.projectInstruments[0].voice > 0 ? t(appId, 'voice {voice}', { voice: participant.projectInstruments[0].voice }) : '', participant.projectInstruments[0].sectionLeader ? t(appId, 'section leader') : ''].filter(x => x.length > 0).join(', ')" />
-              <li class="photos-link list-item__wrapper">
-                <a class="list-item" :target="md5(projectPathUrl(participant.project))" :href="projectPathUrl(participant.project)">
-                  <div class="list-item-content">
-                    <span class="label">{{ t(appId, 'Photos') }}</span>
-                    <span class="link">{{ projectPath(participant.project) }}</span>
-                  </div>
-                </a>
-              </li>
+              <ListItem :title="t(appId, 'Photos')"
+                        class="photos-item">
+                <template #details>
+                  <a :target="md5(projectPathUrl(participant.project))" :href="projectPathUrl(participant.project)">
+                    {{ projectPath(participant.project) }}
+                  </a>
+                </template>
+              </ListItem>
             </ul>
           </template>
         </ListItem>
@@ -78,7 +78,7 @@
 import { appName as appId } from '../config.js'
 import Vue from 'vue'
 import Content from '@nextcloud/vue/dist/Components/Content'
-import ListItem from '@nextcloud/vue/dist/Components/ListItem'
+import ListItem from '../components/ListItem'
 import CheckboxRadioSwitch from '@nextcloud/vue/dist/Components/CheckboxRadioSwitch'
 import '@nextcloud/dialogs/styles/toast.scss'
 import { generateUrl } from '@nextcloud/router'
@@ -175,52 +175,40 @@ export default {
 
 .project-list {
   min-width:32rem;
-}
 
-::v-deep {
-  .list-item {
-    padding-right: 0;
-    ul .list-item {
-      padding-top:2px;
-      padding-bottom:2px;
+  ::v-deep {
+    .list-item {
+      padding-right: 0;
+      ul .list-item {
+        padding-top:2px;
+        padding-bottom:2px;
+      }
     }
-  }
 
-  .line-two__subtitle {
-    padding-right:0;
-  }
+    .line-two__subtitle {
+      padding-right:0;
+    }
 
-  .line-one--bold {
-    &.line-one {
+    .line-one--bold {
+      &.line-one {
+        .line-one__details {
+          font-weight:inherit;
+        }
+      }
+      &.line-two {
+        font-weight: normal;
+      }
+    }
+
+    .list-item__wrapper.photos-item {
+      .line-one__title {
+        flex-shrink: 0;
+      }
       .line-one__details {
-        font-weight:inherit;
-      }
-    }
-    &.line-two {
-      font-weight: normal;
-    }
-  }
-}
-
-.photos-link.list-item__wrapper {
-  .list-item {
-    padding: 2px 0 2px 8px;
-    .list-item-content {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      white-space: nowrap;
-      margin: 0 auto;
-      .label {
-        flex-grow:1;
-      }
-      .link {
-        color: CornFlowerBlue;
-        text-decoration: underline;
-        font-weight:normal;
-        margin: 0 8px;
-        * {
-          color:inherit;
+        a {
+          color: CornFlowerBlue;
+          text-decoration: underline;
+          font-weight:normal;
         }
       }
     }

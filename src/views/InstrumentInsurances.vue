@@ -44,23 +44,18 @@
                         :details="totalPayableFees.toFixed(2) + ' ' + currencySymbol" />
               <ListItem :title="t(appId, 'Yearly Insurance fees with {taxes}% taxes', { taxes: taxRate*100.0 })"
                         :details="(totalPayableFees * (1.0 + taxRate)).toFixed(2) + ' ' + currencySymbol" />
-              <li class="insurance-bills list-item__wrapper">
-                <a class="list-item" href="#">
-                  <div class="list-item-content">
-                    <span class="label">{{ t(appId, 'Yearly Insurance Bills') }}</span>
-                    <span class="menu">
-                      <Actions class="insurance-bill-list">
-                        <ActionLink v-for="receivable in insuranceBills"
-                                    :key="receivable.optionKey"
-                                    icon="icon-download"
-                                    :href="optionDownloadUrl(receivable.optionKey)">
-                          {{ receivable.dataOption.label }}
-                        </ActionLink>
-                      </Actions>
-                    </span>
-                  </div>
-                </a>
-              </li>
+              <ListItem :title="t(appId, 'Yearly Insurance Bills')">
+                <template #details>
+                  <Actions class="insurance-bill-list">
+                    <ActionLink v-for="receivable in insuranceBills"
+                                :key="receivable.optionKey"
+                                icon="icon-download"
+                                :href="optionDownloadUrl(receivable.optionKey)">
+                      {{ receivable.dataOption.label }}
+                    </ActionLink>
+                  </Actions>
+                </template>
+              </ListItem>
             </ul>
           </template>
         </ListItem>
@@ -69,10 +64,10 @@
                   :details="t(appId, 'paid by me, instrument used by someone else')"
                   :bold="true">
           <template #subtitle>
-            <ul v-for="insurance in memberData.instrumentInsurances.forOthers"
-                :key="insurance.id"
-                class="insurance-list for-others">
-              <ListItem :title="insurance.object"
+            <ul class="insurance-list for-others">
+              <ListItem v-for="insurance in memberData.instrumentInsurances.forOthers"
+                        :key="insurance.id"
+                        :title="insurance.object"
                         :details="insurance.insuranceAmount + ' ' + currencySymbol"
                         :bold="true">
                 <template #subtitle>
@@ -89,10 +84,10 @@
                   :details="t(appId, 'paid by someone else, instrument used by me')"
                   :bold="true">
           <template #subtitle>
-            <ul v-for="insurance in memberData.instrumentInsurances.byOthers"
-                :key="insurance.id"
-                class="insurance-list by-others">
-              <ListItem :title="insurance.object"
+            <ul class="insurance-list by-others">
+              <ListItem v-for="insurance in memberData.instrumentInsurances.byOthers"
+                        :key="insurance.id"
+                        :title="insurance.object"
                         :details="insurance.insuranceAmount + ' ' + currencySymbol"
                         :bold="true">
                 <template #subtitle>
@@ -109,12 +104,14 @@
                   :details="haveOthers ? t(appId, 'paid and used by myself') : ''"
                   :bold="true">
           <template #subtitle>
-            <ul v-for="insurance in memberData.instrumentInsurances.self"
-                :key="insurance.id"
-                class="insurance-list self">
-              <ListItem :title="insurance.object"
-                        :details="insurance.insuranceAmount + ' ' + currencySymbol"
+            <ul class="insurance-list self">
+              <ListItem v-for="insurance in memberData.instrumentInsurances.self"
+                        :key="insurance.id"
+                        :title="insurance.object"
                         :bold="true">
+                <template #details>
+                  {{ insurance.insuranceAmount + ' ' + currencySymbol }}
+                </template>
                 <template #subtitle>
                   <InsuranceDetails :insurance="insurance"
                                     :tax-rate="taxRate"
@@ -142,15 +139,15 @@
 import { appName as appId } from '../config.js'
 import Vue from 'vue'
 import Content from '@nextcloud/vue/dist/Components/Content'
-import ListItem from '@nextcloud/vue/dist/Components/ListItem'
+// import ListItem from '@nextcloud/vue/dist/Components/ListItem'
+import ListItem from '../components/ListItem'
 import Actions from '@nextcloud/vue/dist/Components/Actions'
 import ActionLink from '@nextcloud/vue/dist/Components/ActionLink'
 import CheckboxRadioSwitch from '@nextcloud/vue/dist/Components/CheckboxRadioSwitch'
+import AppSidebar from '@nextcloud/vue/dist/Components/AppSidebar'
+import AppSidebarTab from '@nextcloud/vue/dist/Components/AppSidebarTab'
 import InsuranceDetails from './InstrumentInsurances/InsuranceDetails'
-import '@nextcloud/dialogs/styles/toast.scss'
 import { generateUrl } from '@nextcloud/router'
-import { showError, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
-import axios from '@nextcloud/axios'
 import { getLocale, getCanonicalLocale, } from '@nextcloud/l10n'
 import { getInitialState } from '../services/InitialStateService'
 import { getRequestToken } from '@nextcloud/auth'
@@ -171,6 +168,8 @@ export default {
     Actions,
     ActionLink,
     InsuranceDetails,
+    AppSidebar,
+    AppSidebarTab,
   },
   mixins: [
     {
@@ -253,6 +252,7 @@ export default {
       this.memberData.instrumentInsurances.forOthers,
       this.memberData.instrumentInsurances.byOthers
     )) {
+      insurance.showDetails = false
       if (insurance.deleted) {
         this.haveDeleted = true
       } else {
@@ -274,7 +274,7 @@ export default {
   methods: {
     optionDownloadUrl(key) {
       return generateUrl('/apps/' + appId + '/download/member/' + key + '?requesttoken=' + encodeURIComponent(getRequestToken()))
-    }
+    },
   },
 }
 </script>
