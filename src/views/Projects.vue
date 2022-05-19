@@ -150,6 +150,6 @@ export default {
 }
 
 .project-list {
-  min-width:32rem;
+  // min-width:32rem;
 }
 </style>
