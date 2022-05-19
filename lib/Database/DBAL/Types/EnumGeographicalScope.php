@@ -40,9 +40,20 @@ use MyCLabs\Enum\Enum as EnumType;
  */
 class EnumGeographicalScope extends EnumType
 {
+  use \OCA\CAFeVDBMembers\Traits\FakeTranslationTrait;
+
   public const DOMESTIC = 'Domestic';
   public const CONTINENT = 'Continent';
   public const GERMANY = 'Germany';
   public const EUROPE = 'Europe';
   public const WORLD = 'World';
+
+  static private function translationHack()
+  {
+    self::t('Domestic');
+    self::t('Continent');
+    self::t('Germany');
+    self::t('Europe');
+    self::t('World');
+  }
 }
