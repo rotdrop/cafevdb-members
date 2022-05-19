@@ -6,27 +6,32 @@
           :to="{ name: '/' }"
           :title="t(appId, 'Home')"
           icon="icon-home"
-          exact />
+          exact
+          @click="showSidebar = false" />
         <AppNavigationItem
           :to="{ name: 'personalProfile' }"
           :title="t(appId, 'Personal Profile')"
           icon="icon-files-dark"
-          exact />
+          exact
+          @click="showSidebar = false" />
         <AppNavigationItem
           :to="{ name: 'bankAccounts' }"
           :title="t(appId, 'Bank Accounts')"
           icon="icon-files-dark"
-          exact />
+          exact
+          @click="showSidebar = false" />
         <AppNavigationItem
           :to="{ name: 'instrumentInsurances' }"
           :title="t(appId, 'Instrument Insurances')"
           icon="icon-files-dark"
-          exact />
+          exact
+          @click="showSidebar = false" />
         <AppNavigationItem
           :to="{ name: 'projects' }"
           :title="t(appId, 'Projects')"
           icon="icon-files-dark"
-          exact />
+          exact
+          @click="showSidebar = false" />
       </template>
       <template #footer>
         <AppNavigationSettings>
@@ -37,8 +42,8 @@
       </template>
     </AppNavigation>
 
-    <AppContent :class="{'icon-loading': loading}">
-      <router-view v-show="!loading" :loading.sync="loading" />
+    <AppContent :class="{'icon-loading': loading}" @insurance-details="showSidebar = true">
+      <router-view v-show="!loading" :loading.sync="loading" @view-details="handleDetailsRequest" />
       <EmptyContent v-if="isRoot" class="emp-content">
         <template #icon>
           <img :src="icon">
@@ -52,11 +57,13 @@
     </AppContent>
 
     <AppSidebar v-show="showSidebar"
-                title="blah"
+                :title="sidebarTitle"
                 :loading.sync="loading"
                 @close="closeSidebar">
-      <AppSidebarTab id="blah" icon="icon-settings" name="Settings">
-        Settings tab content
+      <AppSidebarTab id="details-side-bar"
+                     icon="icon-share"
+                     :name="t(appId, 'details')">
+        <InsuranceDetails v-bind="sidebarProps" />
       </AppSidebarTab>
     </AppSidebar>
   </Content>
@@ -73,6 +80,8 @@ import CheckboxRadioSwitch from '@nextcloud/vue/dist/Components/CheckboxRadioSwi
 import AppSidebar from '@nextcloud/vue/dist/Components/AppSidebar'
 import AppSidebarTab from '@nextcloud/vue/dist/Components/AppSidebarTab'
 import EmptyContent from '@nextcloud/vue/dist/Components/EmptyContent'
+
+import InsuranceDetails from './views/InstrumentInsurances/InsuranceDetails'
 
 import Icon from '../img/cafevdbmembers.svg'
 
@@ -95,6 +104,7 @@ export default {
     EmptyContent,
     AppSidebar,
     AppSidebarTab,
+    InsuranceDetails,
   },
   data() {
     return {
@@ -102,6 +112,9 @@ export default {
       icon: Icon,
       loading: false,
       showSidebar: false,
+      sidebarTitle: '',
+      sidebarView: '',
+      sidebarProps: {},
     }
   },
   computed: {
@@ -118,6 +131,13 @@ export default {
   methods: {
     closeSidebar() {
       this.showSidebar = false
+    },
+    handleDetailsRequest(data) {
+      this.showSidebar = true
+      this.sidebarTitle = data.title
+      this.sidebarView = data.viewName
+      this.sidebarProps = data.props
+      console.info('VIEW', this.sidebarView)
     },
   },
 }

@@ -68,12 +68,15 @@
               <ListItem v-for="insurance in memberData.instrumentInsurances.forOthers"
                         :key="insurance.id"
                         :title="insurance.object"
-                        :details="insurance.insuranceAmount + ' ' + currencySymbol"
                         :bold="true">
-                <template #subtitle>
-                  <InsuranceDetails :insurance="insurance"
-                                    :tax-rate="taxRate"
-                                    :currency-symbol="currencySymbol" />
+                <template #details>
+                  <span class="insurance-amount">{{ insurance.insuranceAmount + ' ' + currencySymbol }}</span>
+                  <Actions class="insurance-details">
+                    <ActionButton icon="icon-info"
+                                  @click="requestInsuranceDetails(insurance)">
+                      {{ t(appId, 'details') }}
+                    </ActionButton>
+                  </Actions>
                 </template>
               </ListItem>
             </ul>
@@ -88,12 +91,15 @@
               <ListItem v-for="insurance in memberData.instrumentInsurances.byOthers"
                         :key="insurance.id"
                         :title="insurance.object"
-                        :details="insurance.insuranceAmount + ' ' + currencySymbol"
                         :bold="true">
-                <template #subtitle>
-                  <InsuranceDetails :insurance="insurance"
-                                    :tax-rate="taxRate"
-                                    :currency-symbol="currencySymbol" />
+                <template #details>
+                  <span class="insurance-amount">{{ insurance.insuranceAmount + ' ' + currencySymbol }}</span>
+                  <Actions class="insurance-details">
+                    <ActionButton icon="icon-info"
+                                  @click="requestInsuranceDetails(insurance)">
+                      {{ t(appId, 'details') }}
+                    </ActionButton>
+                  </Actions>
                 </template>
               </ListItem>
             </ul>
@@ -108,14 +114,15 @@
               <ListItem v-for="insurance in memberData.instrumentInsurances.self"
                         :key="insurance.id"
                         :title="insurance.object"
-                        :bold="true">
+                        class="insurance-item">
                 <template #details>
-                  {{ insurance.insuranceAmount + ' ' + currencySymbol }}
-                </template>
-                <template #subtitle>
-                  <InsuranceDetails :insurance="insurance"
-                                    :tax-rate="taxRate"
-                                    :currency-symbol="currencySymbol" />
+                  <span class="insurance-amount">{{ insurance.insuranceAmount + ' ' + currencySymbol }}</span>
+                  <Actions class="insurance-details">
+                    <ActionButton icon="icon-info"
+                                  @click="requestInsuranceDetails(insurance)">
+                      {{ t(appId, 'details') }}
+                    </ActionButton>
+                  </Actions>
                 </template>
               </ListItem>
             </ul>
@@ -279,6 +286,21 @@ export default {
     optionDownloadUrl(key) {
       return generateUrl('/apps/' + appId + '/download/member/' + key + '?requesttoken=' + encodeURIComponent(getRequestToken()))
     },
+    requestInsuranceDetails(insurance) {
+      this.$emit('view-details', {
+        viewName,
+        title: t(appId, '{insuredObject} ({insuredValue} {currencySymbol})', {
+          insuredObject: insurance.object,
+          insuredValue: insurance.insuranceAmount,
+          currencySymbol: this.currencySymbol,
+        }),
+        props: {
+          insurance,
+          taxRate: this.taxRate,
+          currencySymbol: this.currencySymbol,
+        }
+      })
+    },
   },
 }
 </script>
@@ -325,6 +347,17 @@ export default {
       }
       &.line-two {
         font-weight: normal;
+      }
+    }
+
+    .list-item__wrapper.insurance-item {
+      .line-one__details {
+        color:inherit;
+        display:flex;
+        align-items:center;
+        .insurance-amount {
+          margin-right:0.2em;
+        }
       }
     }
 

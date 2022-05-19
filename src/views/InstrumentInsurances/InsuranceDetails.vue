@@ -29,7 +29,8 @@
     <ListItem :title="t(appId, 'insurance start')" :details="formatDate(insurance.startOfInsurance)" />
     <ListItem :title="t(appId, 'geographical scope')" :details="t(appId, insurance.insuranceRate.geographicalScope)" />
     <ListItem :title="t(appId, 'insurance rate')" :details="insurance.insuranceRate.rate*100.0 + '%'" />
-    <ListItem :title="t(appId, 'insurance fees')" :details="(insurance.insuranceAmount * insurance.insuranceRate.rate * (1. + taxRate)).toFixed(2) + ' ' + currencySymbol" />
+    <ListItem :title="t(appId, 'value')" :details="insurance.insuranceAmount + ' ' + currencySymbol" />
+    <ListItem :title="t(appId, 'insurance fee')" :details="(insurance.insuranceAmount * insurance.insuranceRate.rate * (1. + taxRate)).toFixed(2) + ' ' + currencySymbol" />
     <ListItem :title="t(appId, 'due date')" :details="formatDate(insurance.insuranceRate.dueDate, 'omit-year')" />
   </ul>
 </template>
