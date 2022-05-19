@@ -60,10 +60,17 @@
                 :title="sidebarTitle"
                 :loading.sync="loading"
                 @close="closeSidebar">
-      <AppSidebarTab id="details-side-bar"
+      <AppSidebarTab v-if="sidebarView === 'InstrumentInsurances'"
+                     id="details-side-bar"
                      icon="icon-share"
                      :name="t(appId, 'details')">
         <InsuranceDetails v-bind="sidebarProps" />
+      </AppSidebarTab>
+      <AppSidebarTab v-if="sidebarView === 'Projects'"
+                     id="details-side-bar"
+                     icon="icon-share"
+                     :name="t(appId, 'details')">
+        <ProjectDetails v-bind="sidebarProps" />
       </AppSidebarTab>
     </AppSidebar>
   </Content>
@@ -82,6 +89,7 @@ import AppSidebarTab from '@nextcloud/vue/dist/Components/AppSidebarTab'
 import EmptyContent from '@nextcloud/vue/dist/Components/EmptyContent'
 
 import InsuranceDetails from './views/InstrumentInsurances/InsuranceDetails'
+import ProjectDetails from './views/Projects/ProjectDetails'
 
 import Icon from '../img/cafevdbmembers.svg'
 
@@ -105,6 +113,7 @@ export default {
     AppSidebar,
     AppSidebarTab,
     InsuranceDetails,
+    ProjectDetails,
   },
   data() {
     return {

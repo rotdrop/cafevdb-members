@@ -87,7 +87,7 @@
 import { appName as appId } from '../config.js'
 import Vue from 'vue'
 import Content from '@nextcloud/vue/dist/Components/Content'
-import ListItem from '@nextcloud/vue/dist/Components/ListItem'
+import ListItem from '../components/ListItem'
 import CheckboxRadioSwitch from '@nextcloud/vue/dist/Components/CheckboxRadioSwitch'
 import formatDate from '../mixins/formatDate.js'
 
@@ -126,7 +126,7 @@ export default {
   async created() {
     await this.memberData.initialize()
 
-    if (!this.memberData.initialized[viewName]) {
+    if (this.memberData.initialized.loaded && !this.memberData.initialized[viewName]) {
       this.memberData.sepaBankAccounts.forEach((account, index) => {
         // this.memberData.sepaBankAccounts[index].numDeletedDebitMandates = account.sepaDebitMandates.filter(mandate => !!account.deleted).length
         account.numDeletedDebitMandates = account.sepaDebitMandates.filter(mandate => !!mandate.deleted).length
@@ -135,13 +135,16 @@ export default {
       this.memberData.initialized[viewName] = true;
     }
 
-    this.numDeletedBankAccounts = this.memberData.sepaBankAccounts.filter(account => !!account.deleted).length
-    this.haveDeleted = this.numDeletedBankAccounts > 0;
-    this.numActiveBankAccounts = this.memberData.sepaBankAccounts.length - this.numDeletedBankAccounts
-    const self = this;
-    this.memberData.sepaBankAccounts.forEach((account, index) => {
-      self.haveDeleted = self.haveDeleted || (account.numDeletedDebitMandates > 0)
-    })
+    if (this.memberData.initialized[viewName]) {
+
+      this.numDeletedBankAccounts = this.memberData.sepaBankAccounts.filter(account => !!account.deleted).length
+      this.haveDeleted = this.numDeletedBankAccounts > 0;
+      this.numActiveBankAccounts = this.memberData.sepaBankAccounts.length - this.numDeletedBankAccounts
+      const self = this;
+      this.memberData.sepaBankAccounts.forEach((account, index) => {
+        self.haveDeleted = self.haveDeleted || (account.numDeletedDebitMandates > 0)
+      })
+    }
 
     this.loading = false
   },

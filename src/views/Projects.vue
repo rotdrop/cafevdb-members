@@ -33,31 +33,13 @@
                   :key="participant.project.id"
                   :title="participant.project.name"
                   :bold="true">
-          <template #subtitle>
-            <ul class="project-details">
-              <ListItem v-if="participant.projectInstruments.length > 1"
-                        :title="t(appId, 'Instruments')">
-                <template #subtitle>
-                  <ul class="project-instruments">
-                    <ListItem v-for="instrument in participant.projectInstruments"
-                              :key="instrument.id"
-                              :title="instrument.name"
-                              :details="[instrument.voice > 0 ? t(appId, 'voice {voice}', { voice: instrument.voice }) : '', instrument.sectionLeader ? t(appId, 'section leader') : ''].filter(x => x.length > 0).join(', ')" />
-                  </ul>
-                </template>
-              </ListItem>
-              <ListItem v-else-if="participant.projectInstruments.length == 1"
-                        :title="participant.projectInstruments[0].name"
-                        :details="[participant.projectInstruments[0].voice > 0 ? t(appId, 'voice {voice}', { voice: participant.projectInstruments[0].voice }) : '', participant.projectInstruments[0].sectionLeader ? t(appId, 'section leader') : ''].filter(x => x.length > 0).join(', ')" />
-              <ListItem :title="t(appId, 'Photos')"
-                        class="photos-item">
-                <template #details>
-                  <a :target="md5(projectPathUrl(participant.project))" :href="projectPathUrl(participant.project)">
-                    {{ projectPath(participant.project) }}
-                  </a>
-                </template>
-              </ListItem>
-            </ul>
+          <template #details>
+            <Actions class="project-details">
+              <ActionButton icon="icon-info"
+                            @click="requestProjectDetails(participant)">
+                {{ t(appId, 'details') }}
+              </ActionButton>
+            </Actions>
           </template>
         </ListItem>
       </ul>
@@ -79,12 +61,15 @@ import { appName as appId } from '../config.js'
 import Vue from 'vue'
 import Content from '@nextcloud/vue/dist/Components/Content'
 import ListItem from '../components/ListItem'
+import Actions from '@nextcloud/vue/dist/Components/Actions'
+import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import CheckboxRadioSwitch from '@nextcloud/vue/dist/Components/CheckboxRadioSwitch'
 import '@nextcloud/dialogs/styles/toast.scss'
 import { generateUrl } from '@nextcloud/router'
 import { showError, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
 import axios from '@nextcloud/axios'
-import md5 from 'blueimp-md5'
+
+import ProjectDetails from './Projects/ProjectDetails'
 
 import { useAppDataStore } from '../stores/appData.js'
 import { useMemberDataStore } from '../stores/memberData.js'
@@ -98,14 +83,10 @@ export default {
     Content,
     CheckboxRadioSwitch,
     ListItem,
+    ProjectDetails,
+    Actions,
+    ActionButton,
   },
-  mixins: [
-    {
-      methods: {
-        md5,
-      }
-    },
-  ],
   setup() {
     const memberData = useMemberDataStore()
     return { memberData }
@@ -141,21 +122,16 @@ export default {
     this.loading = false
   },
   methods: {
-    projectPath(project) {
-      const components = [
-        this.memberRootFolder,
-      ]
-      if (project.type === 'temporary') {
-        components.push(t(appId, 'projects'))
-        components.push(project.year)
-      }
-      components.push(project.name);
-      return '/' + components.join('/')
+    requestProjectDetails(participant) {
+      this.$emit('view-details', {
+        viewName,
+        title: participant.project.name,
+        props: {
+          participant,
+          memberRootFolder: this.memberRootFolder,
+        }
+      })
     },
-    projectPathUrl(project) {
-      const path = this.projectPath(project)
-      return generateUrl('apps/files') + '?dir=' + path
-    }
   },
 }
 </script>
@@ -175,43 +151,5 @@ export default {
 
 .project-list {
   min-width:32rem;
-
-  ::v-deep {
-    .list-item {
-      padding-right: 0;
-      ul .list-item {
-        padding-top:2px;
-        padding-bottom:2px;
-      }
-    }
-
-    .line-two__subtitle {
-      padding-right:0;
-    }
-
-    .line-one--bold {
-      &.line-one {
-        .line-one__details {
-          font-weight:inherit;
-        }
-      }
-      &.line-two {
-        font-weight: normal;
-      }
-    }
-
-    .list-item__wrapper.photos-item {
-      .line-one__title {
-        flex-shrink: 0;
-      }
-      .line-one__details {
-        a {
-          color: CornFlowerBlue;
-          text-decoration: underline;
-          font-weight:normal;
-        }
-      }
-    }
-  }
 }
 </style>

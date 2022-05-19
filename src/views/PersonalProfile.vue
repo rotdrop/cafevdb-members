@@ -156,7 +156,7 @@ export default {
   async created() {
     await this.memberData.initialize()
 
-    if (!this.memberData.initialized[viewName]) {
+    if (this.memberData.initialized.loaded && !this.memberData.initialized[viewName]) {
       Vue.set(this.memberData, 'birthday', new Date(this.memberData.birthday))
       Vue.set(this.memberData, 'selectedInstruments', [])
       for (const instrument of this.memberData.instruments) {

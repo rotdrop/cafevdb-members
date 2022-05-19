@@ -146,7 +146,6 @@
 import { appName as appId } from '../config.js'
 import Vue from 'vue'
 import Content from '@nextcloud/vue/dist/Components/Content'
-// import ListItem from '@nextcloud/vue/dist/Components/ListItem'
 import ListItem from '../components/ListItem'
 import Actions from '@nextcloud/vue/dist/Components/Actions'
 import ActionLink from '@nextcloud/vue/dist/Components/ActionLink'
@@ -216,7 +215,7 @@ export default {
   async created() {
     await this.memberData.initialize()
 
-    if (!this.memberData.initialized[viewName]) {
+    if (this.memberData.initialized.loaded && !this.memberData.initialized[viewName]) {
       // extract insurances information
       const ownInsurances = []; // holder === debitor
       const insurancesForOthers = []; // debitor === thisMember, holder different
@@ -258,27 +257,30 @@ export default {
       this.memberData.initialized[viewName] = true;
     }
 
-    this.totalInsuredValue = 0.0;
-    for (const insurance of this.memberData.instrumentInsurances.self.concat(
-      this.memberData.instrumentInsurances.forOthers,
-      this.memberData.instrumentInsurances.byOthers
-    )) {
-      insurance.showDetails = false
-      if (insurance.deleted) {
-        this.haveDeleted = true
-      } else {
-        this.totalInsuredValue += insurance.insuranceAmount
-        if (insurance.isDebitor) {
-          this.totalPayableValue += insurance.insuranceAmount
-          this.totalPayableFees += insurance.insuranceAmount * insurance.insuranceRate.rate
+    if (this.memberData.initialized[viewName]) {
+
+      this.totalInsuredValue = 0.0;
+      for (const insurance of this.memberData.instrumentInsurances.self.concat(
+        this.memberData.instrumentInsurances.forOthers,
+        this.memberData.instrumentInsurances.byOthers
+      )) {
+        insurance.showDetails = false
+        if (insurance.deleted) {
+          this.haveDeleted = true
+        } else {
+          this.totalInsuredValue += insurance.insuranceAmount
+          if (insurance.isDebitor) {
+            this.totalPayableValue += insurance.insuranceAmount
+            this.totalPayableFees += insurance.insuranceAmount * insurance.insuranceRate.rate
+          }
         }
       }
+      this.haveOthers = (
+        this.memberData.instrumentInsurances.byOthers.length
+        +
+        this.memberData.instrumentInsurances.forOthers.length
+      ) > 0
     }
-    this.haveOthers = (
-      this.memberData.instrumentInsurances.byOthers.length
-      +
-      this.memberData.instrumentInsurances.forOthers.length
-    ) > 0
 
     this.loading = false
   },

@@ -22,7 +22,7 @@
  */
 </script>
 <template>
-  <ul class="insurance-details">
+  <ul v-if="insurance !== false" class="insurance-details">
     <ListItem :title="t(appId, 'manufacturer')" :details="insurance.manufacturer" />
     <ListItem :title="t(appId, 'manufacturered')" :details="insurance.yearOfConstruction" />
     <ListItem :title="t(appId, 'insurance broker')" :details="insurance.insuranceRate.broker.shortName" />
@@ -36,16 +36,17 @@
 </template>
 <script>
 import { appId } from '../../config.js'
-import ListItem from '@nextcloud/vue/dist/Components/ListItem'
+import ListItem from '../../components/ListItem'
 import formatDate from '../../mixins/formatDate.js'
+
 export default {
   components: {
     ListItem,
   },
   props: {
-    insurance: { type: Object, required: true },
-    taxRate: { type: Number, required: true },
-    currencySymbol: { type: String, required: true },
+    insurance: { type: [Object,Boolean], required: true, default: false },
+    taxRate: { type: Number, required: true, default: 0.0 },
+    currencySymbol: { type: String, required: true, default: '' },
   },
   mixins: [
     formatDate,
