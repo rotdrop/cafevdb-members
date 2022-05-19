@@ -63,10 +63,7 @@ export const useMemberDataStore = defineStore('member-data', {
           if (e.response && e.response.data && e.response.data.message) {
             message = e.response.data.message
           }
-          // Ignore for the time being
-          if (this === false) {
-            showError(t(appId, 'Could not fetch musician(s): {message}', { message }), { timeout: TOAST_PERMANENT_TIMEOUT })
-          }
+          showError(t(appId, 'Could not fetch musician(s): {message}', { message }), { timeout: TOAST_PERMANENT_TIMEOUT })
         }
       }
     },
