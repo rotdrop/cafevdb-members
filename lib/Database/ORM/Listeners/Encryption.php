@@ -80,7 +80,10 @@ class Encryption implements Transformable\Transformer\TransformerInterface
 
     $sealCryptors = [];
     foreach ($context as $encryptionId) {
-      $sealCryptors[$encryptionId] = $this->getSealCryptor($encryptionId);
+      $cryptor =  $this->getSealCryptor($encryptionId);
+      if ($cryptor->canEncrypt()) {
+        $sealCryptors[$encryptionId] = $cryptor;
+      }
     }
     $this->sealCryptor->setSealCryptors($sealCryptors);
 
@@ -108,7 +111,10 @@ class Encryption implements Transformable\Transformer\TransformerInterface
 
     $sealCryptors = [];
     foreach ($context as $encryptionId) {
-      $sealCryptors[$encryptionId] = $this->getSealCryptor($encryptionId);
+      $cryptor = $this->getSealCryptor($encryptionId);
+      if ($cryptor->canDecrypt()) {
+        $sealCryptors[$encryptionId] = $cryptor;
+      }
     }
     $this->sealCryptor->setSealCryptors($sealCryptors);
 
