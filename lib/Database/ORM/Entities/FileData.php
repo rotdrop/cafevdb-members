@@ -39,7 +39,7 @@ use OCA\CAFeVDBMembers\Database\DBAL\Types;
  *
  * @ORM\Table(name="PersonalizedFileDataView")
  * @ORM\InheritanceType("SINGLE_TABLE")
- * @ORM\DiscriminatorColumn(name="transformation", type="EnumDataTransformation")
+ * @ORM\DiscriminatorColumn(name="type", type="EnumFileType")
  * @ORM\DiscriminatorMap({"generic"="FileData", "image"="ImageFileData", "encrypted"="EncryptedFileData"})
  * @ORM\Entity
  */
