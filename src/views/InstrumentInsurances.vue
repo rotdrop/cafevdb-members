@@ -129,15 +129,7 @@
           </template>
         </ListItem>
       </ul>
-      <div v-if="debug" class="debug-container">
-        <CheckboxRadioSwitch :checked.sync="debug">
-          {{ t(appId, 'Enable Debug') }}
-        </CheckboxRadioSwitch>
-        <div class="debug">
-          <div>{{ t(appId, 'DEBUG: all data') }}</div>
-          <pre>{{ JSON.stringify(memberData, null, 2) }}</pre>
-        </div>
-      </div>
+      <DebugInfo :data="memberData" />
     </div>
   </Content>
 </template>
@@ -147,6 +139,7 @@ import { appName as appId } from '../config.js'
 import Vue from 'vue'
 import Content from '@nextcloud/vue/dist/Components/Content'
 import ListItem from '../components/ListItem'
+import DebugInfo from '../components/DebugInfo'
 import Actions from '@nextcloud/vue/dist/Components/Actions'
 import ActionLink from '@nextcloud/vue/dist/Components/ActionLink'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
@@ -160,9 +153,7 @@ import { getInitialState } from '../services/InitialStateService'
 import { getRequestToken } from '@nextcloud/auth'
 
 const initialState = getInitialState()
-import { useAppDataStore } from '../stores/appData.js'
 import { useMemberDataStore } from '../stores/memberData.js'
-import { mapWritableState } from 'pinia'
 
 const viewName ='InstrumentInsurances'
 
@@ -172,6 +163,7 @@ export default {
     Content,
     CheckboxRadioSwitch,
     ListItem,
+    DebugInfo,
     Actions,
     ActionLink,
     ActionButton,
@@ -210,7 +202,6 @@ export default {
     insuranceBills() {
       return this.memberData.instrumentInsurances.receivables.filter(x => x.supportingDocumentId)
     },
-    ...mapWritableState(useAppDataStore, ['debug']),
   },
   async created() {
     await this.memberData.initialize()
@@ -312,12 +303,6 @@ export default {
   &.loading {
     width:100%;
   }
-}
-
-.debug-container {
-  width:100%;
-  max-width:32rem;
-  overflow:visible;
 }
 
 .insurance-sections {

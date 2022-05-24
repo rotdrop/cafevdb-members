@@ -104,29 +104,20 @@
                    :readonly="readonly"
                    :multiple="true" />
       </div>
-      <div v-if="debug" class="debug-container">
-        <CheckboxRadioSwitch :checked.sync="debug">
-          {{ t(appId, 'Enable Debug') }}
-        </CheckboxRadioSwitch>
-        <div class="debug">
-          <div>{{ t(appId, 'DEBUG: all data') }}</div>
-          <pre>{{ JSON.stringify(memberData, null, 2) }}</pre>
-        </div>
-      </div>
+      <DebugInfo :data="memberData" />
     </div>
   </Content>
 </template>
 <script>
 import { appName as appId } from '../config.js'
 import InputText from '../components/InputText'
+import DebugInfo from '../components/DebugInfo'
 
 import Vue from 'vue'
 import Content from '@nextcloud/vue/dist/Components/Content'
 import CheckboxRadioSwitch from '@nextcloud/vue/dist/Components/CheckboxRadioSwitch'
 
-import { useAppDataStore } from '../stores/appData.js'
 import { useMemberDataStore } from '../stores/memberData.js'
-import { mapWritableState } from 'pinia'
 
 const viewName = 'PersonalProfile'
 
@@ -135,6 +126,7 @@ export default {
   components: {
     Content,
     InputText,
+    DebugInfo,
     CheckboxRadioSwitch,
   },
   setup() {
@@ -146,9 +138,6 @@ export default {
       loading: true,
       readonly: true,
     }
-  },
-  computed: {
-    ...mapWritableState(useAppDataStore, ['debug']),
   },
   /**
    *
@@ -177,12 +166,6 @@ export default {
   &.loading {
     width:100%;
   }
-}
-
-.debug-container {
-  width:100%;
-  max-width:32rem;
-  overflow:visible;
 }
 
 .input-row {

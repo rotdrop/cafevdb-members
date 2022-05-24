@@ -43,15 +43,7 @@
           </template>
         </ListItem>
       </ul>
-      <div v-if="debug" class="debug-container">
-        <CheckboxRadioSwitch :checked.sync="debug">
-          {{ t(appId, 'Enable Debug') }}
-        </CheckboxRadioSwitch>
-        <div class="debug">
-          <div>{{ t(appId, 'DEBUG: all data') }}</div>
-          <pre>{{ JSON.stringify(memberData, null, 2) }}</pre>
-        </div>
-      </div>
+      <DebugInfo :data="memberData" />
     </div>
   </Content>
 </template>
@@ -61,6 +53,7 @@ import { appName as appId } from '../config.js'
 import Vue from 'vue'
 import Content from '@nextcloud/vue/dist/Components/Content'
 import ListItem from '../components/ListItem'
+import DebugInfo from '../components/DebugInfo'
 import Actions from '@nextcloud/vue/dist/Components/Actions'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import CheckboxRadioSwitch from '@nextcloud/vue/dist/Components/CheckboxRadioSwitch'
@@ -86,6 +79,7 @@ export default {
     ProjectDetails,
     Actions,
     ActionButton,
+    DebugInfo,
   },
   setup() {
     const memberData = useMemberDataStore()
@@ -97,7 +91,7 @@ export default {
     }
   },
   computed: {
-    ...mapWritableState(useAppDataStore, ['debug', 'memberRootFolder']),
+    ...mapWritableState(useAppDataStore, ['memberRootFolder']),
   },
   async created() {
     await this.memberData.initialize()
@@ -141,12 +135,6 @@ export default {
   &.loading {
     width:100%;
   }
-}
-
-.debug-container {
-  width:100%;
-  max-width:32rem;
-  overflow:visible;
 }
 
 .project-list {
