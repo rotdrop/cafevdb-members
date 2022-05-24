@@ -104,7 +104,7 @@
                    :readonly="readonly"
                    :multiple="true" />
       </div>
-      <DebugInfo :data="memberData" />
+      <DebugInfo :debug-data="memberData" />
     </div>
   </Content>
 </template>

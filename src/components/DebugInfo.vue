@@ -29,7 +29,7 @@
     </CheckboxRadioSwitch>
     <div class="debug">
       <div>{{ t(appId, 'DEBUG: all data') }}</div>
-      <pre>{{ stringify(data) }}</pre>
+      <pre>{{ stringify(debugData) }}</pre>
     </div>
   </div>
 </template>
@@ -48,14 +48,35 @@ export default {
     CheckboxRadioSwitch,
   },
   props: {
-    data: { type: Object, required: true, default: {} },
+    debugData: { type: Object, required: true, default: {} },
   },
   computed: {
     ...mapWritableState(useAppDataStore, ['debug']),
   },
   methods: {
     stringify(data) {
-      return JSON.stringify(data, null, 2)
+      console.info('DATA', data)
+      try {
+        const getCircularReplacer = () => {
+          const seen = new WeakSet
+          return (key, value) => {
+            if (key.startsWith('$') || key.startsWith('_')) {
+              return
+            }
+            if (typeof value === "object" && value !== null) {
+              if (seen.has(value)) {
+                return
+              }
+              seen.add(value)
+            }
+            return value
+          }
+        }
+        return JSON.stringify(data, getCircularReplacer(), 2)
+      } catch (e) {
+        console.error('ERROR', e)
+        return ''
+      }
     },
   },
 }

@@ -70,7 +70,7 @@
           </template>
         </ListItem>
       </ul>
-      <DebugInfo :data="memberData" />
+      <DebugInfo :debug-data="memberData" />
     </div>
   </Content>
 </template>
