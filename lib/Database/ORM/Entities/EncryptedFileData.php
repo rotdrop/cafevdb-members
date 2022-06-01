@@ -30,7 +30,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
 use OCA\CAFeVDBMembers\Database\ORM as CAFEVDB;
-use MediaMonks\Doctrine\Mapping\Annotation as MediaMonks;
+use MediaMonks\Doctrine\Mapping as MediaMonks;
 use OCA\CAFeVDBMembers\Database\DBAL\Types;
 
 /**

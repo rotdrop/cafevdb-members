@@ -30,7 +30,7 @@ use OCA\CAFeVDBMembers\Database\ORM as CAFEVDB;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
-use MediaMonks\Doctrine\Mapping\Annotation as MediaMonks;
+use MediaMonks\Doctrine\Mapping as MediaMonks;
 
 /**
  * SepaBankAccount.

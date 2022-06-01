@@ -58,7 +58,7 @@ class Encryption implements Transformable\Transformer\TransformerInterface
     $this->keyService->initEncryptionKeyPair();
   }
 
-  public function isCachable():bool
+  public function isCachable(): bool
   {
     return true;
   }
@@ -70,7 +70,7 @@ class Encryption implements Transformable\Transformer\TransformerInterface
    *
    * @return string Encrypted data.
    */
-  public function transform($value, &$context = null)
+  public function transform(?string $value, mixed &$context = null): mixed
   {
     $context = $this->manageEncryptionContext(null, $context);
 
@@ -97,7 +97,7 @@ class Encryption implements Transformable\Transformer\TransformerInterface
    *
    * @return string Decrypted data.
    */
-  public function reverseTransform($value, &$context = null)
+  public function reverseTransform(?string $value, mixed &$context = null): mixed
   {
     if (!$this->sealCryptor->getSealService()->isSealedData($value)) {
       return $value;
