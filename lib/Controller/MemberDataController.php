@@ -61,14 +61,14 @@ class MemberDataController extends Controller
     , $userId
     , IL10N $l10n
     , LoggerInterface $logger
-    // , MemberDataService $dataService
+    , MemberDataService $dataService
     , EntityManager $entityManager
   ) {
-    parent::__construct($this->appName, $request);
+    parent::__construct($appName, $request);
     $this->userId = $userId;
     $this->l = $l10n;
     $this->logger = $logger;
-    $this->dataService = new MemberDataService($entityManager, $logger, $l10n);
+    $this->dataService = $dataService;
     $this->entityManager = $entityManager;
   }
 
