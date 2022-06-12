@@ -245,7 +245,7 @@ class InstrumentInsurance implements \ArrayAccess
    */
   public function getAccessory():bool
   {
-    return $this->accessory;
+    return !empty($this->accessory);
   }
 
   /**
