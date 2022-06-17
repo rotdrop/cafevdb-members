@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2022-06-18 01:30+0200\n"
+"POT-Creation-Date: 2022-06-18 01:41+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -517,7 +517,7 @@ msgstr ""
 
 #. TRANSLATORS src/views/InstrumentInsurances/InsuranceDetails.vue:35
 #: specialVueFakeDummyForL10nScript.js:118
-msgid "role"
+msgid "my role"
 msgstr ""
 
 #. TRANSLATORS src/views/InstrumentInsurances/InsuranceDetails.vue:58

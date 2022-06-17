@@ -94,7 +94,7 @@ OC.L10N.register(
     "value" : "Wert",
     "insurance fee" : "Versicherungsbeitrag",
     "due date" : "Stichtag",
-    "role" : "Rolle",
+    "my role" : "Meine Rolle",
     "debitor" : "Schuldner",
     "owner" : "Eigentum",
     "holder" : "Besitz",
