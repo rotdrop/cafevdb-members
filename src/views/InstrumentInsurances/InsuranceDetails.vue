@@ -32,7 +32,7 @@
     <ListItem :title="t(appId, 'value')" :details="insurance.insuranceAmount + ' ' + currencySymbol" />
     <ListItem :title="t(appId, 'insurance fee')" :details="(insurance.insuranceAmount * insurance.insuranceRate.rate * (1. + taxRate)).toFixed(2) + ' ' + currencySymbol" />
     <ListItem :title="t(appId, 'due date')" :details="formatDate(insurance.insuranceRate.dueDate, 'omit-year')" />
-    <ListItem v-if="needRoles" :title="t(appId, 'role')" :details="roles" />
+    <ListItem v-if="needRoles" :title="t(appId, 'my role')" :details="roles" />
   </ul>
 </template>
 <script>
