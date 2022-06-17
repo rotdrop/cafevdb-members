@@ -76,6 +76,13 @@ class InstrumentInsurance implements \ArrayAccess
   private $isHolder;
 
   /**
+   * @var bool
+   *
+   * @ORM\Column(type="boolean", nullable=false)
+   */
+  private $isOwner;
+
+  /**
    * @var InsuranceRate
    *
    * @ORM\ManyToOne(targetEntity="InsuranceRate", inversedBy="instrumentInsurances", fetch="EXTRA_LAZY")
@@ -435,5 +442,28 @@ class InstrumentInsurance implements \ArrayAccess
   public function getIsHolder():bool
   {
     return $this->isHolder;
+  }
+
+  /**
+   * Set isOwner.
+   *
+   * @param int $isOwner
+   *
+   * @return InstrumentInsurance
+   */
+  public function setIsOwner(IsOwner $isOwner):InstrumentInsurance
+  {
+    $this->isOwner = $isOwner;
+    return $this;
+  }
+
+  /**
+   * Get isOwner.
+   *
+   * @return bool
+   */
+  public function getIsOwner():bool
+  {
+    return $this->isOwner;
   }
 }

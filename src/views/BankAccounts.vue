@@ -41,7 +41,7 @@
           <template #subtitle>
             <ul class="sepa-bank-account-details">
               <!-- <ListItem :title="t(appId, 'BIC')" :details="account.bic" /> -->
-              <ListItem :title="t(appId, 'owner')" :details="account.bankAccountOwner" />
+              <ListItem :title="t(appId, 'account holder')" :details="account.bankAccountOwner" />
               <ListItem :title="t(appId, 'registered')" :details="formatDate(account.created)" />
               <ListItem v-if="account.modified" :title="t(appId, 'modified')" :details="formatDate(account.modified)" />
               <ListItem v-if="account.deleted" :title="t(appId, 'revoked')" :details="formatDate(account.deleted)" />

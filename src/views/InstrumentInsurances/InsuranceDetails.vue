@@ -32,10 +32,11 @@
     <ListItem :title="t(appId, 'value')" :details="insurance.insuranceAmount + ' ' + currencySymbol" />
     <ListItem :title="t(appId, 'insurance fee')" :details="(insurance.insuranceAmount * insurance.insuranceRate.rate * (1. + taxRate)).toFixed(2) + ' ' + currencySymbol" />
     <ListItem :title="t(appId, 'due date')" :details="formatDate(insurance.insuranceRate.dueDate, 'omit-year')" />
+    <ListItem v-if="needRoles" :title="t(appId, 'role')" :details="roles" />
   </ul>
 </template>
 <script>
-import { appId } from '../../config.js'
+import { appName as appId } from '../../config.js'
 import ListItem from '../../components/ListItem'
 import formatDate from '../../mixins/formatDate.js'
 
@@ -47,6 +48,22 @@ export default {
     insurance: { type: [Object,Boolean], required: true, default: false },
     taxRate: { type: Number, required: true, default: 0.0 },
     currencySymbol: { type: String, required: true, default: '' },
+  },
+  computed: {
+    needRoles() {
+      return !this.insurance.isDebitor || !this.insurance.isHolder || !this.insurance.isOwner
+    },
+    roles() {
+      const roles = []
+      this.insurance.isDebitor && roles.push(t(appId, 'debitor'))
+      if (this.insurance.isHolder != this.insurance.isOwner) {
+        this.insurance.isOwner && roles.push(t(appId, 'owner'))
+        this.insurance.isHolder && roles.push(t(appId, 'holder'))
+      } else {
+        this.insurance.isOwner && roles.push(t(appId, 'owner'))
+      }
+      return roles.join('; ')
+    }
   },
   mixins: [
     formatDate,

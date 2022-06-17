@@ -60,15 +60,15 @@
           </template>
         </ListItem>
         <ListItem v-if="memberData.instrumentInsurances.forOthers.length > 0"
-                  :title="t(appname, 'Paid for Others')"
-                  :details="t(appId, 'paid by me, instrument used by someone else')"
+                  :title="t(appId, 'Paid for Others')"
+                  :details="t(appId, 'instrument used by someone else')"
                   :bold="true">
           <template #subtitle>
             <ul class="insurance-list for-others">
               <ListItem v-for="insurance in memberData.instrumentInsurances.forOthers"
                         :key="insurance.id"
                         :title="insurance.object"
-                        :bold="true">
+                        class="insurance-item">
                 <template #details>
                   <span class="insurance-amount">{{ insurance.insuranceAmount + ' ' + currencySymbol }}</span>
                   <Actions class="insurance-details">
@@ -83,15 +83,15 @@
           </template>
         </ListItem>
         <ListItem v-if="memberData.instrumentInsurances.byOthers.length > 0"
-                  :title="t(appname, 'Paid by Others')"
-                  :details="t(appId, 'paid by someone else, instrument used by me')"
+                  :title="t(appId, 'Paid by Others')"
+                  :details="t(appId, 'instrument used by me')"
                   :bold="true">
           <template #subtitle>
             <ul class="insurance-list by-others">
               <ListItem v-for="insurance in memberData.instrumentInsurances.byOthers"
                         :key="insurance.id"
                         :title="insurance.object"
-                        :bold="true">
+                        class="insurance-item">
                 <template #details>
                   <span class="insurance-amount">{{ insurance.insuranceAmount + ' ' + currencySymbol }}</span>
                   <Actions class="insurance-details">
@@ -107,7 +107,7 @@
         </ListItem>
         <ListItem v-if="memberData.instrumentInsurances.self.length > 0"
                   :title="haveOthers ? t(appId, 'Self Used and Paid') : t(appId, 'Insured Instruments')"
-                  :details="haveOthers ? t(appId, 'paid and used by myself') : ''"
+                  :details="haveOthers ? t(appId, 'instrument used by me') : ''"
                   :bold="true">
           <template #subtitle>
             <ul class="insurance-list self">
@@ -208,14 +208,16 @@ export default {
 
     if (this.memberData.initialized.loaded && !this.memberData.initialized[viewName]) {
       // extract insurances information
-      const ownInsurances = []; // holder === debitor
-      const insurancesForOthers = []; // debitor === thisMember, holder different
-      const insurancesByOthers = []; // holer === thisMember, debitor different
+      const ownInsurances = []; // holder or owner === debitor
+      const insurancesForOthers = []; // debitor === thisMember, holder and owner different
+      const insurancesByOthers = []; // holder or owner === thisMember, debitor different
       for (const insurance of this.memberData.instrumentInsurances) {
-        if (insurance.isDebitor === insurance.isHolder) {
-          ownInsurances.push(insurance)
-        } else if (insurance.isDebitor) {
-          insurancesForOthers.push(insurance)
+        if (insurance.isDebitor) {
+          if (insurance.isHolder) {
+            ownInsurances.push(insurance);
+          } else {
+            insurancesForOthers.push(insurance)
+          }
         } else {
           insurancesByOthers.push(insurance)
         }
