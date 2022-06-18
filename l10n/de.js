@@ -108,7 +108,7 @@ OC.L10N.register(
     "Paid for Others" : "Für Andere bezahlt",
     "instrument used by someone else" : "Jemand anders verwendet das Instrument.",
     "Paid by Others" : "Bezahlt von Anderen",
-    "instrument used by me" : "Ich verwende das Instrument.",
+    "instrument owned or used by me" : "Ich bin Eigentümer oder Besitzer.",
     "Self Used and Paid" : "Selbst benutzt und bezahlt",
     "Insured Instruments" : "Versicherte Instrumente",
     "Instrument Insurance" : "Instrumenten-Versicherung",

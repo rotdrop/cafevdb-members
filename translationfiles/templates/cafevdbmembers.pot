@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2022-06-18 01:41+0200\n"
+"POT-Creation-Date: 2022-06-18 10:19+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -520,18 +520,18 @@ msgstr ""
 msgid "my role"
 msgstr ""
 
-#. TRANSLATORS src/views/InstrumentInsurances/InsuranceDetails.vue:58
+#. TRANSLATORS src/views/InstrumentInsurances/InsuranceDetails.vue:56
 #: specialVueFakeDummyForL10nScript.js:120
 msgid "debitor"
 msgstr ""
 
-#. TRANSLATORS src/views/InstrumentInsurances/InsuranceDetails.vue:60
+#. TRANSLATORS src/views/InstrumentInsurances/InsuranceDetails.vue:58
 #: specialVueFakeDummyForL10nScript.js:122
 #: specialVueFakeDummyForL10nScript.js:126
 msgid "owner"
 msgstr ""
 
-#. TRANSLATORS src/views/InstrumentInsurances/InsuranceDetails.vue:61
+#. TRANSLATORS src/views/InstrumentInsurances/InsuranceDetails.vue:59
 #: specialVueFakeDummyForL10nScript.js:124
 msgid "holder"
 msgstr ""
@@ -590,7 +590,7 @@ msgstr ""
 #. TRANSLATORS src/views/InstrumentInsurances.vue:110
 #: specialVueFakeDummyForL10nScript.js:152
 #: specialVueFakeDummyForL10nScript.js:158
-msgid "instrument used by me"
+msgid "instrument owned or used by me"
 msgstr ""
 
 #. TRANSLATORS src/views/InstrumentInsurances.vue:109
@@ -602,13 +602,13 @@ msgstr ""
 msgid "Insured Instruments"
 msgstr ""
 
-#. TRANSLATORS src/views/InstrumentInsurances.vue:237
+#. TRANSLATORS src/views/InstrumentInsurances.vue:235
 #: specialVueFakeDummyForL10nScript.js:162
 #: specialVueFakeDummyForL10nScript.js:164
 msgid "Instrument Insurance"
 msgstr ""
 
-#. TRANSLATORS src/views/InstrumentInsurances.vue:287
+#. TRANSLATORS src/views/InstrumentInsurances.vue:285
 #: specialVueFakeDummyForL10nScript.js:166
 msgid "{insuredObject} ({insuredValue} {currencySymbol})"
 msgstr ""

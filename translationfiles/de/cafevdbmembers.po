@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2022-06-18 01:41+0200\n"
-"PO-Revision-Date: 2022-06-18 01:41+0200\n"
+"POT-Creation-Date: 2022-06-18 10:18+0200\n"
+"PO-Revision-Date: 2022-06-18 10:19+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -550,18 +550,18 @@ msgstr "Stichtag"
 msgid "my role"
 msgstr "Meine Rolle"
 
-#. TRANSLATORS src/views/InstrumentInsurances/InsuranceDetails.vue:58
+#. TRANSLATORS src/views/InstrumentInsurances/InsuranceDetails.vue:56
 #: specialVueFakeDummyForL10nScript.js:120
 msgid "debitor"
 msgstr "Schuldner"
 
-#. TRANSLATORS src/views/InstrumentInsurances/InsuranceDetails.vue:60
+#. TRANSLATORS src/views/InstrumentInsurances/InsuranceDetails.vue:58
 #: specialVueFakeDummyForL10nScript.js:122
 #: specialVueFakeDummyForL10nScript.js:126
 msgid "owner"
 msgstr "Eigentum"
 
-#. TRANSLATORS src/views/InstrumentInsurances/InsuranceDetails.vue:61
+#. TRANSLATORS src/views/InstrumentInsurances/InsuranceDetails.vue:59
 #: specialVueFakeDummyForL10nScript.js:124
 msgid "holder"
 msgstr "Besitz"
@@ -620,8 +620,8 @@ msgstr "Bezahlt von Anderen"
 #. TRANSLATORS src/views/InstrumentInsurances.vue:110
 #: specialVueFakeDummyForL10nScript.js:152
 #: specialVueFakeDummyForL10nScript.js:158
-msgid "instrument used by me"
-msgstr "Ich verwende das Instrument."
+msgid "instrument owned or used by me"
+msgstr "Ich bin Eigentümer oder Besitzer."
 
 #. TRANSLATORS src/views/InstrumentInsurances.vue:109
 #: specialVueFakeDummyForL10nScript.js:156
@@ -632,13 +632,13 @@ msgstr "Selbst benutzt und bezahlt"
 msgid "Insured Instruments"
 msgstr "Versicherte Instrumente"
 
-#. TRANSLATORS src/views/InstrumentInsurances.vue:237
+#. TRANSLATORS src/views/InstrumentInsurances.vue:235
 #: specialVueFakeDummyForL10nScript.js:162
 #: specialVueFakeDummyForL10nScript.js:164
 msgid "Instrument Insurance"
 msgstr "Instrumenten-Versicherung"
 
-#. TRANSLATORS src/views/InstrumentInsurances.vue:287
+#. TRANSLATORS src/views/InstrumentInsurances.vue:285
 #: specialVueFakeDummyForL10nScript.js:166
 msgid "{insuredObject} ({insuredValue} {currencySymbol})"
 msgstr "{insuredObject} ({insuredValue} {currencySymbol})"
@@ -813,8 +813,8 @@ msgstr ""
 msgid "Could not fetch musician(s): {message}"
 msgstr "Konnte den oder die Musiker nicht abfragen: {message}"
 
-#~ msgid "instruement owned or used by me"
-#~ msgstr "Ich bin Eigentümer oder Besitzer."
+#~ msgid "instrument used by me"
+#~ msgstr "Ich verwende das Instrument."
 
 #~ msgid "paid by someone else, instrument used by me"
 #~ msgstr "von mir verwendet, von anderen bezahlt"
