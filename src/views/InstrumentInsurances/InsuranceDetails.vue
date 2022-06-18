@@ -32,7 +32,7 @@
     <ListItem :title="t(appId, 'value')" :details="insurance.insuranceAmount + ' ' + currencySymbol" />
     <ListItem :title="t(appId, 'insurance fee')" :details="(insurance.insuranceAmount * insurance.insuranceRate.rate * (1. + taxRate)).toFixed(2) + ' ' + currencySymbol" />
     <ListItem :title="t(appId, 'due date')" :details="formatDate(insurance.insuranceRate.dueDate, 'omit-year')" />
-    <ListItem :title="t(appId, 'my role')" :details="roles" />
+    <ListItem v-if="includeRole" :title="t(appId, 'my role')" :details="roles" />
   </ul>
 </template>
 <script>
@@ -48,6 +48,7 @@ export default {
     insurance: { type: [Object,Boolean], required: true, default: false },
     taxRate: { type: Number, required: true, default: 0.0 },
     currencySymbol: { type: String, required: true, default: '' },
+    includeRole: true,
   },
   computed: {
     roles() {

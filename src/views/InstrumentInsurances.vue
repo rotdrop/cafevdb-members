@@ -84,7 +84,7 @@
         </ListItem>
         <ListItem v-if="memberData.instrumentInsurances.byOthers.length > 0"
                   :title="t(appId, 'Paid by Others')"
-                  :details="t(appId, 'instrument used by me')"
+                  :details="t(appId, 'instrument owned or used by me')"
                   :bold="true">
           <template #subtitle>
             <ul class="insurance-list by-others">
@@ -107,7 +107,7 @@
         </ListItem>
         <ListItem v-if="memberData.instrumentInsurances.self.length > 0"
                   :title="haveOthers ? t(appId, 'Self Used and Paid') : t(appId, 'Insured Instruments')"
-                  :details="haveOthers ? t(appId, 'instrument used by me') : ''"
+                  :details="haveOthers ? t(appId, 'instrument owned or used by me') : ''"
                   :bold="true">
           <template #subtitle>
             <ul class="insurance-list self">
@@ -146,7 +146,6 @@ import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 import CheckboxRadioSwitch from '@nextcloud/vue/dist/Components/CheckboxRadioSwitch'
 import AppSidebar from '@nextcloud/vue/dist/Components/AppSidebar'
 import AppSidebarTab from '@nextcloud/vue/dist/Components/AppSidebarTab'
-import InsuranceDetails from './InstrumentInsurances/InsuranceDetails'
 import { generateUrl } from '@nextcloud/router'
 import { getLocale, getCanonicalLocale, } from '@nextcloud/l10n'
 import { getInitialState } from '../services/InitialStateService'
@@ -167,7 +166,6 @@ export default {
     Actions,
     ActionLink,
     ActionButton,
-    InsuranceDetails,
     AppSidebar,
     AppSidebarTab,
   },
@@ -293,6 +291,7 @@ export default {
           insurance,
           taxRate: this.taxRate,
           currencySymbol: this.currencySymbol,
+          includeRole: this.haveOthers,
         }
       })
     },
