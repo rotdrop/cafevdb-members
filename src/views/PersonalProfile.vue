@@ -36,10 +36,16 @@
                    :placeholder="t(appId, 'e.g. Smith')"
                    :readonly="readonly" />
       </div>
-      <div class="input-row">
+      <div v-show="memberData.nickName" class="input-row">
         <InputText v-model="memberData.nickName"
                    :label="t(appId, 'Nick Name')"
                    :placeholder="t(appId, 'e.g. Jonny')"
+                   :readonly="readonly" />
+      </div>
+      <div v-show="memberData.addressSupplement" class="input-row">
+        <InputText v-model="memberData.addressSupplement"
+                   :label="t(appId, 'Address Supplement')"
+                   :placeholder="t(appId, 'e.g. c/o Doe')"
                    :readonly="readonly" />
       </div>
       <div class="input-row">
