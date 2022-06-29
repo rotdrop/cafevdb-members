@@ -59,10 +59,15 @@ class Instrument implements \ArrayAccess
   /**
    * @var string
    *
-   * @Gedmo\Translatable
+   * @Gedmo\Translatable(untranslated="untranslatedName")
    * @ORM\Column(type="string", length=128, nullable=false)
    */
   private string $name;
+
+  /**
+   * @var string
+   */
+  private string $untranslatedName;
 
   /**
    * @var int
@@ -124,6 +129,16 @@ class Instrument implements \ArrayAccess
   public function getName():string
   {
     return $this->name;
+  }
+
+  /**
+   * Get untranslated name.
+   *
+   * @return string
+   */
+  public function getUntranslatedName():string
+  {
+    return $this->untranslatedName;
   }
 
   /**
