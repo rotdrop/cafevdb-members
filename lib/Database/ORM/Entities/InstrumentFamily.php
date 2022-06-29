@@ -58,10 +58,15 @@ class InstrumentFamily implements \ArrayAccess
   /**
    * @var string
    *
-   * @Gedmo\Translatable
+   * @Gedmo\Translatable(untranslated="untranslatedFamily")
    * @ORM\Column(type="string", length=255, nullable=false, unique=true)
    */
   private string $family;
+
+  /**
+   * @var string
+   */
+  private string $untranslatedFamily;
 
   /**
    * @ORM\ManyToMany(targetEntity="Instrument", mappedBy="families")
@@ -105,6 +110,16 @@ class InstrumentFamily implements \ArrayAccess
   public function getFamily():string
   {
     return $this->family;
+  }
+
+  /**
+   * Get untranslated family.
+   *
+   * @return string
+   */
+  public function getUntranslatedFamily():string
+  {
+    return $this->untranslatedFamily;
   }
 
   /**
