@@ -24,6 +24,6 @@
 
 namespace OCA\CAFeVDBMembers\Exceptions;
 
-class PhpSessionException extends Exception
+class PhpSessionException extends \Exception
 {
 }
