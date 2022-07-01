@@ -25,7 +25,8 @@ import { defineStore } from 'pinia'
 import { appName as appId } from '../config.js'
 import Vue from 'vue'
 import '@nextcloud/dialogs/styles/toast.scss'
-import { generateUrl } from '@nextcloud/router'
+import { generateUrl, generateOcsUrl } from '@nextcloud/router'
+import { getCurrentUser } from '@nextcloud/auth'
 import { showError, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
 import axios from '@nextcloud/axios'
 
@@ -44,26 +45,53 @@ export const useMemberDataStore = defineStore('member-data', {
       projectParticipation: [],
       initialized: {
         loaded: false,
+        promise: null,
+        error: false,
+        recryptRequest: null,
       },
     }
   },
   actions: {
-    async initialize() {
+    async initialize(silent) {
       if (!this.initialized.loaded) {
+        if (this.initialized.promise !== null) {
+          await this.initialized.promise
+          return
+        }
         this.$reset()
         try {
-          const response = await axios.get(generateUrl('/apps/' + appId + '/member'))
+          this.initialized.promise = axios.get(generateUrl('/apps/' + appId + '/member'))
+          const response = await this.initialized.promise
           for (const [key, value] of Object.entries(response.data)) {
             Vue.set(this, key, value)
           }
+          this.initialized.promise = null
           this.initialized.loaded = true
         } catch (e) {
           console.error('ERROR', e)
-          let message = t(appId, 'reason unknown')
+          let message = t(appId, 'general failure')
           if (e.response && e.response.data && e.response.data.message) {
             message = e.response.data.message
           }
-          showError(t(appId, 'Could not fetch musician(s): {message}', { message }), { timeout: TOAST_PERMANENT_TIMEOUT })
+          this.initialized.error = message
+          if (!silent) {
+            showError(t(appId, 'Could not fetch musician(s): {message}', { message }), { timeout: TOAST_PERMANENT_TIMEOUT })
+          }
+          const cloudUser = getCurrentUser() || {}
+          this.initialized.recryptRequest = null
+          if (cloudUser.uid) {
+            try {
+              const url = generateOcsUrl('apps/cafevdb/api/v1/maintenance/encryption/recrypt/{userId}', {
+                userId: cloudUser.uid,
+              })
+              console.info('CURRENT USER', getCurrentUser(), url + '?format=json')
+              const response = await axios.get(url + '?format=json')
+              this.initialized.recryptRequest = response.data.ocs.data.request
+            } catch (e) {
+              console.error('Error retrieving recryption request', e)
+            }
+          }
+          this.initialized.promise = null
         }
       }
     },

@@ -84,6 +84,7 @@ export default {
       syncDone: 0,
       synchronizing: false,
       syncLabel: '',
+      syncCounter: '',
       cloudUserViewsDatabase: '',
     }
   },

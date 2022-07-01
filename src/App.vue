@@ -9,27 +9,31 @@
           exact
           @click="showSidebar = false" />
         <AppNavigationItem
-          :to="{ name: 'personalProfile' }"
+          :to="memberDataError ? false : { name: 'personalProfile' }"
           :title="t(appId, 'Personal Profile')"
           icon="icon-files-dark"
+          :class="{ disabled: memberDataError }"
           exact
           @click="showSidebar = false" />
         <AppNavigationItem
-          :to="{ name: 'bankAccounts' }"
+          :to="memberDataError ? false : { name: 'bankAccounts' }"
           :title="t(appId, 'Bank Accounts')"
           icon="icon-files-dark"
+          :class="{ disabled: memberDataError }"
           exact
           @click="showSidebar = false" />
         <AppNavigationItem
-          :to="{ name: 'instrumentInsurances' }"
+          :to="memberDataError ? false : { name: 'instrumentInsurances' }"
           :title="t(appId, 'Instrument Insurances')"
           icon="icon-files-dark"
+          :class="{ disabled: memberDataError }"
           exact
           @click="showSidebar = false" />
         <AppNavigationItem
-          :to="{ name: 'projects' }"
+          :to="memberDataError ? false : { name: 'projects' }"
           :title="t(appId, 'Projects')"
           icon="icon-files-dark"
+          :class="{ disabled: memberDataError }"
           exact
           @click="showSidebar = false" />
       </template>
@@ -42,16 +46,25 @@
       </template>
     </AppNavigation>
 
-    <AppContent :class="{'icon-loading': loading}" @insurance-details="showSidebar = true">
-      <router-view v-show="!loading" :loading.sync="loading" @view-details="handleDetailsRequest" />
-      <EmptyContent v-if="isRoot" class="emp-content">
+    <AppContent :class="{ 'icon-loading': loading }" @insurance-details="showSidebar = true">
+      <router-view v-show="!loading && !memberDataError" :loading.sync="loading" @view-details="handleDetailsRequest" />
+      <EmptyContent v-if="isRoot || memberDataError" class="emp-content">
+        {{ t(appId, '{orchestraName} Orchestra Member Portal', { orchestraName, }) }}
         <template #icon>
           <img :src="icon">
         </template>
         <template #desc>
-          <p>
-            {{ t(appId, '{orchestraName} Orchestra Member Portal', { orchestraName, }) }}
-          </p>
+          <div v-if="memberDataError" class="error-section">
+            <p class="error-info">
+              {{ t(appId, 'Error') + ': ' + memberDataError }}
+            </p>
+            <button class="button primary" @click="putRecryptionRequest">
+              {{ t(appId, 'Request Access to my personal Data') }}
+            </button>
+            <p class="hint">
+              {{ t(appId, 'The authorization request has to be processed by a human being, this means that it will need some time before you are granted access to your data. You will be notified by the cloud-software when the request has been processed.') }}
+            </p>
+          </div>
         </template>
       </EmptyContent>
     </AppContent>
@@ -78,6 +91,7 @@
 
 <script>
 import { appName as appId } from './config.js'
+import { getCurrentUser } from '@nextcloud/auth'
 import Content from '@nextcloud/vue/dist/Components/Content'
 import AppContent from '@nextcloud/vue/dist/Components/AppContent'
 import AppNavigation from '@nextcloud/vue/dist/Components/AppNavigation'
@@ -88,13 +102,18 @@ import AppSidebar from '@nextcloud/vue/dist/Components/AppSidebar'
 import AppSidebarTab from '@nextcloud/vue/dist/Components/AppSidebarTab'
 import EmptyContent from '@nextcloud/vue/dist/Components/EmptyContent'
 
+import '@nextcloud/dialogs/styles/toast.scss'
+import { generateOcsUrl } from '@nextcloud/router'
+import { showError, showInfo, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
+import axios from '@nextcloud/axios'
+
 import InsuranceDetails from './views/InstrumentInsurances/InsuranceDetails'
 import ProjectDetails from './views/Projects/ProjectDetails'
 
 import Icon from '../img/cafevdbmembers.svg'
 
 import { getInitialState } from './services/InitialStateService'
-// import { useMemberDataStore } from './stores/memberData.js'
+import { useMemberDataStore } from './stores/memberData.js'
 import { useAppDataStore } from './stores/appData.js'
 import { mapWritableState } from 'pinia'
 
@@ -115,11 +134,15 @@ export default {
     InsuranceDetails,
     ProjectDetails,
   },
+  setup() {
+    const memberData = useMemberDataStore()
+    return { memberData }
+  },
   data() {
     return {
       orchestraName: initialState?.orchestraName || t(appId, '[UNKNOWN]'),
       icon: Icon,
-      loading: false,
+      loading: true,
       showSidebar: false,
       sidebarTitle: '',
       sidebarView: '',
@@ -131,10 +154,15 @@ export default {
       console.info('PATH', this.$route.path)
       return this.$route.path === '/'
     },
+    memberDataError() {
+      return this.memberData.initialized.error
+    },
     ...mapWritableState(useAppDataStore, ['debug']),
     // ...mapWritableState(useMemberDataStore, ['memberData']),
   },
-  mounted() {
+  async created() {
+    this.memberData.initialized.error = false
+    await this.memberData.initialize(true) // silent
     this.loading = false
   },
   methods: {
@@ -148,11 +176,57 @@ export default {
       this.sidebarProps = data.props
       console.info('VIEW', this.sidebarView)
     },
+    async putRecryptionRequest() {
+      const cloudUser = getCurrentUser() || {}
+      if (!cloudUser.uid) {
+        showError(t(appId, 'Unable to determine the identity of the current user.'))
+      }
+      const userId = cloudUser.uid
+      try {
+        const url = generateOcsUrl('apps/cafevdb/api/v1/maintenance/encryption/recrypt/{userId}', { userId })
+        await axios.put(url + '?format=json')
+        showInfo(t(appId, 'The authorization request for {userId} has been submitted successfully', { userId }))
+      } catch (e) {
+        console.info('ERROR', e)
+        let message = t(appId, 'reason unknown')
+        if (e.response && e.response.data) {
+          const data = e.response.data
+          if (data.ocs && data.ocs.meta && data.ocs.meta.message) {
+            message = data.ocs.meta.message
+          }
+        }
+        showError(t(appId, 'Unable to handle access action: {message}', { message }), { timeout: TOAST_PERMANENT_TIMEOUT })
+      }
+    },
   },
 }
 </script>
 <style lang="scss" scoped>
-.blah {
-  color: red;
+.app-navigation-entry.disabled::v-deep {
+  opacity: 0.5;
+  &, & * {
+    cursor: default !important;
+    pointer-events: none;
+  }
+}
+
+.empty-content::v-deep {
+  h2 ~ p {
+    text-align: center;
+  }
+  .hint {
+    color: var(--color-text-lighter);
+  }
+  .error-section {
+    text-align: center;
+    .error-info {
+      font-weight: bold;
+      font-style: italic;
+      max-width: 66ex;
+    }
+    .hint {
+      max-width: 66ex;
+    }
+  }
 }
 </style>
