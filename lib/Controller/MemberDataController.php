@@ -36,6 +36,7 @@ use OCA\CAFeVDBMembers\AppInfo\Application;
 use OCA\CAFeVDBMembers\Database\ORM\EntityManager;
 use OCA\CAFeVDBMembers\Database\ORM\Entities;
 use OCA\CAFeVDBMembers\Service\MemberDataService;
+use OCA\CAFeVDBMembers\Service\AuthenticationService;
 
 class MemberDataController extends Controller
 {
@@ -48,6 +49,9 @@ class MemberDataController extends Controller
 
   /** @var IL10N */
   private $l;
+
+  /** @var AuthenticationService */
+  private $authenticationService;
 
   /** @var MemberDataService */
   private $dataService;
@@ -62,12 +66,14 @@ class MemberDataController extends Controller
     , IL10N $l10n
     , LoggerInterface $logger
     , MemberDataService $dataService
+    , AuthenticationService $authenticationService
     , EntityManager $entityManager
   ) {
     parent::__construct($appName, $request);
     $this->userId = $userId;
     $this->l = $l10n;
     $this->logger = $logger;
+    $this->authenticationService = $authenticationService;
     $this->dataService = $dataService;
     $this->entityManager = $entityManager;
   }
@@ -81,6 +87,9 @@ class MemberDataController extends Controller
    */
   public function get()
   {
+    if (($authOk = $this->checkAccess()) !== true) {
+      return $authOk;
+    }
     $musicians = $this->entityManager->getRepository(Entities\Musician::class)->findAll();
     $this->logInfo('NUMBER OF MUSICIANS ' . count($musicians));
     if (count($musicians) == 0) {
@@ -299,6 +308,9 @@ class MemberDataController extends Controller
    */
   public function download(string $optionKey)
   {
+    if (($authOk = $this->checkAccess()) !== true) {
+      return $authOk;
+    }
     $musicians = $this->entityManager->getRepository(Entities\Musician::class)->findAll();
     $this->logInfo('NUMBER OF MUSICIANS ' . count($musicians));
     if (count($musicians) == 0) {
@@ -327,5 +339,21 @@ class MemberDataController extends Controller
     $fileName = $pathInfo['baseName'];
 
     return $this->dataDownloadResponse($file->getFileData()->getData(), $fileName, $mimeType);
+  }
+
+  /**
+   * Check whether the cafevdb database can be accessed
+   *
+   * @return {bool|Response} true if everything is ok, otherwise an error
+   * response to be passed back to the web-client.
+   */
+  private function checkAccess()
+  {
+    try {
+      $this->authenticationService->getRowAccessToken();
+      return true;
+    } catch (\Throwable $t) {
+      return self::grumble($this->l->t('Access to the member-data is not authorized: %s', $t->getMessage()));
+    }
   }
 }

@@ -50,7 +50,7 @@ use MediaMonks\Doctrine\Transformable;
 use OCA\CAFeVDBMembers\Database\ORM\Mapping\ReservedWordQuoteStrategy;
 use OCA\CAFeVDBMembers\Database\DBAL\Types;
 use OCA\CAFeVDBMembers\Database\DBAL\Logging\CloudLogger;
-use OCA\CAFEVDB\Crypto\AsymmetricKeyService;
+use OCA\CAFeVDBMembers\Service\AuthenticationService;
 
 /**
  * Use this as the actual EntityManager in order to be able to
@@ -77,6 +77,9 @@ class EntityManager extends EntityManagerDecorator
   /** @var string */
   private $appName;
 
+  /** @var AuthenticationService */
+  private $authenticationService;
+
   /** @var IConfig */
   private $cloudConfig;
 
@@ -98,6 +101,7 @@ class EntityManager extends EntityManagerDecorator
   public function __construct(
     $appName
     , $userId
+    , AuthenticationService $authenticationService
     , IAppContainer $appContainer
     , IConfig $cloudConfig
     , IL10N $l10n
@@ -106,6 +110,7 @@ class EntityManager extends EntityManagerDecorator
   ) {
     $this->appName = $appName;
     $this->userId = $userId;
+    $this->authenticationService = $authenticationService;
     $this->appContainer = $appContainer;
     $this->cloudConfig = $cloudConfig;
     $this->l = $l10n;
@@ -391,11 +396,7 @@ class EntityManager extends EntityManagerDecorator
   {
     if (!empty($this->userId)) {
       $args->getConnection()->executeStatement("SET @CLOUD_USER_ID = '" . $this->userId . "'");
-
-      /** @var AsymmetricKeyService $keyService */
-      $keyService = $this->appContainer->get(AsymmetricKeyService::class);
-      $rowAccessToken = $keyService->getSharedPrivateValue($this->userId, 'rowAccessToken');
-      $rowAccessTokenHash = \hash('sha512', $rowAccessToken);
+      $rowAccessTokenHash = $this->authenticationService->getRowAccessToken();
       $args->getConnection()->executeStatement("SET @ROW_ACCESS_TOKEN = '" . $rowAccessTokenHash . "'");
     }
   }
