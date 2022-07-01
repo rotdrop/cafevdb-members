@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2022-06-18 10:18+0200\n"
-"PO-Revision-Date: 2022-06-18 10:19+0200\n"
+"POT-Creation-Date: 2022-07-01 23:10+0200\n"
+"PO-Revision-Date: 2022-07-01 23:20+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -30,27 +30,32 @@ msgstr "POST-Anfragen an die Basis-Adresse der App \"%s\" sind nicht erlaubt."
 msgid "Get from end-point \"%s\" not implemented."
 msgstr "GET-Anfragen an \"%s\" sind nicht implementiert."
 
-#: lib/Controller/MemberDataController.php:87
-#: lib/Controller/MemberDataController.php:305
+#: lib/Controller/MemberDataController.php:96
+#: lib/Controller/MemberDataController.php:317
 #, php-format
 msgid "No member-data found for user-id \"%s\"."
 msgstr "Keine Daten für Benutzer-Kennung \"%s\" gefunden."
 
-#: lib/Controller/MemberDataController.php:89
-#: lib/Controller/MemberDataController.php:307
+#: lib/Controller/MemberDataController.php:98
+#: lib/Controller/MemberDataController.php:319
 #, php-format
 msgid "More than one musician found for user-id \"%s\"."
 msgstr "Benutzer-Kennung \"%s\" scheint nicht eindeutig zu sein."
 
-#: lib/Controller/MemberDataController.php:315
+#: lib/Controller/MemberDataController.php:327
 #, php-format
 msgid "Unable to find data for the option-uuid \"%s\"."
 msgstr "Kann keine Daten für die Option mit der UUID \"%s\" finden."
 
-#: lib/Controller/MemberDataController.php:320
+#: lib/Controller/MemberDataController.php:332
 #, php-format
 msgid "The option \"%s\" does not have any associated files."
 msgstr "Die Option \"%s\" hat keine zugeordneten Dateien."
+
+#: lib/Controller/MemberDataController.php:356
+#, php-format
+msgid "Access to the member-data is not authorized: %s"
+msgstr "Fehlende Authorisierung für den Zugriff auf Ihre Benutzer-Daten: %s"
 
 #: lib/Controller/SettingsController.php:113
 #, php-format
@@ -108,6 +113,20 @@ msgstr "Europa"
 #: lib/Database/DBAL/Types/EnumGeographicalScope.php:57
 msgid "World"
 msgstr "Welt"
+
+#: lib/Service/AuthenticationService.php:80
+#, php-format
+msgid ""
+"The row-access token for \"%s\" is present but invalid, the user's data will "
+"be unaccessble."
+msgstr "Das vorhandene Zugriffs-Ticket für die persönlichen Daten von \"%s\" ist ungültig, auf die Daten kann nicht zugegriffen werden."
+
+#: lib/Service/AuthenticationService.php:83
+#, php-format
+msgid ""
+"The row-access token for \"%s\" is missing, the user's data will be "
+"unaccessble."
+msgstr "Das Zugriffs-Ticket für die persönlichen Daten von \"%s\" fehlt, auf die Daten kann nicht zugegriffen werden."
 
 #: lib/Service/GroupFoldersService.php:158
 #, php-format
@@ -179,7 +198,7 @@ msgstr ""
 
 #. TRANSLATORS src/views/Projects/ProjectDetails.vue:80
 #: lib/Service/ProjectGroupService.php:125
-#: specialVueFakeDummyForL10nScript.js:228
+#: specialVueFakeDummyForL10nScript.js:246
 msgid "projects"
 msgstr "Projekte"
 
@@ -296,56 +315,58 @@ msgstr ""
 "Der Name der Datenbank für die personalisierten Tabellen-Ansichten, die die "
 "persönlichen Daten des gerade angemeldeten Users enthalten."
 
-#. TRANSLATORS src/AdminSettings.vue:135
+#. TRANSLATORS src/AdminSettings.vue:136
 #: specialVueFakeDummyForL10nScript.js:20
 msgid "Confirmation Required"
 msgstr "Bestätigung erforderlich!"
 
-#. TRANSLATORS src/AdminSettings.vue:140
+#. TRANSLATORS src/AdminSettings.vue:141
 #: specialVueFakeDummyForL10nScript.js:22
 msgid "Unconfirmed, reverting to old value."
 msgstr "Bestätigung nicht erteilt, setze auf den alten Wert zurück."
 
-#. TRANSLATORS src/AdminSettings.vue:146
+#. TRANSLATORS src/AdminSettings.vue:147
 #: specialVueFakeDummyForL10nScript.js:24
 msgid "Successfully set value for \"{settingsKey}\" to \"{value}\""
 msgstr ""
 "Der Wert für die Einstellung \"{settingsKey}\" wurde erfolgreich auf "
 "\"{value}\" gesetzt"
 
-#. TRANSLATORS src/AdminSettings.vue:150
+#. TRANSLATORS src/AdminSettings.vue:151
+#. TRANSLATORS src/App.vue:191
 #. TRANSLATORS src/views/Projects.vue:105
 #: specialVueFakeDummyForL10nScript.js:26
 #: specialVueFakeDummyForL10nScript.js:34
-#: specialVueFakeDummyForL10nScript.js:234 src/stores/memberData.js:62
+#: specialVueFakeDummyForL10nScript.js:72
+#: specialVueFakeDummyForL10nScript.js:252
 msgid "reason unknown"
 msgstr "Grund unbekannt"
 
-#. TRANSLATORS src/AdminSettings.vue:155
+#. TRANSLATORS src/AdminSettings.vue:156
 #: specialVueFakeDummyForL10nScript.js:28
 msgid "Could not set value for \"{settingsKey}\" to \"{value}\": {message}"
 msgstr ""
 "Konnte den Wert für die Einstellung \"{settingsKey}\" nicht auf den Wert "
 "\"{value}\" setzen: {message}"
 
-#. TRANSLATORS src/AdminSettings.vue:168
+#. TRANSLATORS src/AdminSettings.vue:169
 #: specialVueFakeDummyForL10nScript.js:30
 msgid "Synchronizing for group {group}"
 msgstr "Synchronisierung für die Gruppe {group}"
 
-#. TRANSLATORS src/AdminSettings.vue:169
+#. TRANSLATORS src/AdminSettings.vue:170
 #: specialVueFakeDummyForL10nScript.js:32
 msgid "{current} of {totals}"
 msgstr "{current} von {totals}"
 
-#. TRANSLATORS src/AdminSettings.vue:178
+#. TRANSLATORS src/AdminSettings.vue:179
 #: specialVueFakeDummyForL10nScript.js:36
 msgid "Folder for \"{group}\" could not be created: {message}"
 msgstr ""
 "Der Dateiordner für die Gruppe \"{group}\" konnte wohl nicht erzeugt werden: "
 "{message}"
 
-#. TRANSLATORS src/AdminSettings.vue:185
+#. TRANSLATORS src/AdminSettings.vue:186
 #: specialVueFakeDummyForL10nScript.js:38
 msgid ""
 "Failed at group \"{group}\" after {numFolders} have been processed "
@@ -355,7 +376,7 @@ msgstr ""
 "abgearbeitet wurden, es verbleiben {remainingFolders}, die noch nicht "
 "bearbeitet wurden."
 
-#. TRANSLATORS src/AdminSettings.vue:187
+#. TRANSLATORS src/AdminSettings.vue:188
 #: specialVueFakeDummyForL10nScript.js:40
 msgid "All done, folder structure for all {numFolders} folders is up to date."
 msgstr ""
@@ -372,429 +393,472 @@ msgstr "Startseite"
 msgid "Personal Profile"
 msgstr "Persönliches Profil"
 
-#. TRANSLATORS src/App.vue:19
+#. TRANSLATORS src/App.vue:20
 #: specialVueFakeDummyForL10nScript.js:46 src/router/router.js:23
 msgid "Bank Accounts"
 msgstr "Bankverbindungen"
 
-#. TRANSLATORS src/App.vue:25
+#. TRANSLATORS src/App.vue:27
 #: specialVueFakeDummyForL10nScript.js:48 src/router/router.js:31
 msgid "Instrument Insurances"
 msgstr "Instrumentenversicherungen"
 
-#. TRANSLATORS src/App.vue:31
+#. TRANSLATORS src/App.vue:34
 #: specialVueFakeDummyForL10nScript.js:50 src/router/router.js:39
 msgid "Projects"
 msgstr "Projekte"
 
-#. TRANSLATORS src/App.vue:39
+#. TRANSLATORS src/App.vue:43
 #. TRANSLATORS src/components/DebugInfo.vue:28
 #: specialVueFakeDummyForL10nScript.js:52
-#: specialVueFakeDummyForL10nScript.js:68
+#: specialVueFakeDummyForL10nScript.js:82
 msgid "Enable Debug"
 msgstr "Diagnose zur Fehlersuche"
 
-#. TRANSLATORS src/App.vue:53
+#. TRANSLATORS src/App.vue:52
 #: specialVueFakeDummyForL10nScript.js:54
 msgid "{orchestraName} Orchestra Member Portal"
 msgstr "{orchestraName} Orchester Mitglieder Portal"
 
-#. TRANSLATORS src/App.vue:66
+#. TRANSLATORS src/App.vue:59
+#: specialVueFakeDummyForL10nScript.js:56
+msgid "Error"
+msgstr "Fehler"
+
+#. TRANSLATORS src/App.vue:62
+#: specialVueFakeDummyForL10nScript.js:58
+msgid "Request Access to my personal Data"
+msgstr "Zugriff auf meine personenbezogenen Daten anfordern"
+
+#. TRANSLATORS src/App.vue:65
+#: specialVueFakeDummyForL10nScript.js:60
+msgid ""
+"The authorization request has to be processed by a human being, this means "
+"that it will need some time before you are granted access to your data. You "
+"will be notified by the cloud-software when the request has been processed."
+msgstr "Die Authorisierungs-Anfrage wird persönlich von einem Menschen bearbeitet, das bedeutet, dass es womöglich etwas dauern kann, bis Sie Zugriff auf Ihre Daten bekommen. Die Cloud-Software wird Sie benachrichtigen, sobald Ihre Anfrage bearbeitet wurde."
+
+#. TRANSLATORS src/App.vue:79
 #. TRANSLATORS src/views/InstrumentInsurances.vue:77
 #. TRANSLATORS src/views/Projects.vue:40
-#: specialVueFakeDummyForL10nScript.js:56
-#: specialVueFakeDummyForL10nScript.js:58
-#: specialVueFakeDummyForL10nScript.js:148
-#: specialVueFakeDummyForL10nScript.js:154
-#: specialVueFakeDummyForL10nScript.js:160
-#: specialVueFakeDummyForL10nScript.js:232
+#: specialVueFakeDummyForL10nScript.js:62
+#: specialVueFakeDummyForL10nScript.js:64
+#: specialVueFakeDummyForL10nScript.js:162
+#: specialVueFakeDummyForL10nScript.js:168
+#: specialVueFakeDummyForL10nScript.js:174
+#: specialVueFakeDummyForL10nScript.js:250
 msgid "details"
 msgstr "Details"
 
-#. TRANSLATORS src/App.vue:120
-#: specialVueFakeDummyForL10nScript.js:60
+#. TRANSLATORS src/App.vue:143
+#: specialVueFakeDummyForL10nScript.js:66
 msgid "[UNKNOWN]"
 msgstr "[UNBEKANNT]"
 
+#. TRANSLATORS src/App.vue:182
+#: specialVueFakeDummyForL10nScript.js:68
+msgid "Unable to determine the identity of the current user."
+msgstr "Kann die Identität des aktuellen Benutzers nicht feststellen."
+
+#. TRANSLATORS src/App.vue:188
+#: specialVueFakeDummyForL10nScript.js:70
+msgid "The authorization request for {userId} has been submitted successfully"
+msgstr "Die Authorisierungsanfrage für {userId} wurde erfolgreich übermittelt"
+
+#. TRANSLATORS src/App.vue:198
+#: specialVueFakeDummyForL10nScript.js:74
+msgid "Unable to handle access action: {message}"
+msgstr "Kann die Zugriffsanfrage nicht bearbeiten: {message}"
+
 #. TRANSLATORS src/PersonalSettings.vue:25
-#: specialVueFakeDummyForL10nScript.js:62
+#: specialVueFakeDummyForL10nScript.js:76
 msgid "CAFeVDB Database Connector, Personal Settings"
 msgstr "CAFeVDB Datenbank Integration, persönliche Einstellungen"
 
 #. TRANSLATORS src/PersonalSettings.vue:29
-#: specialVueFakeDummyForL10nScript.js:64
+#: specialVueFakeDummyForL10nScript.js:78
 msgid "Test Input"
 msgstr "Test-Eingabe"
 
 #. TRANSLATORS src/PersonalSettings.vue:30
-#: specialVueFakeDummyForL10nScript.js:66
+#: specialVueFakeDummyForL10nScript.js:80
 msgid "Test Hint"
 msgstr "Test-Hinweis"
 
 #. TRANSLATORS src/components/DebugInfo.vue:31
-#: specialVueFakeDummyForL10nScript.js:70
+#: specialVueFakeDummyForL10nScript.js:84
 msgid "DEBUG: all data"
 msgstr "DEBUG: alles"
 
 #. TRANSLATORS src/views/BankAccounts.vue:29
-#: specialVueFakeDummyForL10nScript.js:72
+#: specialVueFakeDummyForL10nScript.js:86
 msgid "Bank Accounts of {publicName} ({count})"
 msgstr "Bankverbindungen von {publicName} ({count})"
 
 #. TRANSLATORS src/views/BankAccounts.vue:32
 #. TRANSLATORS src/views/InstrumentInsurances.vue:30
-#: specialVueFakeDummyForL10nScript.js:74
-#: specialVueFakeDummyForL10nScript.js:130
+#: specialVueFakeDummyForL10nScript.js:88
+#: specialVueFakeDummyForL10nScript.js:144
 msgid "show deleted"
 msgstr "gelöschte anzeigen"
 
 #. TRANSLATORS src/views/BankAccounts.vue:38
-#: specialVueFakeDummyForL10nScript.js:76
+#: specialVueFakeDummyForL10nScript.js:90
 msgid "IBAN"
 msgstr "IBAN"
 
 #. TRANSLATORS src/views/BankAccounts.vue:43
-#: specialVueFakeDummyForL10nScript.js:78
+#: specialVueFakeDummyForL10nScript.js:92
 msgid "BIC"
 msgstr "BIC"
 
 #. TRANSLATORS src/views/BankAccounts.vue:44
-#: specialVueFakeDummyForL10nScript.js:80
+#: specialVueFakeDummyForL10nScript.js:94
 msgid "account holder"
 msgstr "Kontoinhaber"
 
 #. TRANSLATORS src/views/BankAccounts.vue:45
-#: specialVueFakeDummyForL10nScript.js:82
+#: specialVueFakeDummyForL10nScript.js:96
 msgid "registered"
 msgstr "registriert"
 
 #. TRANSLATORS src/views/BankAccounts.vue:46
-#: specialVueFakeDummyForL10nScript.js:84
-#: specialVueFakeDummyForL10nScript.js:96
+#: specialVueFakeDummyForL10nScript.js:98
+#: specialVueFakeDummyForL10nScript.js:110
 msgid "modified"
 msgstr "geändert"
 
 #. TRANSLATORS src/views/BankAccounts.vue:47
-#: specialVueFakeDummyForL10nScript.js:86
-#: specialVueFakeDummyForL10nScript.js:98
+#: specialVueFakeDummyForL10nScript.js:100
+#: specialVueFakeDummyForL10nScript.js:112
 msgid "revoked"
 msgstr "entwertet"
 
 #. TRANSLATORS src/views/BankAccounts.vue:49
-#: specialVueFakeDummyForL10nScript.js:88
+#: specialVueFakeDummyForL10nScript.js:102
 msgid "Debit Mandates ({count})"
 msgstr "Lastschrift-Mandate ({count})"
 
 #. TRANSLATORS src/views/BankAccounts.vue:55
-#: specialVueFakeDummyForL10nScript.js:90
+#: specialVueFakeDummyForL10nScript.js:104
 msgid "reference"
 msgstr "Referenz"
 
 #. TRANSLATORS src/views/BankAccounts.vue:59
-#: specialVueFakeDummyForL10nScript.js:92
+#: specialVueFakeDummyForL10nScript.js:106
 msgid "granted"
 msgstr "erteilt"
 
 #. TRANSLATORS src/views/BankAccounts.vue:60
-#: specialVueFakeDummyForL10nScript.js:94
+#: specialVueFakeDummyForL10nScript.js:108
 msgid "last used"
 msgstr "letzte Verwendung"
 
 #. TRANSLATORS src/views/InstrumentInsurances/InsuranceDetails.vue:26
-#: specialVueFakeDummyForL10nScript.js:100
+#: specialVueFakeDummyForL10nScript.js:114
 msgid "manufacturer"
 msgstr "Hersteller:in"
 
 #. TRANSLATORS src/views/InstrumentInsurances/InsuranceDetails.vue:27
-#: specialVueFakeDummyForL10nScript.js:102
+#: specialVueFakeDummyForL10nScript.js:116
 msgid "manufacturered"
 msgstr "hergestellt"
 
 #. TRANSLATORS src/views/InstrumentInsurances/InsuranceDetails.vue:28
-#: specialVueFakeDummyForL10nScript.js:104
+#: specialVueFakeDummyForL10nScript.js:118
 msgid "insurance broker"
 msgstr "Versicherungsmakler"
 
 #. TRANSLATORS src/views/InstrumentInsurances/InsuranceDetails.vue:29
-#: specialVueFakeDummyForL10nScript.js:106
+#: specialVueFakeDummyForL10nScript.js:120
 msgid "insurance start"
 msgstr "Versicherungsbeginn"
 
 #. TRANSLATORS src/views/InstrumentInsurances/InsuranceDetails.vue:30
-#: specialVueFakeDummyForL10nScript.js:108
+#: specialVueFakeDummyForL10nScript.js:122
 msgid "geographical scope"
 msgstr "Geltungsbereich"
 
 #. TRANSLATORS src/views/InstrumentInsurances/InsuranceDetails.vue:31
-#: specialVueFakeDummyForL10nScript.js:110
+#: specialVueFakeDummyForL10nScript.js:124
 msgid "insurance rate"
 msgstr "Versicherungsrate"
 
 #. TRANSLATORS src/views/InstrumentInsurances/InsuranceDetails.vue:32
-#: specialVueFakeDummyForL10nScript.js:112
+#: specialVueFakeDummyForL10nScript.js:126
 msgid "value"
 msgstr "Wert"
 
 #. TRANSLATORS src/views/InstrumentInsurances/InsuranceDetails.vue:33
-#: specialVueFakeDummyForL10nScript.js:114
+#: specialVueFakeDummyForL10nScript.js:128
 msgid "insurance fee"
 msgstr "Versicherungsbeitrag"
 
 #. TRANSLATORS src/views/InstrumentInsurances/InsuranceDetails.vue:34
-#: specialVueFakeDummyForL10nScript.js:116
+#: specialVueFakeDummyForL10nScript.js:130
 msgid "due date"
 msgstr "Stichtag"
 
 #. TRANSLATORS src/views/InstrumentInsurances/InsuranceDetails.vue:35
-#: specialVueFakeDummyForL10nScript.js:118
+#: specialVueFakeDummyForL10nScript.js:132
 msgid "my role"
 msgstr "Meine Rolle"
 
 #. TRANSLATORS src/views/InstrumentInsurances/InsuranceDetails.vue:56
-#: specialVueFakeDummyForL10nScript.js:120
+#: specialVueFakeDummyForL10nScript.js:134
 msgid "debitor"
 msgstr "Schuldner"
 
 #. TRANSLATORS src/views/InstrumentInsurances/InsuranceDetails.vue:58
-#: specialVueFakeDummyForL10nScript.js:122
-#: specialVueFakeDummyForL10nScript.js:126
+#: specialVueFakeDummyForL10nScript.js:136
+#: specialVueFakeDummyForL10nScript.js:140
 msgid "owner"
 msgstr "Eigentum"
 
 #. TRANSLATORS src/views/InstrumentInsurances/InsuranceDetails.vue:59
-#: specialVueFakeDummyForL10nScript.js:124
+#: specialVueFakeDummyForL10nScript.js:138
 msgid "holder"
 msgstr "Besitz"
 
 #. TRANSLATORS src/views/InstrumentInsurances.vue:28
-#: specialVueFakeDummyForL10nScript.js:128
+#: specialVueFakeDummyForL10nScript.js:142
 msgid "Instrument Insurances of {publicName}"
 msgstr "Instrumentenversicherungen von {publicName}"
 
 #. TRANSLATORS src/views/InstrumentInsurances.vue:33
-#: specialVueFakeDummyForL10nScript.js:132
+#: specialVueFakeDummyForL10nScript.js:146
 msgid "Summary"
 msgstr "Zusammenfassung"
 
 #. TRANSLATORS src/views/InstrumentInsurances.vue:38
-#: specialVueFakeDummyForL10nScript.js:134
+#: specialVueFakeDummyForL10nScript.js:148
 msgid "Total Insured Value"
 msgstr "Gesamtversicherungssumme"
 
 #. TRANSLATORS src/views/InstrumentInsurances.vue:41
-#: specialVueFakeDummyForL10nScript.js:136
+#: specialVueFakeDummyForL10nScript.js:150
 msgid "Total Payable Value"
 msgstr "Zahlungspflichtige Versicherungssumme"
 
 #. TRANSLATORS src/views/InstrumentInsurances.vue:43
-#: specialVueFakeDummyForL10nScript.js:138
+#: specialVueFakeDummyForL10nScript.js:152
 msgid "Yearly Insurance fees w/o taxes"
 msgstr "Jahresbeitrag ohne Steuern"
 
 #. TRANSLATORS src/views/InstrumentInsurances.vue:45
-#: specialVueFakeDummyForL10nScript.js:140
+#: specialVueFakeDummyForL10nScript.js:154
 msgid "Yearly Insurance fees with {taxes}% taxes"
 msgstr "Jahresbeitrag mit {taxes}% Steuern"
 
 #. TRANSLATORS src/views/InstrumentInsurances.vue:47
-#: specialVueFakeDummyForL10nScript.js:142
+#: specialVueFakeDummyForL10nScript.js:156
 msgid "Yearly Insurance Bills"
 msgstr "Jahresrechnungen"
 
 #. TRANSLATORS src/views/InstrumentInsurances.vue:63
-#: specialVueFakeDummyForL10nScript.js:144
+#: specialVueFakeDummyForL10nScript.js:158
 msgid "Paid for Others"
 msgstr "Für Andere bezahlt"
 
 #. TRANSLATORS src/views/InstrumentInsurances.vue:64
-#: specialVueFakeDummyForL10nScript.js:146
+#: specialVueFakeDummyForL10nScript.js:160
 msgid "instrument used by someone else"
 msgstr "Jemand anders verwendet das Instrument."
 
 #. TRANSLATORS src/views/InstrumentInsurances.vue:86
-#: specialVueFakeDummyForL10nScript.js:150
+#: specialVueFakeDummyForL10nScript.js:164
 msgid "Paid by Others"
 msgstr "Bezahlt von Anderen"
 
 #. TRANSLATORS src/views/InstrumentInsurances.vue:87
 #. TRANSLATORS src/views/InstrumentInsurances.vue:110
-#: specialVueFakeDummyForL10nScript.js:152
-#: specialVueFakeDummyForL10nScript.js:158
+#: specialVueFakeDummyForL10nScript.js:166
+#: specialVueFakeDummyForL10nScript.js:172
 msgid "instrument owned or used by me"
 msgstr "Ich bin Eigentümer oder Besitzer."
 
 #. TRANSLATORS src/views/InstrumentInsurances.vue:109
-#: specialVueFakeDummyForL10nScript.js:156
+#: specialVueFakeDummyForL10nScript.js:170
 msgid "Self Used and Paid"
 msgstr "Selbst benutzt und bezahlt"
 
-#: specialVueFakeDummyForL10nScript.js:156
+#: specialVueFakeDummyForL10nScript.js:170
 msgid "Insured Instruments"
 msgstr "Versicherte Instrumente"
 
 #. TRANSLATORS src/views/InstrumentInsurances.vue:235
-#: specialVueFakeDummyForL10nScript.js:162
-#: specialVueFakeDummyForL10nScript.js:164
+#: specialVueFakeDummyForL10nScript.js:176
+#: specialVueFakeDummyForL10nScript.js:178
 msgid "Instrument Insurance"
 msgstr "Instrumenten-Versicherung"
 
 #. TRANSLATORS src/views/InstrumentInsurances.vue:285
-#: specialVueFakeDummyForL10nScript.js:166
+#: specialVueFakeDummyForL10nScript.js:180
 msgid "{insuredObject} ({insuredValue} {currencySymbol})"
 msgstr "{insuredObject} ({insuredValue} {currencySymbol})"
 
 #. TRANSLATORS src/views/PersonalProfile.vue:28
-#: specialVueFakeDummyForL10nScript.js:168
+#: specialVueFakeDummyForL10nScript.js:182
 msgid "Personal Profile of {publicName}"
 msgstr "Persönliches Profil von {publicName}"
 
 #. TRANSLATORS src/views/PersonalProfile.vue:31
-#: specialVueFakeDummyForL10nScript.js:170
+#: specialVueFakeDummyForL10nScript.js:184
 msgid "First Name"
 msgstr "Vorname"
 
 #. TRANSLATORS src/views/PersonalProfile.vue:32
-#: specialVueFakeDummyForL10nScript.js:172
+#: specialVueFakeDummyForL10nScript.js:186
 msgid "e.g. Jonathan"
 msgstr "z.B. Otto"
 
 #. TRANSLATORS src/views/PersonalProfile.vue:35
-#: specialVueFakeDummyForL10nScript.js:174
+#: specialVueFakeDummyForL10nScript.js:188
 msgid "Sur Name"
 msgstr "Nachname"
 
 #. TRANSLATORS src/views/PersonalProfile.vue:36
-#: specialVueFakeDummyForL10nScript.js:176
+#: specialVueFakeDummyForL10nScript.js:190
 msgid "e.g. Smith"
 msgstr "z.B. Mustermensch"
 
 #. TRANSLATORS src/views/PersonalProfile.vue:41
-#: specialVueFakeDummyForL10nScript.js:178
+#: specialVueFakeDummyForL10nScript.js:192
 msgid "Nick Name"
 msgstr "Rufname"
 
 #. TRANSLATORS src/views/PersonalProfile.vue:42
-#: specialVueFakeDummyForL10nScript.js:180
+#: specialVueFakeDummyForL10nScript.js:194
 msgid "e.g. Jonny"
 msgstr "z.B. Hannes"
 
 #. TRANSLATORS src/views/PersonalProfile.vue:47
-#: specialVueFakeDummyForL10nScript.js:182
+#: specialVueFakeDummyForL10nScript.js:196
+msgid "Address Supplement"
+msgstr "Adresszusatz"
+
+#. TRANSLATORS src/views/PersonalProfile.vue:48
+#: specialVueFakeDummyForL10nScript.js:198
+msgid "e.g. c/o Doe"
+msgstr "z.B. c/o Müller"
+
+#. TRANSLATORS src/views/PersonalProfile.vue:53
+#: specialVueFakeDummyForL10nScript.js:200
 msgid "Street"
 msgstr "Straße"
 
-#. TRANSLATORS src/views/PersonalProfile.vue:48
-#: specialVueFakeDummyForL10nScript.js:184
+#. TRANSLATORS src/views/PersonalProfile.vue:54
+#: specialVueFakeDummyForL10nScript.js:202
 msgid "e.g. Underhill"
 msgstr "z.B. Mühlengasse"
 
-#. TRANSLATORS src/views/PersonalProfile.vue:52
-#: specialVueFakeDummyForL10nScript.js:186
+#. TRANSLATORS src/views/PersonalProfile.vue:58
+#: specialVueFakeDummyForL10nScript.js:204
 msgid "Number"
 msgstr "Hausnummer"
 
-#. TRANSLATORS src/views/PersonalProfile.vue:53
-#: specialVueFakeDummyForL10nScript.js:188
+#. TRANSLATORS src/views/PersonalProfile.vue:59
+#: specialVueFakeDummyForL10nScript.js:206
 msgid "e.g. 13"
 msgstr "z.B. 13"
 
-#. TRANSLATORS src/views/PersonalProfile.vue:59
-#: specialVueFakeDummyForL10nScript.js:190
+#. TRANSLATORS src/views/PersonalProfile.vue:65
+#: specialVueFakeDummyForL10nScript.js:208
 msgid "Postal Code"
 msgstr "Postleitzahl"
 
-#. TRANSLATORS src/views/PersonalProfile.vue:60
-#: specialVueFakeDummyForL10nScript.js:192
+#. TRANSLATORS src/views/PersonalProfile.vue:66
+#: specialVueFakeDummyForL10nScript.js:210
 msgid "e.g. 4711"
 msgstr "z.B. 4711"
 
-#. TRANSLATORS src/views/PersonalProfile.vue:63
-#: specialVueFakeDummyForL10nScript.js:194
+#. TRANSLATORS src/views/PersonalProfile.vue:69
+#: specialVueFakeDummyForL10nScript.js:212
 msgid "City"
 msgstr "Wohnort"
 
-#. TRANSLATORS src/views/PersonalProfile.vue:64
-#: specialVueFakeDummyForL10nScript.js:196
+#. TRANSLATORS src/views/PersonalProfile.vue:70
+#: specialVueFakeDummyForL10nScript.js:214
 msgid "e.g. Bagend"
 msgstr "z.B. Neustadt"
 
-#. TRANSLATORS src/views/PersonalProfile.vue:70
-#: specialVueFakeDummyForL10nScript.js:198
+#. TRANSLATORS src/views/PersonalProfile.vue:76
+#: specialVueFakeDummyForL10nScript.js:216
 msgid "Country"
 msgstr "Land"
 
-#. TRANSLATORS src/views/PersonalProfile.vue:71
-#: specialVueFakeDummyForL10nScript.js:200
+#. TRANSLATORS src/views/PersonalProfile.vue:77
+#: specialVueFakeDummyForL10nScript.js:218
 msgid "e.g. The Shire"
 msgstr "z.B. Auenland"
 
-#. TRANSLATORS src/views/PersonalProfile.vue:76
-#: specialVueFakeDummyForL10nScript.js:202
+#. TRANSLATORS src/views/PersonalProfile.vue:82
+#: specialVueFakeDummyForL10nScript.js:220
 msgid "Birthday"
 msgstr "Geburtstag"
 
-#. TRANSLATORS src/views/PersonalProfile.vue:77
-#: specialVueFakeDummyForL10nScript.js:204
+#. TRANSLATORS src/views/PersonalProfile.vue:83
+#: specialVueFakeDummyForL10nScript.js:222
 msgid "e.g. 01.01.1970"
 msgstr "z.B. 01.01.1970"
 
-#. TRANSLATORS src/views/PersonalProfile.vue:82
-#: specialVueFakeDummyForL10nScript.js:206
+#. TRANSLATORS src/views/PersonalProfile.vue:88
+#: specialVueFakeDummyForL10nScript.js:224
 msgid "Email"
 msgstr "Email"
 
-#. TRANSLATORS src/views/PersonalProfile.vue:83
-#: specialVueFakeDummyForL10nScript.js:208
+#. TRANSLATORS src/views/PersonalProfile.vue:89
+#: specialVueFakeDummyForL10nScript.js:226
 msgid "e.g. me@you.tld"
 msgstr "z.B. ich@du.tld"
 
-#. TRANSLATORS src/views/PersonalProfile.vue:89
-#: specialVueFakeDummyForL10nScript.js:210
+#. TRANSLATORS src/views/PersonalProfile.vue:95
+#: specialVueFakeDummyForL10nScript.js:228
 msgid "Mobile Phone"
 msgstr "Mobilfunk"
 
-#. TRANSLATORS src/views/PersonalProfile.vue:90
-#: specialVueFakeDummyForL10nScript.js:212
-#: specialVueFakeDummyForL10nScript.js:216
+#. TRANSLATORS src/views/PersonalProfile.vue:96
+#: specialVueFakeDummyForL10nScript.js:230
+#: specialVueFakeDummyForL10nScript.js:234
 msgid "e.g. +12 34 5678 901234"
 msgstr "z.B. +12 34 5678 901234"
 
-#. TRANSLATORS src/views/PersonalProfile.vue:93
-#: specialVueFakeDummyForL10nScript.js:214
+#. TRANSLATORS src/views/PersonalProfile.vue:99
+#: specialVueFakeDummyForL10nScript.js:232
 msgid "Fixed Line Phone"
 msgstr "Festnetz"
 
-#. TRANSLATORS src/views/PersonalProfile.vue:100
+#. TRANSLATORS src/views/PersonalProfile.vue:106
 #. TRANSLATORS src/views/Projects/ProjectDetails.vue:28
-#: specialVueFakeDummyForL10nScript.js:218
-#: specialVueFakeDummyForL10nScript.js:220
+#: specialVueFakeDummyForL10nScript.js:236
+#: specialVueFakeDummyForL10nScript.js:238
 msgid "Instruments"
 msgstr "Instrumente"
 
 #. TRANSLATORS src/views/Projects/ProjectDetails.vue:34
 #. TRANSLATORS src/views/Projects/ProjectDetails.vue:40
-#: specialVueFakeDummyForL10nScript.js:222
-#: specialVueFakeDummyForL10nScript.js:224
+#: specialVueFakeDummyForL10nScript.js:240
+#: specialVueFakeDummyForL10nScript.js:242
 msgid "voice {voice}"
 msgstr "Stimme {voice}"
 
-#: specialVueFakeDummyForL10nScript.js:222
-#: specialVueFakeDummyForL10nScript.js:224
+#: specialVueFakeDummyForL10nScript.js:240
+#: specialVueFakeDummyForL10nScript.js:242
 msgid "section leader"
 msgstr "Stimmführer:in"
 
 #. TRANSLATORS src/views/Projects/ProjectDetails.vue:41
-#: specialVueFakeDummyForL10nScript.js:226
+#: specialVueFakeDummyForL10nScript.js:244
 msgid "Photos"
 msgstr "Fotos"
 
 #. TRANSLATORS src/views/Projects.vue:29
-#: specialVueFakeDummyForL10nScript.js:230
+#: specialVueFakeDummyForL10nScript.js:248
 msgid "Project-Participation of {publicName}"
 msgstr "Projekt-Teilnahme von {publicName}"
 
 #. TRANSLATORS src/views/Projects.vue:111
-#: specialVueFakeDummyForL10nScript.js:236
+#: specialVueFakeDummyForL10nScript.js:254
 msgid "Could not fetch root-folder of member file space: {message}"
 msgstr ""
 "Konnte den Basis-Ordner des Mitglieder-Speicherplatzes nicht ermitteln: "
@@ -809,7 +873,11 @@ msgstr ""
 "Synchronisiere die Dateiordner-Struktur der gemeinsam benutzten Ordner "
 "unterhalb von {root} mit den Projekten der {managementApp}-Verwaltungs-App."
 
-#: src/stores/memberData.js:66
+#: src/stores/memberData.js:72
+msgid "general failure"
+msgstr "allgemeiner Fehler"
+
+#: src/stores/memberData.js:78
 msgid "Could not fetch musician(s): {message}"
 msgstr "Konnte den oder die Musiker nicht abfragen: {message}"
 
