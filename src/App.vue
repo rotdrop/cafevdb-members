@@ -9,28 +9,28 @@
           exact
           @click="showSidebar = false" />
         <AppNavigationItem
-          :to="memberDataError ? false : { name: 'personalProfile' }"
+          :to="memberDataError ? {} : { name: 'personalProfile' }"
           :title="t(appId, 'Personal Profile')"
           icon="icon-files-dark"
           :class="{ disabled: memberDataError }"
           exact
           @click="showSidebar = false" />
         <AppNavigationItem
-          :to="memberDataError ? false : { name: 'bankAccounts' }"
+          :to="memberDataError ? {} : { name: 'bankAccounts' }"
           :title="t(appId, 'Bank Accounts')"
           icon="icon-files-dark"
           :class="{ disabled: memberDataError }"
           exact
           @click="showSidebar = false" />
         <AppNavigationItem
-          :to="memberDataError ? false : { name: 'instrumentInsurances' }"
+          :to="memberDataError ? {} : { name: 'instrumentInsurances' }"
           :title="t(appId, 'Instrument Insurances')"
           icon="icon-files-dark"
           :class="{ disabled: memberDataError }"
           exact
           @click="showSidebar = false" />
         <AppNavigationItem
-          :to="memberDataError ? false : { name: 'projects' }"
+          :to="memberDataError ? {} : { name: 'projects' }"
           :title="t(appId, 'Projects')"
           icon="icon-files-dark"
           :class="{ disabled: memberDataError }"
@@ -147,11 +147,12 @@ export default {
       sidebarTitle: '',
       sidebarView: '',
       sidebarProps: {},
+      memberDataPollTimer: null,
+      memberDataPollTimeout: 60 * 1000,
     }
   },
   computed: {
     isRoot() {
-      console.info('PATH', this.$route.path)
       return this.$route.path === '/'
     },
     memberDataError() {
@@ -160,9 +161,19 @@ export default {
     ...mapWritableState(useAppDataStore, ['debug']),
     // ...mapWritableState(useMemberDataStore, ['memberData']),
   },
+  watch: {
+    memberDataError(newVal, oldVal) {
+      if (oldVal && this.memberDataPollTimer) {
+        clearTimeout(this.memberDataPollTimer)
+        this.memberDataPollTimer = null
+      } else if (newVal && !this.memberDataPollTimer) {
+        this.memberDataPollTimer = setTimeout(() => this.pollMemberData(), this.memberDataPollTimeout)
+      }
+    },
+  },
   async created() {
     this.memberData.initialized.error = false
-    await this.memberData.initialize(true) // silent
+    await this.memberData.initialize(true, true) // silent and reset
     this.loading = false
   },
   methods: {
@@ -174,7 +185,14 @@ export default {
       this.sidebarTitle = data.title
       this.sidebarView = data.viewName
       this.sidebarProps = data.props
-      console.info('VIEW', this.sidebarView)
+    },
+    async pollMemberData() {
+      await this.memberData.initialize(true, false) // silent, do not reset
+      if (this.memberDataError) {
+        this.memberDataPollTimer = setTimeout(() => this.pollMemberData(), this.memberDataPollTimeout)
+      } else {
+        this.memberDataPollTimer = null
+      }
     },
     async putRecryptionRequest() {
       const cloudUser = getCurrentUser() || {}

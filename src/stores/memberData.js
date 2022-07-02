@@ -52,13 +52,15 @@ export const useMemberDataStore = defineStore('member-data', {
     }
   },
   actions: {
-    async initialize(silent) {
+    async initialize(silent, reset) {
       if (!this.initialized.loaded) {
         if (this.initialized.promise !== null) {
           await this.initialized.promise
           return
         }
-        this.$reset()
+        if (reset) {
+          this.$reset()
+        }
         try {
           this.initialized.promise = axios.get(generateUrl('/apps/' + appId + '/member'))
           const response = await this.initialized.promise
@@ -66,6 +68,7 @@ export const useMemberDataStore = defineStore('member-data', {
             Vue.set(this, key, value)
           }
           this.initialized.promise = null
+          this.initialized.error = false
           this.initialized.loaded = true
         } catch (e) {
           console.error('ERROR', e)
@@ -84,7 +87,6 @@ export const useMemberDataStore = defineStore('member-data', {
               const url = generateOcsUrl('apps/cafevdb/api/v1/maintenance/encryption/recrypt/{userId}', {
                 userId: cloudUser.uid,
               })
-              console.info('CURRENT USER', getCurrentUser(), url + '?format=json')
               const response = await axios.get(url + '?format=json')
               this.initialized.recryptRequest = response.data.ocs.data.request
             } catch (e) {
