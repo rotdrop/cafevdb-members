@@ -5,8 +5,8 @@
  */
 </script>
 <template>
-  <div :class="['input__container', 'input-type-' + type, { readonly, collapse }, has_hint ]">
-    <div :class="['input-effect', filled, { readonly, collapse }, has_hint ]">
+  <div :class="['input__container', 'input-type-' + type, { readonly, collapse }, has_hint, has_icon ]">
+    <div :class="['input-effect', filled, { readonly, collapse }, has_hint, has_icon ]">
       <DatetimePicker v-if="isDatePickerType"
                       class="effect"
                       :type="isDatePickerType"
@@ -135,9 +135,20 @@ export default {
   width: 100%;
   padding: 0.5rem 0.5rem 0 0;
   text-align: left;
-  &.input__no_hint.collapse {
+  /* &.input__no_hint.collapse {
+     .input__icon {
+     top: -2rem;
+     }
+     } */
+  &.input__has_icon {
+    position: relative;
+    left:0;
+    top:0;
     .input__icon {
-      top: -2rem;
+      position: absolute;
+      left: 0rem;
+      top: 2.5rem;
+      opacity: 0.3;
     }
   }
 }
@@ -177,7 +188,7 @@ export default {
   }
 }
 
-.input__has_icon {
+input.input__has_icon {
   padding-left: 2rem !important;
 }
 
