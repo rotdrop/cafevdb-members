@@ -27,6 +27,7 @@ use OCP\IL10N;
 use OCP\IGroupManager;
 use OCP\IGroup;
 
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
 use OCA\CAFEVDB\Events\PostProjectUpdatedEvent;
 use OCA\CAFEVDB\Events\BeforeProjectDeletedEvent;
 use OCA\CAFEVDB\Events\ProjectCreatedEvent;
@@ -292,6 +293,20 @@ class ProjectGroupService
     $groupId = $this->getProjectGroupId($event->getProjectId());
     $oldData = $event->getOldData();
     $newData = $event->getNewData();
+    if ($oldData['type'] == ProjectType::TEMPLATE && $newData['type'] == ProjectType::TEMPLATE) {
+      return;
+    } elseif ($oldData['type'] == ProjectType::TEMPLATE) {
+      $this->handleProjectCreatedEvent(new ProjectCreatedEvent(
+        $newData['id'], $newData['name'], $newData['year'], $newData['type']
+      ));
+      return;
+    } elseif ($newData['type'] == ProjectType::TEMPLATE) {
+      $this->handleProjectDeletedEvent(new BeforeProjectDeletedEvent(
+        $newData['id'], $newData['name'], $newData['year'], $newData['type']
+      ));
+      return;
+    }
+
     if ($oldData['name'] != $newData['name']) {
       $oldMountPoint = $this->getProjectFolderMountPoint($oldData['name']);
       $newMountPoint = $this->getProjectFolderMountPoint($newData['name']);
@@ -302,10 +317,10 @@ class ProjectGroupService
         $this->logInfo('No folder info for old mount-point ' . $oldMountPoint);
       }
       $group = $this->groupManager->get($groupId);
-      if ($group->getDisplayName() != $newData['name']) {
-        $this->logWarn('GROUP NAME IS STILL ' . $group->getDisplayName() . ' vs ' . $newData['name']);
-      }
       if (!empty($group)) {
+        if ($group->getDisplayName() != $newData['name']) {
+          $this->logWarn('GROUP NAME IS STILL ' . $group->getDisplayName() . ' vs ' . $newData['name']);
+        }
         $this->ensureProjectFolder($group, forcedFolderName: $newData['name']);
       } else {
         $this->logError('Cloud-group "' . $groupId . '" for project "' . $newData['name'] . ' does not exist.');
