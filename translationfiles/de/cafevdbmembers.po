@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2022-07-01 23:10+0200\n"
-"PO-Revision-Date: 2022-07-01 23:20+0200\n"
+"POT-Creation-Date: 2022-10-18 00:20+0200\n"
+"PO-Revision-Date: 2022-10-18 00:22+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -31,28 +31,28 @@ msgid "Get from end-point \"%s\" not implemented."
 msgstr "GET-Anfragen an \"%s\" sind nicht implementiert."
 
 #: lib/Controller/MemberDataController.php:96
-#: lib/Controller/MemberDataController.php:317
+#: lib/Controller/MemberDataController.php:328
 #, php-format
 msgid "No member-data found for user-id \"%s\"."
 msgstr "Keine Daten für Benutzer-Kennung \"%s\" gefunden."
 
 #: lib/Controller/MemberDataController.php:98
-#: lib/Controller/MemberDataController.php:319
+#: lib/Controller/MemberDataController.php:330
 #, php-format
 msgid "More than one musician found for user-id \"%s\"."
 msgstr "Benutzer-Kennung \"%s\" scheint nicht eindeutig zu sein."
 
-#: lib/Controller/MemberDataController.php:327
+#: lib/Controller/MemberDataController.php:338
 #, php-format
 msgid "Unable to find data for the option-uuid \"%s\"."
 msgstr "Kann keine Daten für die Option mit der UUID \"%s\" finden."
 
-#: lib/Controller/MemberDataController.php:332
+#: lib/Controller/MemberDataController.php:343
 #, php-format
 msgid "The option \"%s\" does not have any associated files."
 msgstr "Die Option \"%s\" hat keine zugeordneten Dateien."
 
-#: lib/Controller/MemberDataController.php:356
+#: lib/Controller/MemberDataController.php:367
 #, php-format
 msgid "Access to the member-data is not authorized: %s"
 msgstr "Fehlende Authorisierung für den Zugriff auf Ihre Benutzer-Daten: %s"
@@ -119,14 +119,18 @@ msgstr "Welt"
 msgid ""
 "The row-access token for \"%s\" is present but invalid, the user's data will "
 "be unaccessble."
-msgstr "Das vorhandene Zugriffs-Ticket für die persönlichen Daten von \"%s\" ist ungültig, auf die Daten kann nicht zugegriffen werden."
+msgstr ""
+"Das vorhandene Zugriffs-Ticket für die persönlichen Daten von \"%s\" ist "
+"ungültig, auf die Daten kann nicht zugegriffen werden."
 
 #: lib/Service/AuthenticationService.php:83
 #, php-format
 msgid ""
 "The row-access token for \"%s\" is missing, the user's data will be "
 "unaccessble."
-msgstr "Das Zugriffs-Ticket für die persönlichen Daten von \"%s\" fehlt, auf die Daten kann nicht zugegriffen werden."
+msgstr ""
+"Das Zugriffs-Ticket für die persönlichen Daten von \"%s\" fehlt, auf die "
+"Daten kann nicht zugegriffen werden."
 
 #: lib/Service/GroupFoldersService.php:158
 #, php-format
@@ -198,7 +202,7 @@ msgstr ""
 
 #. TRANSLATORS src/views/Projects/ProjectDetails.vue:80
 #: lib/Service/ProjectGroupService.php:125
-#: specialVueFakeDummyForL10nScript.js:246
+#: specialVueFakeDummyForL10nScript.js:248
 msgid "projects"
 msgstr "Projekte"
 
@@ -333,12 +337,12 @@ msgstr ""
 "\"{value}\" gesetzt"
 
 #. TRANSLATORS src/AdminSettings.vue:151
-#. TRANSLATORS src/App.vue:191
+#. TRANSLATORS src/App.vue:209
 #. TRANSLATORS src/views/Projects.vue:105
 #: specialVueFakeDummyForL10nScript.js:26
 #: specialVueFakeDummyForL10nScript.js:34
 #: specialVueFakeDummyForL10nScript.js:72
-#: specialVueFakeDummyForL10nScript.js:252
+#: specialVueFakeDummyForL10nScript.js:254
 msgid "reason unknown"
 msgstr "Grund unbekannt"
 
@@ -436,7 +440,11 @@ msgid ""
 "The authorization request has to be processed by a human being, this means "
 "that it will need some time before you are granted access to your data. You "
 "will be notified by the cloud-software when the request has been processed."
-msgstr "Die Authorisierungs-Anfrage wird persönlich von einem Menschen bearbeitet, das bedeutet, dass es womöglich etwas dauern kann, bis Sie Zugriff auf Ihre Daten bekommen. Die Cloud-Software wird Sie benachrichtigen, sobald Ihre Anfrage bearbeitet wurde."
+msgstr ""
+"Die Authorisierungs-Anfrage wird persönlich von einem Menschen bearbeitet, "
+"das bedeutet, dass es womöglich etwas dauern kann, bis Sie Zugriff auf Ihre "
+"Daten bekommen. Die Cloud-Software wird Sie benachrichtigen, sobald Ihre "
+"Anfrage bearbeitet wurde."
 
 #. TRANSLATORS src/App.vue:79
 #. TRANSLATORS src/views/InstrumentInsurances.vue:77
@@ -446,7 +454,7 @@ msgstr "Die Authorisierungs-Anfrage wird persönlich von einem Menschen bearbeit
 #: specialVueFakeDummyForL10nScript.js:162
 #: specialVueFakeDummyForL10nScript.js:168
 #: specialVueFakeDummyForL10nScript.js:174
-#: specialVueFakeDummyForL10nScript.js:250
+#: specialVueFakeDummyForL10nScript.js:252
 msgid "details"
 msgstr "Details"
 
@@ -455,17 +463,17 @@ msgstr "Details"
 msgid "[UNKNOWN]"
 msgstr "[UNBEKANNT]"
 
-#. TRANSLATORS src/App.vue:182
+#. TRANSLATORS src/App.vue:200
 #: specialVueFakeDummyForL10nScript.js:68
 msgid "Unable to determine the identity of the current user."
 msgstr "Kann die Identität des aktuellen Benutzers nicht feststellen."
 
-#. TRANSLATORS src/App.vue:188
+#. TRANSLATORS src/App.vue:206
 #: specialVueFakeDummyForL10nScript.js:70
 msgid "The authorization request for {userId} has been submitted successfully"
 msgstr "Die Authorisierungsanfrage für {userId} wurde erfolgreich übermittelt"
 
-#. TRANSLATORS src/App.vue:198
+#. TRANSLATORS src/App.vue:216
 #: specialVueFakeDummyForL10nScript.js:74
 msgid "Unable to handle access action: {message}"
 msgstr "Kann die Zugriffsanfrage nicht bearbeiten: {message}"
@@ -812,53 +820,58 @@ msgstr "Email"
 msgid "e.g. me@you.tld"
 msgstr "z.B. ich@du.tld"
 
-#. TRANSLATORS src/views/PersonalProfile.vue:95
+#. TRANSLATORS src/views/PersonalProfile.vue:97
 #: specialVueFakeDummyForL10nScript.js:228
+msgid "All Email Addresses"
+msgstr "Alle Email-Adressen"
+
+#. TRANSLATORS src/views/PersonalProfile.vue:106
+#: specialVueFakeDummyForL10nScript.js:230
 msgid "Mobile Phone"
 msgstr "Mobilfunk"
 
-#. TRANSLATORS src/views/PersonalProfile.vue:96
-#: specialVueFakeDummyForL10nScript.js:230
-#: specialVueFakeDummyForL10nScript.js:234
+#. TRANSLATORS src/views/PersonalProfile.vue:107
+#: specialVueFakeDummyForL10nScript.js:232
+#: specialVueFakeDummyForL10nScript.js:236
 msgid "e.g. +12 34 5678 901234"
 msgstr "z.B. +12 34 5678 901234"
 
-#. TRANSLATORS src/views/PersonalProfile.vue:99
-#: specialVueFakeDummyForL10nScript.js:232
+#. TRANSLATORS src/views/PersonalProfile.vue:110
+#: specialVueFakeDummyForL10nScript.js:234
 msgid "Fixed Line Phone"
 msgstr "Festnetz"
 
-#. TRANSLATORS src/views/PersonalProfile.vue:106
+#. TRANSLATORS src/views/PersonalProfile.vue:117
 #. TRANSLATORS src/views/Projects/ProjectDetails.vue:28
-#: specialVueFakeDummyForL10nScript.js:236
 #: specialVueFakeDummyForL10nScript.js:238
+#: specialVueFakeDummyForL10nScript.js:240
 msgid "Instruments"
 msgstr "Instrumente"
 
 #. TRANSLATORS src/views/Projects/ProjectDetails.vue:34
 #. TRANSLATORS src/views/Projects/ProjectDetails.vue:40
-#: specialVueFakeDummyForL10nScript.js:240
 #: specialVueFakeDummyForL10nScript.js:242
+#: specialVueFakeDummyForL10nScript.js:244
 msgid "voice {voice}"
 msgstr "Stimme {voice}"
 
-#: specialVueFakeDummyForL10nScript.js:240
 #: specialVueFakeDummyForL10nScript.js:242
+#: specialVueFakeDummyForL10nScript.js:244
 msgid "section leader"
 msgstr "Stimmführer:in"
 
 #. TRANSLATORS src/views/Projects/ProjectDetails.vue:41
-#: specialVueFakeDummyForL10nScript.js:244
+#: specialVueFakeDummyForL10nScript.js:246
 msgid "Photos"
 msgstr "Fotos"
 
 #. TRANSLATORS src/views/Projects.vue:29
-#: specialVueFakeDummyForL10nScript.js:248
+#: specialVueFakeDummyForL10nScript.js:250
 msgid "Project-Participation of {publicName}"
 msgstr "Projekt-Teilnahme von {publicName}"
 
 #. TRANSLATORS src/views/Projects.vue:111
-#: specialVueFakeDummyForL10nScript.js:254
+#: specialVueFakeDummyForL10nScript.js:256
 msgid "Could not fetch root-folder of member file space: {message}"
 msgstr ""
 "Konnte den Basis-Ordner des Mitglieder-Speicherplatzes nicht ermitteln: "
@@ -873,11 +886,11 @@ msgstr ""
 "Synchronisiere die Dateiordner-Struktur der gemeinsam benutzten Ordner "
 "unterhalb von {root} mit den Projekten der {managementApp}-Verwaltungs-App."
 
-#: src/stores/memberData.js:72
+#: src/stores/memberData.js:75
 msgid "general failure"
 msgstr "allgemeiner Fehler"
 
-#: src/stores/memberData.js:78
+#: src/stores/memberData.js:81
 msgid "Could not fetch musician(s): {message}"
 msgstr "Konnte den oder die Musiker nicht abfragen: {message}"
 

@@ -191,6 +191,13 @@ class Musician implements \ArrayAccess, \JsonSerializable
   private $email;
 
   /**
+   * @var Collection All email addresses.
+   *
+   * @ORM\OneToMany(targetEntity="MusicianEmailAddress", mappedBy="musician", indexBy="address")
+   */
+  private $emailAddresses;
+
+  /**
    * @var Types\EnumMemberStatus|null
    *
    * @ORM\Column(type="EnumMemberStatus", nullable=false)
@@ -622,6 +629,30 @@ class Musician implements \ArrayAccess, \JsonSerializable
   public function getEmail()
   {
     return $this->email;
+  }
+
+  /**
+   * Set emailAddresses.
+   *
+   * @param Collection $emailAddresses
+   *
+   * @return Musician
+   */
+  public function setEmailAddresses(Collection $emailAddresses):Musician
+  {
+    $this->emailAddresses = $emailAddresses;
+
+    return $this;
+  }
+
+  /**
+   * Get emailAddresses.
+   *
+   * @return Collection
+   */
+  public function getEmailAddresses():Collection
+  {
+    return $this->emailAddresses;
   }
 
   /**

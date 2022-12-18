@@ -104,6 +104,17 @@ class MemberDataController extends Controller
     $musicianData = $musician->toArray();
 
     $musicianData['personalPublicName'] = $musician->getPublicName(firstNameFirst: true);
+
+    $musicianData['emailAddresses'] = [];
+
+    /** @var Entities\MusicianEmailAddress $emailAddress */
+    foreach ($musician->getEmailAddresses() as $emailAddress) {
+      $flatEmailAddress = $emailAddress->toArray();
+      $flatEmailAddress['primary'] = $emailAddress->isPrimaryAddress();
+      unset($flatEmailAddress['musician']);
+      $musicianData['emailAddresses'][] = $flatEmailAddress;
+    }
+
     $musicianData['instruments'] = [];
     /** @var Entities\Instrument $instrument */
     /** @var Entities\MusicianInstrument $musicianInstrument */

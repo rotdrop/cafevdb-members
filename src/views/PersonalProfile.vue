@@ -90,6 +90,17 @@
                    :readonly="readonly"
                    icon="email" />
       </div>
+      <div v-if="memberData.emailAddresses.length > 1"
+           class="input-row">
+        <InputText v-model="memberData.emailAddresses"
+                   type="multiselect"
+                   :label="t(appId, 'All Email Addresses')"
+                   :options="memberData.emailAddresses"
+                   track-by="address"
+                   option-label="address"
+                   :readonly="readonly"
+                   :multiple="true" />
+      </div>
       <div class="input-row">
         <InputText v-model="memberData.mobilePhone"
                    :label="t(appId, 'Mobile Phone')"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2022-07-01 23:20+0200\n"
+"POT-Creation-Date: 2022-10-18 00:20+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -33,28 +33,28 @@ msgid "Get from end-point \"%s\" not implemented."
 msgstr ""
 
 #: lib/Controller/MemberDataController.php:96
-#: lib/Controller/MemberDataController.php:317
+#: lib/Controller/MemberDataController.php:328
 #, php-format
 msgid "No member-data found for user-id \"%s\"."
 msgstr ""
 
 #: lib/Controller/MemberDataController.php:98
-#: lib/Controller/MemberDataController.php:319
+#: lib/Controller/MemberDataController.php:330
 #, php-format
 msgid "More than one musician found for user-id \"%s\"."
 msgstr ""
 
-#: lib/Controller/MemberDataController.php:327
+#: lib/Controller/MemberDataController.php:338
 #, php-format
 msgid "Unable to find data for the option-uuid \"%s\"."
 msgstr ""
 
-#: lib/Controller/MemberDataController.php:332
+#: lib/Controller/MemberDataController.php:343
 #, php-format
 msgid "The option \"%s\" does not have any associated files."
 msgstr ""
 
-#: lib/Controller/MemberDataController.php:356
+#: lib/Controller/MemberDataController.php:367
 #, php-format
 msgid "Access to the member-data is not authorized: %s"
 msgstr ""
@@ -182,7 +182,7 @@ msgstr ""
 
 #. TRANSLATORS src/views/Projects/ProjectDetails.vue:80
 #: lib/Service/ProjectGroupService.php:125
-#: specialVueFakeDummyForL10nScript.js:246
+#: specialVueFakeDummyForL10nScript.js:248
 msgid "projects"
 msgstr ""
 
@@ -306,12 +306,12 @@ msgid "Successfully set value for \"{settingsKey}\" to \"{value}\""
 msgstr ""
 
 #. TRANSLATORS src/AdminSettings.vue:151
-#. TRANSLATORS src/App.vue:191
+#. TRANSLATORS src/App.vue:209
 #. TRANSLATORS src/views/Projects.vue:105
 #: specialVueFakeDummyForL10nScript.js:26
 #: specialVueFakeDummyForL10nScript.js:34
 #: specialVueFakeDummyForL10nScript.js:72
-#: specialVueFakeDummyForL10nScript.js:252
+#: specialVueFakeDummyForL10nScript.js:254
 msgid "reason unknown"
 msgstr ""
 
@@ -415,7 +415,7 @@ msgstr ""
 #: specialVueFakeDummyForL10nScript.js:162
 #: specialVueFakeDummyForL10nScript.js:168
 #: specialVueFakeDummyForL10nScript.js:174
-#: specialVueFakeDummyForL10nScript.js:250
+#: specialVueFakeDummyForL10nScript.js:252
 msgid "details"
 msgstr ""
 
@@ -424,17 +424,17 @@ msgstr ""
 msgid "[UNKNOWN]"
 msgstr ""
 
-#. TRANSLATORS src/App.vue:182
+#. TRANSLATORS src/App.vue:200
 #: specialVueFakeDummyForL10nScript.js:68
 msgid "Unable to determine the identity of the current user."
 msgstr ""
 
-#. TRANSLATORS src/App.vue:188
+#. TRANSLATORS src/App.vue:206
 #: specialVueFakeDummyForL10nScript.js:70
 msgid "The authorization request for {userId} has been submitted successfully"
 msgstr ""
 
-#. TRANSLATORS src/App.vue:198
+#. TRANSLATORS src/App.vue:216
 #: specialVueFakeDummyForL10nScript.js:74
 msgid "Unable to handle access action: {message}"
 msgstr ""
@@ -781,53 +781,58 @@ msgstr ""
 msgid "e.g. me@you.tld"
 msgstr ""
 
-#. TRANSLATORS src/views/PersonalProfile.vue:95
+#. TRANSLATORS src/views/PersonalProfile.vue:97
 #: specialVueFakeDummyForL10nScript.js:228
-msgid "Mobile Phone"
-msgstr ""
-
-#. TRANSLATORS src/views/PersonalProfile.vue:96
-#: specialVueFakeDummyForL10nScript.js:230
-#: specialVueFakeDummyForL10nScript.js:234
-msgid "e.g. +12 34 5678 901234"
-msgstr ""
-
-#. TRANSLATORS src/views/PersonalProfile.vue:99
-#: specialVueFakeDummyForL10nScript.js:232
-msgid "Fixed Line Phone"
+msgid "All Email Addresses"
 msgstr ""
 
 #. TRANSLATORS src/views/PersonalProfile.vue:106
-#. TRANSLATORS src/views/Projects/ProjectDetails.vue:28
+#: specialVueFakeDummyForL10nScript.js:230
+msgid "Mobile Phone"
+msgstr ""
+
+#. TRANSLATORS src/views/PersonalProfile.vue:107
+#: specialVueFakeDummyForL10nScript.js:232
 #: specialVueFakeDummyForL10nScript.js:236
+msgid "e.g. +12 34 5678 901234"
+msgstr ""
+
+#. TRANSLATORS src/views/PersonalProfile.vue:110
+#: specialVueFakeDummyForL10nScript.js:234
+msgid "Fixed Line Phone"
+msgstr ""
+
+#. TRANSLATORS src/views/PersonalProfile.vue:117
+#. TRANSLATORS src/views/Projects/ProjectDetails.vue:28
 #: specialVueFakeDummyForL10nScript.js:238
+#: specialVueFakeDummyForL10nScript.js:240
 msgid "Instruments"
 msgstr ""
 
 #. TRANSLATORS src/views/Projects/ProjectDetails.vue:34
 #. TRANSLATORS src/views/Projects/ProjectDetails.vue:40
-#: specialVueFakeDummyForL10nScript.js:240
 #: specialVueFakeDummyForL10nScript.js:242
+#: specialVueFakeDummyForL10nScript.js:244
 msgid "voice {voice}"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:240
 #: specialVueFakeDummyForL10nScript.js:242
+#: specialVueFakeDummyForL10nScript.js:244
 msgid "section leader"
 msgstr ""
 
 #. TRANSLATORS src/views/Projects/ProjectDetails.vue:41
-#: specialVueFakeDummyForL10nScript.js:244
+#: specialVueFakeDummyForL10nScript.js:246
 msgid "Photos"
 msgstr ""
 
 #. TRANSLATORS src/views/Projects.vue:29
-#: specialVueFakeDummyForL10nScript.js:248
+#: specialVueFakeDummyForL10nScript.js:250
 msgid "Project-Participation of {publicName}"
 msgstr ""
 
 #. TRANSLATORS src/views/Projects.vue:111
-#: specialVueFakeDummyForL10nScript.js:254
+#: specialVueFakeDummyForL10nScript.js:256
 msgid "Could not fetch root-folder of member file space: {message}"
 msgstr ""
 
@@ -838,10 +843,10 @@ msgid ""
 "of the {managementApp}-orchestra-management app."
 msgstr ""
 
-#: src/stores/memberData.js:72
+#: src/stores/memberData.js:75
 msgid "general failure"
 msgstr ""
 
-#: src/stores/memberData.js:78
+#: src/stores/memberData.js:81
 msgid "Could not fetch musician(s): {message}"
 msgstr ""
