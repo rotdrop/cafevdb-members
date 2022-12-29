@@ -85,7 +85,7 @@ class SettingsController extends Controller
   }
 
   /**
-   * @AuthorizedAdminSetting(settings=OCA\GroupFolders\Settings\Admin)
+   * @AuthorizedAdminSetting(settings=OCA\CAFeVDBMembers\Settings\Admin)
    *
    * @param string $setting
    *
@@ -161,7 +161,7 @@ class SettingsController extends Controller
   }
 
   /**
-   * @AuthorizedAdminSetting(settings=OCA\GroupFolders\Settings\Admin)
+   * @AuthorizedAdminSetting(settings=OCA\CAFeVDBMembers\Settings\Admin)
    *
    * @param string $setting
    *
