@@ -43,7 +43,7 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\TimestampableEntity;
-  use \OCA\CAFeVDBMembers\Traits\DateTimeTrait;
+  use \OCA\RotDrop\Toolkit\Traits\DateTimeTrait;
   use CAFEVDB\Traits\SoftDeleteableEntity;
   use CAFEVDB\Traits\TranslatableTrait;
 

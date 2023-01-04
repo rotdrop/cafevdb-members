@@ -38,7 +38,7 @@ use OCA\CAFeVDBMembers\Database\DBAL\Types;
 class InsuranceRate implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
-  use \OCA\CAFeVDBMembers\Traits\DateTimeTrait;
+  use \OCA\RotDrop\Toolkit\Traits\DateTimeTrait;
 
   /**
    * @ORM\ManyToOne(targetEntity="InsuranceBroker", inversedBy="insuranceRates", fetch="EXTRA_LAZY")

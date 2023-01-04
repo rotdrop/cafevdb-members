@@ -27,7 +27,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 /** Helper for Gedmo time-stampable entities. */
 trait UpdatedAtEntity
 {
-  use \OCA\CAFeVDBMembers\Traits\DateTimeTrait;
+  use \OCA\RotDrop\Toolkit\Traits\DateTimeTrait;
 
   /**
    * @var \DateTimeImmutable

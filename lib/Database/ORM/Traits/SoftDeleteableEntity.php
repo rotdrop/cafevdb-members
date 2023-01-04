@@ -29,7 +29,7 @@ use OCA\CAFeVDBMembers\Database\ORM as CAFEVDB;
 /** Helper for Gedmo soft-deleteable entities. */
 trait SoftDeleteableEntity
 {
-  use \OCA\CAFeVDBMembers\Traits\DateTimeTrait;
+  use \OCA\RotDrop\Toolkit\Traits\DateTimeTrait;
 
   /**
    * @ORM\Column(type="datetime_immutable", nullable=true)
