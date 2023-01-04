@@ -1,6 +1,6 @@
 <script>
 /**
- * @copyright Copyright (c) 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
  *
@@ -103,8 +103,11 @@ export default {
       } catch (e) {
         console.error('ERROR', e)
         let message = t(appId, 'reason unknown')
-        if (e.response && e.response.data && e.response.data.message) {
-          message = e.response.data.message
+        if (e.response && e.response.data && e.response.data.messages) {
+          message = e.response.data.messages
+          if (Array.isArray(message)) {
+            message = message.join(' ')
+          }
         }
         // Ignore for the time being
         if (this === false) {

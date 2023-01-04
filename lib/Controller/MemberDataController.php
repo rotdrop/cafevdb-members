@@ -42,8 +42,8 @@ use OCA\CAFeVDBMembers\Service\AuthenticationService;
 class MemberDataController extends Controller
 {
   use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
-  use \OCA\CAFeVDBMembers\Traits\ResponseTrait;
-  use \OCA\CAFeVDBMembers\Traits\UtilTrait;
+  use \OCA\RotDrop\Toolkit\Traits\ResponseTrait;
+  use \OCA\RotDrop\Toolkit\Traits\UtilTrait;
 
   /** @var string */
   private $userId;

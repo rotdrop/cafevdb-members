@@ -31,7 +31,7 @@ use OCP\IL10N;
 /** Attempt a catch-all controller to improve error messages. */
 class CatchAllController extends Controller
 {
-  use \OCA\CAFeVDBMembers\Traits\ResponseTrait;
+  use \OCA\RotDrop\Toolkit\Traits\ResponseTrait;
 
   /** @var IL10N */
   private $l;

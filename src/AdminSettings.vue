@@ -1,6 +1,6 @@
 <script>
 /**
- * @copyright Copyright (c) 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
  *
@@ -149,8 +149,11 @@ export default {
         console.info('RESPONSE', response)
       } catch (e) {
         let message = t(appName, 'reason unknown')
-        if (e.response && e.response.data && e.response.data.message) {
-          message = e.response.data.message
+        if (e.response && e.response.data && e.response.data.messages) {
+          message = e.response.data.messages
+          if (Array.isArray(message)) {
+            message = message.join(' ')
+          }
           console.info('RESPONSE', e.response)
         }
         showError(t(appName, 'Could not set value for "{settingsKey}" to "{value}": {message}', { settingsKey, value, message }), { timeout: TOAST_PERMANENT_TIMEOUT })
@@ -172,8 +175,11 @@ export default {
           const response = await axios.post(generateUrl('apps/' + appName + '/settings/admin/synchronize'), { value: group.gid })
         } catch (e) {
           let message = t(appName, 'reason unknown')
-          if (e.response && e.response.data && e.response.data.message) {
-            message = e.response.data.message
+          if (e.response && e.response.data && e.response.data.messages) {
+            message = e.response.data.messages
+            if (Array.isArray(message)) {
+              message = message.join(' ')
+            }
             console.info('RESPONSE', e.response)
           }
           showError(t(appName, 'Folder for "{group}" could not be created: {message}', { group: group.displayName, message }), { timeout: TOAST_PERMANENT_TIMEOUT })

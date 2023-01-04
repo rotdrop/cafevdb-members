@@ -1,6 +1,6 @@
 <script>
 /**
- * @copyright Copyright (c) 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
  *
@@ -136,7 +136,7 @@
 <script>
 
 import { appName as appId } from '../config.js'
-import Vue from 'vue'
+import { set as vueSet } from 'vue'
 import Content from '@nextcloud/vue/dist/Components/Content'
 import ListItem from '../components/ListItem'
 import DebugInfo from '../components/DebugInfo'
@@ -220,10 +220,10 @@ export default {
           insurancesByOthers.push(insurance)
         }
       }
-      Vue.set(this.memberData, 'instrumentInsurances', {})
-      Vue.set(this.memberData.instrumentInsurances, 'forOthers', insurancesForOthers)
-      Vue.set(this.memberData.instrumentInsurances, 'byOthers', insurancesByOthers)
-      Vue.set(this.memberData.instrumentInsurances, 'self', ownInsurances)
+      vueSet(this.memberData, 'instrumentInsurances', {})
+      vueSet(this.memberData.instrumentInsurances, 'forOthers', insurancesForOthers)
+      vueSet(this.memberData.instrumentInsurances, 'byOthers', insurancesByOthers)
+      vueSet(this.memberData.instrumentInsurances, 'self', ownInsurances)
 
       const insuranceReceivables = [];
       for (const participant of this.memberData.projectParticipation) {
@@ -243,7 +243,7 @@ export default {
       }
       insuranceReceivables.sort((left, right) => - parseInt(left.dataOption.data) + parseInt(right.dataOption.data))
 
-      Vue.set(this.memberData.instrumentInsurances, 'receivables', insuranceReceivables)
+      vueSet(this.memberData.instrumentInsurances, 'receivables', insuranceReceivables)
 
       this.memberData.initialized[viewName] = true;
     }

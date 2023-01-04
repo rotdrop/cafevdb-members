@@ -1,6 +1,6 @@
 <script>
 /**
- * @copyright Copyright (c) 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
  *
@@ -130,7 +130,7 @@ import { appName as appId } from '../config.js'
 import InputText from '../components/InputText'
 import DebugInfo from '../components/DebugInfo'
 
-import Vue from 'vue'
+import { set as vueSet } from 'vue'
 import Content from '@nextcloud/vue/dist/Components/Content'
 import CheckboxRadioSwitch from '@nextcloud/vue/dist/Components/CheckboxRadioSwitch'
 
@@ -163,8 +163,8 @@ export default {
     await this.memberData.initialize()
 
     if (this.memberData.initialized.loaded && !this.memberData.initialized[viewName]) {
-      Vue.set(this.memberData, 'birthday', new Date(this.memberData.birthday))
-      Vue.set(this.memberData, 'selectedInstruments', [])
+      vueSet(this.memberData, 'birthday', new Date(this.memberData.birthday))
+      vueSet(this.memberData, 'selectedInstruments', [])
       for (const instrument of this.memberData.instruments) {
         this.memberData.selectedInstruments.push(instrument);
       }

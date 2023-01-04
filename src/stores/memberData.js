@@ -1,5 +1,5 @@
 /**
- * @copyright Copyright (c) 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
  *
@@ -23,7 +23,7 @@
 import { defineStore } from 'pinia'
 
 import { appName as appId } from '../config.js'
-import Vue from 'vue'
+import { set as vueSet } from 'vue'
 import '@nextcloud/dialogs/styles/toast.scss'
 import { generateUrl, generateOcsUrl } from '@nextcloud/router'
 import { getCurrentUser } from '@nextcloud/auth'
@@ -65,7 +65,7 @@ export const useMemberDataStore = defineStore('member-data', {
           this.initialized.promise = axios.get(generateUrl('/apps/' + appId + '/member'))
           const response = await this.initialized.promise
           for (const [key, value] of Object.entries(response.data)) {
-            Vue.set(this, key, value)
+            vueSet(this, key, value)
           }
           this.initialized.promise = null
           this.initialized.error = false
@@ -73,8 +73,11 @@ export const useMemberDataStore = defineStore('member-data', {
         } catch (e) {
           console.error('ERROR', e)
           let message = t(appId, 'general failure')
-          if (e.response && e.response.data && e.response.data.message) {
-            message = e.response.data.message
+          if (e.response && e.response.data) {
+            message = e.response.data.messages
+            if (Array.isArray(message)) {
+              message = message.join(' ')
+            }
           }
           this.initialized.error = message
           if (!silent) {
