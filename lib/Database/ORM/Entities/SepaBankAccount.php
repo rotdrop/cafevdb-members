@@ -2,10 +2,8 @@
 /**
  * Member's data base connector for CAFEVDB orchetra management app.
  *
- * @copyright Copyright (c) 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
- *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- *
+ * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,7 +18,6 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 namespace OCA\CAFeVDBMembers\Database\ORM\Entities;
@@ -124,29 +121,23 @@ class SepaBankAccount implements \ArrayAccess
    */
   private $sepaDebitMandates;
 
-  // /**
-  //  * @var Collection
-  //  *
-  //  * @ORM\OneToMany(targetEntity="CompositePayment",
-  //  *                mappedBy="sepaBankAccount",
-  //  *                fetch="EXTRA_LAZY")
-  //  */
-  // private $payments;
-
-  public function __construct() {
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
+  public function __construct()
+  {
     $this->arrayCTOR();
     $this->sepaDebitMandates = new ArrayCollection();
     // $this->payments = new ArrayCollection();
   }
+  // phpcs:enable
 
   /**
    * Set iban.
    *
-   * @param string $iban
+   * @param null|string $iban
    *
    * @return SepaBankAccount
    */
-  public function setIban($iban):SepaBankAccount
+  public function setIban(?string $iban):SepaBankAccount
   {
     $this->iban = $iban;
 
@@ -164,13 +155,13 @@ class SepaBankAccount implements \ArrayAccess
   }
 
   /**
-   * Set bic.
+   * Set BIC.
    *
-   * @param string $bic
+   * @param null|string $bic
    *
    * @return SepaBankAccount
    */
-  public function setBic($bic):SepaBankAccount
+  public function setBic(?string $bic):SepaBankAccount
   {
     $this->bic = $bic;
 
@@ -190,11 +181,11 @@ class SepaBankAccount implements \ArrayAccess
   /**
    * Set blz.
    *
-   * @param string $blz
+   * @param null|string $blz
    *
    * @return SepaBankAccount
    */
-  public function setBlz($blz):SepaBankAccount
+  public function setBlz(?string $blz):SepaBankAccount
   {
     $this->blz = $blz;
 
@@ -214,11 +205,11 @@ class SepaBankAccount implements \ArrayAccess
   /**
    * Set bankAccountOwner.
    *
-   * @param string $bankAccountOwner
+   * @param null|string $bankAccountOwner
    *
    * @return SepaBankAccount
    */
-  public function setBankAccountOwner($bankAccountOwner):SepaBankAccount
+  public function setBankAccountOwner(?string $bankAccountOwner):SepaBankAccount
   {
     $this->bankAccountOwner = $bankAccountOwner;
 
@@ -310,7 +301,7 @@ class SepaBankAccount implements \ArrayAccess
   /**
    * Set sepaDebitMandates.
    *
-   * @param int $sepaDebitMandates
+   * @param Collection $sepaDebitMandates
    *
    * @return SepaBankAccount
    */
@@ -329,5 +320,29 @@ class SepaBankAccount implements \ArrayAccess
   public function getSepaDebitMandates():Collection
   {
     return $this->sepaDebitMandates;
+  }
+
+  /**
+   * Set encryptionContext.
+   *
+   * @param array $encryptionContext
+   *
+   * @return SepaBankAccount
+   */
+  public function setEncryptionContext(array $encryptionContext):SepaBankAccount
+  {
+    $this->encryptionContext = $encryptionContext;
+
+    return $this;
+  }
+
+  /**
+   * Get encryptionContext.
+   *
+   * @return array
+   */
+  public function getEncryptionContext():array
+  {
+    return $this->encryptionContext;
   }
 }

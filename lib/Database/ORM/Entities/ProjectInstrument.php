@@ -2,10 +2,8 @@
 /**
  * Member's data base connector for CAFEVDB orchetra management app.
  *
- * @copyright Copyright (c) 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
- *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- *
+ * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,7 +18,6 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 namespace OCA\CAFeVDBMembers\Database\ORM\Entities;
@@ -104,28 +101,21 @@ class ProjectInstrument implements \ArrayAccess
    */
   private $musicianInstrument;
 
-  // /**
-  //  * @ORM\ManyToOne(targetEntity="ProjectInstrumentationNumber", inversedBy="instruments", fetch="EXTRA_LAZY")
-  //  * @ORM\JoinColumns(
-  //  *   @ORM\JoinColumn(name="project_id", referencedColumnName="project_id"),
-  //  *   @ORM\JoinColumn(name="instrument_id", referencedColumnName="instrument_id"),
-  //  *   @ORM\JoinColumn(name="voice", referencedColumnName="voice")
-  //  * )
-  //  */
-  // private $instrumentationNumber;
-
-  public function __construct() {
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
+  public function __construct()
+  {
     $this->arrayCTOR();
   }
+  // phpcs:enable
 
   /**
    * Set project.
    *
-   * @param int $project
+   * @param null|Project $project
    *
    * @return ProjectInstrument
    */
-  public function setProject($project)
+  public function setProject(?Project $project):ProjectInstrument
   {
     $this->project = $project;
 
@@ -145,11 +135,11 @@ class ProjectInstrument implements \ArrayAccess
   /**
    * Set musician.
    *
-   * @param int $musician
+   * @param null|Musician $musician
    *
    * @return ProjectInstrument
    */
-  public function setMusician($musician)
+  public function setMusician(?Musician $musician):ProjectInstrument
   {
     $this->musician = $musician;
 
@@ -169,11 +159,11 @@ class ProjectInstrument implements \ArrayAccess
   /**
    * Set instrument.
    *
-   * @param int $instrument
+   * @param null|Instrument $instrument
    *
    * @return ProjectInstrument
    */
-  public function setInstrument($instrument)
+  public function setInstrument(?Instrument $instrument):ProjectInstrument
   {
     $this->instrument = $instrument;
 
@@ -221,7 +211,7 @@ class ProjectInstrument implements \ArrayAccess
    *
    * @return ProjectInstrument
    */
-  public function setSectionLeader($sectionLeader)
+  public function setSectionLeader(bool $sectionLeader):ProjectInstrument
   {
     $this->sectionLeader = $sectionLeader;
 
@@ -241,11 +231,11 @@ class ProjectInstrument implements \ArrayAccess
   /**
    * Set projectParticipant.
    *
-   * @param int $projectParticipant
+   * @param null|ProjectParticipant $projectParticipant
    *
    * @return ProjectInstrument
    */
-  public function setProjectParticipant($projectParticipant)
+  public function setProjectParticipant(?ProjectParticipant $projectParticipant):ProjectInstrument
   {
     $this->projectParticipant = $projectParticipant;
 
@@ -274,11 +264,11 @@ class ProjectInstrument implements \ArrayAccess
   /**
    * Set musicianInstrument.
    *
-   * @param int $musicianInstrument
+   * @param null|MusicianInstrument $musicianInstrument
    *
    * @return ProjectInstrument
    */
-  public function setMusicianInstrument($musicianInstrument)
+  public function setMusicianInstrument(?MusicianInstrument $musicianInstrument):ProjectInstrument
   {
     $this->musicianInstrument = $musicianInstrument;
 

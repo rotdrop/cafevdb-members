@@ -1,11 +1,8 @@
 <?php
 /**
- * Orchestra member, musician and project management application.
- *
- * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
- *
- * @author Claus-Justus Heine
- * @copyright 2021 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2021, 2023 Claus-Justus Heine
+ * @license AGPL-3.0-or-later
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
@@ -23,9 +20,22 @@
 
 namespace OCA\CAFeVDBMembers\Traits;
 
+/**
+ * Supply a dummy t() function in order to inject strings into the translation
+ * machinery.
+ *
+ * @SuppressWarnings(PHPMD.ShortMethodName)
+ */
 trait FakeTranslationTrait
 {
-  static protected function t($text, $parameters = [])
+  /**
+   * @param string $text
+   *
+   * @param array $parameters
+   *
+   * @return string
+   */
+  protected static function t(string $text, array $parameters = []):string
   {
     if (!is_array($parameters)) {
       $parameters = [ $parameters ];

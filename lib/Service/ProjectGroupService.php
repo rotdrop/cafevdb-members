@@ -2,8 +2,8 @@
 /**
  * Member's data base connector for CAFEVDB orchetra management app.
  *
- * @copyright Copyright (c) 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,6 +22,9 @@
 
 namespace OCA\CAFeVDBMembers\Service;
 
+use InvalidArgumentException;
+use RuntimeException;
+
 use Psr\Log\LoggerInterface;
 use OCP\IL10N;
 use OCP\IGroupManager;
@@ -32,6 +35,7 @@ use OCA\CAFEVDB\Events\PostProjectUpdatedEvent;
 use OCA\CAFEVDB\Events\BeforeProjectDeletedEvent;
 use OCA\CAFEVDB\Events\ProjectCreatedEvent;
 
+/** Manage the shared project-group folders. */
 class ProjectGroupService
 {
   use \OCA\CAFeVDBMembers\Traits\LoggerTrait;
@@ -57,13 +61,14 @@ class ProjectGroupService
   /** @var string */
   private $appManagementGroup;
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    string $appManagementGroup
-    , string $memberRootFolder
-    , LoggerInterface $logger
-    , IL10N $l10n
-    , IGroupManager $groupManager
-    , GroupFoldersService $groupFoldersService
+    string $appManagementGroup,
+    string $memberRootFolder,
+    LoggerInterface $logger,
+    IL10N $l10n,
+    IGroupManager $groupManager,
+    GroupFoldersService $groupFoldersService,
   ) {
     $this->appManagementGroup = $appManagementGroup;
     $this->memberRootFolder = $memberRootFolder;
@@ -72,16 +77,23 @@ class ProjectGroupService
     $this->groupManager = $groupManager;
     $this->groupFoldersService = $groupFoldersService;
   }
+  // phpcs:enable
 
-  /** Make sure all folders for all projects exist */
-  public function synchronizeFolderStructure(string $gid = null)
+  /**
+   * Make sure all folders for all projects exist.
+   *
+   * @param string $gid
+   *
+   * @return void
+   */
+  public function synchronizeFolderStructure(string $gid = null):void
   {
     if (empty($gid)) {
-      throw new \InvalidArgumentException($this->l->t('Syncing all groups in one run is no longer supported.'));
+      throw new InvalidArgumentException($this->l->t('Syncing all groups in one run is no longer supported.'));
       $groups = $this->getProjectGroups();
-    } else{
+    } else {
       if (!$this->isProjectGroup($gid)) {
-        throw new \InvalidArgumentException(
+        throw new InvalidArgumentException(
           $this->l->t('Group %1$s does not start with the correct prefix "%2$s".', [
             $gid, self::GROUP_ID_PREFIX,
           ]));
@@ -99,13 +111,22 @@ class ProjectGroupService
     $this->removeOrphanFolders();
   }
 
-  private function isProjectGroup(string $gid)
+  /**
+   * @param string $gid
+   *
+   * @return bool
+   */
+  private function isProjectGroup(string $gid):bool
   {
     return str_starts_with($gid, self::GROUP_ID_PREFIX);
   }
 
-  /** Returns the list of the cafevdb created user groups */
-  public function getProjectGroups()
+  /**
+   * Returns the list of the cafevdb created user groups.
+   *
+   * @return array
+   */
+  public function getProjectGroups():array
   {
     $groups = [];
     /** @var IGroup $group */
@@ -117,6 +138,13 @@ class ProjectGroupService
     return $groups;
   }
 
+  /**
+   * @param string $projectName
+   *
+   * @param array $parentMounts
+   *
+   * @return string
+   */
   public function getProjectFolderMountPoint(string $projectName, array &$parentMounts = null):string
   {
     $projectYear = substr($projectName, -4);
@@ -134,6 +162,11 @@ class ProjectGroupService
     return $leafMountPoint;
   }
 
+  /**
+   * @param int $projectId
+   *
+   * @return string
+   */
   public function getProjectGroupId(int $projectId):string
   {
     return self::GROUP_ID_PREFIX . $projectId;
@@ -148,8 +181,10 @@ class ProjectGroupService
    * is primarily used to make sure that the new group display name is
    * used while renaming projects. If null the display name of the
    * group is used.
+   *
+   * @return void
    */
-  public function ensureProjectFolder(IGroup $group, ?string $forcedFolderName = null)
+  public function ensureProjectFolder(IGroup $group, ?string $forcedFolderName = null):void
   {
     $groupId = $group->getGID();
     $groupName = $forcedFolderName ?? $group->getDisplayName();
@@ -203,7 +238,7 @@ class ProjectGroupService
     }
     $leafFolder = $this->groupFoldersService->getFolder($leafMountPoint);
     if (empty($leafFolder)) {
-      throw new \RuntimeException($this->l->t('Unable to make sure the the group-shared folder "%1$s" for group "%2$s" exists.', [ $leafMountPoint, $group->getDisplayName() ]));
+      throw new RuntimeException($this->l->t('Unable to make sure the the group-shared folder "%1$s" for group "%2$s" exists.', [ $leafMountPoint, $group->getDisplayName() ]));
     }
     if ($leafFolder['groups'][$groupId] != self::GROUP_LEAF_PERMISSIONS) {
       // add write-access to the leaf-folder, this lazily just performs the necessary steps.
@@ -243,8 +278,12 @@ class ProjectGroupService
    * Search all folders for which the given group has write-access. Ideally,
    * this is just one. If so, this folder can simply be renamed when changing
    * the internal folder structure.
+   *
+   * @param IGroup $group
+   *
+   * @return array
    */
-  private function searchWritableGroupFolders(IGroup $group)
+  private function searchWritableGroupFolders(IGroup $group):array
   {
     $groupId = $group->getGID();
     $groupFolders = [];
@@ -259,8 +298,10 @@ class ProjectGroupService
 
   /**
    * Remove all "orphan" folders, i.e. year-folders without projects.
+   *
+   * @return void
    */
-  public function removeOrphanFolders()
+  public function removeOrphanFolders():void
   {
     $allFolders = $this->groupFoldersService->searchFolders('|^' . $this->memberRootFolder . '.*$|');
     $cleanList = [];
@@ -288,7 +329,12 @@ class ProjectGroupService
     }
   }
 
-  public function handleProjectRenamed(PostProjectUpdatedEvent $event)
+  /**
+   * @param PostProjectUpdatedEvent $event
+   *
+   * @return void
+   */
+  public function handleProjectRenamed(PostProjectUpdatedEvent $event):void
   {
     $groupId = $this->getProjectGroupId($event->getProjectId());
     $oldData = $event->getOldData();
@@ -328,6 +374,11 @@ class ProjectGroupService
     }
   }
 
+  /**
+   * @param BeforeProjectDeletedEvent $event
+   *
+   * @return void
+   */
   public function handleProjectDeletedEvent(BeforeProjectDeletedEvent $event)
   {
     // $groupId = $this->getProjectGroupId($event->getProjectId());
@@ -335,6 +386,11 @@ class ProjectGroupService
     $this->groupFoldersService->deleteFolders($mountPoint);
   }
 
+  /**
+   * @param ProjectCreatedEvent $event
+   *
+   * @return void
+   */
   public function handleProjectCreatedEvent(ProjectCreatedEvent $event)
   {
     $groupId = $this->getProjectGroupId($event->getProjectId());
@@ -343,7 +399,7 @@ class ProjectGroupService
     if (!empty($group)) {
       $this->ensureProjectFolder($group);
     } else {
-      $this->logError('Cloud-group "' . $groupId . '" for project "' . $newData['name'] . ' does not exist.');
+      $this->logError('Cloud-group "' . $groupId . '" for project "' . $projectName . ' does not exist.');
     }
   }
 }

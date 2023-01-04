@@ -2,10 +2,8 @@
 /**
  * Member's data base connector for CAFEVDB orchetra management app.
  *
- * @copyright Copyright (c) 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
- *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- *
+ * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,7 +18,6 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 namespace OCA\CAFeVDBMembers\Database\ORM\Entities;
@@ -114,7 +111,9 @@ class Project implements \ArrayAccess
    */
   private $payments;
 
-  public function __construct() {
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
+  public function __construct()
+  {
     $this->arrayCTOR();
     $this->participants = new ArrayCollection();
     $this->participantFields = new ArrayCollection();
@@ -122,9 +121,12 @@ class Project implements \ArrayAccess
     $this->sepaDebitMandates = new ArrayCollection();
     $this->payments = new ArrayCollection();
   }
+  // phpcs:enable
 
   /**
    * Set id.
+   *
+   * @param int $id
    *
    * @return Project
    */
@@ -148,11 +150,11 @@ class Project implements \ArrayAccess
   /**
    * Set year.
    *
-   * @param int $year
+   * @param null|int $year
    *
    * @return Project
    */
-  public function setYear($year)
+  public function setYear(?int $year):Project
   {
     $this->year = $year;
 
@@ -172,11 +174,11 @@ class Project implements \ArrayAccess
   /**
    * Set name.
    *
-   * @param string $name
+   * @param null|string $name
    *
    * @return Project
    */
-  public function setName($name)
+  public function setName(?string $name):Project
   {
     $this->name = $name;
 
@@ -220,11 +222,11 @@ class Project implements \ArrayAccess
   /**
    * Set participants.
    *
-   * @param ArrayCollection $participants
+   * @param Collection $participants
    *
    * @return Project
    */
-  public function setParticipants($participants):Project
+  public function setParticipants(Collection $participants):Project
   {
     $this->participants = $participants;
 
@@ -244,11 +246,11 @@ class Project implements \ArrayAccess
   /**
    * Set participantFields.
    *
-   * @param ArrayCollection $participantFields
+   * @param Collection $participantFields
    *
    * @return Project
    */
-  public function setParticipantFields($participantFields):Project
+  public function setParticipantFields(Collection $participantFields):Project
   {
     $this->participantFields = $participantFields;
 
@@ -268,11 +270,11 @@ class Project implements \ArrayAccess
   /**
    * Set participantFieldsData.
    *
-   * @param ArrayCollection $participantFieldsData
+   * @param Collection $participantFieldsData
    *
    * @return Project
    */
-  public function setParticipantFieldsData($participantFieldsData):Project
+  public function setParticipantFieldsData(Collection $participantFieldsData):Project
   {
     $this->participantFieldsData = $participantFieldsData;
 
@@ -316,11 +318,11 @@ class Project implements \ArrayAccess
   /**
    * Set sepaDebitMandates.
    *
-   * @param ArrayCollection $sepaDebitMandates
+   * @param Collection $sepaDebitMandates
    *
    * @return Project
    */
-  public function setSepaDebitMandates($sepaDebitMandates):Project
+  public function setSepaDebitMandates(Collection $sepaDebitMandates):Project
   {
     $this->sepaDebitMandates = $sepaDebitMandates;
 

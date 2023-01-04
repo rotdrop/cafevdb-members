@@ -4,8 +4,8 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -46,11 +46,13 @@ class GedmoTranslatableListener extends \Gedmo\Translatable\TranslatableListener
   /** @var BiDirectionalL10N */
   private $musicL10n;
 
+  // phpcs:ignore Squiz.Commenting.FunctionComment.Missing
   public function __construct(BiDirectionalL10N $musicL10n)
   {
     parent::__construct();
     $this->musicL10n = $musicL10n;
   }
+  // phpcs:enable
 
   /**
    * {@inheritdoc}
@@ -89,9 +91,9 @@ class GedmoTranslatableListener extends \Gedmo\Translatable\TranslatableListener
   /**
    * {@inheritdoc}
    */
-  public function getTranslationClass(TranslatableAdapter $ea, $class)
+  public function getTranslationClass(TranslatableAdapter $eventAdapter, $class)
   {
     $class = str_replace(self::TRANSLATED_ENTITIES, self::OWN_ENTITIES, $class);
-    return parent::getTranslationClass($ea, $class);
+    return parent::getTranslationClass($eventAdapter, $class);
   }
 }

@@ -1,7 +1,7 @@
 <?php
 /**
- * @copyright Copyright (c) 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright Copyright (c) 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,6 +20,10 @@
 
 namespace OCA\CAFeVDBMembers\AppInfo;
 
+use SimpleXMLElement;
+use NumberFormatter;
+use Exception;
+
 use OCP\AppFramework\App;
 use OCP\AppFramework\Bootstrap\IBootstrap;
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
@@ -31,6 +35,7 @@ use Psr\Container\ContainerInterface;
 
 use OCA\CAFeVDBMembers\Listener\Registration as ListenerRegistration;
 
+/** Cloud application entry point. */
 class Application extends App implements IBootstrap
 {
   const CAFEVDB_APP = 'cafevdb';
@@ -41,23 +46,25 @@ class Application extends App implements IBootstrap
   /** @var string */
   protected $appName;
 
+  // phpcs:ignore Squiz.Commenting.FunctionComment.Missing
   public function __construct()
   {
-    $infoXml = new \SimpleXMLElement(file_get_contents(__DIR__ . '/../../appinfo/info.xml'));
+    $infoXml = new SimpleXMLElement(file_get_contents(__DIR__ . '/../../appinfo/info.xml'));
     $this->appName = (string)$infoXml->id;
     parent::__construct($this->appName);
   }
+  // phpcs:enable
 
-  // Called later than "register".
-  public function boot(IBootContext $context): void
+  /** {@inheritdoc} */
+  public function boot(IBootContext $context):void
   {
     $context->injectFn(function(IInitialState $initialState, IConfig $config) {
       $initialState->provideInitialState('testValue', '*** INITIAL STATE OF TEST VALUE ***');
 
       $orchestraLocale = $config->getAppValue(self::CAFEVDB_APP, 'orchestraLocale', self::DEFAULT_LOCALE);
-      $fmt = new \NumberFormatter($orchestraLocale, \NumberFormatter::CURRENCY);
-      $currencySymbol = $fmt->getSymbol(\NumberFormatter::CURRENCY_SYMBOL);
-      $currencyCode = $fmt->getTextAttribute(\NumberFormatter::CURRENCY_CODE);
+      $fmt = new NumberFormatter($orchestraLocale, NumberFormatter::CURRENCY);
+      $currencySymbol = $fmt->getSymbol(NumberFormatter::CURRENCY_SYMBOL);
+      $currencyCode = $fmt->getTextAttribute(NumberFormatter::CURRENCY_CODE);
       $initialState->provideInitialState('config', [
         'orchestraName' => $config->getAppValue(self::CAFEVDB_APP, 'orchestra'),
         'orchestraLocale' => $orchestraLocale,
@@ -93,12 +100,16 @@ class Application extends App implements IBootstrap
     // });
   }
 
-  // Called earlier than boot, so anything initialized in the
-  // "boot()" method must not be used here.
-  public function register(IRegistrationContext $context): void
+  /**
+   * {@inheritdoc}
+   *
+   * Called earlier than boot, so anything initialized in the "boot()" method
+   * must not be used here.
+   */
+  public function register(IRegistrationContext $context):void
   {
-    if ((@include_once __DIR__ . '/../../vendor/autoload.php') === false) {
-      throw new \Exception('Cannot include autoload. Did you run install dependencies using composer?');
+    if ((include_once __DIR__ . '/../../vendor/autoload.php') === false) {
+      throw new Exception('Cannot include autoload. Did you run install dependencies using composer?');
     }
     $context->registerService('appManagementGroup', function($c) {
       /** @var \OCP\IConfig $config */

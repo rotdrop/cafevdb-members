@@ -2,10 +2,8 @@
 /**
  * Member's data base connector for CAFEVDB orchetra management app.
  *
- * @copyright Copyright (c) 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
- *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- *
+ * @copyright Copyright (c) 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,7 +18,6 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 namespace OCA\CAFeVDBMembers\Database\ORM\Entities;
@@ -73,10 +70,13 @@ class InstrumentFamily implements \ArrayAccess
    */
   private $instruments;
 
-  public function __construct() {
+  // phpcs:ignore Squiz.Commenting.FunctionComment.Missing
+  public function __construct()
+  {
     $this->arrayCTOR();
     $this->instruments = new ArrayCollection();
   }
+  // phpcs:enable
 
   /**
    * Get id.
@@ -125,11 +125,11 @@ class InstrumentFamily implements \ArrayAccess
   /**
    * Set instruments.
    *
-   * @param bool $instruments
+   * @param Collection $instruments
    *
    * @return InstrumentFamily
    */
-  public function setInstruments($instruments):InstrumentFamily
+  public function setInstruments(Collection $instruments):InstrumentFamily
   {
     $this->instruments = $instruments;
 
@@ -149,6 +149,8 @@ class InstrumentFamily implements \ArrayAccess
   /**
    * Get the usage count, i.e. the number of instruments which belong
    * to this family.
+   *
+   * @return int
    */
   public function usage():int
   {

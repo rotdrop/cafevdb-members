@@ -2,8 +2,8 @@
 /**
  * Member's data base connector for CAFEVDB orchetra management app.
  *
- * @copyright Copyright (c) 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -47,17 +47,19 @@ class AuthenticationService
   /** @var IL10N */
   private $l;
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    string $userId
-    , AsymmetricKeyService $keyService
-    , LoggerInterface $logger
-    , IL10N $l10n
+    string $userId,
+    AsymmetricKeyService $keyService,
+    LoggerInterface $logger,
+    IL10N $l10n,
   ) {
     $this->userId = $userId;
     $this->keyService = $keyService;
     $this->logger = $logger;
     $this->l = $l10n;
   }
+  // phpcs:enable
 
   /**
    * Try to get and decrypt the row-access-token from the config space. The
@@ -77,7 +79,13 @@ class AuthenticationService
     try {
       $rowAccessToken = $this->keyService->getSharedPrivateValue($this->userId, 'rowAccessToken');
     } catch (CannotDecryptException $e) {
-      throw new Exceptions\RowAccessTokenInvalidException($this->l->t('The row-access token for "%s" is present but invalid, the user\'s data will be unaccessble.', $this->userId), $e->getCode(), $e);
+      throw new Exceptions\RowAccessTokenInvalidException(
+        $this->l->t(
+          'The row-access token for "%s" is present but invalid, the user\'s data will be unaccessble.',
+          $this->userId
+        ),
+        $e->getCode(),
+        $e);
     }
     if (empty($rowAccessToken)) {
       throw new Exceptions\RowAccessTokenMissingException($this->l->t('The row-access token for "%s" is missing, the user\'s data will be unaccessble.', $this->userId));

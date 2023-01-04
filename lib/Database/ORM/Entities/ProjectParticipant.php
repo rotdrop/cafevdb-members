@@ -2,10 +2,8 @@
 /**
  * Member's data base connector for CAFEVDB orchetra management app.
  *
- * @copyright Copyright (c) 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
- *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- *
+ * @copyright Copyright (c) 2022, 2023, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,7 +18,6 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 namespace OCA\CAFeVDBMembers\Database\ORM\Entities;
@@ -124,21 +121,24 @@ class ProjectParticipant implements \ArrayAccess
    */
   private $sepaDebitMandate = null;
 
-  public function __construct() {
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
+  public function __construct()
+  {
     $this->arrayCTOR();
     $this->payments = new ArrayCollection();
     $this->participantFieldsData = new ArrayCollection();
     $this->projectInstruments = new ArrayCollection();
   }
+  // phpcs:enable
 
   /**
    * Set project.
    *
-   * @param int $project
+   * @param null|Project $project
    *
    * @return ProjectParticipant
    */
-  public function setProject($project):ProjectParticipant
+  public function setProject(?Project $project):ProjectParticipant
   {
     $this->project = $project;
 
@@ -158,11 +158,11 @@ class ProjectParticipant implements \ArrayAccess
   /**
    * Set musician.
    *
-   * @param int $musician
+   * @param null|Musician $musician
    *
    * @return ProjectParticipant
    */
-  public function setMusician($musician):ProjectParticipant
+  public function setMusician(?Musician $musician):ProjectParticipant
   {
     $this->musician = $musician;
 
@@ -186,7 +186,7 @@ class ProjectParticipant implements \ArrayAccess
    *
    * @return ProjectParticipant
    */
-  public function setRegistration($registration):ProjectParticipant
+  public function setRegistration(bool $registration):ProjectParticipant
   {
     $this->registration = $registration;
 
@@ -206,11 +206,11 @@ class ProjectParticipant implements \ArrayAccess
   /**
    * Set projectInstruments.
    *
-   * @param bool $projectInstruments
+   * @param Collection $projectInstruments
    *
    * @return ProjectParticipant
    */
-  public function setProjectInstruments($projectInstruments):ProjectParticipant
+  public function setProjectInstruments(Collection $projectInstruments):ProjectParticipant
   {
     $this->projectInstruments = $projectInstruments;
 
@@ -234,7 +234,7 @@ class ProjectParticipant implements \ArrayAccess
    *
    * @return ProjectParticipant
    */
-  public function setParticipantFieldsData($participantFieldsData):ProjectParticipant
+  public function setParticipantFieldsData(Collection $participantFieldsData):ProjectParticipant
   {
     $this->participantFieldsData = $participantFieldsData;
 
@@ -269,7 +269,7 @@ class ProjectParticipant implements \ArrayAccess
    *
    * @return null|ProjectParticipantFieldDatum
    */
-  public function getParticipantFieldsDatum($key):?ProjectParticipantFieldDatum
+  public function getParticipantFieldsDatum(mixed $key):?ProjectParticipantFieldDatum
   {
     return $this->getByUuid($this->participantFieldsData, $key, 'optionKey');
   }
@@ -281,7 +281,7 @@ class ProjectParticipant implements \ArrayAccess
    *
    * @return ProjectParticipant
    */
-  public function setPayments($payments):ProjectParticipant
+  public function setPayments(Collection $payments):ProjectParticipant
   {
     $this->payments = $payments;
 
@@ -301,7 +301,7 @@ class ProjectParticipant implements \ArrayAccess
   /**
    * Set sepaBankAccount.
    *
-   * @param SepaBankAccount|null sepaBankAccount
+   * @param null|SepaBankAccountl $sepaBankAccount
    *
    * @return ProjectParticipant
    */
@@ -325,7 +325,7 @@ class ProjectParticipant implements \ArrayAccess
   /**
    * Set sepaDebitMandate.
    *
-   * @param SepaDebitMandate|null sepaDebitMandate
+   * @param null|SepaDebitMandate $sepaDebitMandate
    *
    * @return ProjectParticipant
    */

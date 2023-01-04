@@ -1,9 +1,7 @@
 <?php
 /**
- * @copyright Copyright (c) 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
- *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- *
+ * @copyright Copyright (c) 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,7 +16,6 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 namespace OCA\CAFeVDBMembers\Database\ORM;
@@ -29,20 +26,25 @@ use OCP\AppFramework\IAppContainer;
 use OCP\IConfig;
 use OCP\IL10N;
 
-use Doctrine\ORM\Tools\Setup;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\DBAL\Event\ConnectionEventArgs;
-use Doctrine\Persistence\Event\LifecycleEventArgs;
-use Doctrine\ORM\Decorator\EntityManagerDecorator;
-use Doctrine\ORM\Mapping\UnderscoreNamingStrategy;
-use Doctrine\DBAL\Connection as DatabaseConnection;
-use Doctrine\DBAL\Types\Type;
-use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\Psr6\CacheAdapter;
 use Doctrine\Common\Cache\Psr6\DoctrineProvider;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\PsrCachedReader;
+use Doctrine\Common\EventManager as DoctrineEventManager;
+use Doctrine\Persistence\Event\LifecycleEventArgs;
+use Doctrine\Persistence\Mapping\Driver\MappingDriverChain;
+use Doctrine\DBAL\Connection as DatabaseConnection;
+use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\Event\ConnectionEventArgs;
+use Doctrine\ORM;
+use Doctrine\ORM\Tools\Setup;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Decorator\EntityManagerDecorator;
+use Doctrine\ORM\Mapping\UnderscoreNamingStrategy;
+use Doctrine\ORM\Configuration as OrmConfiguration;
+use Symfony\Component\Cache\Adapter\ArrayAdapter;
+use Gedmo\SoftDeleteable\SoftDeleteableListener;
 
 use MyCLabs\Enum\Enum as EnumType;
 use MediaMonks\Doctrine\Transformable;
@@ -98,15 +100,16 @@ class EntityManager extends EntityManagerDecorator
   /** @var bool */
   private $typesBound = false;
 
+  // phpcs:ignore Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    $appName
-    , $userId
-    , AuthenticationService $authenticationService
-    , IAppContainer $appContainer
-    , IConfig $cloudConfig
-    , IL10N $l10n
-    , LoggerInterface $logger
-    , CloudLogger $sqlLogger
+    string $appName,
+    ?string $userId,
+    AuthenticationService $authenticationService,
+    IAppContainer $appContainer,
+    IConfig $cloudConfig,
+    IL10N $l10n,
+    LoggerInterface $logger,
+    CloudLogger $sqlLogger,
   ) {
     $this->appName = $appName;
     $this->userId = $userId;
@@ -127,7 +130,11 @@ class EntityManager extends EntityManagerDecorator
       $this->registerTypes();
     }
   }
+  // phpcs:enable
 
+  /**
+   * @return array
+   */
   private function createConfiguration():array
   {
     $cache = null;
@@ -137,11 +144,14 @@ class EntityManager extends EntityManagerDecorator
 
       private $appContainer;
 
+      // phpcs:ignore Squiz.Commenting.FunctionComment.Missing
       public function __construct(IAppContainer $appContainer)
       {
         $this->appContainer = $appContainer;
       }
+      // phpcs:enable
 
+      /** {@inheritdoc} */
       public function resolve($className)
       {
         try {
@@ -153,7 +163,7 @@ class EntityManager extends EntityManagerDecorator
       }
     });
 
-    $eventManager = new \Doctrine\Common\EventManager();
+    $eventManager = new DoctrineEventManager();
 
     $eventManager->addEventListener([
       // \OCA\CAFEVDB\Wrapped\Doctrine\ORM\Tools\ToolEvents::postGenerateSchema,
@@ -167,7 +177,14 @@ class EntityManager extends EntityManagerDecorator
     return [ $config, $eventManager, ];
   }
 
-  private function createGedmoConfiguration($config, $eventManager):array
+  /**
+   * @param OrmConfiguration $config
+   *
+   * @param DoctrineEventManager $eventManager
+   *
+   * @return array
+   */
+  private function createGedmoConfiguration(OrmConfiguration $config, DoctrineEventManager $eventManager):array
   {
     // standard annotation reader
     $annotationReader = new AnnotationReader;
@@ -175,7 +192,7 @@ class EntityManager extends EntityManagerDecorator
     $cachedAnnotationReader = new PsrCachedReader($annotationReader, $cache);
 
     // create a driver chain for metadata reading
-    $driverChain = new \Doctrine\Persistence\Mapping\Driver\MappingDriverChain();
+    $driverChain = new MappingDriverChain();
 
     // load superclass metadata mapping only, into driver chain
     // also registers Gedmo annotations.NOTE: you can personalize it
@@ -190,7 +207,7 @@ class EntityManager extends EntityManagerDecorator
 
     // now we want to register our application entities,
     // for that we need another metadata driver used for Entity namespace
-    $annotationDriver = new \Doctrine\ORM\Mapping\Driver\AnnotationDriver(
+    $annotationDriver = new ORM\Mapping\Driver\AnnotationDriver(
       $cachedAnnotationReader, // our cached annotation reader
       self::ENTITY_PATHS, // paths to look in
     );
@@ -215,7 +232,7 @@ class EntityManager extends EntityManagerDecorator
     // gedmo extension listeners
 
     // soft deletable
-    $softDeletableListener = new \Gedmo\SoftDeleteable\SoftDeleteableListener();
+    $softDeletableListener = new SoftDeleteableListener();
     $softDeletableListener->setAnnotationReader($cachedAnnotationReader);
     $eventManager->addEventSubscriber($softDeletableListener);
     $config->addFilter('soft-deleteable', \Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter::class);
@@ -261,7 +278,12 @@ class EntityManager extends EntityManagerDecorator
     return [ $config, $eventManager, $annotationReader ];
   }
 
-  private function connectionParameters($params = [])
+  /**
+   * @param array $params
+   *
+   * @return array
+   */
+  private function connectionParameters(array $params = []):array
   {
     $connectionParams = [
       'dbname' => $this->cloudConfig->getAppValue($this->appName, 'cloudUserViewsDatabase'),
@@ -316,7 +338,8 @@ class EntityManager extends EntityManagerDecorator
     return true;
   }
 
-  private function registerTypes()
+  /** @return void */
+  private function registerTypes():void
   {
     if ($this->typesBound) {
       return;
@@ -367,7 +390,12 @@ class EntityManager extends EntityManagerDecorator
     }
   }
 
-  private function getEntityManager($params = [])
+  /**
+   * @param array $params
+   *
+   * @return EntityManagerInterface
+   */
+  private function getEntityManager(array $params = []):EntityManagerInterface
   {
     list($config, $eventManager) = $this->createConfiguration();
     list($config, $eventManager, ) = $this->createGedmoConfiguration($config, $eventManager);
@@ -392,6 +420,7 @@ class EntityManager extends EntityManagerDecorator
     return $entityManager;
   }
 
+  /** {@inheritdoc} */
   public function postConnect(ConnectionEventArgs $args)
   {
     if (!empty($this->userId)) {
@@ -401,6 +430,7 @@ class EntityManager extends EntityManagerDecorator
     }
   }
 
+  /** {@inheritdoc} */
   public function postLoad(LifecycleEventArgs $args)
   {
     $entity = $args->getObject();

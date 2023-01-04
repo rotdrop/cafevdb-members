@@ -2,10 +2,8 @@
 /**
  * Member's data base connector for CAFEVDB orchetra management app.
  *
- * @copyright Copyright (c) 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
- *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- *
+ * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,7 +18,6 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 namespace OCA\CAFeVDBMembers\Database\ORM\Entities;
@@ -186,6 +183,7 @@ class ProjectParticipantField implements \ArrayAccess
    */
   private $fieldData;
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct()
   {
     $this->__wakeup();
@@ -195,7 +193,9 @@ class ProjectParticipantField implements \ArrayAccess
     $this->fieldData = new ArrayCollection();
     $this->dataOptions = new ArrayCollection();
   }
+  // phpcs:enable
 
+  /** {@inheritdoc} */
   public function __clone()
   {
     if (!$this->id) {
@@ -214,6 +214,7 @@ class ProjectParticipantField implements \ArrayAccess
     }
   }
 
+  /** {@inheritdoc} */
   public function __wakeup()
   {
     $this->arrayCTOR();
@@ -246,11 +247,11 @@ class ProjectParticipantField implements \ArrayAccess
   /**
    * Set project.
    *
-   * @param Project $project
+   * @param null|Project $project
    *
    * @return ProjectParticipantField
    */
-  public function setProject($project):ProjectParticipantField
+  public function setProject(?Project $project):ProjectParticipantField
   {
     $this->project = $project;
 
@@ -274,7 +275,7 @@ class ProjectParticipantField implements \ArrayAccess
    *
    * @return ProjectParticipantField
    */
-  public function setDataOptions($dataOptions):ProjectParticipantField
+  public function setDataOptions(Collection $dataOptions):ProjectParticipantField
   {
     $this->dataOptions = $dataOptions;
 
@@ -298,7 +299,7 @@ class ProjectParticipantField implements \ArrayAccess
    *
    * @return Collection
    */
-  public function getSelectableOptions($includeDeleted = false):Collection
+  public function getSelectableOptions(bool $includeDeleted = false):Collection
   {
     // this unfortunately just does not work.
     // return $this->dataOptions->matching(DBUtil::criteriaWhere([ '!key' => Uuid::NIL, 'deleted' => null, ]));
@@ -327,7 +328,7 @@ class ProjectParticipantField implements \ArrayAccess
    *
    * @return null|ProjectParticipantFieldDataOption
    */
-  public function getDataOption($key):?ProjectParticipantFieldDataOption
+  public function getDataOption(mixed $key):?ProjectParticipantFieldDataOption
   {
     return $this->getByUuid($this->dataOptions, $key, 'key');
   }
@@ -339,7 +340,7 @@ class ProjectParticipantField implements \ArrayAccess
    *
    * @return ProjectParticipantField
    */
-  public function setFieldData($fieldData):ProjectParticipantField
+  public function setFieldData(Collection $fieldData):ProjectParticipantField
   {
     $this->fieldData = $fieldData;
 
@@ -393,11 +394,11 @@ class ProjectParticipantField implements \ArrayAccess
   /**
    * Set name.
    *
-   * @param string $name
+   * @param null|string $name
    *
    * @return ProjectParticipantField
    */
-  public function setName($name):ProjectParticipantField
+  public function setName(?string $name):ProjectParticipantField
   {
     $this->name = $name;
     if ($this->getLocale() == ConfigService::DEFAULT_LOCALE) {
@@ -419,11 +420,11 @@ class ProjectParticipantField implements \ArrayAccess
   /**
    * Set untranslatedName.
    *
-   * @param string $untranslatedName
+   * @param null|string $untranslatedName
    *
    * @return ProjectParticipantField
    */
-  public function setUntranslatedName($untranslatedName):ProjectParticipantField
+  public function setUntranslatedName(?string $untranslatedName):ProjectParticipantField
   {
     throw new Exceptions\DatabaseReadonlyException('The property "untranslatedName" cannot be set, it is read-only.');
     return $this;
@@ -559,11 +560,11 @@ class ProjectParticipantField implements \ArrayAccess
   /**
    * Set tooltip.
    *
-   * @param string $tooltip
+   * @param null|string $tooltip
    *
    * @return ProjectParticipantField
    */
-  public function setTooltip($tooltip):ProjectParticipantField
+  public function setTooltip(?string $tooltip):ProjectParticipantField
   {
     $this->tooltip = $tooltip;
 
@@ -583,11 +584,11 @@ class ProjectParticipantField implements \ArrayAccess
   /**
    * Set tab.
    *
-   * @param string $tab
+   * @param null|string $tab
    *
    * @return ProjectParticipantField
    */
-  public function setTab($tab):ProjectParticipantField
+  public function setTab(?string $tab):ProjectParticipantField
   {
     $this->tab = $tab;
 
@@ -607,11 +608,11 @@ class ProjectParticipantField implements \ArrayAccess
   /**
    * Set untranslatedTab.
    *
-   * @param string $untranslatedTab
+   * @param null|string $untranslatedTab
    *
    * @return ProjectParticipantField
    */
-  public function setUntranslatedTab($untranslatedTab):ProjectParticipantField
+  public function setUntranslatedTab(?string $untranslatedTab):ProjectParticipantField
   {
     throw new Exceptions\DatabaseReadonlyException('The property "untranslatedTab" cannot be set, it is read-only.');
     return $this;
@@ -698,5 +699,4 @@ class ProjectParticipantField implements \ArrayAccess
   {
     return $this->writers;
   }
-
 }

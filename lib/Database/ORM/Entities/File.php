@@ -2,10 +2,8 @@
 /**
  * Member's data base connector for CAFEVDB orchetra management app.
  *
- * @copyright Copyright (c) 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
- *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- *
+ * @copyright Copyright (c) 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,7 +18,6 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 namespace OCA\CAFeVDBMembers\Database\ORM\Entities;
@@ -84,37 +81,29 @@ class File implements \ArrayAccess
    * @var FileData
    *
    * As ORM still does not support lazy one-to-one associations from the
-   * inverse side we just use one-directional from both sides here. This
-   * works, as the join column is just the key of both sides. So we have no
-   * "mappedBy" and "inversedBy".
+   * inverse side we use a OneToMany - ManyToOne trick which inserts a lazy
+   * association in between.
    *
-   * Note that it is not possible to override the targetEntity in a
-   * child class. OTOH, lazy-loading is only possible with leaf-classes. So
-   * the OneToOne annotation must go to the leaf-classes. Hence, the
-   * File-entity can only be used through its base-classes.
-   *
-   * _AT_ORM\OneToOne(targetEntity="FileData", fetch="EXTRA_LAZY")
-   * _AT_ORM\JoinColumns(
-   *   _AT_ORM\JoinColumn(name="id", referencedColumnName="file_id", nullable=false),
-   * )
-   *
+   * @ORM\OneToMany(targetEntity="FileData", mappedBy="file", cascade={"all"}, orphanRemoval=true, fetch="EXTRA_LAZY")
    */
-  // protected $fileData;
+  protected $fileData;
 
   /**
    * @var string|null
    *
    * @ORM\Column(type="string", length=32, nullable=true, options={"fixed"=true})
    */
-  private $dataHash;
+  protected $dataHash;
 
   /**
    * @var \DateTimeImmutable
    * @ORM\Column(type="datetime_immutable", nullable=true)
    */
-  private $updated;
+  protected $updated;
 
-  public function __construct($fileName = null, $data = null, $mimeType = null) {
+  // phpcs:ignore Squiz.Commenting.FunctionComment.Missing
+  public function __construct($fileName = null, $data = null, $mimeType = null)
+  {
     $this->arrayCTOR();
     $this->setFileName($fileName);
     $this->setMimeType($mimeType);
@@ -124,6 +113,7 @@ class File implements \ArrayAccess
     $this->setFileData($fileData)
       ->setSize(strlen($data));
   }
+  // phpcs:enable
 
   /**
    * Get id.
@@ -184,7 +174,11 @@ class File implements \ArrayAccess
   }
 
   /**
-   * Set only the dir-name
+   * Set only the dir-name.
+   *
+   * @param string $dirName
+   *
+   * @return File
    */
   public function setDirName(string $dirName):File
   {
@@ -194,6 +188,8 @@ class File implements \ArrayAccess
 
   /**
    * Get the dir-part of the file-name
+   *
+   * @return null|string
    */
   public function getDirName():?string
   {
@@ -201,7 +197,11 @@ class File implements \ArrayAccess
   }
 
   /**
-   * Set only the base-name
+   * Set only the base-name.
+   *
+   * @param string $baseName
+   *
+   * @return File
    */
   public function setBaseName(string $baseName):File
   {
@@ -210,7 +210,11 @@ class File implements \ArrayAccess
   }
 
   /**
-   * Get the dir-part of the file-name
+   * Get the dir-part of the file-name.
+   *
+   * @param null|string $extension
+   *
+   * @return null|string
    */
   public function getBaseName(?string $extension = null):?string
   {
@@ -244,11 +248,11 @@ class File implements \ArrayAccess
   /**
    * Set $size.
    *
-   * @param int $fileData
+   * @param int $size
    *
    * @return File
    */
-  public function setSize(int $size= -1):File
+  public function setSize(int $size = -1):File
   {
     $this->size = $size;
 
@@ -268,7 +272,7 @@ class File implements \ArrayAccess
   /**
    * Set FileData.
    *
-   * @param FileData $data
+   * @param FileData $fileData
    *
    * @return File
    */

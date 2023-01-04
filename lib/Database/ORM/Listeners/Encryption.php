@@ -2,10 +2,8 @@
 /**
  * Member's data base connector for CAFEVDB orchetra management app.
  *
- * @copyright Copyright (c) 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
- *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- *
+ * @copyright Copyright (c) 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,10 +18,11 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 namespace OCA\CAFeVDBMembers\Database\ORM\Listeners;
+
+use RuntimeException;
 
 use Psr\Log\LoggerInterface;
 use OCP\IUserSession;
@@ -32,6 +31,7 @@ use OCP\Authentication\LoginCredentials\ICredentials;
 use MediaMonks\Doctrine\Transformable;
 use OCA\CAFEVDB\Crypto;
 
+/** Implement transparent encryption/decryption of database fields. */
 class Encryption implements Transformable\Transformer\TransformerInterface
 {
   use \OCA\CAFeVDBMembers\Traits\LoggerTrait;
@@ -45,11 +45,12 @@ class Encryption implements Transformable\Transformer\TransformerInterface
   /** @var Crypto\SealCryptor */
   private $sealCryptor;
 
+  // phpcs:ignore Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    IUserSession $userSession
-    , Crypto\AsymmetricKeyService $keyService
-    , Crypto\SealCryptor $sealCryptor
-    , LoggerInterface $logger
+    IUserSession $userSession,
+    Crypto\AsymmetricKeyService $keyService,
+    Crypto\SealCryptor $sealCryptor,
+    LoggerInterface $logger,
   ) {
     $this->userSession = $userSession;
     $this->keyService = $keyService;
@@ -57,13 +58,17 @@ class Encryption implements Transformable\Transformer\TransformerInterface
     $this->logger = $logger;
     $this->keyService->initEncryptionKeyPair();
   }
+  // phpcs:enable
 
+  /** {@inheritdoc} */
   public function isCachable(): bool
   {
     return true;
   }
 
   /**
+   * {@inheritdoc}
+   *
    * Forward transform to data-base (encrypt).
    *
    * @param string $value Unencrypted data.
@@ -91,6 +96,8 @@ class Encryption implements Transformable\Transformer\TransformerInterface
   }
 
   /**
+   * {@inheritdoc}
+   *
    * Decrypt.
    *
    * @param string $value Encrypted data.
@@ -121,12 +128,24 @@ class Encryption implements Transformable\Transformer\TransformerInterface
     return $this->sealCryptor->decrypt($value);
   }
 
+  /**
+   * @param string $encryptionId
+   *
+   * @return Crypto\ICryptor
+   */
   private function getSealCryptor(string $encryptionId):Crypto\ICryptor
   {
     return $this->keyService->getCryptor($encryptionId);
   }
 
-  private function manageEncryptionContext(?string $value, $context)
+  /**
+   * @param null|string $value
+   *
+   * @param mixed $context
+   *
+   * @return array
+   */
+  private function manageEncryptionContext(?string $value, mixed $context):array
   {
     if (is_string($context)) {
       try {
@@ -145,7 +164,7 @@ class Encryption implements Transformable\Transformer\TransformerInterface
       $context = array_merge($context, array_keys($sealData['keys']));
     }
     $user = $this->userSession->getUser();
-    if (!empty($user))  {
+    if (!empty($user)) {
       $userId = $user->getUID();
       if (array_search($userId, $context) === false) {
         $context[] = $userId;
@@ -153,8 +172,8 @@ class Encryption implements Transformable\Transformer\TransformerInterface
     }
 
     if (!is_array($context)) {
-      throw new \RuntimeException('Encryption context must be an array of user- or @group-ids.');
+      throw new RuntimeException('Encryption context must be an array of user- or @group-ids.');
     }
     return array_unique($context);
   }
-};
+}

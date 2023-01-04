@@ -2,10 +2,8 @@
 /**
  * Member's data base connector for CAFEVDB orchetra management app.
  *
- * @copyright Copyright (c) 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
- *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- *
+ * @copyright Copyright (c) 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,7 +18,6 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 namespace OCA\CAFeVDBMembers\Database\ORM\Entities;
@@ -67,7 +64,9 @@ class EncryptedFile extends File
    */
   private $owners;
 
-  public function __construct($fileName = null, $data = null, $mimeType = null, ?Musician $owner = null) {
+  // phpcs:ignore Squiz.Commenting.FunctionComment.Missing
+  public function __construct($fileName = null, $data = null, $mimeType = null, ?Musician $owner = null)
+  {
     parent::__construct($fileName, null, $mimeType);
     $this->owners = new ArrayCollection;
     $data = $data ?? '';
@@ -79,6 +78,7 @@ class EncryptedFile extends File
       $this->addOwner($owner);
     }
   }
+  // phpcs:enable
 
   /**
    * Set Owners.
@@ -130,5 +130,7 @@ class EncryptedFile extends File
   public function removeOwner(Musician $musician):EncryptedFile
   {
     $this->owners->remove($musician->getId());
+
+    return $this;
   }
 }

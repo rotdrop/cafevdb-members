@@ -2,10 +2,8 @@
 /**
  * Member's data base connector for CAFEVDB orchetra management app.
  *
- * @copyright Copyright (c) 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
- *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- *
+ * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,10 +18,11 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 namespace OCA\CAFeVDBMembers\Database\ORM\Entities;
+
+use Exception;
 
 use OCA\CAFeVDBMembers\Database\ORM as CAFEVDB;
 
@@ -130,6 +129,7 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
    */
   private $payments;
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct()
   {
     $this->__wakeup();
@@ -138,7 +138,9 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
     $this->key = null;
     $this->field = null;
   }
+  // phpcs:enable
 
+  /** {@inheritdoc} */
   public function __clone()
   {
     if (empty($this->field) || empty($this->key)) {
@@ -151,6 +153,7 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
                : Uuid::create();
   }
 
+  /** {@inheritdoc} */
   public function __wakeup()
   {
     $this->arrayCTOR();
@@ -159,11 +162,11 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   /**
    * Set field.
    *
-   * @param ProjectParticipantField $field
+   * @param null|ProjectParticipantField $field
    *
    * @return ProjectParticipantFieldDataOption
    */
-  public function setField($field):ProjectParticipantFieldDataOption
+  public function setField(?ProjectParticipantField $field):ProjectParticipantFieldDataOption
   {
     $this->field = $field;
 
@@ -183,14 +186,15 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   /**
    * Set key.
    *
-   * @param string|UuidInterface $key
+   * @param mixed $key
    *
    * @return ProjectParticipantFieldDataOption
    */
-  public function setKey($key):ProjectParticipantFieldDataOption
+  public function setKey(mixed $key):ProjectParticipantFieldDataOption
   {
-    if (empty($key = Uuid::asUuid($key))) {
-      throw new \Exception("UUID DATA: ".$key);
+    $key = Uuid::asUuid($key);
+    if (empty($key)) {
+      throw new Exception("UUID DATA: ".$key);
     }
     $this->key = $key;
 
@@ -283,7 +287,7 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   /**
    * Set deposit.
    *
-   * @param null|string $float
+   * @param null|float $deposit
    *
    * @return ProjectParticipantFieldDatum
    */
@@ -331,11 +335,11 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   /**
    * Set limit.
    *
-   * @param int $limit
+   * @param null|int $limit
    *
    * @return ProjectParticipantFieldDataOption
    */
-  public function setLimit($limit):ProjectParticipantFieldDataOption
+  public function setLimit(?int $limit):ProjectParticipantFieldDataOption
   {
     $this->limit = $limit;
 
@@ -359,7 +363,7 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
    *
    * @return ProjectParticipantFieldDataOption
    */
-  public function setFieldData($fieldData):ProjectParticipantFieldDataOption
+  public function setFieldData(Collection $fieldData):ProjectParticipantFieldDataOption
   {
     $this->fieldData = $fieldData;
 
@@ -383,7 +387,7 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
    *
    * @return ProjectParticipantPaymentsOption
    */
-  public function setPayments($payments):ProjectParticipantFieldDataOption
+  public function setPayments(Collection $payments):ProjectParticipantFieldDataOption
   {
     $this->payments = $payments;
 
@@ -403,10 +407,12 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   /**
    * Filter field-data by musician.
    *
+   * @param Musician $musician
+   *
    * @todo Why does this return a collection? There should be zero or one data
    * item.
    *
-   * @param Musician $musician
+   * @return Collection
    */
   public function getMusicianFieldData(Musician $musician):Collection
   {

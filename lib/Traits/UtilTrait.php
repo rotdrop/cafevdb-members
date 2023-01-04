@@ -2,10 +2,8 @@
 /**
  * Member's data base connector for CAFEVDB orchetra management app.
  *
- * @copyright Copyright (c) 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
- *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- *
+ * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,13 +18,13 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 namespace OCA\CAFeVDBMembers\Traits;
 
 use OCP\IL10N;
 
+/** Some static helper methods. */
 trait UtilTrait
 {
   /** @var IL10N */
@@ -36,13 +34,15 @@ trait UtilTrait
    * Take any dashed or "underscored" lower-case string and convert to
    * camel-case.
    *
-   * @param string $string the string to convert.
+   * @param null|string $string the string to convert.
    *
    * @param bool $capitalizeFirstCharacter self explaining.
    *
    * @param string $dashes Characters to replace.
+   *
+   * @return string
    */
-  protected static function dashesToCamelCase($string, $capitalizeFirstCharacter = false, $dashes = '_-')
+  protected static function dashesToCamelCase(?string $string, bool $capitalizeFirstCharacter = false, string $dashes = '_-'):string
   {
     $str = str_replace(str_split($dashes), '', ucwords($string, $dashes));
 
@@ -58,19 +58,19 @@ trait UtilTrait
    * or underscores between the words. First letter may or may not
    * be upper case.
    *
-   * @param string $string String to work on.
+   * @param null|string $string String to work on.
    *
    * @param string $separator Separator to use, defaults to '-'.
+   *
+   * @return string
    */
-  protected static function camelCaseToDashes($string, $separator = '-')
+  protected static function camelCaseToDashes(?string $string, string $separator = '-'):string
   {
     return strtolower(preg_replace('/([A-Z])/', $separator.'$1', lcfirst($string)));
   }
 
   /**
    * Return the locale as string, e.g. de_DE.UTF-8.
-   *
-   * @param string|null $lang
    *
    * @return string
    */
@@ -90,10 +90,16 @@ trait UtilTrait
   /**
    * Transliterate the given string to the given or default locale.
    *
+   * @param string $string
+   *
+   * @param null|string $locale
+   *
+   * @return string
+   *
    * @todo We should define a user-independent locale based on the
    * location of the orchestra.
    */
-  protected function transliterate(string $string, string $locale = null):string
+  protected function transliterate(string $string, ?string $locale = null):string
   {
     $oldlocale = setlocale(LC_CTYPE, '0');
     empty($locale) && $locale = $this->getLocale();

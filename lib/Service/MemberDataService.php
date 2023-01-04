@@ -2,8 +2,8 @@
 /**
  * Member's data base connector for CAFEVDB orchetra management app.
  *
- * @copyright Copyright (c) 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -46,21 +46,28 @@ class MemberDataService
   /** @var IL10N */
   private $l;
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    EntityManager $entityManager
-    , LoggerInterface $logger
-    , IL10N $l10n
+    EntityManager $entityManager,
+    LoggerInterface $logger,
+    IL10N $l10n,
   ) {
     $this->entityManager = $entityManager;
     $this->logger = $logger;
     $this->l = $l10n;
   }
+  // phpcs:enable
 
   /**
-   * e.g. passport-clausjustusheine.pdf
-   * e.g. passport-claus-justus-heine.pdf
+   * Generates e.g. passport-clausJustusHeine.pdf.
+   *
+   * @param string $base
+   *
+   * @param Entities\Musician $musician
+   *
+   * @return string
    */
-  public function participantFilename(string $base, Entities\Musician $musician)
+  public function participantFilename(string $base, Entities\Musician $musician):string
   {
     $userIdSlug = $musician->getUserIdSlug();
     return $base . '-' . self::dashesToCamelCase($userIdSlug, true, '_-.');
@@ -71,6 +78,8 @@ class MemberDataService
    * information for the file.
    *
    * @param Entities\ProjectParticipantFieldDatum $fieldDatum
+   *
+   * @param bool $includeDeleted
    *
    * @return null|array
    * ```

@@ -2,8 +2,8 @@
 /**
  * Member's data base connector for CAFEVDB orchetra management app.
  *
- * @copyright Copyright (c) 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,6 +22,9 @@
 
 namespace OCA\CAFeVDBMembers\Service;
 
+use InvalidArgumentException;
+use RuntimeException;
+
 use OCP\IRequest;
 use OCP\IURLGenerator;
 use OCP\ISession;
@@ -30,6 +33,7 @@ use OCP\IL10N;
 
 use OCA\CAFeVDBMembers\Exceptions;
 
+/** Post to local routes on the same server. */
 class RequestService
 {
   use \OCA\CAFeVDBMembers\Traits\LoggerTrait;
@@ -64,13 +68,14 @@ class RequestService
    */
   private $closeSession;
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    IRequest $request
-    , IURLGenerator $urlGenerator
-    , ISession $session
-    , LoggerInterface $logger
-    , IL10N $l10n
-    , bool $closeSession = true
+    IRequest $request,
+    IURLGenerator $urlGenerator,
+    ISession $session,
+    LoggerInterface $logger,
+    IL10N $l10n,
+    bool $closeSession = true,
   ) {
     $this->request = $request;
     $this->urlGenerator = $urlGenerator;
@@ -79,52 +84,95 @@ class RequestService
     $this->l = $l10n;
     $this->closeSession = $closeSession;
   }
+  // phpcs:enable
 
   /**
    * Set the close-session-behaviour.
    *
    * @param bool $value If true close the session just before actually
    * calling out to a route on the same server.
+   *
+   * @return void
    */
-  public function setCloseSession(bool $value)
+  public function setCloseSession(bool $value):void
   {
     $this->closeSession = $value;
   }
 
-  public function postToRoute(string $route,
-                              array $routeParams = [],
-                              array $requestData = [],
-                              string $postType = self::JSON)
-  {
+  /**
+   * Post to to a Cloud route.
+   *
+   * @param string $route Route name (i.e.: not the URL).
+   *
+   * @param array $routeParams Parameters built in to the URL (despite
+   * the fact that we use POST).
+   *
+   * @param array $requestData Stuff passed by the POST method.
+   *
+   * @param string $postType How $requestData is encoded. Can be 'json' or
+   * 'urlencoded'. Default is 'json'.
+   *
+   * @return array
+   *
+   * @throws Exceptions\SessionStillOpenException
+   */
+  public function postToRoute(
+    string $route,
+    array $routeParams = [],
+    array $requestData = [],
+    string $postType = self::JSON,
+  ):array {
     return $this->callInternalRoute($route, self::POST, $routeParams, $requestData, $postType);
   }
 
-  public function getFromRoute(string $route,
-                               array $routeParams = [],
-                               array $requestData = [])
-  {
+  /**
+   * GET from a Cloud route.
+   *
+   * @param string $route Route name (i.e.: not the URL).
+   *
+   * @param array $routeParams Parameters built in to the URL (despite
+   * the fact that we use POST).
+   *
+   * @param array $requestData Stuff passed by the POST method.
+   *
+   * @return array
+   *
+   * @throws Exceptions\SessionStillOpenException
+   */
+  public function getFromRoute(
+    string $route,
+    array $routeParams = [],
+    array $requestData = [],
+  ):array {
     return $this->callInternalRoute($route, self::GET, $routeParams, $requestData);
   }
 
   /**
-   * Post to a Cloud route.
+   * Send to to a Cloud route.
    *
-   * @param string $route Route name (i.e.: not the URL)
+   * @param string $route Route name (i.e.: not the URL).
+   *
+   * @param string $method
    *
    * @param array $routeParams Parameters built in to the URL (despite
-   * the fact that we use POST)
+   * the fact that we use POST).
    *
-   * @param array $postData Stuff passed by the POST method.
+   * @param array $requestData Stuff passed by the POST method.
    *
-   * @param string $type How $postData is encoded. Can be 'json' or
+   * @param string $postType How $requestData is encoded. Can be 'json' or
    * 'urlencoded'. Default is 'json'.
+   *
+   * @return array
+   *
+   * @throws Exceptions\SessionStillOpenException
    */
-  public function callInternalRoute(string $route,
-                                    string $method = self::POST,
-                                    array $routeParams = [],
-                                    array $requestData = [],
-                                    string $postType = self::JSON)
-  {
+  public function callInternalRoute(
+    string $route,
+    string $method = self::POST,
+    array $routeParams = [],
+    array $requestData = [],
+    string $postType = self::JSON,
+  ):array {
     if (!$this->session->isClosed()) {
       if ($this->closeSession) {
         $this->session->close();
@@ -165,7 +213,7 @@ class RequestService
           }
           break;
         default:
-          throw new \InvalidArgumentException(
+          throw new InvalidArgumentException(
             $this->l->t('Supported data formats are "%1$s" and "%2$s", specified was "%3$s".', [
               self::JSON, self::URL_ENCODED, $postType
             ]));
@@ -176,7 +224,7 @@ class RequestService
     $url = $this->urlGenerator->linkToRouteAbsolute($route, array_merge($routeParams, $urlParameters));
 
     $cookies = array();
-    foreach($this->request->cookies as $name => $value) {
+    foreach ($this->request->cookies as $name => $value) {
       $cookies[] = "$name=" . urlencode($value);
     }
 
@@ -222,7 +270,7 @@ class RequestService
 
     $responseData = json_decode($result, true);
     if (!is_array($responseData)) {
-      throw new \RunTimeException(
+      throw new RuntimeException(
         $this->l->t('Invalid response from API call: "%s"', print_r($result, true)));
     }
 
@@ -231,7 +279,7 @@ class RequestService
     // Some apps still return HTTP_STATUS_OK and code errors and success in
     // the old way instead of using HTTP-error-codes.
     if (($responseData['status']??null) != 'success' && isset($responseData['data'])) {
-      throw new \RuntimeException(
+      throw new RuntimeException(
         $this->l->t('Error response from call to internal route "%1$s": %2$s', [
           $route, $responseData['data']['message']??print_r($responseData, true)
         ]));
@@ -242,13 +290,13 @@ class RequestService
       $meta = $responseData['ocs']['meta']??null;
       $data = $responseData['ocs']['data']??null;
       if ($meta === null || $data === null) {
-        throw new \RuntimeException(
+        throw new RuntimeException(
           $this->l->t('Invalid OCS response from call to internal route "%1$s": %2$s', [
             $route, $responseData,
           ]));
       }
       if ($meta['statuscode'] !== 100) {
-        throw new \RuntimeException(
+        throw new RuntimeException(
           $this->l->t('Error response from call to internal route "%1$s": %2$s --  %3$s', [
             $route, $meta['status']??'unknwown status', $meta['message']??print_r($meta, true)
           ]));

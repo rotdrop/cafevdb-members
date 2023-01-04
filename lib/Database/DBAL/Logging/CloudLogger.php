@@ -4,21 +4,22 @@
  *
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
- * @author Claus-Justus Heine
- * @copyright 2020, 2021, 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020, 2021, 2022 Claus-Justus Heine
+ * @license AGPL-3.0-or-later
  *
- * This library se Doctrine\ORM\Tools\Setup;is free software; you can redistribute it and/or
- * modify it under the terms of the GNU GENERAL PUBLIC LICENSE
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU AFFERO GENERAL PUBLIC LICENSE for more details.
+ * GNU Affero General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 namespace OCA\CAFeVDBMembers\Database\DBAL\Logging;
@@ -28,6 +29,7 @@ use Doctrine\DBAL\Logging\SQLLogger;
 use Psr\Log\LoggerInterface;
 use OCP\IL10N;
 
+/** Logger implementation for DBAL. */
 class CloudLogger implements SQLLogger
 {
   use \OCA\CAFeVDBMembers\Traits\LoggerTrait;
@@ -41,21 +43,25 @@ class CloudLogger implements SQLLogger
   /** @var float|null */
   public $start = null;
 
+  // phpcs:ignore Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    LoggerInterface $logger
-    , IL10N $l10n
+    LoggerInterface $logger,
+    IL10N $l10n,
   ) {
     $this->logger = $logger;
     $this->l = $l10n;
     $this->enabled = false;
   }
+  // phpcs:enable
 
   /**
    * Enable logging.
    *
    * @param bool $enable Optional, defaults to true.
+   *
+   * @return void
    */
-  public function enable(bool $enable = true)
+  public function enable(bool $enable = true):void
   {
     $this->enabled = $enable;
   }
@@ -64,13 +70,17 @@ class CloudLogger implements SQLLogger
    * Disable logging.
    *
    * @param bool $disable Optional, defaults to true.
+   *
+   * @return void
    */
-  public function disable($disable = true)
+  public function disable(bool $disable = true):void
   {
     $this->enable(!$disable);
   }
 
   /**
+   * {@inheritdoc}
+   *
    * Logs a SQL statement somewhere.
    *
    * @param string              $sql    The SQL to be executed.
@@ -90,6 +100,8 @@ class CloudLogger implements SQLLogger
   }
 
   /**
+   * {@inheritdoc}
+   *
    * Marks the last started query as stopped. This can be used for timing of queries.
    *
    * @return void
@@ -107,5 +119,4 @@ class CloudLogger implements SQLLogger
     $this->currentQuery = null;
     $this->start = null;
   }
-
 }

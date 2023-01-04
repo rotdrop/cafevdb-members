@@ -1,11 +1,7 @@
 <?php
 /**
- * Orchestra member, musicion and project management application.
- *
- * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
- *
- * @author Claus-Justus Heine
- * @copyright 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,6 +20,9 @@
 
 namespace OCA\CAFeVDBMembers\Exceptions;
 
-class PhpSessionException extends \Exception
+use Exception;
+
+/** Thrown if there is something wrong with the access to the PHP session. */
+class PhpSessionException extends Exception
 {
 }

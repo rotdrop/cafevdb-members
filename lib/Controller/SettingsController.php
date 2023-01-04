@@ -2,10 +2,8 @@
 /**
  * Member's data base connector for CAFEVDB orchetra management app.
  *
- * @copyright Copyright (c) 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
- *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- *
+ * @copyright Copyright (c) 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,7 +18,6 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 namespace OCA\CAFeVDBMembers\Controller;
@@ -35,6 +32,7 @@ use OCP\IL10N;
 use OCA\CAFeVDBMembers\Service\GroupFoldersService;
 use OCA\CAFeVDBMembers\Service\ProjectGroupService;
 
+/** AJAX end-points for admin and personal settings. */
 class SettingsController extends Controller
 {
   use \OCA\CAFeVDBMembers\Traits\ResponseTrait;
@@ -63,16 +61,17 @@ class SettingsController extends Controller
   /** @var string */
   private $appManagementGroup;
 
+  // phpcs:ignore Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    string $appName
-    , string $appManagementGroup
-    , IRequest $request
-    , $userId
-    , LoggerInterface $logger
-    , IL10N $l10n
-    , IConfig $config
-    , GroupFoldersService $groupFoldersService
-    , ProjectGroupService $projectGroupService
+    string $appName,
+    string $appManagementGroup,
+    IRequest $request,
+    ?string $userId,
+    LoggerInterface $logger,
+    IL10N $l10n,
+    IConfig $config,
+    GroupFoldersService $groupFoldersService,
+    ProjectGroupService $projectGroupService,
   ) {
     parent::__construct($appName, $request);
     $this->appManagementGroup = $appManagementGroup;
@@ -83,15 +82,18 @@ class SettingsController extends Controller
     $this->groupFoldersService = $groupFoldersService;
     $this->projectGroupService = $projectGroupService;
   }
+  // phpcs:enable
 
   /**
-   * @AuthorizedAdminSetting(settings=OCA\CAFeVDBMembers\Settings\Admin)
-   *
    * @param string $setting
    *
    * @param null|string $value
    *
+   * @param bool $force
+   *
    * @return DataResponse
+   *
+   * @AuthorizedAdminSetting(settings=OCA\CAFeVDBMembers\Settings\Admin)
    */
   public function setAdmin(string $setting, ?string $value, bool $force = false):DataResponse
   {
@@ -132,8 +134,12 @@ class SettingsController extends Controller
         if (!empty($newValue)) {
           if (empty($oldRootFolder)) {
             // create a new one
-            $this->groupFoldersService->createFolder($newValue, [ $this->appManagementGroup => GroupFoldersService::PERMISSION_ALL ], [ $this->appManagementGroup => GroupFoldersService::MANAGER_TYPE_GROUP ]);
-          } else if ($oldValue != $newValue) {
+            $this->groupFoldersService->createFolder(
+              $newValue,
+              [ $this->appManagementGroup => GroupFoldersService::PERMISSION_ALL ],
+              [ $this->appManagementGroup => GroupFoldersService::MANAGER_TYPE_GROUP ],
+            );
+          } elseif ($oldValue != $newValue) {
             // rename and/or check permissions
             $this->groupFoldersService->changeMountPoint($oldValue, $newValue, moveChildren: true);
           }
@@ -161,15 +167,14 @@ class SettingsController extends Controller
   }
 
   /**
-   * @AuthorizedAdminSetting(settings=OCA\CAFeVDBMembers\Settings\Admin)
-   *
    * @param string $setting
    *
    * @return DataResponse
+   *
+   * @AuthorizedAdminSetting(settings=OCA\CAFeVDBMembers\Settings\Admin)
    */
   public function getAdmin(string $setting):DataResponse
   {
-    $result = null;
     switch ($setting) {
       case self::USER_VIEWS_DATABASE_KEY:
       case self::MEMBER_ROOT_FOLDER_KEY:
@@ -196,11 +201,11 @@ class SettingsController extends Controller
   /**
    * Export some of the admin settings
    *
-   * @NoAdminRequired
-   *
    * @param string $setting
    *
    * @return DataResponse
+   *
+   * @NoAdminRequired
    */
   public function getApp(string $setting):DataResponse
   {
@@ -214,9 +219,15 @@ class SettingsController extends Controller
   }
 
   /**
+   * @param string $setting
+   *
+   * @param mixed $value
+   *
+   * @return DataResponse
+   *
    * @NoAdminRequired
    */
-  public function setPersonal(string $setting, $value)
+  public function setPersonal(string $setting, mixed $value):DataResponse
   {
     $oldValue = $this->config->getUserValue($this->userId, $this->appName, $setting);
     $this->config->setUserValue($this->userId, $this->appName, $setting, $value);
@@ -226,9 +237,13 @@ class SettingsController extends Controller
   }
 
   /**
+   * @param string $setting
+   *
+   * @return DataResponse
+   *
    * @NoAdminRequired
    */
-  public function getPersonal(string $setting)
+  public function getPersonal(string $setting):DataResponse
   {
     return new DataResponse([
       'value' => $this->config->getUserValue($this->userId, $this->appName, $setting),

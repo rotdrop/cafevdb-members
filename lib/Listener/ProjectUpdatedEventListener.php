@@ -1,7 +1,7 @@
 <?php
 /**
- * @copyright Copyright (c) 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,6 +27,9 @@ use OCA\CAFEVDB\Events\PostProjectUpdatedEvent as HandledEvent;
 
 use OCA\CAFeVDBMembers\Service\ProjectGroupService;
 
+/**
+ * Rename the group-shared folder for the project if the project name changes.
+ */
 class ProjectUpdatedEventListener implements IEventListener
 {
   const EVENT = HandledEvent::class;
@@ -34,14 +37,18 @@ class ProjectUpdatedEventListener implements IEventListener
   /** @var IAppContainer */
   private $appContainer;
 
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(IAppContainer $appContainer)
   {
     $this->appContainer = $appContainer;
   }
+  // phpcs:enable
 
-  public function handle(Event $event): void {
+  /** {@inheritdoc} */
+  public function handle(Event $event):void
+  {
     /** @var HandledEvent $event */
-    if (!($event instanceOf HandledEvent)) {
+    if (!($event instanceof HandledEvent)) {
       return;
     }
     /** @var ProjectGroupService $service */
@@ -49,8 +56,3 @@ class ProjectUpdatedEventListener implements IEventListener
     $service->handleProjectRenamed($event);
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

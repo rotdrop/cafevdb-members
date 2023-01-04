@@ -2,8 +2,8 @@
 /**
  * Member's data base connector for CAFEVDB orchetra management app.
  *
- * @copyright Copyright (c) 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright Copyright (c) 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,6 +28,7 @@ use OCP\AppFramework\Http\DataResponse;
 use OCP\IRequest;
 use OCP\IL10N;
 
+/** Attempt a catch-all controller to improve error messages. */
 class CatchAllController extends Controller
 {
   use \OCA\CAFeVDBMembers\Traits\ResponseTrait;
@@ -35,21 +36,46 @@ class CatchAllController extends Controller
   /** @var IL10N */
   private $l;
 
+  // phpcs:ignore Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    string $appName
-    , IRequest $request
-    , IL10N $l10n
+    string $appName,
+    IRequest $request,
+    IL10N $l10n,
   ) {
     parent::__construct($this->appName, $request);
     $this->l = $l10n;
   }
+  // phpcs:enable
 
   /**
+   * @param mixed $a
+   *
+   * @param mixed $b
+   *
+   * @param mixed $c
+   *
+   * @param mixed $d
+   *
+   * @param mixed $e
+   *
+   * @param mixed $f
+   *
+   * @param mixed $g
+   *
+   * @return DataResponse
+   *
    * @NoAdminRequired
    * @NoCSRFRequired
    */
-  public function post($a, $b, $c, $d, $e, $f, $g)
-  {
+  public function post(
+    mixed $a,
+    mixed $b,
+    mixed $c,
+    mixed $d,
+    mixed $e,
+    mixed $f,
+    mixed $g,
+  ):DataResponse {
     $parts = [ $a, $b, $c, $d, $e, $f, $g ];
     $request = implode('/', array_filter($parts));
     if (!empty($request)) {
@@ -62,11 +88,34 @@ class CatchAllController extends Controller
   }
 
   /**
+   * @param mixed $a
+   *
+   * @param mixed $b
+   *
+   * @param mixed $c
+   *
+   * @param mixed $d
+   *
+   * @param mixed $e
+   *
+   * @param mixed $f
+   *
+   * @param mixed $g
+   *
+   * @return DataResponse
+   *
    * @NoAdminRequired
    * @NoCSRFRequired
    */
-  public function get($a, $b, $c, $d, $e, $f, $g)
-  {
+  public function get(
+    mixed $a,
+    mixed $b,
+    mixed $c,
+    mixed $d,
+    mixed $e,
+    mixed $f,
+    mixed $g,
+  ):DataResponse {
     $parts = [ $a, $b, $c, $d, $e, $f, $g ];
     $request = implode('/', array_filter($parts));
     return self::grumble(

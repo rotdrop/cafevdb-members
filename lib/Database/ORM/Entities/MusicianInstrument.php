@@ -2,10 +2,8 @@
 /**
  * Member's data base connector for CAFEVDB orchetra management app.
  *
- * @copyright Copyright (c) 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
- *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- *
+ * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,7 +18,6 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 namespace OCA\CAFeVDBMembers\Database\ORM\Entities;
@@ -71,18 +68,21 @@ class MusicianInstrument implements \ArrayAccess
    */
   private $ranking = 1;
 
-  public function __construct() {
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
+  public function __construct()
+  {
     $this->__wakeup();
   }
+  // phpcs:enable
 
   /**
    * Set musician.
    *
-   * @param int $musician
+   * @param null|int $musician
    *
    * @return MusicianInstrument
    */
-  public function setMusician($musician):MusicianInstrument
+  public function setMusician(?int $musician):MusicianInstrument
   {
     $this->musician = $musician;
 
@@ -102,11 +102,11 @@ class MusicianInstrument implements \ArrayAccess
   /**
    * Set instrument.
    *
-   * @param Instrument $instrument
+   * @param null|Instrument $instrument
    *
    * @return MusicianInstrument
    */
-  public function setInstrument($instrument):MusicianInstrument
+  public function setInstrument(?Instrument $instrument):MusicianInstrument
   {
     $this->instrument = $instrument;
 
@@ -150,8 +150,10 @@ class MusicianInstrument implements \ArrayAccess
   /**
    * Return the number of project instrumentation slots the associated
    * musician is registered with.
+   *
+   * @return int
    */
-  public function usage()
+  public function usage():int
   {
     return 0; /* $this->projectInstruments->count(); */
   }

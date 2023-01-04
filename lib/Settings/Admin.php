@@ -1,9 +1,7 @@
 <?php
 /**
- * @copyright Copyright (c) 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
- *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- *
+ * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,7 +16,6 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 namespace OCA\CAFeVDBMembers\Settings;
@@ -26,6 +23,7 @@ namespace OCA\CAFeVDBMembers\Settings;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\Settings\IDelegatedSettings;
 
+/** Admin settings implementation. */
 class Admin implements IDelegatedSettings
 {
   const TEMPLATE = "admin-settings";
@@ -33,13 +31,16 @@ class Admin implements IDelegatedSettings
   /** @var string */
   private $appName;
 
-  public function __construct(
-    string $appName
-  ) {
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
+  public function __construct(string $appName)
+  {
     $this->appName = $appName;
   }
+  // phpcs:enable
 
-  public function getForm() {
+  /** {@inheritdoc} */
+  public function getForm()
+  {
     return new TemplateResponse(
       $this->appName,
       self::TEMPLATE, [
@@ -48,37 +49,28 @@ class Admin implements IDelegatedSettings
       'blank');
   }
 
-  /**
-   * @return string the section ID, e.g. 'sharing'
-   * @since 9.1
-   */
-  public function getSection() {
+  /** {@inheritdoc} */
+  public function getSection()
+  {
     return $this->appName;
   }
 
-  /**
-   * @return int whether the form should be rather on the top or bottom of
-   * the admin section. The forms are arranged in ascending order of the
-   * priority values. It is required to return a value between 0 and 100.
-   *
-   * E.g.: 70
-   * @since 9.1
-   */
-  public function getPriority() {
-    // @@todo could be made a configure option.
+  /** {@inheritdoc} */
+  public function getPriority()
+  {
+    // @todo could be made a configure option.
     return 50;
   }
 
-  public function getName(): ?string {
+  /** {@inheritdoc} */
+  public function getName():?string
+  {
     return null;
   }
 
-  public function getAuthorizedAppConfig(): array {
+  /** {@inheritdoc} */
+  public function getAuthorizedAppConfig():array
+  {
     return [];
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***

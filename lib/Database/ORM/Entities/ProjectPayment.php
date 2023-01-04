@@ -2,10 +2,8 @@
 /**
  * Member's data base connector for CAFEVDB orchetra management app.
  *
- * @copyright Copyright (c) 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
- *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- *
+ * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,7 +18,6 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 namespace OCA\CAFeVDBMembers\Database\ORM\Entities;
@@ -111,9 +108,12 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
    */
   private $projectParticipant;
 
-  public function __construct() {
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
+  public function __construct()
+  {
     $this->arrayCTOR();
   }
+  // phpcs:enable
 
   /**
    * Set id.
@@ -143,11 +143,11 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
   /**
    * Set compositePayment.
    *
-   * @param int $compositePayment
+   * @param null|CompositePayment $compositePayment
    *
    * @return ProjectPayment
    */
-  public function setCompositePayment($compositePayment):ProjectPayment
+  public function setCompositePayment(?CompositePayment $compositePayment):ProjectPayment
   {
     $this->compositePayment = $compositePayment;
 
@@ -167,11 +167,11 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
   /**
    * Set projectParticipant.
    *
-   * @param int $projectParticipant
+   * @param null|ProjectParticipant $projectParticipant
    *
    * @return ProjectPayment
    */
-  public function setProjectParticipant($projectParticipant):ProjectPayment
+  public function setProjectParticipant(?ProjectParticipant $projectParticipant):ProjectPayment
   {
     $this->projectParticipant = $projectParticipant;
 
@@ -191,11 +191,11 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
   /**
    * Set project.
    *
-   * @param int $project
+   * @param null|Project $project
    *
    * @return ProjectPayment
    */
-  public function setProject($project):ProjectPayment
+  public function setProject(?Project $project):ProjectPayment
   {
     $this->project = $project;
 
@@ -215,11 +215,11 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
   /**
    * Set musician.
    *
-   * @param int $musician
+   * @param null|Musician $musician
    *
    * @return ProjectPayment
    */
-  public function setMusician($musician):ProjectPayment
+  public function setMusician(?Musician $musician):ProjectPayment
   {
     $this->musician = $musician;
 
@@ -263,11 +263,11 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
   /**
    * Set subject.
    *
-   * @param string $subject
+   * @param null|string $subject
    *
    * @return ProjectPayment
    */
-  public function setSubject($subject):ProjectPayment
+  public function setSubject(?string $subject):ProjectPayment
   {
     $this->subject = $subject;
 
@@ -311,11 +311,11 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
   /**
    * Set receivableOption.
    *
-   * @param ProjectParticipantFieldDataOption $receivableOption
+   * @param null|ProjectParticipantFieldDataOption $receivableOption
    *
    * @return ProjectPayment
    */
-  public function setReceivableOption($receivableOption):ProjectPayment
+  public function setReceivableOption(?ProjectParticipantFieldDataOption $receivableOption):ProjectPayment
   {
     $this->receivableOption = $receivableOption;
 
@@ -332,7 +332,7 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
     return $this->receivableOption;
   }
 
-  /** \JsonSerializable interface */
+  /** {@inheritdoc} */
   public function jsonSerialize():array
   {
     return $this->toArray();

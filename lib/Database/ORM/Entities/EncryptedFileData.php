@@ -2,10 +2,8 @@
 /**
  * Member's data base connector for CAFEVDB orchetra management app.
  *
- * @copyright Copyright (c) 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
- *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- *
+ * @copyright Copyright (c) 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,7 +18,6 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 namespace OCA\CAFeVDBMembers\Database\ORM\Entities;
@@ -51,19 +48,19 @@ class EncryptedFileData extends FileData
    * @ORM\Id
    * @ORM\OneToOne(targetEntity="EncryptedFile")
    */
-  private $file;
+  protected $file;
 
   /**
    * @MediaMonks\Transformable(name="encrypt", override=true, context="encryptionContext")
    */
-  private $data;
+  protected $data;
 
   /**
    * @var array
    *
    * In memory encryption context to support multi user encryption.
    */
-  private $encryptionContext;
+  protected $encryptionContext;
 
   /**
    * Add a user-id or group-id to the list of "encryption identities",

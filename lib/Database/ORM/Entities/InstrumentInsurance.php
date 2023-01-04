@@ -2,10 +2,8 @@
 /**
  * Member's data base connector for CAFEVDB orchetra management app.
  *
- * @copyright Copyright (c) 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
- *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- *
+ * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,7 +18,6 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 namespace OCA\CAFeVDBMembers\Database\ORM\Entities;
@@ -135,9 +132,12 @@ class InstrumentInsurance implements \ArrayAccess
    */
   private $startOfInsurance;
 
-  public function __construct() {
+  // phpcs:ignore Squiz.Commenting.FunctionComment.Missing
+  public function __construct()
+  {
     $this->arrayCTOR();
   }
+  // phpcs:enable
 
   /**
    * Set id.
@@ -146,7 +146,7 @@ class InstrumentInsurance implements \ArrayAccess
    *
    * @return InstrumentInsurance
    */
-  public function setId($id):InstrumentInsurance
+  public function setId(int $id):InstrumentInsurance
   {
     $this->id = $id;
 
@@ -161,30 +161,6 @@ class InstrumentInsurance implements \ArrayAccess
   public function getId():int
   {
     return $this->id;
-  }
-
-  /**
-   * Set instrumentHolder.
-   *
-   * @param int $instrumentHolder
-   *
-   * @return InstrumentInsurance
-   */
-  public function setInstrumentHolder($instrumentHolder):InstrumentInsurance
-  {
-    $this->instrumentHolder = $instrumentHolder;
-
-    return $this;
-  }
-
-  /**
-   * Get instrumentHolder.
-   *
-   * @return Musician
-   */
-  public function getInstrumentHolder():Musician
-  {
-    return $this->instrumentHolder;
   }
 
   /**
@@ -210,11 +186,11 @@ class InstrumentInsurance implements \ArrayAccess
   /**
    * Set object.
    *
-   * @param string $object
+   * @param null|string $object
    *
    * @return InstrumentInsurance
    */
-  public function setObject($object):InstrumentInsurance
+  public function setObject(?string $object):InstrumentInsurance
   {
     $this->object = $object;
 
@@ -238,7 +214,7 @@ class InstrumentInsurance implements \ArrayAccess
    *
    * @return InstrumentInsurance
    */
-  public function setAccessory($accessory):InstrumentInsurance
+  public function setAccessory(bool $accessory):InstrumentInsurance
   {
     $this->accessory = $accessory;
 
@@ -258,11 +234,11 @@ class InstrumentInsurance implements \ArrayAccess
   /**
    * Set manufacturer.
    *
-   * @param string $manufacturer
+   * @param null|string $manufacturer
    *
    * @return InstrumentInsurance
    */
-  public function setManufacturer($manufacturer):InstrumentInsurance
+  public function setManufacturer(?string $manufacturer):InstrumentInsurance
   {
     $this->manufacturer = $manufacturer;
 
@@ -282,11 +258,11 @@ class InstrumentInsurance implements \ArrayAccess
   /**
    * Set yearOfConstruction.
    *
-   * @param string $yearOfConstruction
+   * @param null|string $yearOfConstruction
    *
    * @return InstrumentInsurance
    */
-  public function setYearOfConstruction($yearOfConstruction):InstrumentInsurance
+  public function setYearOfConstruction(?string $yearOfConstruction):InstrumentInsurance
   {
     $this->yearOfConstruction = $yearOfConstruction;
 
@@ -310,7 +286,7 @@ class InstrumentInsurance implements \ArrayAccess
    *
    * @return InstrumentInsurance
    */
-  public function setInsuranceAmount($insuranceAmount):InstrumentInsurance
+  public function setInsuranceAmount(int $insuranceAmount):InstrumentInsurance
   {
     $this->insuranceAmount = $insuranceAmount;
 
@@ -330,11 +306,11 @@ class InstrumentInsurance implements \ArrayAccess
   /**
    * Set musician.
    *
-   * @param int $musician
+   * @param null|Musician $musician
    *
    * @return InstrumentInsurance
    */
-  public function setMusician($musician):InstrumentInsurance
+  public function setMusician(?Musician $musician):InstrumentInsurance
   {
     $this->musician = $musician;
 
@@ -354,11 +330,11 @@ class InstrumentInsurance implements \ArrayAccess
   /**
    * Set startOfInsurance.
    *
-   * @param string|\DateTimeInterface $submitDate
+   * @param mixed $startOfInsurance
    *
    * @return InstrumentInsurance
    */
-  public function setStartOfInsurance($startOfInsurance):InstrumentInsurance
+  public function setStartOfInsurance(mixed $startOfInsurance):InstrumentInsurance
   {
     $this->startOfInsurance = self::convertToDateTime($startOfInsurance);
 
@@ -378,11 +354,11 @@ class InstrumentInsurance implements \ArrayAccess
   /**
    * Set insuranceRate.
    *
-   * @param int $insuranceRate
+   * @param null|InsuranceRate $insuranceRate
    *
    * @return InstrumentInsurance
    */
-  public function setInsuranceRate(InsuranceRate $insuranceRate):InstrumentInsurance
+  public function setInsuranceRate(?InsuranceRate $insuranceRate):InstrumentInsurance
   {
     $this->insuranceRate = $insuranceRate;
     return $this;
@@ -401,11 +377,11 @@ class InstrumentInsurance implements \ArrayAccess
   /**
    * Set isDebitor.
    *
-   * @param int $isDebitor
+   * @param bool $isDebitor
    *
    * @return InstrumentInsurance
    */
-  public function setIsDebitor(IsDebitor $isDebitor):InstrumentInsurance
+  public function setIsDebitor(bool $isDebitor):InstrumentInsurance
   {
     $this->isDebitor = $isDebitor;
     return $this;
@@ -424,11 +400,11 @@ class InstrumentInsurance implements \ArrayAccess
   /**
    * Set isHolder.
    *
-   * @param int $isHolder
+   * @param bool $isHolder
    *
    * @return InstrumentInsurance
    */
-  public function setIsHolder(IsHolder $isHolder):InstrumentInsurance
+  public function setIsHolder(bool $isHolder):InstrumentInsurance
   {
     $this->isHolder = $isHolder;
     return $this;
@@ -447,11 +423,11 @@ class InstrumentInsurance implements \ArrayAccess
   /**
    * Set isOwner.
    *
-   * @param int $isOwner
+   * @param bool $isOwner
    *
    * @return InstrumentInsurance
    */
-  public function setIsOwner(IsOwner $isOwner):InstrumentInsurance
+  public function setIsOwner(bool $isOwner):InstrumentInsurance
   {
     $this->isOwner = $isOwner;
     return $this;

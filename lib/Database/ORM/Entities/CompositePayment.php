@@ -2,10 +2,8 @@
 /**
  * Member's data base connector for CAFEVDB orchetra management app.
  *
- * @copyright Copyright (c) 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
- *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- *
+ * @copyright Copyright (c) 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,7 +18,6 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 namespace OCA\CAFeVDBMembers\Database\ORM\Entities;
@@ -72,9 +69,7 @@ class CompositePayment implements \ArrayAccess
   private $dateOfReceipt;
 
   /**
-   * @var string
-   * Subject of the bank transaction.
-   *
+   * @var string Subject of the bank transaction.
    *
    * @ORM\Column(type="string", length=1024, nullable=false)
    */
@@ -144,10 +139,13 @@ class CompositePayment implements \ArrayAccess
    */
   private $supportingDocument;
 
-  public function __construct() {
+  // phpcs:ignore Squiz.Commenting.FunctionComment.Missing
+  public function __construct()
+  {
     $this->arrayCTOR();
     $this->projectPayments = new ArrayCollection;
   }
+  // phpcs:enable
 
   /**
    * Get id.
@@ -210,6 +208,8 @@ class CompositePayment implements \ArrayAccess
   /**
    * Return the sum of the amounts of the individual payments, which
    * should sum up to $this->amount, of course.
+   *
+   * @return float
    */
   public function sumPaymentsAmount():float
   {
@@ -224,11 +224,11 @@ class CompositePayment implements \ArrayAccess
   /**
    * Set musician.
    *
-   * @param int $musician
+   * @param mixed $musician
    *
    * @return CompositePayment
    */
-  public function setMusician($musician):CompositePayment
+  public function setMusician(mixed $musician):CompositePayment
   {
     $this->musician = $musician;
 
@@ -272,11 +272,11 @@ class CompositePayment implements \ArrayAccess
   /**
    * Set subject.
    *
-   * @param string $subject
+   * @param null|string $subject
    *
    * @return CompositePayment
    */
-  public function setSubject($subject):CompositePayment
+  public function setSubject(?string $subject):CompositePayment
   {
     $this->subject = $subject;
 
@@ -392,11 +392,11 @@ class CompositePayment implements \ArrayAccess
   /**
    * Set notificationMessageId.
    *
-   * @param string $notificationMessageId
+   * @param null|string $notificationMessageId
    *
    * @return CompositePayment
    */
-  public function setNotificationMessageId($notificationMessageId):CompositePayment
+  public function setNotificationMessageId(?string $notificationMessageId):CompositePayment
   {
     $this->notificationMessageId = $notificationMessageId;
 
@@ -437,7 +437,7 @@ class CompositePayment implements \ArrayAccess
     return $this->supportingDocument;
   }
 
-  /** \JsonSerializable interface */
+  /** {@inheritdoc} */
   public function jsonSerialize():array
   {
     return $this->toArray();

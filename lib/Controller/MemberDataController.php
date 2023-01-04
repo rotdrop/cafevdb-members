@@ -2,10 +2,8 @@
 /**
  * Member's data base connector for CAFEVDB orchetra management app.
  *
- * @copyright Copyright (c) 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
- *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- *
+ * @copyright Copyright (c) 2022 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,7 +18,6 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
 namespace OCA\CAFeVDBMembers\Controller;
@@ -28,6 +25,7 @@ namespace OCA\CAFeVDBMembers\Controller;
 use Psr\Log\LoggerInterface;
 
 use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http\Response;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\IRequest;
 use OCP\IL10N;
@@ -38,6 +36,9 @@ use OCA\CAFeVDBMembers\Database\ORM\Entities;
 use OCA\CAFeVDBMembers\Service\MemberDataService;
 use OCA\CAFeVDBMembers\Service\AuthenticationService;
 
+/**
+ * AJAX endpoints for dealing with the personal data of the logged in user.
+ */
 class MemberDataController extends Controller
 {
   use \OCA\CAFeVDBMembers\Traits\LoggerTrait;
@@ -59,15 +60,16 @@ class MemberDataController extends Controller
   /** @var EntityManager */
   private $entityManager;
 
+  // phpcs:ignore Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    string $appName
-    , IRequest $request
-    , $userId
-    , IL10N $l10n
-    , LoggerInterface $logger
-    , MemberDataService $dataService
-    , AuthenticationService $authenticationService
-    , EntityManager $entityManager
+    string $appName,
+    IRequest $request,
+    ?string $userId,
+    IL10N $l10n,
+    LoggerInterface $logger,
+    MemberDataService $dataService,
+    AuthenticationService $authenticationService,
+    EntityManager $entityManager,
   ) {
     parent::__construct($appName, $request);
     $this->userId = $userId;
@@ -77,24 +79,28 @@ class MemberDataController extends Controller
     $this->dataService = $dataService;
     $this->entityManager = $entityManager;
   }
+  // phpcs:enable
 
   /**
-   * @NoAdminRequired
-   *
    * Get all the data of the given musician. This mess removes "circular"
    * associations as we are really only interested into the data for this
    * single person.
+   *
+   * @return DataResponse
+   *
+   * @NoAdminRequired
    */
-  public function get()
+  public function get():DataResponse
   {
-    if (($authOk = $this->checkAccess()) !== true) {
+    $authOk = $this->checkAccess();
+    if ($authOk !== true) {
       return $authOk;
     }
     $musicians = $this->entityManager->getRepository(Entities\Musician::class)->findAll();
     $this->logInfo('NUMBER OF MUSICIANS ' . count($musicians));
     if (count($musicians) == 0) {
       return self::grumble($this->l->t('No member-data found for user-id "%s".', $this->userId));
-    } else if (count($musicians) > 1) {
+    } elseif (count($musicians) > 1) {
       return self::grumble($this->l->t('More than one musician found for user-id "%s".', $this->userId));
     }
     /** @var Entities\Musician $musician */
@@ -251,26 +257,26 @@ class MemberDataController extends Controller
     }
 
     usort($musicianData['projectParticipation'], function($pp1, $pp2) {
-      $p1 = $pp1['project'];
-      $p2 = $pp2['project'];
-      $t1 = $p1['type'];
-      $t2 = $p2['type'];
-      if ($t1 == $t2) {
-        $y1 = $p1['year'];
-        $y2 = $p2['year'];
-        if ($y1 == $y2) {
-          return strcmp($p1['name'], $p2['name']);
+      $pr1 = $pp1['project'];
+      $pr2 = $pp2['project'];
+      $tp1 = $pr1['type'];
+      $tp2 = $pr2['type'];
+      if ($tp1 == $tp2) {
+        $yr1 = $pr1['year'];
+        $yr2 = $pr2['year'];
+        if ($yr1 == $yr2) {
+          return strcmp($pr1['name'], $pr2['name']);
         } else {
-          return $y2 < $y1 ? -1 : 1;
+          return $yr2 < $yr1 ? -1 : 1;
         }
       } else {
-        if ($t1 == 'template') {
+        if ($tp1 == 'template') {
           return 1;
-        } else if ($t1 == 'permanent') {
+        } elseif ($tp1 == 'permanent') {
           return -1;
         } else {
-          // $t1 == 'temporary'
-          if ($t2 == 'template') {
+          // $tp1 == 'temporary'
+          if ($tp2 == 'template') {
             return -1;
           } else {
             // $t2 == 'permanent'
@@ -300,33 +306,41 @@ class MemberDataController extends Controller
     return self::dataResponse($musicianData);
   }
 
-  private function flattenProject(Entities\Project $project)
+  /**
+   * @param Entities\Project $project
+   *
+   * @return array
+   */
+  private function flattenProject(Entities\Project $project):array
   {
     $flatProject = $project->toArray();
-    foreach(['participants', 'participantFields', 'participantFieldsData', 'sepaDebitMandates', 'payments'] as $key) {
+    foreach (['participants', 'participantFields', 'participantFieldsData', 'sepaDebitMandates', 'payments'] as $key) {
       unset($flatProject[$key]);
     }
     return $flatProject;
   }
 
   /**
-   * @NoAdminRequired
-   *
    * Download file-data. The download is always only for the currently logged
    * on user.
    *
-   * @param string $optionKey The UUID of the corresponding field-datum
+   * @param string $optionKey The UUID of the corresponding field-datum.
+   *
+   * @return Response
+   *
+   * @NoAdminRequired
    */
-  public function download(string $optionKey)
+  public function download(string $optionKey):Response
   {
-    if (($authOk = $this->checkAccess()) !== true) {
+    $authOk = $this->checkAccess();
+    if ($authOk !== true) {
       return $authOk;
     }
     $musicians = $this->entityManager->getRepository(Entities\Musician::class)->findAll();
     $this->logInfo('NUMBER OF MUSICIANS ' . count($musicians));
     if (count($musicians) == 0) {
       return self::grumble($this->l->t('No member-data found for user-id "%s".', $this->userId));
-    } else if (count($musicians) > 1) {
+    } elseif (count($musicians) > 1) {
       return self::grumble($this->l->t('More than one musician found for user-id "%s".', $this->userId));
     }
 
