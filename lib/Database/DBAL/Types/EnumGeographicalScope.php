@@ -3,7 +3,7 @@
  * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022 Claus-Justus Heine
+ * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -37,7 +37,7 @@ use MyCLabs\Enum\Enum as EnumType;
  */
 class EnumGeographicalScope extends EnumType
 {
-  use \OCA\CAFeVDBMembers\Traits\FakeTranslationTrait;
+  use \OCA\RotDrop\Toolkit\Traits\FakeTranslationTrait;
 
   public const DOMESTIC = 'Domestic';
   public const CONTINENT = 'Continent';
