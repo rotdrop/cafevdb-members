@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/ingydotnet/git-subrepo#readme
+;
+[subrepo]
+	remote = git@github.com:rotdrop/nextcloud-app-toolkit.git
+	branch = main
+	commit = ba6177ba5abafcc9af73638c9a4ff6ac9185634b
+	parent = a2074c69bd7aecb623ba2d9b097da84e5e73e92e
+	method = merge
+	cmdver = 0.4.5
