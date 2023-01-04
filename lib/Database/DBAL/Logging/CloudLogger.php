@@ -32,7 +32,7 @@ use OCP\IL10N;
 /** Logger implementation for DBAL. */
 class CloudLogger implements SQLLogger
 {
-  use \OCA\CAFeVDBMembers\Traits\LoggerTrait;
+  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   /** @var bool */
   private $enabled;

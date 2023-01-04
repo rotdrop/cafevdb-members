@@ -36,7 +36,7 @@ use OCA\CAFeVDBMembers\Exceptions;
 /** Post to local routes on the same server. */
 class RequestService
 {
-  use \OCA\CAFeVDBMembers\Traits\LoggerTrait;
+  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   const POST = 'post';
   const GET = 'get';

@@ -1,7 +1,7 @@
 <?php
 /**
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022 Claus-Justus Heine
+ * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,9 +18,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+// phpcs:disable PSR1.Files.SideEffects
+
 namespace OCA\CAFeVDBMembers\AppInfo;
 
-use SimpleXMLElement;
 use NumberFormatter;
 use Exception;
 
@@ -35,9 +36,13 @@ use Psr\Container\ContainerInterface;
 
 use OCA\CAFeVDBMembers\Listener\Registration as ListenerRegistration;
 
+include_once __DIR__ . '/../../vendor/autoload.php';
+
 /** Cloud application entry point. */
 class Application extends App implements IBootstrap
 {
+  use \OCA\RotDrop\Toolkit\Traits\AppNameTrait;
+
   const CAFEVDB_APP = 'cafevdb';
 
   const DEFAULT_LOCALE_KEY = 'DefaultLocale';
@@ -46,14 +51,13 @@ class Application extends App implements IBootstrap
   /** @var string */
   protected $appName;
 
-  // phpcs:ignore Squiz.Commenting.FunctionComment.Missing
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct()
   {
-    $infoXml = new SimpleXMLElement(file_get_contents(__DIR__ . '/../../appinfo/info.xml'));
-    $this->appName = (string)$infoXml->id;
+    $this->appName = $this->getAppInfoAppName(__DIR__);
     parent::__construct($this->appName);
   }
-  // phpcs:enable
+  // phpcs:enable Squiz.Commenting.FunctionComment.Missing
 
   /** {@inheritdoc} */
   public function boot(IBootContext $context):void
@@ -72,32 +76,6 @@ class Application extends App implements IBootstrap
         'currencyCode' => $currencyCode,
       ]);
     });
-
-    // The following would restrict the settings to the sub-admins of the
-    // orechstra group only. Another approach would be to put the sub-admins
-    // into a separate group and use the ordinary admin-delegation to handle
-    // the restriction.
-    //
-    // $context->injectFn(function(
-    //   string $appManagementGroup
-    //   , \OCP\IUserSession $userSession
-    //   , \OCP\IGroupManager $groupManager
-    //   , \OCP\Group\ISubAdmin $groupSubAdmin
-    //   , \OCP\Settings\IManager $settingsManager
-    // ) {
-    //   /** @var \OCP\IUser $user */
-    //   $user = $userSession->getUser();
-
-    //   if (empty($user)
-    //       || empty($appManagementGroup)
-    //       || !$groupManager->isInGroup($user->getUID(), $appManagementGroup)
-    //       || !$groupSubAdmin->isSubAdminOfGroup($user, $groupManager->get($appManagementGroup))
-    //   ) {
-    //     return;
-    //   }
-    //   $settingsManager->registerSection('admin', \OCA\CAFeVDBMembers\Settings\AdminSection::class);
-    //   $settingsManager->registerSetting('admin', \OCA\CAFeVDBMembers\Settings\Admin::class);
-    // });
   }
 
   /**
@@ -108,9 +86,6 @@ class Application extends App implements IBootstrap
    */
   public function register(IRegistrationContext $context):void
   {
-    if ((include_once __DIR__ . '/../../vendor/autoload.php') === false) {
-      throw new Exception('Cannot include autoload. Did you run install dependencies using composer?');
-    }
     $context->registerService('appManagementGroup', function($c) {
       /** @var \OCP\IConfig $config */
       $config = $c->get(\OCP\IConfig::class);

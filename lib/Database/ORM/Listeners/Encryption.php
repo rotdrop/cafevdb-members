@@ -34,7 +34,7 @@ use OCA\CAFEVDB\Crypto;
 /** Implement transparent encryption/decryption of database fields. */
 class Encryption implements Transformable\Transformer\TransformerInterface
 {
-  use \OCA\CAFeVDBMembers\Traits\LoggerTrait;
+  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   /** @var IUserSession */
   private $userSession;

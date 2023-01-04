@@ -61,7 +61,7 @@ use OCA\CAFeVDBMembers\Service\AuthenticationService;
  */
 class EntityManager extends EntityManagerDecorator
 {
-  use \OCA\CAFeVDBMembers\Traits\LoggerTrait;
+  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   const ENTITY_PATHS = [
     __DIR__ . "/Entities",

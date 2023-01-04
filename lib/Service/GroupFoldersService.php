@@ -35,7 +35,7 @@ use OCP\Constants;
  */
 class GroupFoldersService
 {
-  use \OCA\CAFeVDBMembers\Traits\LoggerTrait;
+  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   const GROUP_FOLDERS_APP = 'groupfolders';
 

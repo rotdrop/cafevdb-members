@@ -35,7 +35,7 @@ use OCA\CAFeVDBMembers\Database\DBAL\Types\EnumParticipantFieldMultiplicity as F
  */
 class MemberDataService
 {
-  use \OCA\CAFeVDBMembers\Traits\LoggerTrait;
+  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
   use \OCA\CAFeVDBMembers\Traits\UtilTrait;
 
   const PATH_SEP = '/';

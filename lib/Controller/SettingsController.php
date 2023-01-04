@@ -36,7 +36,7 @@ use OCA\CAFeVDBMembers\Service\ProjectGroupService;
 class SettingsController extends Controller
 {
   use \OCA\CAFeVDBMembers\Traits\ResponseTrait;
-  use \OCA\CAFeVDBMembers\Traits\LoggerTrait;
+  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   const MEMBER_ROOT_FOLDER_KEY = 'memberRootFolder';
   const FOLDER_GROUPS_KEY = 'memberFolderGroups';
