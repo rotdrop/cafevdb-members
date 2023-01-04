@@ -6,3 +6,6 @@
 	path = 3rdparty/mediamonks-doctrine-extensions
 	url = git@github.com:rotdrop/mediamonks-doctrine-extensions.git
 	branch = feature/transform-context-field
+[submodule "dev-scripts/MakeHelp"]
+	path = dev-scripts/MakeHelp
+	url = https://github.com/mrdor44/MakeHelp.git

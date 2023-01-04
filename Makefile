@@ -14,6 +14,9 @@ COMPOSER_TOOL=$(COMPOSER_SYSTEM)
 endif
 COMPOSER_OPTIONS=--prefer-dist
 
+MAKE_HELP_DIR = $(SRCDIR)/dev-scripts/MakeHelp
+include $(MAKE_HELP_DIR)/MakeHelp.mk
+
 all: dev-setup lint build-js-production test
 
 # Dev env management
@@ -85,6 +88,18 @@ stylelint:
 
 stylelint-fix:
 	npm run stylelint:fix
+
+$(SRCDIR)/vendor/bin/phpcs: composer
+
+PHPCS_IGNORE=lib/Database/ORM/Proxies/
+
+.PHONY: phpcs
+phpcs: $(SRCDIR)/vendor/bin/phpcs
+	$(SRCDIR)/vendor/bin/phpcs --ignore=$(PHPCS_IGNORE) -v  --standard=.phpcs.xml lib/ templates/
+
+.PHONY: phpcs-errors
+phpcs-errors: $(SRCDIR)/vendor/bin/phpcs
+	$(SRCDIR)/vendor/bin/phpcs --ignore=$(PHPCS_IGNORE) -n --standard=.phpcs.xml lib/ templates/|grep FILE:|awk '{ print $$2; }'
 
 #@@ Removes WebPack builds
 webpack-clean:
