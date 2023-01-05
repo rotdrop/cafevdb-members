@@ -35,6 +35,7 @@ use OCA\CAFeVDBMembers\Service\ProjectGroupService;
 /** AJAX end-points for admin and personal settings. */
 class SettingsController extends Controller
 {
+  use \OCA\RotDrop\Toolkit\Traits\UtilTrait;
   use \OCA\RotDrop\Toolkit\Traits\ResponseTrait;
   use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 

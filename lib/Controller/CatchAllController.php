@@ -3,7 +3,7 @@
  * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022 Claus-Justus Heine
+ * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -31,10 +31,8 @@ use OCP\IL10N;
 /** Attempt a catch-all controller to improve error messages. */
 class CatchAllController extends Controller
 {
+  use \OCA\RotDrop\Toolkit\Traits\UtilTrait;
   use \OCA\RotDrop\Toolkit\Traits\ResponseTrait;
-
-  /** @var IL10N */
-  private $l;
 
   // phpcs:ignore Squiz.Commenting.FunctionComment.Missing
   public function __construct(
