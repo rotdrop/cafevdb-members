@@ -9,3 +9,6 @@
 [submodule "dev-scripts/MakeHelp"]
 	path = dev-scripts/MakeHelp
 	url = https://github.com/mrdor44/MakeHelp.git
+[submodule "3rdparty/rotdrop-nextcloud-vue-components"]
+	path = 3rdparty/rotdrop-nextcloud-vue-components
+	url = https://github.com/rotdrop/nextcloud-vue-components.git
