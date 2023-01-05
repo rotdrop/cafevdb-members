@@ -44,9 +44,6 @@ class AuthenticationService
   /** @var AsymmetricKeyService */
   private $keyService;
 
-  /** @var IL10N */
-  private $l;
-
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     string $userId,

@@ -47,9 +47,6 @@ class SettingsController extends Controller
   /** @var IConfig */
   private $config;
 
-  /** @var IL10N */
-  private $l;
-
   /** @var string */
   private $userId;
 

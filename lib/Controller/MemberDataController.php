@@ -48,9 +48,6 @@ class MemberDataController extends Controller
   /** @var string */
   private $userId;
 
-  /** @var IL10N */
-  private $l;
-
   /** @var AuthenticationService */
   private $authenticationService;
 

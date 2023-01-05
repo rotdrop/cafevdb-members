@@ -43,9 +43,6 @@ class MemberDataService
   /** @var EntityManager */
   private $entityManager;
 
-  /** @var IL10N */
-  private $l;
-
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     EntityManager $entityManager,
