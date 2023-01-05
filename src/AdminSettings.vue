@@ -63,7 +63,7 @@
 import { appName } from './config.js'
 import ProgressBar from '@nextcloud/vue/dist/Components/ProgressBar'
 import SettingsSection from '@nextcloud/vue/dist/Components/SettingsSection'
-import SettingsInputText from './components/SettingsInputText'
+import SettingsInputText from '@rotdrop/nextcloud-vue-components/lib/components/SettingsInputText'
 import { generateUrl } from '@nextcloud/router'
 import { showError, showSuccess, showInfo, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
 import axios from '@nextcloud/axios'
