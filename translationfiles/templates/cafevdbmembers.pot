@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2022-10-18 00:20+0200\n"
+"POT-Creation-Date: 2023-01-05 15:41+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,223 +17,238 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: lib/Controller/CatchAllController.php:57
+#: lib/Controller/CatchAllController.php:81
 #, php-format
 msgid "Post to end-point \"%s\" not implemented."
 msgstr ""
 
-#: lib/Controller/CatchAllController.php:60
+#: lib/Controller/CatchAllController.php:84
 #, php-format
 msgid "Post to base-url of app \"%s\" not allowed."
 msgstr ""
 
-#: lib/Controller/CatchAllController.php:73
+#: lib/Controller/CatchAllController.php:120
 #, php-format
 msgid "Get from end-point \"%s\" not implemented."
 msgstr ""
 
-#: lib/Controller/MemberDataController.php:96
-#: lib/Controller/MemberDataController.php:328
+#: lib/Controller/MemberDataController.php:102
+#: lib/Controller/MemberDataController.php:342
 #, php-format
 msgid "No member-data found for user-id \"%s\"."
 msgstr ""
 
-#: lib/Controller/MemberDataController.php:98
-#: lib/Controller/MemberDataController.php:330
+#: lib/Controller/MemberDataController.php:104
+#: lib/Controller/MemberDataController.php:344
 #, php-format
 msgid "More than one musician found for user-id \"%s\"."
 msgstr ""
 
-#: lib/Controller/MemberDataController.php:338
+#: lib/Controller/MemberDataController.php:352
 #, php-format
 msgid "Unable to find data for the option-uuid \"%s\"."
 msgstr ""
 
-#: lib/Controller/MemberDataController.php:343
+#: lib/Controller/MemberDataController.php:357
 #, php-format
 msgid "The option \"%s\" does not have any associated files."
 msgstr ""
 
-#: lib/Controller/MemberDataController.php:367
+#: lib/Controller/MemberDataController.php:381
 #, php-format
 msgid "Access to the member-data is not authorized: %s"
 msgstr ""
 
-#: lib/Controller/SettingsController.php:113
+#: lib/Controller/SettingsController.php:116
 #, php-format
 msgid "Really delete the old shared root-folder \"/%1$s/\"?"
 msgstr ""
 
-#: lib/Controller/SettingsController.php:123
+#: lib/Controller/SettingsController.php:126
 #, php-format
 msgid ""
 "Destination \"%1$s\" already exists and is configured as shared folder, "
 "delete it?"
 msgstr ""
 
-#: lib/Controller/SettingsController.php:146
+#: lib/Controller/SettingsController.php:153
 msgid "Successfully synchronized the shared-folder structure."
 msgstr ""
 
-#: lib/Controller/SettingsController.php:150
+#: lib/Controller/SettingsController.php:157
 #, php-format
 msgid "Synchronizing the shared-folder structure failed: %s"
 msgstr ""
 
-#: lib/Controller/SettingsController.php:155
-#: lib/Controller/SettingsController.php:192
+#: lib/Controller/SettingsController.php:162
+#: lib/Controller/SettingsController.php:198
 #, php-format
 msgid "Unknown admin setting: \"%1$s\""
 msgstr ""
 
-#: lib/Controller/SettingsController.php:212
+#: lib/Controller/SettingsController.php:218
 #, php-format
 msgid "Unknown app setting: \"%1$s\""
 msgstr ""
 
-#: lib/Database/DBAL/Types/EnumGeographicalScope.php:53
+#: lib/Database/DBAL/Types/EnumGeographicalScope.php:55
 msgid "Domestic"
 msgstr ""
 
-#: lib/Database/DBAL/Types/EnumGeographicalScope.php:54
+#: lib/Database/DBAL/Types/EnumGeographicalScope.php:56
 msgid "Continent"
 msgstr ""
 
-#: lib/Database/DBAL/Types/EnumGeographicalScope.php:55
+#: lib/Database/DBAL/Types/EnumGeographicalScope.php:57
 msgid "Germany"
 msgstr ""
 
-#: lib/Database/DBAL/Types/EnumGeographicalScope.php:56
+#: lib/Database/DBAL/Types/EnumGeographicalScope.php:58
 msgid "Europe"
 msgstr ""
 
-#: lib/Database/DBAL/Types/EnumGeographicalScope.php:57
+#: lib/Database/DBAL/Types/EnumGeographicalScope.php:59
 msgid "World"
 msgstr ""
 
-#: lib/Service/AuthenticationService.php:80
+#: lib/Service/AuthenticationService.php:84
 #, php-format
 msgid ""
 "The row-access token for \"%s\" is present but invalid, the user's data will "
 "be unaccessble."
 msgstr ""
 
-#: lib/Service/AuthenticationService.php:83
+#: lib/Service/AuthenticationService.php:91
 #, php-format
 msgid ""
 "The row-access token for \"%s\" is missing, the user's data will be "
 "unaccessble."
 msgstr ""
 
-#: lib/Service/GroupFoldersService.php:158
+#: lib/Service/GroupFoldersService.php:173
 #, php-format
 msgid "Unknown search topic \"%1$s\""
 msgstr ""
 
-#: lib/Service/GroupFoldersService.php:209
+#: lib/Service/GroupFoldersService.php:237
 #, php-format
 msgid ""
 "Shared folder for mount-point \"%1$s\" already exists, cannot create it."
 msgstr ""
 
-#: lib/Service/GroupFoldersService.php:237
+#: lib/Service/GroupFoldersService.php:279
 #, php-format
 msgid ""
 "Shared folder for mount-point \"%1$s\" does not exist, cannot add group "
 "\"%2$s\"."
 msgstr ""
 
-#: lib/Service/GroupFoldersService.php:259
+#: lib/Service/GroupFoldersService.php:307
 #, php-format
 msgid ""
 "Shared folder for mount-point \"%1$s\" does not exist, cannot remove group "
 "\"%2$s\"."
 msgstr ""
 
-#: lib/Service/GroupFoldersService.php:280
+#: lib/Service/GroupFoldersService.php:339
 #, php-format
 msgid ""
 "Shared folder for mount-point \"%1$s\" does not exist, cannot modify manager "
 "\"%2$s\"."
 msgstr ""
 
-#: lib/Service/GroupFoldersService.php:331
+#: lib/Service/GroupFoldersService.php:417
 #, php-format
 msgid ""
 "Shared folder for mount-point \"%1$s\" does not exist, cannot set "
 "permissions for group \"%2$s\"."
 msgstr ""
 
-#: lib/Service/GroupFoldersService.php:367
+#: lib/Service/GroupFoldersService.php:455
 #, php-format
 msgid ""
 "Shared folder for mount-point \"%1$s\" does not exist, cannot change its "
 "mount-point to \"%2$s\"."
 msgstr ""
 
-#: lib/Service/ProjectGroupService.php:79
+#: lib/Service/ProjectGroupService.php:92
 msgid "Syncing all groups in one run is no longer supported."
 msgstr ""
 
-#: lib/Service/ProjectGroupService.php:84
+#: lib/Service/ProjectGroupService.php:97
 #, php-format
 msgid "Group %1$s does not start with the correct prefix \"%2$s\"."
 msgstr ""
 
 #. TRANSLATORS src/views/Projects/ProjectDetails.vue:80
-#: lib/Service/ProjectGroupService.php:125
+#: lib/Service/ProjectGroupService.php:154
 #: specialVueFakeDummyForL10nScript.js:248
 msgid "projects"
 msgstr ""
 
-#: lib/Service/ProjectGroupService.php:205
+#: lib/Service/ProjectGroupService.php:241
 #, php-format
 msgid ""
 "Unable to make sure the the group-shared folder \"%1$s\" for group \"%2$s\" "
 "exists."
 msgstr ""
 
-#: lib/Service/RequestService.php:133
+#: lib/Settings/AdminSection.php:60
+#: lib/Settings/PersonalSection.php:60
+msgid "Camerata DB Members"
+msgstr ""
+
+#: lib/Toolkit/Service/RequestService.php:199
 msgid "Cannot call internal route while the session is open."
 msgstr ""
 
-#: lib/Service/RequestService.php:169
+#: lib/Toolkit/Service/RequestService.php:235
 #, php-format
 msgid ""
 "Supported data formats are \"%1$s\" and \"%2$s\", specified was \"%3$s\"."
 msgstr ""
 
-#: lib/Service/RequestService.php:226
+#: lib/Toolkit/Service/RequestService.php:292
 #, php-format
 msgid "Invalid response from API call: \"%s\""
 msgstr ""
 
-#: lib/Service/RequestService.php:235
+#: lib/Toolkit/Service/RequestService.php:301
 #, php-format
 msgid "Error response from call to internal route \"%1$s\": %2$s"
 msgstr ""
 
-#: lib/Service/RequestService.php:246
+#: lib/Toolkit/Service/RequestService.php:312
 #, php-format
 msgid "Invalid OCS response from call to internal route \"%1$s\": %2$s"
 msgstr ""
 
-#: lib/Service/RequestService.php:252
+#: lib/Toolkit/Service/RequestService.php:318
 #, php-format
 msgid "Error response from call to internal route \"%1$s\": %2$s --  %3$s"
 msgstr ""
 
-#: lib/Settings/AdminSection.php:69
-#: lib/Settings/PersonalSection.php:69
-msgid "Camerata DB Members"
-msgstr ""
-
-#: lib/Traits/ResponseTrait.php:77
+#: lib/Toolkit/Traits/ResponseTrait.php:121
 msgid "Error, caught an exception."
 msgstr ""
 
-#: lib/Traits/ResponseTrait.php:78
+#: lib/Toolkit/Traits/ResponseTrait.php:122
 msgid "Caused by previous exception"
+msgstr ""
+
+#: lib/Toolkit/Traits/UtilTrait.php:258
+#: lib/Toolkit/Traits/UtilTrait.php:260
+msgid "bytes"
+msgstr ""
+
+#: lib/Toolkit/Traits/UtilTrait.php:514
+#: lib/Toolkit/Traits/UtilTrait.php:527
+#, php-format
+msgid "The supplied color-string \"%s\" seems to be invalid."
+msgstr ""
+
+#: lib/Toolkit/Traits/UtilTrait.php:548
+msgid "The input color values are invalid."
 msgstr ""
 
 #: specialAppInfoFakeDummyForL10nScript.php:2
@@ -315,34 +330,34 @@ msgstr ""
 msgid "reason unknown"
 msgstr ""
 
-#. TRANSLATORS src/AdminSettings.vue:156
+#. TRANSLATORS src/AdminSettings.vue:159
 #: specialVueFakeDummyForL10nScript.js:28
 msgid "Could not set value for \"{settingsKey}\" to \"{value}\": {message}"
 msgstr ""
 
-#. TRANSLATORS src/AdminSettings.vue:169
+#. TRANSLATORS src/AdminSettings.vue:172
 #: specialVueFakeDummyForL10nScript.js:30
 msgid "Synchronizing for group {group}"
 msgstr ""
 
-#. TRANSLATORS src/AdminSettings.vue:170
+#. TRANSLATORS src/AdminSettings.vue:173
 #: specialVueFakeDummyForL10nScript.js:32
 msgid "{current} of {totals}"
 msgstr ""
 
-#. TRANSLATORS src/AdminSettings.vue:179
+#. TRANSLATORS src/AdminSettings.vue:185
 #: specialVueFakeDummyForL10nScript.js:36
 msgid "Folder for \"{group}\" could not be created: {message}"
 msgstr ""
 
-#. TRANSLATORS src/AdminSettings.vue:186
+#. TRANSLATORS src/AdminSettings.vue:192
 #: specialVueFakeDummyForL10nScript.js:38
 msgid ""
 "Failed at group \"{group}\" after {numFolders} have been processed "
 "successfully, {remainingFolders} are remaining."
 msgstr ""
 
-#. TRANSLATORS src/AdminSettings.vue:188
+#. TRANSLATORS src/AdminSettings.vue:194
 #: specialVueFakeDummyForL10nScript.js:40
 msgid "All done, folder structure for all {numFolders} folders is up to date."
 msgstr ""
@@ -831,7 +846,7 @@ msgstr ""
 msgid "Project-Participation of {publicName}"
 msgstr ""
 
-#. TRANSLATORS src/views/Projects.vue:111
+#. TRANSLATORS src/views/Projects.vue:114
 #: specialVueFakeDummyForL10nScript.js:256
 msgid "Could not fetch root-folder of member file space: {message}"
 msgstr ""
@@ -847,6 +862,6 @@ msgstr ""
 msgid "general failure"
 msgstr ""
 
-#: src/stores/memberData.js:81
+#: src/stores/memberData.js:84
 msgid "Could not fetch musician(s): {message}"
 msgstr ""
