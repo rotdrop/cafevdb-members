@@ -19,6 +19,8 @@ include $(MAKE_HELP_DIR)/MakeHelp.mk
 
 all: dev-setup lint build-js-production test
 
+dev: dev-setup lint build-js test
+
 # Dev env management
 dev-setup: clean clean-dev app-toolkit composer npm-init
 
