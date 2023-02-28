@@ -41,7 +41,7 @@ use OCA\CAFeVDBMembers\Database\DBAL\Types;
 class ProjectParticipantField implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
-  use \OCA\RotDrop\Toolkit\Traits\DateTimeTrait;
+  use \OCA\CAFeVDBMembers\Toolkit\Traits\DateTimeTrait;
   use CAFEVDB\Traits\SoftDeleteableEntity;
   use CAFEVDB\Traits\GetByUuidTrait;
   use CAFEVDB\Traits\TranslatableTrait;

@@ -39,7 +39,7 @@ class InstrumentInsurance implements \ArrayAccess
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\TimestampableEntity;
   use CAFEVDB\Traits\SoftDeleteableEntity;
-  use \OCA\RotDrop\Toolkit\Traits\DateTimeTrait;
+  use \OCA\CAFeVDBMembers\Toolkit\Traits\DateTimeTrait;
 
   /**
    * @var int

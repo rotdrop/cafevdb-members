@@ -41,7 +41,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
   use CAFEVDB\Traits\TimestampableEntity;
   use CAFEVDB\Traits\UuidTrait;
   use CAFEVDB\Traits\GetByUuidTrait;
-  use \OCA\RotDrop\Toolkit\Traits\DateTimeTrait;
+  use \OCA\CAFeVDBMembers\Toolkit\Traits\DateTimeTrait;
 
   /**
    * @var int

@@ -38,7 +38,7 @@ use OCA\CAFEVDB\Events\ProjectCreatedEvent;
 /** Manage the shared project-group folders. */
 class ProjectGroupService
 {
-  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFeVDBMembers\Toolkit\Traits\LoggerTrait;
 
   const GROUP_ID_PREFIX = 'cafevdb:';
 

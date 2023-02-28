@@ -31,8 +31,8 @@ use OCP\IL10N;
 /** Attempt a catch-all controller to improve error messages. */
 class CatchAllController extends Controller
 {
-  use \OCA\RotDrop\Toolkit\Traits\UtilTrait;
-  use \OCA\RotDrop\Toolkit\Traits\ResponseTrait;
+  use \OCA\CAFeVDBMembers\Toolkit\Traits\UtilTrait;
+  use \OCA\CAFeVDBMembers\Toolkit\Traits\ResponseTrait;
 
   // phpcs:ignore Squiz.Commenting.FunctionComment.Missing
   public function __construct(

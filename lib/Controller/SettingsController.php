@@ -35,9 +35,9 @@ use OCA\CAFeVDBMembers\Service\ProjectGroupService;
 /** AJAX end-points for admin and personal settings. */
 class SettingsController extends Controller
 {
-  use \OCA\RotDrop\Toolkit\Traits\UtilTrait;
-  use \OCA\RotDrop\Toolkit\Traits\ResponseTrait;
-  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFeVDBMembers\Toolkit\Traits\UtilTrait;
+  use \OCA\CAFeVDBMembers\Toolkit\Traits\ResponseTrait;
+  use \OCA\CAFeVDBMembers\Toolkit\Traits\LoggerTrait;
 
   const MEMBER_ROOT_FOLDER_KEY = 'memberRootFolder';
   const FOLDER_GROUPS_KEY = 'memberFolderGroups';

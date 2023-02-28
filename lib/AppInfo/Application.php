@@ -41,7 +41,7 @@ include_once __DIR__ . '/../../vendor/autoload.php';
 /** Cloud application entry point. */
 class Application extends App implements IBootstrap
 {
-  use \OCA\RotDrop\Toolkit\Traits\AppNameTrait;
+  use \OCA\CAFeVDBMembers\Toolkit\Traits\AppNameTrait;
 
   const CAFEVDB_APP = 'cafevdb';
 

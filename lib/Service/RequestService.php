@@ -31,7 +31,7 @@ use OCP\ISession;
 use Psr\Log\LoggerInterface;
 use OCP\IL10N;
 
-use OCA\RotDrop\Toolkit\Service\RequestService as ToolkitService;
+use OCA\CAFeVDBMembers\Toolkit\Service\RequestService as ToolkitService;
 
 /** Post to local routes on the same server. */
 class RequestService extends ToolkitService

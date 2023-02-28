@@ -28,7 +28,7 @@ use Psr\Log\LoggerInterface;
 use OCP\IL10N;
 use OCP\Constants;
 
-use OCA\RotDrop\Toolkit\Service\GroupFoldersService as ToolkitService;
+use OCA\CAFeVDBMembers\Toolkit\Service\GroupFoldersService as ToolkitService;
 
 /**
  * Mis-use the internal routes of the groupfolders app in order to

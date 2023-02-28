@@ -20,7 +20,7 @@ include $(MAKE_HELP_DIR)/MakeHelp.mk
 all: dev-setup lint build-js-production test
 
 # Dev env management
-dev-setup: clean clean-dev composer npm-init
+dev-setup: clean clean-dev app-toolkit composer npm-init
 
 composer.json: composer.json.in
 	cp composer.json.in composer.json
@@ -53,6 +53,17 @@ composer: stamp.composer-core-versions
 composer-suggest:
 	@echo -e "\n*** Regular Composer Suggestions ***\n"
 	$(COMPOSER_TOOL) suggest --all
+
+#
+# Another namespace wrapper, but less complicated, in order to
+# decouple our shared Nextcloud traits collection from other apps.
+#
+
+APP_TOOLKIT_DIR = $(ABSSRCDIR)/php-toolkit
+APP_TOOLKIT_DEST = $(ABSSRCDIR)/lib/Toolkit
+APP_TOOLKIT_NS = CAFeVDBMembers
+
+include $(APP_TOOLKIT_DIR)/tools/scopeme.mk
 
 npm-init: package.json webpack.config.js Makefile
 	{ [ -d package-lock.json ] && [ test -d node_modules ]; } || npm install
@@ -116,6 +127,7 @@ clean: ## Tidy up local environment
 distclean: clean ## Clean even more, calls clean
 	rm -rf vendor*
 	rm -rf node_modules
+	rm -rf lib/Toolkit/*
 .PHONY: distclean
 
 #@@ Really delete everything but the bare source files

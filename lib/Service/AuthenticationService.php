@@ -35,8 +35,8 @@ use OCA\CAFeVDBMembers\Exceptions;
  */
 class AuthenticationService
 {
-  use \OCA\RotDrop\Toolkit\Traits\LoggerTrait;
-  use \OCA\RotDrop\Toolkit\Traits\UtilTrait;
+  use \OCA\CAFeVDBMembers\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFeVDBMembers\Toolkit\Traits\UtilTrait;
 
   /** @var string */
   private $userId;
