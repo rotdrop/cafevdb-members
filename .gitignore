@@ -13,3 +13,5 @@ composer.lock
 package-lock.json
 js/**
 lib/Database/ORM/Proxies/**
+*-build-hash
+lib/Toolkit/[A-Z]*
