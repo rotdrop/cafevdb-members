@@ -91,36 +91,6 @@ class ProjectParticipant implements \ArrayAccess
    */
   private $projectInstruments;
 
-  /**
-   * @var SepaBankAccount
-   *
-   * Optional link to a bank account for this project. The account can
-   * but need not belong to a debit-mandate. This is the account used
-   * for this project.
-   * @todo Either remove or use this information.
-   *
-   * @ORM\ManyToOne(targetEntity="SepaBankAccount")
-   * @ORM\JoinColumns(
-   *   @ORM\JoinColumn(name="musician_id", referencedColumnName="musician_id"),
-   *   @ORM\JoinColumn(name="bank_account_sequence", referencedColumnName="sequence", nullable=true)
-   * )
-   */
-  private $sepaBankAccount = null;
-
-  /**
-   * @var SepaDebitMandate
-   *
-   * Optional link to a SEPA debit-mandate used for this project.
-   * @todo Remove, this is a relict from pre-ORM times. Is it really a relict?
-   *
-   * @ORM\ManyToOne(targetEntity="SepaDebitMandate")
-   * @ORM\JoinColumns(
-   *   @ORM\JoinColumn(name="musician_id", referencedColumnName="musician_id"),
-   *   @ORM\JoinColumn(name="debit_mandate_sequence", referencedColumnName="sequence", nullable=true)
-   * )
-   */
-  private $sepaDebitMandate = null;
-
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct()
   {
