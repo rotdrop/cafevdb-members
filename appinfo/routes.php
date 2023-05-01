@@ -22,6 +22,11 @@ return [
       'requirements' => [ 'path' => '.+' ],
       'postfix' => 'front',
     ],
+    [
+      'name' => 'ProjectRegistration#page',
+      'url' => '/public/projects/registration',
+      'verb' => 'GET',
+    ],
     // [
     //   'name' => 'note_api#preflighted_cors',
     //   'url' => '/api/0.1/{path}',
