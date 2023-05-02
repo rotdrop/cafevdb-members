@@ -72,6 +72,17 @@ class Project implements \ArrayAccess
   private $type = 'temporary';
 
   /**
+   * @var \DateTimeImmutable
+   *
+   * Optional registration deadline. If null then the date one day before the
+   * first rehearsal is used, if set. Otherwise no registration dead-line is
+   * imposed.
+   *
+   * @ORM\Column(type="date_immutable", nullable=true)
+   */
+  private $registrationDeadline;
+
+  /**
    * @var bool
    *
    * @ORM\Column(type="boolean")
@@ -385,5 +396,28 @@ class Project implements \ArrayAccess
   public function getExecutiveBoard():bool
   {
     return !empty($this->executiveBoard);
+  }
+
+  /**
+   * Sets registrationDeadline.
+   *
+   * @param string|int|DateTimeInterface $registrationDeadline
+   *
+   * @return Project
+   */
+  public function setRegistrationDeadline(mixed $registrationDeadline):Project
+  {
+    $this->registrationDeadline = self::convertToDateTime($registrationDeadline);
+    return $this;
+  }
+
+  /**
+   * Returns registrationDeadline.
+   *
+   * @return DateTimeImmutable
+   */
+  public function getRegistrationDeadline():?DateTimeInterface
+  {
+    return $this->registrationDeadline;
   }
 }
