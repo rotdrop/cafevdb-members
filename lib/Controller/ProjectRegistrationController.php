@@ -28,6 +28,7 @@ use OCP\AppFramework\Controller;
 use OCP\IRequest;
 use OCP\IL10N;
 use OCP\AppFramework\Http\Template\PublicTemplateResponse;
+use OCP\AppFramework\Http\Template\SimpleMenuAction;
 
 /** AJAX endpoints for a project registration form. */
 class ProjectRegistrationController extends Controller
@@ -65,6 +66,14 @@ class ProjectRegistrationController extends Controller
     ]);
 
     $response->setFooterVisible(false);
+
+    $actionMenu = [
+      new SimpleMenuAction('one', $this->l->t('one'), 'icon-download'),
+      new SimpleMenuAction('two', $this->l->t('two'), 'icon-download'),
+      new SimpleMenuAction('three', $this->l->t('three'), 'icon-download'),
+    ];
+
+    $response->setHeaderActions($actionMenu);
 
     return $response;
   }
