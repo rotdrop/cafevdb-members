@@ -30,11 +30,17 @@ use OCP\IL10N;
 use OCP\AppFramework\Http\Template\PublicTemplateResponse;
 use OCP\AppFramework\Http\Template\SimpleMenuAction;
 
+use OCA\CAFeVDBMembers\Database\ORM\EntityManager;
+use OCA\CAFeVDBMembers\Database\ORM\Entities;
+
 /** AJAX endpoints for a project registration form. */
 class ProjectRegistrationController extends Controller
 {
   use \OCA\CAFeVDBMembers\Toolkit\Traits\ResponseTrait;
   use \OCA\CAFeVDBMembers\Toolkit\Traits\LoggerTrait;
+
+  /** @var EntityManager */
+  private $entityManager;
 
   // phpcs:ignore Squiz.Commenting.FunctionComment.Missing
   public function __construct(
@@ -42,10 +48,12 @@ class ProjectRegistrationController extends Controller
     IRequest $request,
     IL10N $l10n,
     LoggerInterface $logger,
+    EntityManager $entityManager,
   ) {
     parent::__construct($appName, $request);
     $this->l = $l10n;
     $this->logger = $logger;
+    $this->entityManager = $entityManager;
   }
   // phpcs:enable
 
@@ -67,11 +75,13 @@ class ProjectRegistrationController extends Controller
 
     $response->setFooterVisible(false);
 
-    $actionMenu = [
-      new SimpleMenuAction('one', $this->l->t('one'), 'icon-download'),
-      new SimpleMenuAction('two', $this->l->t('two'), 'icon-download'),
-      new SimpleMenuAction('three', $this->l->t('three'), 'icon-download'),
-    ];
+    $projects = $this->entityManager->getRepository(Entities\Project::class)->findAll();
+
+    $actionMenu = [];
+    /** @var Entities\Project $project */
+    foreach ($projects as $project) {
+      $actionMenu[] = new SimpleMenuAction($project->getName(), $project->getName(), 'icon-download');
+    }
 
     $response->setHeaderActions($actionMenu);
 
