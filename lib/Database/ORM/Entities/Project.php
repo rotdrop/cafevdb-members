@@ -69,7 +69,18 @@ class Project implements \ArrayAccess
    *
    * @ORM\Column(type="EnumProjectTemporalType", nullable=false)
    */
-  private $type = 'temporary';
+  private $type = Types\EnumProjectTemporalType::TEMPORARY;
+
+  /**
+   * @var \DateTimeImmutable
+   *
+   * Optional registration deadline. If null then the date one day before the
+   * first rehearsal is used, if set. Otherwise no registration dead-line is
+   * imposed.
+   *
+   * @ORM\Column(type="date_immutable", nullable=true)
+   */
+  private $registrationDeadline;
 
   /**
    * @var bool
@@ -84,6 +95,13 @@ class Project implements \ArrayAccess
    * @ORM\Column(type="boolean")
    */
   private $executiveBoard;
+
+  /**
+   * @var Collection
+   *
+   * @ORM\OneToMany(targetEntity="ProjectEvent", mappedBy="project")
+   */
+  private $calendarEvents;
 
   /**
    * @ORM\OneToMany(targetEntity="ProjectParticipant", mappedBy="project")
@@ -120,6 +138,8 @@ class Project implements \ArrayAccess
     $this->participantFieldsData = new ArrayCollection();
     $this->sepaDebitMandates = new ArrayCollection();
     $this->payments = new ArrayCollection();
+    $this->calendarEvents = new ArrayCollection();
+    $this->type = Types\EnumProjectTemporalType->from($this->type);
   }
   // phpcs:enable
 
@@ -337,6 +357,53 @@ class Project implements \ArrayAccess
   public function getSepaDebitMandates():Collection
   {
     return $this->sepaDebitMandates;
+  }
+
+  /**
+   * Sets registrationDeadline.
+   *
+   * @param string|int|DateTimeInterface $registrationDeadline
+   *
+   * @return Project
+   */
+  public function setRegistrationDeadline(mixed $registrationDeadline):Project
+  {
+    $this->registrationDeadline = self::convertToDateTime($registrationDeadline);
+    return $this;
+  }
+
+  /**
+   * Returns registrationDeadline.
+   *
+   * @return DateTimeImmutable
+   */
+  public function getRegistrationDeadline():?DateTimeInterface
+  {
+    return $this->registrationDeadline;
+  }
+
+  /**
+   * Set calendarEvents.
+   *
+   * @param Collection $calendarEvents
+   *
+   * @return Project
+   */
+  public function setCalendarEvents(Collection $calendarEvents):Project
+  {
+    $this->calendarEvents = $calendarEvents;
+
+    return $this;
+  }
+
+  /**
+   * Get calendarEvents.
+   *
+   * @return Collection
+   */
+  public function getCalendarEvents():Collection
+  {
+    return $this->calendarEvents;
   }
 
   /**
