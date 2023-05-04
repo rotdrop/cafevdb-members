@@ -38,6 +38,7 @@ use OCA\CAFeVDBMembers\Utils\Uuid;
  * ProjectEvents
  *
  * @ORM\Table(name="PersonalizedProjectEventsView")
+ * @ORM\Entity
  * @Gedmo\SoftDeleteable(fieldName="deleted")
  */
 class ProjectEvent implements \ArrayAccess
