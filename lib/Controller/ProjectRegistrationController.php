@@ -23,13 +23,23 @@
 namespace OCA\CAFeVDBMembers\Controller;
 
 use Psr\Log\LoggerInterface;
+use DateTimeImmutable;
+use DateTimeInterface;
 
 use OCP\AppFramework\Controller;
 use OCP\IRequest;
 use OCP\IL10N;
+use OCP\IDateTimeZone;
 use OCP\AppFramework\Http\Template\PublicTemplateResponse;
 use OCP\AppFramework\Http\Template\SimpleMenuAction;
+use OCP\Calendar\ICalendar;
+use OCP\Calendar\IManager as ICalendarMananger;
+use OCP\Calendar\ICalendarQuery;
+use OCP\IConfig;
 
+use OCA\CAFEVDB\Service\ConfigService;
+
+use OCA\CAFeVDBMembers\Constants;
 use OCA\CAFeVDBMembers\Database\ORM\EntityManager;
 use OCA\CAFeVDBMembers\Database\ORM\Entities;
 
@@ -38,6 +48,16 @@ class ProjectRegistrationController extends Controller
 {
   use \OCA\CAFeVDBMembers\Toolkit\Traits\ResponseTrait;
   use \OCA\CAFeVDBMembers\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFeVDBMembers\Toolkit\Traits\DateTimeTrait;
+
+  /** @var IConfig */
+  private $cloudConfig;
+
+  /** @var ICalendarMananger */
+  private $calendarManager;
+
+  /** @var IDateTimeZone */
+  private $dateTimeZone;
 
   /** @var EntityManager */
   private $entityManager;
@@ -48,11 +68,17 @@ class ProjectRegistrationController extends Controller
     IRequest $request,
     IL10N $l10n,
     LoggerInterface $logger,
+    IConfig $cloudConfig,
+    ICalendarMananger $calendarManager,
+    IDateTimeZone $dateTimeZone,
     EntityManager $entityManager,
   ) {
     parent::__construct($appName, $request);
     $this->l = $l10n;
     $this->logger = $logger;
+    $this->cloudConfig = $cloudConfig;
+    $this->calendarManager = $calendarManager;
+    $this->dateTimeZone = $dateTimeZone;
     $this->entityManager = $entityManager;
   }
   // phpcs:enable
@@ -75,16 +101,76 @@ class ProjectRegistrationController extends Controller
 
     $response->setFooterVisible(false);
 
-    $projects = $this->entityManager->getRepository(Entities\Project::class)->findAll();
+    $nowDate = self::convertToTimezoneDate(new DateTimeImmutable, $this->dateTimeZone->getTimeZone());
+    $currentYear = $nowDate->format('Y');
+
+    $projects = $this->entityManager->getRepository(Entities\Project::class)->findBy([
+      '>=year' => $currentYear,
+    ]);
 
     $actionMenu = [];
+
     /** @var Entities\Project $project */
     foreach ($projects as $project) {
+      $this->logInfo('NAME ' . $project->getName());
+      $deadline = $this->getProjectRegistrationDeadline($project);
+      if (empty($deadline)) {
+        continue;
+      }
+      $deadline = self::convertToTimezoneDate($deadline, $this->dateTimeZone->getTimeZone());
+      if ($nowDate > $deadline) {
+        continue;
+      }
+
       $actionMenu[] = new SimpleMenuAction($project->getName(), $project->getName(), 'icon-download');
     }
 
     $response->setHeaderActions($actionMenu);
 
     return $response;
+  }
+
+  /**
+   * @param Entities\Project $project
+   *
+   * @return null|DateTimeInterface
+   */
+  private function getProjectRegistrationDeadline(Entities\Project $project):?DateTimeInterface
+  {
+    $deadline = $project->getRegistrationDeadline();
+    if (!empty($deadline)) {
+      return $deadline;
+    }
+
+    $shareOwner = $this->cloudConfig->getAppValue(Constants::CAFEVDB_APP_ID, ConfigService::SHAREOWNER_KEY);
+    if (empty($shareOwner)) {
+      return null;
+    }
+    $principalUri = 'principals/users/' . $shareOwner;
+    $projectCategory = $project->getName();
+    $query = $this->calendarManager->newQuery($principalUri);
+    $query->addSearchProperty(ICalendarQuery::SEARCH_PROPERTY_CATEGORIES);
+    $query->setSearchPattern($projectCategory);
+    $query->addSearchCalendar(ConfigService::REHEARSALS_CALENDAR_URI);
+    $query->addSearchCalendar(ConfigService::CONCERTS_CALENDAR_URI);
+
+    $calendarObjects = $this->calendarManager->searchForPrincipal($query);
+
+    if (empty($calendarObjects)) {
+      return null;
+    }
+
+    $startDates = [];
+
+    foreach ($calendarObjects as $objectInfo) {
+      foreach ($objectInfo['objects'] as $calendarObject) {
+        $startDates[] = $calendarObject['DTSTART'][0];
+        $this->logInfo('START ' . print_r($calendarObject['DTSTART'][0], true));
+      }
+    }
+
+    $deadline = min($startDates)->modify('-1 day');
+
+    return $deadline;
   }
 }
