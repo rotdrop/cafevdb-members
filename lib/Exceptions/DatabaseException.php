@@ -21,6 +21,6 @@
 namespace OCA\CAFeVDBMembers\Exceptions;
 
 /** Thrown at authentication errors. */
-class AuthenticationException extends Exception
+class DatabaseException extends Exception
 {
 }
