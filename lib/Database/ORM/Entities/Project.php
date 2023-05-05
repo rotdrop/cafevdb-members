@@ -22,6 +22,9 @@
 
 namespace OCA\CAFeVDBMembers\Database\ORM\Entities;
 
+use DateTimeImmutable;
+use DateTimeInterface;
+
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -33,7 +36,7 @@ use OCA\CAFeVDBMembers\Database\DBAL\Types;
  * Projects
  *
  * @ORM\Table(name="PersonalizedProjectsView")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="OCA\CAFeVDBMembers\Database\ORM\Repositories\ProjectsRepository")
  */
 class Project implements \ArrayAccess
 {
@@ -72,7 +75,7 @@ class Project implements \ArrayAccess
   private $type = Types\EnumProjectTemporalType::TEMPORARY;
 
   /**
-   * @var \DateTimeImmutable
+   * @var DateTimeImmutable
    *
    * Optional registration deadline. If null then the date one day before the
    * first rehearsal is used, if set. Otherwise no registration dead-line is
