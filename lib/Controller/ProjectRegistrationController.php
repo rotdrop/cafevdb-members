@@ -36,6 +36,7 @@ use OCP\Calendar\ICalendar;
 use OCP\Calendar\IManager as ICalendarMananger;
 use OCP\Calendar\ICalendarQuery;
 use OCP\IConfig;
+use OCP\IURLGenerator;
 
 use OCA\CAFEVDB\Service\ConfigService;
 
@@ -59,6 +60,9 @@ class ProjectRegistrationController extends Controller
   /** @var IDateTimeZone */
   private $dateTimeZone;
 
+  /** @var IURLGenerator */
+  private $urlGenerator;
+
   /** @var EntityManager */
   private $entityManager;
 
@@ -71,6 +75,7 @@ class ProjectRegistrationController extends Controller
     IConfig $cloudConfig,
     ICalendarMananger $calendarManager,
     IDateTimeZone $dateTimeZone,
+    IURLGenerator $urlGenerator,
     EntityManager $entityManager,
   ) {
     parent::__construct($appName, $request);
@@ -79,6 +84,7 @@ class ProjectRegistrationController extends Controller
     $this->cloudConfig = $cloudConfig;
     $this->calendarManager = $calendarManager;
     $this->dateTimeZone = $dateTimeZone;
+    $this->urlGenerator = $urlGenerator;
     $this->entityManager = $entityManager;
   }
   // phpcs:enable
@@ -92,7 +98,7 @@ class ProjectRegistrationController extends Controller
    * @NoCSRFRequired
    * @PublicPage
    */
-  public function page():PublicTemplateResponse
+  public function page(?string $projectName):PublicTemplateResponse
   {
     $response = new PublicTemplateResponse($this->appName, 'project-registration', [
       'appName' => $this->appName,
@@ -122,7 +128,13 @@ class ProjectRegistrationController extends Controller
         continue;
       }
 
-      $actionMenu[] = new SimpleMenuAction($project->getName(), $project->getName(), 'icon-download');
+      $link = $this->urlGenerator->linkToRoute($this->appName . '.project_registration.page', [ 'projectName' => $project->getName() ]);
+      $menuItem = new SimpleMenuAction($project->getName(), $project->getName(), 'icon-download', $link);
+      if ($project->getName() == $projectName) {
+        array_unshift($actionMenu, $menuItem);
+      } else {
+        $actionMenu[] = $menuItem;
+      }
     }
 
     $response->setHeaderActions($actionMenu);

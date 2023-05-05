@@ -23,9 +23,12 @@ return [
       'postfix' => 'front',
     ],
     [
-      'name' => 'ProjectRegistration#page',
-      'url' => '/public/projects/registration',
+      'name' => 'project_registration#page',
+      'url' => '/public/projects/registration/{projectName}',
       'verb' => 'GET',
+      'defaults' => [
+        'projectName' => null,
+      ],
     ],
     // [
     //   'name' => 'note_api#preflighted_cors',
