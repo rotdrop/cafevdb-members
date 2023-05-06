@@ -86,6 +86,11 @@ class Project implements \ArrayAccess
   private $registrationDeadline;
 
   /**
+   * @ORM\OneToMany(targetEntity="ProjectInstrumentationNumber", mappedBy="project", fetch="EXTRA_LAZY")
+   */
+  private $instrumentationNumbers;
+
+  /**
    * @var bool
    *
    * @ORM\Column(type="boolean")
@@ -142,6 +147,7 @@ class Project implements \ArrayAccess
     $this->sepaDebitMandates = new ArrayCollection();
     $this->payments = new ArrayCollection();
     $this->calendarEvents = new ArrayCollection();
+    $this->instrumentationNumbers = new ArrayCollection();
     $this->type = Types\EnumProjectTemporalType->from($this->type);
   }
   // phpcs:enable
@@ -407,6 +413,30 @@ class Project implements \ArrayAccess
   public function getCalendarEvents():Collection
   {
     return $this->calendarEvents;
+  }
+
+  /**
+   * Set instrumentationNumbers.
+   *
+   * @param Collection $instrumentationNumbers
+   *
+   * @return Project
+   */
+  public function setInstrumentationNumbers(Collection $instrumentationNumbers):Project
+  {
+    $this->instrumentationNumbers = $instrumentationNumbers;
+
+    return $this;
+  }
+
+  /**
+   * Get instrumentationNumbers.
+   *
+   * @return Collection
+   */
+  public function getInstrumentationNumbers()
+  {
+    return $this->instrumentationNumbers;
   }
 
   /**
