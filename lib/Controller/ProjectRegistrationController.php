@@ -154,11 +154,34 @@ class ProjectRegistrationController extends Controller
       } else {
         $actionMenu[] = $menuItem;
       }
+
+      $instrumentationNumbers = $project->getInstrumentationNumbers();
+      $flatInstrumentationNumbers = [];
+      /** @var Entities\ProjectInstrumentationNumber $instrumentationNumber */
+      foreach ($instrumentationNumbers as $instrumentationNumber) {
+        $flatData = $instrumentationNumber->toArray();
+        unset($flatData['instruments']);
+        $flatData['project'] = $project->getId();
+        $instrument = $instrumentationNumber->getInstrument();
+        $flatInstrument = $instrument->toArray();
+        unset($flatInstrument['musicianInstruments']);
+        $flatInstrument['families'] = [];
+        foreach ($instrument->getFamilies() as $family) {
+          $flatFamily = $family->toArray();
+          unset($flatFamily['instruments']);
+          $flatInstrument['families'][] = $flatFamily;
+        }
+        usort($flatInstrument['families'], fn($a, $b) => strcmp($a['family'], $b['family']));
+        $flatData['instrument'] = $flatInstrument;
+        $flatInstrumentationNumbers[] = $flatData;
+      }
+
       $projectsList[] = [
         'id' => $project->getId(),
         'name' => $project->getName(),
         'year' => $project->getYear(),
         'deadline' => $deadline,
+        'instrumentation' => $flatInstrumentationNumbers,
       ];
     }
 

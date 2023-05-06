@@ -28,9 +28,7 @@
         {{ t(appId, 'The project registration for all projects is closed.') }}
       </h2>
     </Content>
-    <Content v-else
-             :app-name="appId"
-    >
+    <Content v-if="activeProject" :app-name="appId">
       <div v-if="!loading" class="page-container">
         <h2 v-if="!!registrationData.personalPublicName">
           {{ t(appId, 'Personal Profile of {publicName}', { publicName: registrationData.personalPublicName || '' }) }}
@@ -188,12 +186,25 @@
                                :maxlength="1024"
                                :auto-complete="autoComplete"
                                :placeholder="t(appId, 'Please introduce yourself!')"
-                               :tooltip="t(appId, 'As this is the first time that you try to apply to one of our projects we would like to kindly ask you to introduce yourself shortly (instruments, musicial skills, orchestras you already have played with).')"
                                :multiline="true"
                                :required="registrationData.firstTimeApplication === 'first-time'"
           />
         </div>
         <DebugInfo :debug-data="registrationData" />
+      </div>
+    </Content>
+    <Content v-if="activeProject" :app-name="appId">
+      <div v-if="!loading" class="page-container">
+        <h2>
+          {{ t(appId, 'Instrumentation, Rehearsals and Concerts') }}
+        </h2>
+      </div>
+    </Content>
+    <Content v-if="activeProject" :app-name="appId">
+      <div v-if="!loading" class="page-container">
+        <h2>
+          {{ t(appId, 'Project Fees and Options') }}
+        </h2>
       </div>
     </Content>
   </AppContent>
