@@ -30,68 +30,80 @@
         <InputText v-model="memberData.firstName"
                    :label="t(appId, 'First Name')"
                    :placeholder="t(appId, 'e.g. Jonathan')"
-                   :readonly="readonly" />
+                   :readonly="readonly"
+        />
         <InputText v-model="memberData.surName"
                    :label="t(appId, 'Sur Name')"
                    :placeholder="t(appId, 'e.g. Smith')"
-                   :readonly="readonly" />
+                   :readonly="readonly"
+        />
       </div>
       <div v-show="memberData.nickName" class="input-row">
         <InputText v-model="memberData.nickName"
                    :label="t(appId, 'Nick Name')"
                    :placeholder="t(appId, 'e.g. Jonny')"
-                   :readonly="readonly" />
+                   :readonly="readonly"
+        />
       </div>
       <div v-show="memberData.addressSupplement" class="input-row">
         <InputText v-model="memberData.addressSupplement"
                    :label="t(appId, 'Address Supplement')"
                    :placeholder="t(appId, 'e.g. c/o Doe')"
-                   :readonly="readonly" />
+                   :readonly="readonly"
+        />
       </div>
       <div class="input-row">
         <InputText v-model="memberData.street"
                    :label="t(appId, 'Street')"
                    :placeholder="t(appId, 'e.g. Underhill')"
-                   :readonly="readonly" />
+                   :readonly="readonly"
+        />
         <InputText v-model="memberData.streetNumber"
                    type="number"
                    :label="t(appId, 'Number')"
                    :placeholder="t(appId, 'e.g. 13')"
-                   :readonly="readonly" />
+                   :readonly="readonly"
+        />
       </div>
       <div class="input-row">
         <InputText v-model="memberData.postalCode"
                    type="text"
                    :label="t(appId, 'Postal Code')"
                    :placeholder="t(appId, 'e.g. 4711')"
-                   :readonly="readonly" />
+                   :readonly="readonly"
+        />
         <InputText v-model="memberData.city"
                    :label="t(appId, 'City')"
                    :placeholder="t(appId, 'e.g. Bagend')"
-                   :readonly="readonly" />
+                   :readonly="readonly"
+        />
       </div>
       <div class="input-row">
         <InputText v-model="memberData.country"
                    class="country"
                    :label="t(appId, 'Country')"
                    :placeholder="t(appId, 'e.g. The Shire')"
-                   :readonly="readonly" />
+                   :readonly="readonly"
+        />
         <InputText v-model="memberData.birthday"
                    type="date"
                    class="birthday"
                    :label="t(appId, 'Birthday')"
                    :placeholder="t(appId, 'e.g. 01.01.1970')"
-                   :readonly="readonly" />
+                   :readonly="readonly"
+        />
       </div>
       <div class="input-row">
         <InputText v-model="memberData.email"
                    :label="t(appId, 'Email')"
                    :placeholder="t(appId, 'e.g. me@you.tld')"
                    :readonly="readonly"
-                   icon="email" />
+                   icon="email"
+        />
       </div>
       <div v-if="memberData.emailAddresses.length > 1"
-           class="input-row">
+           class="input-row"
+      >
         <InputText v-model="memberData.emailAddresses"
                    type="multiselect"
                    :label="t(appId, 'All Email Addresses')"
@@ -99,17 +111,20 @@
                    track-by="address"
                    option-label="address"
                    :readonly="readonly"
-                   :multiple="true" />
+                   :multiple="true"
+        />
       </div>
       <div class="input-row">
         <InputText v-model="memberData.mobilePhone"
                    :label="t(appId, 'Mobile Phone')"
                    :placeholder="t(appId, 'e.g. +12 34 5678 901234')"
-                   :readonly="readonly" />
+                   :readonly="readonly"
+        />
         <InputText v-model="memberData.fixedLinePhone"
                    :label="t(appId, 'Fixed Line Phone')"
                    :placeholder="t(appId, 'e.g. +12 34 5678 901234')"
-                   :readonly="readonly" />
+                   :readonly="readonly"
+        />
       </div>
       <div class="input-row">
         <InputText v-model="memberData.selectedInstruments"
@@ -119,7 +134,8 @@
                    track-by="id"
                    option-label="name"
                    :readonly="readonly"
-                   :multiple="true" />
+                   :multiple="true"
+        />
       </div>
       <DebugInfo :debug-data="memberData" />
     </div>
@@ -132,7 +148,6 @@ import DebugInfo from '../components/DebugInfo'
 
 import { set as vueSet } from 'vue'
 import Content from '@nextcloud/vue/dist/Components/Content'
-import CheckboxRadioSwitch from '@nextcloud/vue/dist/Components/CheckboxRadioSwitch'
 
 import { useMemberDataStore } from '../stores/memberData.js'
 
@@ -144,7 +159,6 @@ export default {
     Content,
     InputText,
     DebugInfo,
-    CheckboxRadioSwitch,
   },
   setup() {
     const memberData = useMemberDataStore()

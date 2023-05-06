@@ -32,11 +32,13 @@
         <ListItem v-for="participant in memberData.projectParticipation"
                   :key="participant.project.id"
                   :title="participant.project.name"
-                  :bold="true">
+                  :bold="true"
+        >
           <template #details>
             <Actions class="project-details">
               <ActionButton icon="icon-info"
-                            @click="requestProjectDetails(participant)">
+                            @click="requestProjectDetails(participant)"
+              >
                 {{ t(appId, 'details') }}
               </ActionButton>
             </Actions>

@@ -7,35 +7,40 @@
           :title="t(appId, 'Home')"
           icon="icon-home"
           exact
-          @click="showSidebar = false" />
+          @click="showSidebar = false"
+        />
         <AppNavigationItem
           :to="memberDataError ? {} : { name: 'personalProfile' }"
           :title="t(appId, 'Personal Profile')"
           icon="icon-files-dark"
           :class="{ disabled: memberDataError }"
           exact
-          @click="showSidebar = false" />
+          @click="showSidebar = false"
+        />
         <AppNavigationItem
           :to="memberDataError ? {} : { name: 'bankAccounts' }"
           :title="t(appId, 'Bank Accounts')"
           icon="icon-files-dark"
           :class="{ disabled: memberDataError }"
           exact
-          @click="showSidebar = false" />
+          @click="showSidebar = false"
+        />
         <AppNavigationItem
           :to="memberDataError ? {} : { name: 'instrumentInsurances' }"
           :title="t(appId, 'Instrument Insurances')"
           icon="icon-files-dark"
           :class="{ disabled: memberDataError }"
           exact
-          @click="showSidebar = false" />
+          @click="showSidebar = false"
+        />
         <AppNavigationItem
           :to="memberDataError ? {} : { name: 'projects' }"
           :title="t(appId, 'Projects')"
           icon="icon-files-dark"
           :class="{ disabled: memberDataError }"
           exact
-          @click="showSidebar = false" />
+          @click="showSidebar = false"
+        />
       </template>
       <template #footer>
         <AppNavigationSettings>
@@ -72,17 +77,20 @@
     <AppSidebar v-show="showSidebar"
                 :title="sidebarTitle"
                 :loading.sync="loading"
-                @close="closeSidebar">
+                @close="closeSidebar"
+    >
       <AppSidebarTab v-if="sidebarView === 'InstrumentInsurances'"
                      id="details-side-bar"
                      icon="icon-share"
-                     :name="t(appId, 'details')">
+                     :name="t(appId, 'details')"
+      >
         <InsuranceDetails v-bind="sidebarProps" />
       </AppSidebarTab>
       <AppSidebarTab v-if="sidebarView === 'Projects'"
                      id="details-side-bar"
                      icon="icon-share"
-                     :name="t(appId, 'details')">
+                     :name="t(appId, 'details')"
+      >
         <ProjectDetails v-bind="sidebarProps" />
       </AppSidebarTab>
     </AppSidebar>

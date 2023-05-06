@@ -32,25 +32,31 @@
       <ul class="insurance-sections">
         <ListItem :title="t(appId, 'Summary')"
                   :bold="true"
-                  class="summary">
+                  class="summary"
+        >
           <template #subtitle>
             <ul class="insurance-summary">
               <ListItem :title="t(appId, 'Total Insured Value')"
-                        :details="totalInsuredValue + ' ' + currencySymbol" />
+                        :details="totalInsuredValue + ' ' + currencySymbol"
+              />
               <ListItem v-if="totalInsuredValue != totalPayableValue"
                         :title="t(appId, 'Total Payable Value')"
-                        :details="totalPayableValue + ' ' + currencySymbol" />
+                        :details="totalPayableValue + ' ' + currencySymbol"
+              />
               <ListItem :title="t(appId, 'Yearly Insurance fees w/o taxes')"
-                        :details="totalPayableFees.toFixed(2) + ' ' + currencySymbol" />
+                        :details="totalPayableFees.toFixed(2) + ' ' + currencySymbol"
+              />
               <ListItem :title="t(appId, 'Yearly Insurance fees with {taxes}% taxes', { taxes: taxRate*100.0 })"
-                        :details="(totalPayableFees * (1.0 + taxRate)).toFixed(2) + ' ' + currencySymbol" />
+                        :details="(totalPayableFees * (1.0 + taxRate)).toFixed(2) + ' ' + currencySymbol"
+              />
               <ListItem :title="t(appId, 'Yearly Insurance Bills')">
                 <template #details>
                   <Actions class="insurance-bill-list">
                     <ActionLink v-for="receivable in insuranceBills"
                                 :key="receivable.optionKey"
                                 icon="icon-download"
-                                :href="optionDownloadUrl(receivable.optionKey)">
+                                :href="optionDownloadUrl(receivable.optionKey)"
+                    >
                       {{ receivable.dataOption.label }}
                     </ActionLink>
                   </Actions>
@@ -62,18 +68,21 @@
         <ListItem v-if="memberData.instrumentInsurances.forOthers.length > 0"
                   :title="t(appId, 'Paid for Others')"
                   :details="t(appId, 'instrument used by someone else')"
-                  :bold="true">
+                  :bold="true"
+        >
           <template #subtitle>
             <ul class="insurance-list for-others">
               <ListItem v-for="insurance in memberData.instrumentInsurances.forOthers"
                         :key="insurance.id"
                         :title="insurance.object"
-                        class="insurance-item">
+                        class="insurance-item"
+              >
                 <template #details>
                   <span class="insurance-amount">{{ insurance.insuranceAmount + ' ' + currencySymbol }}</span>
                   <Actions class="insurance-details">
                     <ActionButton icon="icon-info"
-                                  @click="requestInsuranceDetails(insurance)">
+                                  @click="requestInsuranceDetails(insurance)"
+                    >
                       {{ t(appId, 'details') }}
                     </ActionButton>
                   </Actions>
@@ -85,18 +94,21 @@
         <ListItem v-if="memberData.instrumentInsurances.byOthers.length > 0"
                   :title="t(appId, 'Paid by Others')"
                   :details="t(appId, 'instrument owned or used by me')"
-                  :bold="true">
+                  :bold="true"
+        >
           <template #subtitle>
             <ul class="insurance-list by-others">
               <ListItem v-for="insurance in memberData.instrumentInsurances.byOthers"
                         :key="insurance.id"
                         :title="insurance.object"
-                        class="insurance-item">
+                        class="insurance-item"
+              >
                 <template #details>
                   <span class="insurance-amount">{{ insurance.insuranceAmount + ' ' + currencySymbol }}</span>
                   <Actions class="insurance-details">
                     <ActionButton icon="icon-info"
-                                  @click="requestInsuranceDetails(insurance)">
+                                  @click="requestInsuranceDetails(insurance)"
+                    >
                       {{ t(appId, 'details') }}
                     </ActionButton>
                   </Actions>
@@ -108,18 +120,21 @@
         <ListItem v-if="memberData.instrumentInsurances.self.length > 0"
                   :title="haveOthers ? t(appId, 'Self Used and Paid') : t(appId, 'Insured Instruments')"
                   :details="haveOthers ? t(appId, 'instrument owned or used by me') : ''"
-                  :bold="true">
+                  :bold="true"
+        >
           <template #subtitle>
             <ul class="insurance-list self">
               <ListItem v-for="insurance in memberData.instrumentInsurances.self"
                         :key="insurance.id"
                         :title="insurance.object"
-                        class="insurance-item">
+                        class="insurance-item"
+              >
                 <template #details>
                   <span class="insurance-amount">{{ insurance.insuranceAmount + ' ' + currencySymbol }}</span>
                   <Actions class="insurance-details">
                     <ActionButton icon="icon-info"
-                                  @click="requestInsuranceDetails(insurance)">
+                                  @click="requestInsuranceDetails(insurance)"
+                    >
                       {{ t(appId, 'details') }}
                     </ActionButton>
                   </Actions>

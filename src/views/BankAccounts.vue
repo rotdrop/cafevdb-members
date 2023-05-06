@@ -1,6 +1,6 @@
 <script>
 /**
- * @copyright Copyright (c) 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
  *
@@ -33,11 +33,13 @@
       </CheckboxRadioSwitch>
       <ul v-for="account in memberData.sepaBankAccounts"
           :key="account.sequence"
-          class="sepa-bank-accounts-list">
+          class="sepa-bank-accounts-list"
+      >
         <ListItem v-if="showDeleted || !account.deleted"
                   :title="t(appId, 'IBAN')"
                   :details="account.iban"
-                  :bold="true">
+                  :bold="true"
+        >
           <template #subtitle>
             <ul class="sepa-bank-account-details">
               <!-- <ListItem :title="t(appId, 'BIC')" :details="account.bic" /> -->
@@ -46,14 +48,17 @@
               <ListItem v-if="account.modified" :title="t(appId, 'modified')" :details="formatDate(account.modified)" />
               <ListItem v-if="account.deleted" :title="t(appId, 'revoked')" :details="formatDate(account.deleted)" />
               <ListItem v-if="(showDeleted && account.sepaDebitMandates) || (!showDeleted && account.numActiveDebitMandates > 0)"
-                        :title="t(appId, 'Debit Mandates ({count})', { count: showDeleted ? account.sepaDebitMandates.length : account.numActiveDebitMandates, })">
+                        :title="t(appId, 'Debit Mandates ({count})', { count: showDeleted ? account.sepaDebitMandates.length : account.numActiveDebitMandates, })"
+              >
                 <template #subtitle>
                   <ul v-for="mandate in account.sepaDebitMandates"
                       :key="mandate.sequence"
-                      class="sepa-debit-mandates-list">
+                      class="sepa-debit-mandates-list"
+                  >
                     <ListItem v-if="showDeleted || !mandate.deleted"
                               :title="t(appId, 'reference')"
-                              :details="mandate.mandateReference">
+                              :details="mandate.mandateReference"
+                    >
                       <template v-if="true || showDeleted || !mandate.deleted" #subtitle>
                         <ul class="sepa-debit-mandate-details">
                           <ListItem :title="t(appId, 'granted')" :details="formatDate(mandate.mandateDate.date)" />

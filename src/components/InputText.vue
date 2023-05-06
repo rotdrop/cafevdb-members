@@ -16,10 +16,12 @@
                       :input-class="['effect', 'mx-input', { focusable: isFocusable }]"
                       :disabled="disabled || readonly"
                       :readonly="readonly"
+                      :required="required"
                       v-bind="$attrs"
                       @focus="show = !show;"
                       @blur="show = !show;"
-                      @input="$emit('input', $event.target ? $event.target.value : $event);" />
+                      @input="$emit('input', $event.target ? $event.target.value : $event);"
+      />
       <Multiselect v-else-if="isMultiselectType"
                    class="effect"
                    :value="value"
@@ -27,10 +29,12 @@
                    :disabled="disabled || readonly"
                    :readonly="readonly"
                    :label="optionLabel"
+                   :required="required"
                    v-bind="$attrs"
                    v-on="$listeners"
                    @focus="show = !show;"
-                   @blur="show = !show;" />
+                   @blur="show = !show;"
+      />
       <input v-else
              :type="type"
              :value="value"
@@ -38,10 +42,12 @@
              :disabled="disabled"
              :class="['effect', has_icon, { focusable: isFocusable }]"
              :readonly="readonly"
+             :required="required"
              v-bind="$attrs"
              @focus="show = !show;"
              @blur="show = !show;"
-             @input="$emit('input', $event.target.value);">
+             @input="$emit('input', $event.target.value);"
+      >
       <label :style="{ color: color }"><span>{{ label }}</span><span class="readonly-indicator"><LockIcon /></span></label>
       <span class="focus-border" :style="focus_border" />
     </div>
@@ -68,6 +74,7 @@ export default {
     type: { type: String, required: false, default: 'text' },
     disabled: { type: Boolean, required: false, default: false },
     readonly: { type: Boolean, required: false, default: false },
+    required: { type: Boolean, required: false, default: false },
     value: { type: [String, Date, Array], required: false, default: '' },
     label: { type: String, required: false, default: '' },
     hint: { type: String, required: false, default: '' },

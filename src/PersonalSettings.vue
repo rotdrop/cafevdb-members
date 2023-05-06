@@ -1,6 +1,6 @@
 <script>
 /**
- * @copyright Copyright (c) 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
  *
@@ -23,12 +23,12 @@
 </script>
 <template>
   <SettingsSection :title="t(appName, 'CAFeVDB Database Connector, Personal Settings')">
-    <SettingsInputText
-      :id="'test-input'"
-      v-model="inputTest"
-      :label="t(appName, 'Test Input')"
-      :hint="t(appName, 'Test Hint')"
-      @update="saveInputTest" />
+    <SettingsInputText :id="'test-input'"
+                       v-model="inputTest"
+                       :label="t(appName, 'Test Input')"
+                       :hint="t(appName, 'Test Hint')"
+                       @update="saveInputTest"
+    />
   </SettingsSection>
 </template>
 
