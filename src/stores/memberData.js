@@ -33,6 +33,20 @@ import axios from '@nextcloud/axios'
 export const useMemberDataStore = defineStore('member-data', {
   state: () => {
     return {
+      firstName: null,
+      surName: null,
+      nickName: null,
+      personalPublicName: null,
+      addressSupplement: null,
+      street: null,
+      streetNumber: null,
+      postalCode: null,
+      country: null,
+      birthday: null,
+      email: null,
+      emailAddresses: [],
+      mobilePhone: null,
+      fixedLinePhone: null,
       selectedInstruments: [],
       instruments: [],
       sepaBankAccounts: [],

@@ -32,6 +32,7 @@ use OCP\IL10N;
 use OCP\IDateTimeZone;
 use OCP\AppFramework\Http\Template\PublicTemplateResponse;
 use OCP\AppFramework\Http\Template\SimpleMenuAction;
+use OCP\AppFramework\Services\IInitialState;
 use OCP\Calendar\ICalendar;
 use OCP\Calendar\IManager as ICalendarMananger;
 use OCP\Calendar\ICalendarQuery;
@@ -63,6 +64,9 @@ class ProjectRegistrationController extends Controller
   /** @var IURLGenerator */
   private $urlGenerator;
 
+  /** @var IInitialState */
+  private $initialState;
+
   /** @var EntityManager */
   private $entityManager;
 
@@ -76,6 +80,7 @@ class ProjectRegistrationController extends Controller
     ICalendarMananger $calendarManager,
     IDateTimeZone $dateTimeZone,
     IURLGenerator $urlGenerator,
+    IInitialState $initialState,
     EntityManager $entityManager,
   ) {
     parent::__construct($appName, $request);
@@ -85,11 +90,14 @@ class ProjectRegistrationController extends Controller
     $this->calendarManager = $calendarManager;
     $this->dateTimeZone = $dateTimeZone;
     $this->urlGenerator = $urlGenerator;
+    $this->initialState = $initialState;
     $this->entityManager = $entityManager;
   }
   // phpcs:enable
 
   /**
+   * @param null|string $projectName
+   *
    * @return PublicTemplateResponse
    *
    * @todo Check whether we do want CSRF.
@@ -100,25 +108,28 @@ class ProjectRegistrationController extends Controller
    */
   public function page(?string $projectName):PublicTemplateResponse
   {
-    $response = new PublicTemplateResponse($this->appName, 'project-registration', [
-      'appName' => $this->appName,
-      'foo' => 'bar',
-    ]);
-
-    $response->setFooterVisible(false);
-
     $nowDate = self::convertToTimezoneDate(new DateTimeImmutable, $this->dateTimeZone->getTimeZone());
     $currentYear = $nowDate->format('Y');
 
-    $projects = $this->entityManager->getRepository(Entities\Project::class)->findBy([
-      '>=year' => $currentYear,
-    ]);
+    $this->logInfo('YEAR ' . $currentYear);
+
+    $projects = $this->entityManager->getRepository(Entities\Project::class)->findBy(
+      criteria: [
+        '>=year' => $currentYear,
+      ],
+      orderBy: [
+        'year' => 'DESC',
+        'name' => 'ASC',
+      ],
+    );
 
     $actionMenu = [];
+    $projectsList = [];
+    $activeProject = -1;
 
     /** @var Entities\Project $project */
     foreach ($projects as $project) {
-      $this->logInfo('NAME ' . $project->getName());
+      $this->logInfo('PROJECT ' . $project->getName());
       $deadline = $this->getProjectRegistrationDeadline($project);
       if (empty($deadline)) {
         continue;
@@ -128,16 +139,58 @@ class ProjectRegistrationController extends Controller
         continue;
       }
 
+      if (empty($projectName)) {
+        $projectName = $project->getName();
+      }
+
       $link = $this->urlGenerator->linkToRoute($this->appName . '.project_registration.page', [ 'projectName' => $project->getName() ]);
       $menuItem = new SimpleMenuAction($project->getName(), $project->getName(), 'icon-download', $link);
       if ($project->getName() == $projectName) {
         array_unshift($actionMenu, $menuItem);
+        $activeProject = count($projectsList);
       } else {
         $actionMenu[] = $menuItem;
       }
+      $projectsList[] = [
+        'id' => $project->getId(),
+        'name' => $project->getName(),
+        'year' => $project->getYear(),
+        'deadline' => $deadline,
+      ];
     }
 
+    $response = new PublicTemplateResponse($this->appName, 'project-registration', [
+      'appName' => $this->appName,
+    ]);
+    $response->setFooterVisible(false);
+    $response->setHeaderTitle($this->l->t('Project Application for %s', $projectName));
     $response->setHeaderActions($actionMenu);
+
+    $this->initialState->provideInitialState('projects', $projectsList);
+    $this->initialState->provideInitialState('activeProject', $activeProject);
+
+    // provide some select options ...
+    $instruments = $this->entityManager->getRepository(Entities\Instrument::class)->findBy(
+      [],
+      [
+        'sortOrder' => 'ASC',
+      ],
+    );
+    $flatInstruments = [];
+    foreach ($instruments as $instrument) {
+      $flatInstrument = $instrument->toArray();
+      unset($flatInstrument['musicianInstruments']);
+      $flatInstrument['families'] = [];
+      foreach ($instrument->getFamilies() as $family) {
+        $flatFamily = $family->toArray();
+        unset($flatFamily['instruments']);
+        $flatInstrument['families'][] = $flatFamily;
+      }
+      usort($flatInstrument['families'], fn($a, $b) => strcmp($a['family'], $b['family']));
+      $flatInstruments[] = $flatInstrument;
+    }
+
+    $this->initialState->provideInitialState('instruments', $flatInstruments);
 
     return $response;
   }

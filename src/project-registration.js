@@ -22,16 +22,27 @@
 
 import { appName } from './config.js'
 import { generateFilePath } from '@nextcloud/router'
+import { getRequestToken } from '@nextcloud/auth'
 
 import Vue from 'vue'
 import ProjectRegistation from './ProjectRegistration'
+import { createPinia, PiniaVuePlugin } from 'pinia'
+
+Vue.use(PiniaVuePlugin)
+const pinia = createPinia()
+
+// CSP config for webpack dynamic chunk loading
+// eslint-disable-next-line
+__webpack_nonce__ = btoa(getRequestToken())
 
 // eslint-disable-next-line
 __webpack_public_path__ = generateFilePath(appName, '', 'js/')
 
-Vue.mixin({ data() { return { appName } }, methods: { t, n } })
+Vue.mixin({ data() { return { appId: appName } }, methods: { t, n } })
 
 export default new Vue({
   el: '#project-registration',
+  name: appName,
+  pinia,
   render: h => h(ProjectRegistation),
 })
