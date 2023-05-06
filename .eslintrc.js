@@ -12,4 +12,12 @@ module.exports = {
     // space before self-closing elements
     'vue/html-closing-bracket-spacing': 'error',
   },
+  overrides: [
+    {
+      files: ['src/toolkit/**'],
+      rules: {
+        semi: ['error', 'always'],
+      },
+    },
+  ],
 }
