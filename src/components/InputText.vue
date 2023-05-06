@@ -5,11 +5,13 @@
  */
 </script>
 <template>
-  <div :class="['input__container', 'input-type-' + type, { readonly, collapse }, has_hint, has_icon ]">
+  <div :class="['input__container', 'input-type-' + type, { readonly, collapse }, has_hint, has_icon, ...cloudVersionClasses ]">
     <div :class="['input-effect', filled, { readonly, collapse }, has_hint, has_icon ]">
       <DatetimePicker v-if="isDatePickerType"
+                      ref="datepicker"
                       class="effect"
                       :type="isDatePickerType"
+                      :format="format ? format : formatTypeMap"
                       :value="value"
                       :data-foo="value"
                       :placeholder="placeholder"
@@ -57,12 +59,23 @@
 </template>
 
 <script>
+import { getLanguage } from '@nextcloud/l10n'
 import DatetimePicker from '@nextcloud/vue/dist/Components/DatetimePicker'
 import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
 import LockIcon from 'vue-material-design-icons/Lock.vue'
 // The following would interfere with the rest of NC:
 // import 'vue-material-design-icons/styles.css'
 import 'material-icons/iconfont/material-icons.css'
+import cloudVersionClasses from '../toolkit/util/cloud-version-classes.js'
+
+const formatMapDE = {
+        date: 'DD.MM.YYYY',
+        datetime: 'DD.MM.YYYY H:mm:ss',
+        year: 'YYYY',
+        month: 'MM.YYYY',
+        time: 'H:mm:ss',
+        week: 'w',
+}
 
 export default {
   components: {
@@ -75,7 +88,7 @@ export default {
     disabled: { type: Boolean, required: false, default: false },
     readonly: { type: Boolean, required: false, default: false },
     required: { type: Boolean, required: false, default: false },
-    value: { type: [String, Date, Array], required: false, default: '' },
+    value: { type: [String, Date, Array, Object], required: false, default: '' },
     label: { type: String, required: false, default: '' },
     hint: { type: String, required: false, default: '' },
     icon: { type: String, required: false, default: '' },
@@ -83,10 +96,24 @@ export default {
     color: { type: String, required: false, default: 'indigo' },
     optionLabel: { type: String, required: false, default: '' },
     collapse: { type: Boolean, requried: false, default: true },
+    format: { type: String, default: null, },
   },
   data: () => ({
+    cloudVersionClasses,
     show: false,
   }),
+  created() {
+    if (this.isDatePickerType !== false) {
+      const oldComputedPlaceholder = DatetimePicker.computed.placeholder
+      const explicitPlaceholder = this.placeholder
+      DatetimePicker.computed.placeholder = function() {
+        if (explicitPlaceholder) {
+          return explicitPlaceholder
+        }
+        return apply(this, oldComputedPlaceholder)
+      }
+    }
+  },
   computed: {
     filled() {
       if (!this.show && this.value) {
@@ -116,14 +143,25 @@ export default {
     },
     isDatePickerType() {
       switch (this.type) {
-      case 'date':
-      case 'month':
-      case 'time':
-        return this.type
-      case 'datetime-local':
-        return 'datetime'
+        case 'time':
+        case 'month':
+        case 'year':
+        case 'week':
+        case 'date':
+        case 'datetime':
+          return this.type
       }
       return false
+    },
+    formatTypeMap() {
+      if (this.isDatePickerType === false) {
+        return null
+      }
+      if (getLanguage().startsWith('de')) {
+        return formatMapDE[this.type] ?? formatMapDE.date
+      } else {
+        return null
+      }
     },
     /**
      * determines if the action is focusable
@@ -136,8 +174,13 @@ export default {
   },
 }
 </script>
-
 <style lang="scss" scoped>
+.cloud-version {
+  &:not(.cloud-version-major-23, .cloud-version-major-24) {
+    --icon-checkmark-000: var(--icon-checkmark-dark);
+  }
+}
+
 .input__container {
   width: 100%;
   padding: 0.5rem 0.5rem 0 0;
