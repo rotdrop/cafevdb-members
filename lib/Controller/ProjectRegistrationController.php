@@ -52,6 +52,9 @@ class ProjectRegistrationController extends Controller
   use \OCA\CAFeVDBMembers\Toolkit\Traits\LoggerTrait;
   use \OCA\CAFeVDBMembers\Toolkit\Traits\DateTimeTrait;
 
+  /** @var IL10N */
+  private $l;
+
   /** @var IConfig */
   private $cloudConfig;
 
@@ -169,7 +172,7 @@ class ProjectRegistrationController extends Controller
     $this->initialState->provideInitialState('projects', $projectsList);
     $this->initialState->provideInitialState('activeProject', $activeProject);
 
-    // provide some select options ...
+    // provide the available instruments
     $instruments = $this->entityManager->getRepository(Entities\Instrument::class)->findBy(
       [],
       [
@@ -191,6 +194,37 @@ class ProjectRegistrationController extends Controller
     }
 
     $this->initialState->provideInitialState('instruments', $flatInstruments);
+
+    // provide the project instruments
+    // @todo
+
+    // provide country names
+    $displayLocale = $this->l->getLocaleCode();
+    $displayRegion = locale_get_region($displayLocale);
+    if (empty($displayRegion)) {
+      $displayRegion = strtoupper($displayLocale);
+      $displayLocale = $displayLocale . '_' . $displayRegion;
+    }
+    $this->logInfo('LOCALE ' . $displayLocale);
+
+    $locales = resourcebundle_locales('');
+    $countryCodes = [];
+    foreach ($locales as $locale) {
+      $country = locale_get_region($locale);
+      if ($country) {
+        $countryCodes[$country] = [
+          'code' => $country,
+          'name' => locale_get_display_region($locale, $displayLocale),
+        ];
+      }
+    }
+    usort($countryCodes, fn($a, $b) => strcmp($a['name'], $b['name']));
+    $this->initialState->provideInitialState('countries', array_values($countryCodes));
+    $this->initialState->provideInitialState('displayLocale', [
+      'code' => $displayLocale,
+      'region' => $displayRegion,
+      'language' => locale_get_primary_language($displayLocale),
+    ]);
 
     return $response;
   }

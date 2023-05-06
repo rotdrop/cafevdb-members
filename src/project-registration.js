@@ -27,9 +27,12 @@ import { getRequestToken } from '@nextcloud/auth'
 import Vue from 'vue'
 import ProjectRegistation from './ProjectRegistration'
 import { createPinia, PiniaVuePlugin } from 'pinia'
+import { Tooltip } from '@nextcloud/vue'
 
 Vue.use(PiniaVuePlugin)
 const pinia = createPinia()
+
+Vue.directive('tooltip', Tooltip)
 
 // CSP config for webpack dynamic chunk loading
 // eslint-disable-next-line
