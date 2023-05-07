@@ -165,20 +165,6 @@ class ProjectParticipantField implements \ArrayAccess
   private $encrypted = false;
 
   /**
-   * @var string|null
-   *
-   * @ORM\Column(type="string", length=1024, nullable=true, options={"comment"="If non-empty restrict the visbility to this comma separated list of user-groups."})
-   */
-  private $readers = null;
-
-  /**
-   * @var string|null
-   *
-   * @ORM\Column(type="string", length=1024, nullable=true, options={"comment"="Empty or comma separated list of groups allowed to change the field."})
-   */
-  private $writers = null;
-
-  /**
    * @ORM\OneToMany(targetEntity="ProjectParticipantFieldDatum", mappedBy="field", fetch="EXTRA_LAZY")
    */
   private $fieldData;
