@@ -163,7 +163,7 @@ import AppSidebar from '@nextcloud/vue/dist/Components/AppSidebar'
 import AppSidebarTab from '@nextcloud/vue/dist/Components/AppSidebarTab'
 import { generateUrl } from '@nextcloud/router'
 import { getLocale, getCanonicalLocale, } from '@nextcloud/l10n'
-import { getInitialState } from '../services/InitialStateService'
+import { getInitialState } from '../toolkit/services/InitialStateService'
 import { getRequestToken } from '@nextcloud/auth'
 
 const initialState = getInitialState()
