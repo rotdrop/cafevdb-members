@@ -19,32 +19,30 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { appName } from './config.js'
-import { generateFilePath } from '@nextcloud/router'
-import { getRequestToken } from '@nextcloud/auth'
-// import { sync } from 'vuex-router-sync'
-// import { translate, translatePlural } from '@nextcloud/l10n'
-import Vue from 'vue'
-import App from './App'
-import router from './router/app-router.js'
-import { createPinia, PiniaVuePlugin } from 'pinia'
+const routes = [
+  {
+    path: '/:projectName',
+    name: 'home',
+    props: true,
+  },
+  {
+    path: '/:projectName/personal-profile',
+    component: () => import('../views/Registration/PersonalProfile'),
+    name: 'personalProfile',
+    props: true,
+  },
+  {
+    path: '/:projectName/participation',
+    component: () => import('../views/Registration/Participation'),
+    name: 'participation',
+    props: true,
+  },
+  {
+    path: '/:projectName/project-options',
+    component: () => import('../views/Registration/ProjectOptions'),
+    name: 'projectOptions',
+    props: true,
+  },
+]
 
-Vue.use(PiniaVuePlugin)
-const pinia = createPinia()
-
-// CSP config for webpack dynamic chunk loading
-// eslint-disable-next-line
-__webpack_nonce__ = btoa(getRequestToken())
-
-// eslint-disable-next-line
-__webpack_public_path__ = generateFilePath(appName, '', 'js/')
-
-Vue.mixin({ data() { return { appId: appName } }, methods: { t, n } })
-
-export default new Vue({
-  el: '#content',
-  name: appName,
-  router,
-  pinia,
-  render: h => h(App),
-})
+export default routes

@@ -22,92 +22,52 @@
  */
 </script>
 <template>
-  <Content :class="{ 'icon-loading': loading }" :app-name="appId">
-    <AppNavigation>
-      <template #list>
-        <AppNavigationItem
-          :to="{ name: 'home', params: { projectName } }"
-          :title="t(appId, 'Home')"
-          icon="icon-home"
-          exact
+  <Content v-if="activeProject" :app-name="appId">
+    <div v-if="!loading" class="page-container">
+      <h2>
+        {{ t(appId, 'Instrumentation, Rehearsals and Concerts') }}
+      </h2>
+      <h3>
+        {{ t(appId, 'Please configure the instrument or the role you intend to play in this project. Please also inform us about rehearsals or even concerts that you cannot participate in.') }}
+      </h3>
+      <div class="input-row">
+        <InputText v-model="registrationData.project[activeProject.id].instruments"
+                   type="multiselect"
+                   :label="t(appId, 'Project Instruments or Roles')"
+                   :options="personalProjectInstrumentOptions"
+                   track-by="id"
+                   option-label="name"
+                   :auto-limit="true"
+                   :tag-width="100"
+                   :readonly="readonly"
+                   :multiple="true"
+                   :placeholder="t(appId, 'e.g. double bass')"
+                   :required="true"
         />
-        <AppNavigationItem
-          :to="{ name: 'personalProfile', params: { projectName } }"
-          :title="t(appId, 'Personal Profile')"
-          icon="icon-files-dark"
-          :class="{ disabled: !activeProject }"
-          exact
-        />
-        <AppNavigationItem
-          :to="{ name: 'participation', params: { projectName } }"
-          :title="t(appId, 'Instrumentation and Events')"
-          icon="icon-files-dark"
-          :class="{ disabled: !activeProject }"
-          exact
-        />
-        <AppNavigationItem
-          :to="{ name: 'projectOptions', params: { projectName } }"
-          :title="t(appId, 'Options')"
-          icon="icon-files-dark"
-          :class="{ disabled: !activeProject }"
-          exact
-        />
-      </template>
-      <template #footer>
-        <AppNavigationSettings>
-          <CheckboxRadioSwitch :checked.sync="debug">
-            {{ t(appId, 'Enable Debug') }}
-          </CheckboxRadioSwitch>
-        </AppNavigationSettings>
-      </template>
-    </AppNavigation>
-    <AppContent :class="{ 'icon-loading': loading }">
-      <router-view v-show="!loading" :loading.sync="loading" />
-      <EmptyContent v-if="isRoot" class="emp-content">
-        <div v-if="activeProject">
-          {{ t(appId, '{orchestraName} project registion for {projectName}', { orchestraName, projectName }) }}
-        </div>
-        <div v-else>
-          {{ t(appId, '{orchestraName} project registration', { orchestraName }) }}
-        </div>
-        <template #icon>
-          <img :src="icon">
-        </template>
-        <template #desc>
-          <h2 v-if="!activeProject">
-            {{ t(appId, 'The project registration for all projects is closed.') }}
-          </h2>
-        </template>
-      </EmptyContent>
-    </AppContent>
+      </div>
+      <div v-if="personalProjectInstrumentOptions.length === 0">
+        {{ t(appId, 'You do not seem to play any instrument configured for the project: {instruments}.', { instruments: projectInstrumentsText }) }}
+      </div>
+    </div>
   </Content>
 </template>
 
 <script>
-import { appName } from './config.js'
-import InputText from './components/InputText'
-import DebugInfo from './components/DebugInfo'
+import { appName } from '../../config.js'
+import InputText from '../../components/InputText'
+import DebugInfo from '../../components/DebugInfo'
 
 import { set as vueSet } from 'vue'
 import AppContent from '@nextcloud/vue/dist/Components/AppContent'
-import AppNavigation from '@nextcloud/vue/dist/Components/AppNavigation'
-import AppNavigationItem from '@nextcloud/vue/dist/Components/AppNavigationItem'
-import AppNavigationSettings from '@nextcloud/vue/dist/Components/AppNavigationSettings'
 import Content from '@nextcloud/vue/dist/Components/Content'
 import CheckboxRadioSwitch from '@nextcloud/vue/dist/Components/CheckboxRadioSwitch'
-import EmptyContent from '@nextcloud/vue/dist/Components/EmptyContent'
 import RichContenteditable from '@nextcloud/vue/dist/Components/RichContenteditable'
 import { getCurrentUser } from '@nextcloud/auth'
 import { loadState } from '@nextcloud/initial-state'
 
-import { getInitialState } from './toolkit/services/InitialStateService'
-import { useMemberDataStore } from './stores/memberData.js'
-import { useAppDataStore } from './stores/appData.js'
-import { mapWritableState } from 'pinia'
+import { useMemberDataStore } from '../../stores/memberData.js'
 
 const viewName = 'PersonalProfile'
-
-import Icon from '../img/cafevdbmembers.svg'
 
 const projects = loadState(appName, 'projects')
 const activeProject = loadState(appName, 'activeProject')
@@ -115,19 +75,13 @@ const instruments = loadState(appName, 'instruments')
 const countries = loadState(appName, 'countries')
 const displayLocale = loadState(appName, 'displayLocale')
 
-const initialState = getInitialState()
-
 export default {
   name: 'ProjectRegistration',
   components: {
     AppContent,
-    AppNavigation,
-    AppNavigationItem,
-    AppNavigationSettings,
     CheckboxRadioSwitch,
     Content,
     DebugInfo,
-    EmptyContent,
     InputText,
     RichContenteditable,
   },
@@ -137,8 +91,6 @@ export default {
   },
   data() {
     return {
-      orchestraName: initialState?.orchestraName || t(appId, '[UNKNOWN]'),
-      icon: Icon,
       loading: true,
       readonly: true,
       activeProject: activeProject >= 0 ? projects[activeProject] : null,
@@ -163,7 +115,7 @@ export default {
       }
       vueSet(this.registrationData, 'firstTimeApplication', 'you-know-me')
     } else {
-      vueSet(this.registrationData, 'firstTimeApplication', 'first-time')
+    vueSet(this.registrationData, 'firstTimeApplication', 'first-time')
     }
 
     // convert the flat array of instruments to grouped options vor Vue Multiselect
@@ -197,14 +149,6 @@ export default {
     this.loading = false
   },
   computed: {
-    isRoot() {
-      console.info('ROUTE PATH', this.$route.path)
-      return this.$route.path === '/' || this.$route.path === '/' + this.projectName
-    },
-    ...mapWritableState(useAppDataStore, ['debug']),
-    projectName() {
-      return this.activeProject ? this.activeProject.name : null
-    },
     personalProjectInstrumentOptions() {
       if (!this.activeProject) {
         return []
@@ -259,37 +203,35 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.app-navigation-entry.disabled::v-deep {
-  opacity: 0.5;
-  &, & * {
-    cursor: default !important;
-    pointer-events: none;
+.page-container {
+  padding-left:0.5rem;
+  &.loading {
+    width:100%;
   }
 }
 
-.empty-content::v-deep {
-  h2 ~ p {
-    text-align: center;
-  }
-  .hint {
-    color: var(--color-text-lighter);
-  }
-  .error-section {
-    text-align: center;
-    .error-info {
-      font-weight: bold;
-      font-style: italic;
-      max-width: 66ex;
-    }
-    .hint {
-      max-width: 66ex;
-    }
-  }
+#app-content-vue {
+  overflow:auto;
 }
 
-#app-navigation-vue.app-navigation--close::v-deep {
-  .app-navigation-toggle {
-    margin-right: calc(0px - var(--navigation-width) - var(--default-clickable-area));
+.input-row {
+  display:flex;
+  flex-wrap:wrap;
+  > * {
+    flex: 1 0 40%;
+    min-width:20em;
+    &.input-type-number {
+      flex: 1 0 5%;
+      min-width:5em;
+    }
+    &.input-type-date {
+      flex: 0 0 234px;
+      width:234px;
+      min-width:210px;
+    }
+  }
+  ::v-deep .input-effect {
+    margin-bottom:0;
   }
 }
 </style>

@@ -26,6 +26,7 @@ import { getRequestToken } from '@nextcloud/auth'
 
 import Vue from 'vue'
 import ProjectRegistation from './ProjectRegistration'
+import router from './router/registration-router.js'
 import { createPinia, PiniaVuePlugin } from 'pinia'
 import { Tooltip } from '@nextcloud/vue'
 
@@ -44,8 +45,9 @@ __webpack_public_path__ = generateFilePath(appName, '', 'js/')
 Vue.mixin({ data() { return { appId: appName } }, methods: { t, n } })
 
 export default new Vue({
-  el: '#project-registration',
+  el: '#content',
   name: appName,
+  router,
   pinia,
   render: h => h(ProjectRegistation),
 })

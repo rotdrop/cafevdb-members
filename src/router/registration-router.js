@@ -17,34 +17,23 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-import { appName } from './config.js'
-import { generateFilePath } from '@nextcloud/router'
-import { getRequestToken } from '@nextcloud/auth'
-// import { sync } from 'vuex-router-sync'
-// import { translate, translatePlural } from '@nextcloud/l10n'
 import Vue from 'vue'
-import App from './App'
-import router from './router/app-router.js'
-import { createPinia, PiniaVuePlugin } from 'pinia'
+import Router from 'vue-router'
+import generateUrl from '../toolkit/util/generate-url.js'
+import routes from './registration-routes.js'
 
-Vue.use(PiniaVuePlugin)
-const pinia = createPinia()
+Vue.use(Router)
 
-// CSP config for webpack dynamic chunk loading
-// eslint-disable-next-line
-__webpack_nonce__ = btoa(getRequestToken())
+const base = generateUrl('public/registration')
 
-// eslint-disable-next-line
-__webpack_public_path__ = generateFilePath(appName, '', 'js/')
-
-Vue.mixin({ data() { return { appId: appName } }, methods: { t, n } })
-
-export default new Vue({
-  el: '#content',
-  name: appName,
-  router,
-  pinia,
-  render: h => h(App),
+const router = new Router({
+  mode: 'history',
+  base,
+  linkActiveClass: 'active',
+  routes,
 })
+
+export default router
