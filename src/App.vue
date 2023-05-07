@@ -247,4 +247,10 @@ export default {
     }
   }
 }
+
+#app-navigation-vue.app-navigation--close::v-deep {
+  .app-navigation-toggle {
+    margin-right: calc(0px - var(--navigation-width) - var(--default-clickable-area));
+  }
+}
 </style>
