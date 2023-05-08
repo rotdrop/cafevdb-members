@@ -24,11 +24,11 @@ import { defineStore } from 'pinia'
 
 import { getInitialState } from '../toolkit/services/InitialStateService'
 
-const projects = getInitialState('projects')
-const activeProject = getInitialState('activeProject')
-const instruments = getInitialState('instruments')
-const countries = getInitialState('countries')
-const displayLocale = getInitialState('displayLocale')
+const projects = getInitialState('projects', [])
+const activeProject = getInitialState('activeProject', null)
+const instruments = getInitialState('instruments', [])
+const countries = getInitialState('countries', null)
+const displayLocale = getInitialState('displayLocale', null)
 
 const initialState = getInitialState()
 
@@ -45,15 +45,10 @@ export const useAppDataStore = defineStore('app-data', {
       groupedInstruments[familyTag] = optionGroup
     }
 
-    instruments.splice(
-      0, instruments.length,
-      ...Object.values(groupedInstruments).sort((a, b) => a.sortOrder - b.sortOrder)
-    )
-
     return {
       orchestraName: initialState?.orchestraName || t(this.appId, '[UNKNOWN]'),
       projects,
-      activeProject: activeProject >= 0 ? projects[activeProject] : null,
+      activeProject: projects && activeProject >= 0 ? projects[activeProject] : null,
       instruments: Object.values(groupedInstruments).sort((a, b) => a.sortOrder - b.sortOrder),
       countries,
       displayLocale,
