@@ -24,10 +24,11 @@ return [
     ],
     [
       'name' => 'project_registration#page',
-      'url' => '/public/registration/{projectName}',
+      'url' => '/public/registration/{projectName}/{section}',
       'verb' => 'GET',
       'defaults' => [
         'projectName' => null,
+        'section' => null,
       ],
     ],
     // [

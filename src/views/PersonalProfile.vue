@@ -175,16 +175,7 @@ export default {
    */
   async created() {
     await this.memberData.initialize()
-
-    if (this.memberData.initialized.loaded && !this.memberData.initialized[viewName]) {
-      vueSet(this.memberData, 'birthday', new Date(this.memberData.birthday))
-      vueSet(this.memberData, 'selectedInstruments', [])
-      for (const instrument of this.memberData.instruments) {
-        this.memberData.selectedInstruments.push(instrument);
-      }
-      this.memberData.initialized[viewName] = true;
-    }
-
+    this.memberData.initialized[viewName] = true
     this.loading = false
   },
   methods: {

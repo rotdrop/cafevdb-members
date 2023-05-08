@@ -22,7 +22,7 @@
  */
 </script>
 <template>
-  <Content v-if="activeProject" :app-name="appId">
+  <Content v-if="activeProject" :app-name="appId" class="personal-profile-view">
     <div v-if="!loading" class="page-container">
       <h2 v-if="!!registrationData.personalPublicName">
         {{ t(appId, 'Personal Profile of {publicName}', { publicName: registrationData.personalPublicName || '' }) }}
@@ -199,21 +199,12 @@ import AppContent from '@nextcloud/vue/dist/Components/AppContent'
 import Content from '@nextcloud/vue/dist/Components/Content'
 import CheckboxRadioSwitch from '@nextcloud/vue/dist/Components/CheckboxRadioSwitch'
 import RichContenteditable from '@nextcloud/vue/dist/Components/RichContenteditable'
-import { getCurrentUser } from '@nextcloud/auth'
-import { loadState } from '@nextcloud/initial-state'
 
+import mixinRegistrationData from '../../mixins/registationData.js'
 import { useMemberDataStore } from '../../stores/memberData.js'
 
-const viewName = 'PersonalProfile'
-
-const projects = loadState(appName, 'projects')
-const activeProject = loadState(appName, 'activeProject')
-const instruments = loadState(appName, 'instruments')
-const countries = loadState(appName, 'countries')
-const displayLocale = loadState(appName, 'displayLocale')
-
 export default {
-  name: 'ProjectRegistration',
+  name: 'PersonalProfile',
   components: {
     AppContent,
     CheckboxRadioSwitch,
@@ -226,110 +217,29 @@ export default {
     const registrationData = useMemberDataStore()
     return { registrationData }
   },
+  mixins: [
+    mixinRegistrationData,
+  ],
   data() {
     return {
       loading: true,
       readonly: true,
-      activeProject: activeProject >= 0 ? projects[activeProject] : null,
-      projects,
-      instruments,
-      countries,
       registrationCountry: null,
     }
   },
   async created() {
-    vueSet(this.registrationData, 'whoAmI', '')
-    if (getCurrentUser()) {
-      await this.registrationData.initialize()
-
-      if (this.registrationData.initialized.loaded && !this.registrationData.initialized[viewName]) {
-        vueSet(this.registrationData, 'birthday', new Date(this.registrationData.birthday))
-        vueSet(this.registrationData, 'selectedInstruments', [])
-        for (const instrument of this.registrationData.instruments) {
-          this.registrationData.selectedInstruments.push(instrument);
-        }
-        this.registrationData.initialized[viewName] = true;
-      }
-      vueSet(this.registrationData, 'firstTimeApplication', 'you-know-me')
-    } else {
-    vueSet(this.registrationData, 'firstTimeApplication', 'first-time')
-    }
-
-    // convert the flat array of instruments to grouped options vor Vue Multiselect
-    const groupedInstruments = {};
-    for (const instrument of this.instruments) {
-      const familyTag = instrument.families.map(family => family.family).join(', ')
-      const optionGroup = groupedInstruments[familyTag] || { family: familyTag, sortOrder: 0, instruments: [] }
-      optionGroup.instruments.push(instrument)
-      optionGroup.sortOrder += instrument.sortOrder
-      groupedInstruments[familyTag] = optionGroup
-    }
-    this.instruments.splice(0, this.instruments.length, ...Object.values(groupedInstruments).sort((a, b) => a.sortOrder - b.sortOrder))
-    // console.info('GROUPED INSTRUMENTS', this.instruments)
-
-    // console.info('COUNTRIES', this.countries)
-    if (!this.registrationData.country) {
-      vueSet(this.registrationData, 'country', displayLocale.region)
-    }
+    await this.initializeRegistrationData()
     this.registrationCountry = this.countries.find(country => country.code === this.registrationData.country)
-
-    if (!this.registrationData.project) {
-      vueSet(this.registrationData, 'project', {})
-    }
-    if (!this.registrationData.project[this.activeProject.id]) {
-      vueSet(this.registrationData.project, this.activeProject.id, {
-        instruments: [],
-      })
-    }
-
     this.readonly = false
     this.loading = false
   },
-  computed: {
-    personalProjectInstrumentOptions() {
-      if (!this.activeProject) {
-        return []
-      }
-      const possibleInstruments = this.activeProject.instrumentation.filter(
-        instrumentationNumber => instrumentationNumber.voice === 0 && this.registrationData.selectedInstruments.find(instrument => instrument.id === instrumentationNumber.instrument.id)
-      )
-      return possibleInstruments.map(instrumentationNumber => instrumentationNumber.instrument)
-    },
-    projectInstruments() {
-      if (!this.activeProject) {
-        return []
-      }
-      const possibleInstruments = this.activeProject.instrumentation.filter(
-        instrumentationNumber => instrumentationNumber.voice === 0
-      )
-      return possibleInstruments.map(instrumentationNumber => instrumentationNumber.instrument)
-    },
-    projectInstrumentsText() {
-      if (!this.activeProject) {
-        return ''
-      }
-      return this.projectInstruments.map(instrument => instrument.name).join(', ')
-    }
-  },
+  computed: {},
   watch: {
     registrationCountry(newValue, oldValue) {
       vueSet(this.registrationData, 'country', newValue.code)
     },
-    'registrationData.selectedInstruments'(newValue, oldValue) {
-      if (!this.activeProject || newValue.length !== 1) {
-        return
-      }
-      if (this.personalProjectInstrumentOptions.length === 1
-          && this.personalProjectInstrumentOptions[0].id === newValue[0].id) {
-        const projectId = this.activeProject.id
-        vueSet(this.registrationData.project[projectId], 'instruments', newValue)
-      }
-    },
   },
   methods: {
-    info() {
-      console.info('INFO', arguments)
-    },
     updatePublicName() {
       this.registrationData.personalPublicName = (this.registrationData.nickName || this.registrationData.firstName || '') + ' ' + (this.registrationData.surName || '')
     },

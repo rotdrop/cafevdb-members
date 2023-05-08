@@ -22,7 +22,7 @@
  */
 </script>
 <template>
-  <Content :class="{ 'icon-loading': loading }" :app-name="appId">
+  <Content :class="{ 'icon-loading': loading, 'root-view': true }" :app-name="appId">
     <AppNavigation>
       <template #list>
         <AppNavigationItem
@@ -65,7 +65,7 @@
       <router-view v-show="!loading" :loading.sync="loading" />
       <EmptyContent v-if="isRoot" class="emp-content">
         <div v-if="activeProject">
-          {{ t(appId, '{orchestraName} project registion for {projectName}', { orchestraName, projectName }) }}
+          {{ t(appId, '{orchestraName} project registration for {projectName}', { orchestraName, projectName }) }}
         </div>
         <div v-else>
           {{ t(appId, '{orchestraName} project registration', { orchestraName }) }}
@@ -105,9 +105,9 @@ import { useMemberDataStore } from './stores/memberData.js'
 import { useAppDataStore } from './stores/appData.js'
 import { mapWritableState } from 'pinia'
 
-const viewName = 'PersonalProfile'
-
 import Icon from '../img/cafevdbmembers.svg'
+
+import mixinRegistrationData from './mixins/registationData.js'
 
 const projects = loadState(appName, 'projects')
 const activeProject = loadState(appName, 'activeProject')
@@ -137,62 +137,16 @@ export default {
   },
   data() {
     return {
-      orchestraName: initialState?.orchestraName || t(appId, '[UNKNOWN]'),
       icon: Icon,
       loading: true,
       readonly: true,
-      activeProject: activeProject >= 0 ? projects[activeProject] : null,
-      projects,
-      instruments,
-      countries,
-      registrationCountry: null,
     }
   },
+  mixins: [
+    mixinRegistrationData,
+  ],
   async created() {
-    vueSet(this.registrationData, 'whoAmI', '')
-    if (getCurrentUser()) {
-      await this.registrationData.initialize()
-
-      if (this.registrationData.initialized.loaded && !this.registrationData.initialized[viewName]) {
-        vueSet(this.registrationData, 'birthday', new Date(this.registrationData.birthday))
-        vueSet(this.registrationData, 'selectedInstruments', [])
-        for (const instrument of this.registrationData.instruments) {
-          this.registrationData.selectedInstruments.push(instrument);
-        }
-        this.registrationData.initialized[viewName] = true;
-      }
-      vueSet(this.registrationData, 'firstTimeApplication', 'you-know-me')
-    } else {
-      vueSet(this.registrationData, 'firstTimeApplication', 'first-time')
-    }
-
-    // convert the flat array of instruments to grouped options vor Vue Multiselect
-    const groupedInstruments = {};
-    for (const instrument of this.instruments) {
-      const familyTag = instrument.families.map(family => family.family).join(', ')
-      const optionGroup = groupedInstruments[familyTag] || { family: familyTag, sortOrder: 0, instruments: [] }
-      optionGroup.instruments.push(instrument)
-      optionGroup.sortOrder += instrument.sortOrder
-      groupedInstruments[familyTag] = optionGroup
-    }
-    this.instruments.splice(0, this.instruments.length, ...Object.values(groupedInstruments).sort((a, b) => a.sortOrder - b.sortOrder))
-    // console.info('GROUPED INSTRUMENTS', this.instruments)
-
-    // console.info('COUNTRIES', this.countries)
-    if (!this.registrationData.country) {
-      vueSet(this.registrationData, 'country', displayLocale.region)
-    }
-    this.registrationCountry = this.countries.find(country => country.code === this.registrationData.country)
-
-    if (!this.registrationData.project) {
-      vueSet(this.registrationData, 'project', {})
-    }
-    if (!this.registrationData.project[this.activeProject.id]) {
-      vueSet(this.registrationData.project, this.activeProject.id, {
-        instruments: [],
-      })
-    }
-
+    await this.initializeRegistrationData()
     this.readonly = false
     this.loading = false
   },
@@ -201,64 +155,21 @@ export default {
       console.info('ROUTE PATH', this.$route.path)
       return this.$route.path === '/' || this.$route.path === '/' + this.projectName
     },
-    ...mapWritableState(useAppDataStore, ['debug']),
-    projectName() {
-      return this.activeProject ? this.activeProject.name : null
-    },
-    personalProjectInstrumentOptions() {
-      if (!this.activeProject) {
-        return []
-      }
-      const possibleInstruments = this.activeProject.instrumentation.filter(
-        instrumentationNumber => instrumentationNumber.voice === 0 && this.registrationData.selectedInstruments.find(instrument => instrument.id === instrumentationNumber.instrument.id)
-      )
-      return possibleInstruments.map(instrumentationNumber => instrumentationNumber.instrument)
-    },
-    projectInstruments() {
-      if (!this.activeProject) {
-        return []
-      }
-      const possibleInstruments = this.activeProject.instrumentation.filter(
-        instrumentationNumber => instrumentationNumber.voice === 0
-      )
-      return possibleInstruments.map(instrumentationNumber => instrumentationNumber.instrument)
-    },
-    projectInstrumentsText() {
-      if (!this.activeProject) {
-        return ''
-      }
-      return this.projectInstruments.map(instrument => instrument.name).join(', ')
-    }
   },
   watch: {
-    registrationCountry(newValue, oldValue) {
-      vueSet(this.registrationData, 'country', newValue.code)
-    },
-    'registrationData.selectedInstruments'(newValue, oldValue) {
-      if (!this.activeProject || newValue.length !== 1) {
-        return
-      }
-      if (this.personalProjectInstrumentOptions.length === 1
-          && this.personalProjectInstrumentOptions[0].id === newValue[0].id) {
-        const projectId = this.activeProject.id
-        vueSet(this.registrationData.project[projectId], 'instruments', newValue)
-      }
-    },
   },
   methods: {
-    info() {
-      console.info('INFO', arguments)
-    },
-    updatePublicName() {
-      this.registrationData.personalPublicName = (this.registrationData.nickName || this.registrationData.firstName || '') + ' ' + (this.registrationData.surName || '')
-    },
-    autoComplete(search, callback) {
-      callback(null)
-    },
   },
 }
 </script>
 <style lang="scss" scoped>
+.content.root-view::v-deep {
+  height:100%;
+  .app-content {
+    overflow-y: auto;
+  }
+}
+
 .app-navigation-entry.disabled::v-deep {
   opacity: 0.5;
   &, & * {
