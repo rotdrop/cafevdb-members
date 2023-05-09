@@ -87,6 +87,13 @@
           </h2>
         </template>
       </EmptyContent>
+      <!-- <Actions>
+        <ActionRouter v-for="project in projects"
+                      :key="project.id"
+                      :title="project.name"
+                      :to="{ name: 'home', params: { projectName: project.name } }"
+        />
+      </Actions> -->
     </AppContent>
   </Content>
 </template>
@@ -97,6 +104,8 @@ import InputText from './components/InputText'
 import DebugInfo from './components/DebugInfo'
 
 import { set as vueSet } from 'vue'
+import Actions from '@nextcloud/vue/dist/Components/Actions'
+import ActionRouter from '@nextcloud/vue/dist/Components/ActionRouter'
 import AppContent from '@nextcloud/vue/dist/Components/AppContent'
 import AppNavigation from '@nextcloud/vue/dist/Components/AppNavigation'
 import AppNavigationItem from '@nextcloud/vue/dist/Components/AppNavigationItem'
@@ -128,6 +137,8 @@ const initialState = getInitialState()
 export default {
   name: 'ProjectRegistration',
   components: {
+    Actions,
+    ActionRouter,
     AppContent,
     AppNavigation,
     AppNavigationItem,
@@ -157,6 +168,23 @@ export default {
     await this.initializeRegistrationData()
     this.readonly = false
     this.loading = false
+  },
+  mounted() {
+    const headerMenuItems = document.querySelectorAll('.header-right a')
+    console.info('MENU ITEMS', headerMenuItems)
+    headerMenuItems.forEach(anchor => anchor.addEventListener('click', (e) => {
+      const baseName = anchor.href.split('/').pop()
+      console.info('EVENT', baseName)
+      e.preventDefault()
+      console.info(this.$router)
+      this.$router.push('/' + baseName)
+      for (const project of this.projects) {
+        if (project.name === baseName) {
+          this.activeProject = project
+          break
+        }
+      }
+    }))
   },
   computed: {
     isRoot() {
