@@ -1,5 +1,5 @@
 /**
- * @copyright Copyright (c) 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
  *
@@ -59,6 +59,9 @@ export default {
     },
   },
   computed: {
+    routePath() {
+      return this.$route.path
+    },
     ...mapWritableState(useAppDataStore, [
       'orchestraName',
       'projects',
@@ -98,6 +101,17 @@ export default {
     },
   },
   watch: {
+    routePath(newValue, oldValue) {
+      if (newValue === '/') {
+        return
+      }
+      const projectName = newValue.split('/')[1]
+      const project = this.projects.find(project => project.name === projectName)
+      if (project && project.id !== this.activeProject.id) {
+        console.info('Changing active project')
+        this.activeProject = project
+      }
+    },
     'registrationData.selectedInstruments'(newValue, oldValue) {
       if (!this.activeProject || newValue.length !== 1) {
         return

@@ -166,35 +166,57 @@ export default {
   ],
   async created() {
     await this.initializeRegistrationData()
+    this.attachActionMenuHandlers()
     this.readonly = false
     this.loading = false
   },
   mounted() {
-    const headerMenuItems = document.querySelectorAll('.header-right a')
-    console.info('MENU ITEMS', headerMenuItems)
-    headerMenuItems.forEach(anchor => anchor.addEventListener('click', (e) => {
-      const baseName = anchor.href.split('/').pop()
-      console.info('EVENT', baseName)
-      e.preventDefault()
-      console.info(this.$router)
-      this.$router.push('/' + baseName)
-      for (const project of this.projects) {
-        if (project.name === baseName) {
-          this.activeProject = project
-          break
-        }
-      }
-    }))
   },
   computed: {
     isRoot() {
-      console.info('ROUTE PATH', this.$route.path)
       return this.$route.path === '/' || this.$route.path === '/' + this.projectName
     },
   },
   watch: {
+    activeProject(newValue, oldValue) {
+      const pageTitle = document.getElementById('nextcloud')
+      pageTitle.innerHTML = t(appName, 'Project Application for {projectName}', this)
+    },
   },
   methods: {
+    attachActionMenuHandlers() {
+      const headerActionsMenu = document.getElementById('header-actions-menu')
+      const headerMenuItems = headerActionsMenu.querySelectorAll('a')
+      const primaryAction = document.querySelector('#header-primary-action a')
+      const menuToggle = document.getElementById('header-actions-toggle')
+      primaryAction.addEventListener('click', (event) => {
+        const headerActionsMenu = document.getElementById('header-actions-menu')
+        event.preventDefault()
+        event.stopPropagation()
+        primaryAction.classList.toggle('menu-open')
+        if (primaryAction.classList.contains('menu-open')) {
+          headerActionsMenu.classList.add('open')
+        } else {
+          headerActionsMenu.classList.remove('open')
+        }
+      })
+      headerMenuItems.forEach(anchor => anchor.addEventListener('click', (event) => {
+        event.preventDefault()
+        event.stopPropagation()
+        const baseName = anchor.href.split('/').pop()
+        if (baseName !== this.projectName) {
+          this.$router.push('/' + baseName)
+          for (const project of this.projects) {
+            if (project.name === baseName) {
+              this.activeProject = project
+              break
+            }
+          }
+        }
+        headerActionsMenu.classList.remove('open')
+        primaryAction.classList.remove('menu-open')
+      }))
+    },
   },
 }
 </script>

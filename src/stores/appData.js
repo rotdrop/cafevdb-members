@@ -25,7 +25,7 @@ import { defineStore } from 'pinia'
 import { getInitialState } from '../toolkit/services/InitialStateService'
 
 const projects = getInitialState('projects', [])
-const activeProject = getInitialState('activeProject', null)
+let activeProject = getInitialState('activeProject', null)
 const instruments = getInitialState('instruments', [])
 const countries = getInitialState('countries', null)
 const displayLocale = getInitialState('displayLocale', null)
@@ -43,6 +43,10 @@ export const useAppDataStore = defineStore('app-data', {
       optionGroup.instruments.push(instrument)
       optionGroup.sortOrder += instrument.sortOrder
       groupedInstruments[familyTag] = optionGroup
+    }
+
+    if (activeProject === null && projects) {
+      activeProject = 0
     }
 
     return {

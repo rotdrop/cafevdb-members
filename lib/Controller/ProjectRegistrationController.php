@@ -126,7 +126,9 @@ class ProjectRegistrationController extends Controller
       ],
     );
 
-    $actionMenu = [];
+    $actionMenu = [
+      new SimpleMenuAction('menu-trigger', $this->l->t('Select a Project'), ''),
+    ];
     $projectsList = [];
     $activeProject = -1;
 
@@ -148,11 +150,10 @@ class ProjectRegistrationController extends Controller
 
       $link = $this->urlGenerator->linkToRoute($this->appName . '.project_registration.page', [ 'projectName' => $project->getName() ]);
       $menuItem = new SimpleMenuAction($project->getName(), $project->getName(), 'icon-download', $link);
+      $actionMenu[] = $menuItem;
+
       if ($project->getName() == $projectName) {
-        array_unshift($actionMenu, $menuItem);
         $activeProject = count($projectsList);
-      } else {
-        $actionMenu[] = $menuItem;
       }
 
       $instrumentationNumbers = $project->getInstrumentationNumbers();
