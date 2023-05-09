@@ -87,6 +87,17 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.button {
+  display: flex;
+  align-items: center;
+  min-height:44px;
+  box-shadow: 0 0 0 2px var(--color-border-dark);
+  border: 0;
+  &:hover:not(.disabled) {
+    box-shadow: 0 0 0 2px var(--color-primary-element);
+  }
+}
+
 span {
   &[class^='icon-'], &[class*=' icon-'] {
     display: inline-block;

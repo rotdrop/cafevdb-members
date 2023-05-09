@@ -184,7 +184,7 @@
                              :required="registrationData.firstTimeApplication === 'first-time'"
         />
       </div>
-      <div class="flex flex-row flex-justify-full">
+      <div class="navigation flex flex-row flex-justify-full">
         <RouterButton :to="{ name: 'home', params: { projectName } }"
                       exact
                       icon="icon-home"
@@ -277,6 +277,10 @@ export default {
 
 #app-content-vue {
   overflow:auto;
+}
+
+.navigation {
+  margin-top:0.5em;
 }
 
 .flex {

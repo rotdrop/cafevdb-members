@@ -43,6 +43,12 @@ const routes = [
     name: 'projectOptions',
     props: true,
   },
+  {
+    path: '/:projectName/submission',
+    component: () => import('../views/Registration/Submission'),
+    name: 'submission',
+    props: true,
+  },
 ]
 
 export default routes

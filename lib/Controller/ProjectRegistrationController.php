@@ -149,7 +149,7 @@ class ProjectRegistrationController extends Controller
       }
 
       $link = $this->urlGenerator->linkToRoute($this->appName . '.project_registration.page', [ 'projectName' => $project->getName() ]);
-      $menuItem = new SimpleMenuAction($project->getName(), $project->getName(), 'icon-download', $link);
+      $menuItem = new SimpleMenuAction($project->getName(), $project->getName(), 'icon-group', $link);
       $actionMenu[] = $menuItem;
 
       if ($project->getName() == $projectName) {

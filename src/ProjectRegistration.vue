@@ -34,21 +34,28 @@
         <AppNavigationItem
           :to="{ name: 'personalProfile', params: { projectName } }"
           :title="t(appId, 'Personal Profile')"
-          icon="icon-files-dark"
+          icon="icon-user"
           :class="{ disabled: !activeProject }"
           exact
         />
         <AppNavigationItem
           :to="{ name: 'participation', params: { projectName } }"
           :title="t(appId, 'Instrumentation and Events')"
-          icon="icon-files-dark"
+          icon="icon-music"
           :class="{ disabled: !activeProject }"
           exact
         />
         <AppNavigationItem
           :to="{ name: 'projectOptions', params: { projectName } }"
           :title="t(appId, 'Options')"
-          icon="icon-files-dark"
+          icon="icon-details"
+          :class="{ disabled: !activeProject }"
+          exact
+        />
+        <AppNavigationItem
+          :to="{ name: 'submission', params: { projectName } }"
+          :title="t(appId, 'Summary and Submission')"
+          icon="icon-checkmark"
           :class="{ disabled: !activeProject }"
           exact
         />

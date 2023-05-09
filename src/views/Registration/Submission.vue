@@ -22,51 +22,30 @@
  */
 </script>
 <template>
-  <Content v-if="activeProject" :app-name="appId" class="participation-view">
+  <Content v-if="activeProject" :app-name="appId" class="submission-view">
     <div v-if="!loading" class="page-container">
       <h2>
-        {{ t(appId, 'Instrumentation, Rehearsals and Concerts') }}
+        {{ t(appId, 'Summary and Submission') }}
       </h2>
-      <h3>
-        {{ t(appId, 'Please configure the instrument or the role you intend to play in this project. Please also inform us about rehearsals or even concerts that you cannot participate in.') }}
-      </h3>
-      <div class="input-row">
-        <InputText v-model="registrationData.project[activeProject.id].instruments"
-                   type="multiselect"
-                   :label="t(appId, 'Project Instruments or Roles')"
-                   :options="personalProjectInstrumentOptions"
-                   track-by="id"
-                   option-label="name"
-                   :auto-limit="true"
-                   :tag-width="100"
-                   :readonly="readonly"
-                   :multiple="true"
-                   :placeholder="t(appId, 'e.g. double bass')"
-                   :required="true"
-        />
-      </div>
-      <div v-if="personalProjectInstrumentOptions.length === 0">
-        {{ t(appId, 'You do not seem to play any instrument configured for the project: {instruments}.', { instruments: projectInstrumentsText }) }}
-      </div>
-      <div class="navigation flex flex-row flex-justify-full">
-        <RouterButton :to="{ name: 'personalProfile', params: { projectName } }"
+      <div class="navigation flex flex-row flex-justify-full flex-center">
+        <RouterButton :#to="{ name: 'projectOptions', params: { projectName } }"
                       exact
                       icon="icon-history"
                       icon-position="left"
         >
           {{ t(appId, 'back') }}
         </RouterButton>
-        <RouterButton :to="{ name: 'projectOptions', params: { projectName } }"
-                      exact
-                      icon="icon-confirm"
-                      icon-position="right"
-        >
-          {{ t(appIqd, 'next') }}
-        </RouterButton>
+        <Button>
+          {{ t(appId, 'Submit') }}
+          <template #icon>
+            <span class="icon-checkmark" />
+          </template>
+        </Button>
       </div>
     </div>
   </Content>
 </template>
+
 <script>
 import { appName } from '../../config.js'
 import InputText from '../../components/InputText'
@@ -75,17 +54,17 @@ import RouterButton from '../../components/RouterButton'
 
 import { set as vueSet } from 'vue'
 import AppContent from '@nextcloud/vue/dist/Components/AppContent'
+import Button from '@nextcloud/vue/dist/Components/Button'
 import Content from '@nextcloud/vue/dist/Components/Content'
-import CheckboxRadioSwitch from '@nextcloud/vue/dist/Components/CheckboxRadioSwitch'
 
 import mixinRegistrationData from '../../mixins/registationData.js'
 import { useMemberDataStore } from '../../stores/memberData.js'
 
 export default {
-  name: 'Participation',
+  name: 'ProjectOptions',
   components: {
     AppContent,
-    CheckboxRadioSwitch,
+    Button,
     Content,
     DebugInfo,
     InputText,
@@ -120,6 +99,9 @@ export default {
   &.loading {
     width:100%;
   }
+  &::v-deep button {
+    max-height: 44px;
+  }
 }
 
 #app-content-vue {
@@ -137,6 +119,9 @@ export default {
   }
   &.flex-justify-full {
     justify-content: space-between;
+  }
+  &.flex-center {
+    align-items: center;
   }
 }
 

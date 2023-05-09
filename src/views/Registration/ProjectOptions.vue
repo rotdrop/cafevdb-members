@@ -27,7 +27,7 @@
       <h2>
         {{ t(appId, 'Project Fees and Options') }}
       </h2>
-      <div class="flex flex-row flex-justify-full">
+      <div class="navigation flex flex-row flex-justify-full">
         <RouterButton :to="{ name: 'participation', params: { projectName } }"
                       exact
                       icon="icon-history"
@@ -35,13 +35,13 @@
         >
           {{ t(appId, 'back') }}
         </RouterButton>
-        <!-- <RouterButton :to="{ name: 'confirm', params: { projectName } }"
+        <RouterButton :to="{ name: 'submission', params: { projectName } }"
                       exact
                       icon="icon-confirm"
                       icon-position="right"
         >
-          {{ t(appIqd, 'next') }}
-        </RouterButton> -->
+          {{ t(appIqd, 'Summary and Submission') }}
+        </RouterButton>
       </div>
     </div>
   </Content>
@@ -104,6 +104,10 @@ export default {
 
 #app-content-vue {
   overflow:auto;
+}
+
+.navigation {
+  margin-top:0.5em;
 }
 
 .flex {
