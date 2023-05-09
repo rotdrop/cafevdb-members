@@ -74,7 +74,15 @@
           <img :src="icon">
         </template>
         <template #desc>
-          <h2 v-if="!activeProject">
+          <RouterButton v-if="activeProject"
+                        :to="{ name: 'personalProfile', params: { projectName } }"
+                        exact
+                        icon="icon-confirm"
+                        icon-position="right"
+          >
+            {{ t(appId, 'Start') }}
+          </RouterButton>
+          <h2 v-else>
             {{ t(appId, 'The project registration for all projects is closed.') }}
           </h2>
         </template>
@@ -96,9 +104,9 @@ import AppNavigationSettings from '@nextcloud/vue/dist/Components/AppNavigationS
 import Content from '@nextcloud/vue/dist/Components/Content'
 import CheckboxRadioSwitch from '@nextcloud/vue/dist/Components/CheckboxRadioSwitch'
 import EmptyContent from '@nextcloud/vue/dist/Components/EmptyContent'
-import RichContenteditable from '@nextcloud/vue/dist/Components/RichContenteditable'
 import { getCurrentUser } from '@nextcloud/auth'
 import { loadState } from '@nextcloud/initial-state'
+import RouterButton from './components/RouterButton'
 
 import { getInitialState } from './toolkit/services/InitialStateService'
 import { useMemberDataStore } from './stores/memberData.js'
@@ -129,7 +137,7 @@ export default {
     DebugInfo,
     EmptyContent,
     InputText,
-    RichContenteditable,
+    RouterButton,
   },
   setup() {
     const registrationData = useMemberDataStore()
@@ -167,6 +175,18 @@ export default {
   height:100%;
   .app-content {
     overflow-y: auto;
+  }
+}
+
+span {
+  &[class^='icon-'], &[class*=' icon-'] {
+    display: inline-block;
+  }
+  &.right-icon {
+    margin-left: 1ex;
+  }
+  &.left-icon {
+    margin-right: 1ex;
   }
 }
 

@@ -48,20 +48,35 @@
       <div v-if="personalProjectInstrumentOptions.length === 0">
         {{ t(appId, 'You do not seem to play any instrument configured for the project: {instruments}.', { instruments: projectInstrumentsText }) }}
       </div>
+      <div class="flex flex-row flex-justify-full">
+        <RouterButton :to="{ name: 'personalProfile', params: { projectName } }"
+                      exact
+                      icon="icon-history"
+                      icon-position="left"
+        >
+          {{ t(appId, 'back') }}
+        </RouterButton>
+        <RouterButton :to="{ name: 'projectOptions', params: { projectName } }"
+                      exact
+                      icon="icon-confirm"
+                      icon-position="right"
+        >
+          {{ t(appIqd, 'next') }}
+        </RouterButton>
+      </div>
     </div>
   </Content>
 </template>
-
 <script>
 import { appName } from '../../config.js'
 import InputText from '../../components/InputText'
 import DebugInfo from '../../components/DebugInfo'
+import RouterButton from '../../components/RouterButton'
 
 import { set as vueSet } from 'vue'
 import AppContent from '@nextcloud/vue/dist/Components/AppContent'
 import Content from '@nextcloud/vue/dist/Components/Content'
 import CheckboxRadioSwitch from '@nextcloud/vue/dist/Components/CheckboxRadioSwitch'
-import RichContenteditable from '@nextcloud/vue/dist/Components/RichContenteditable'
 
 import mixinRegistrationData from '../../mixins/registationData.js'
 import { useMemberDataStore } from '../../stores/memberData.js'
@@ -74,7 +89,7 @@ export default {
     Content,
     DebugInfo,
     InputText,
-    RichContenteditable,
+    RouterButton,
   },
   setup() {
     const registrationData = useMemberDataStore()
@@ -109,6 +124,16 @@ export default {
 
 #app-content-vue {
   overflow:auto;
+}
+
+.flex {
+  display: flex;
+  &.flex-row {
+    flex-direction: row;
+  }
+  &.flex-justify-full {
+    justify-content: space-between;
+  }
 }
 
 .input-row {
