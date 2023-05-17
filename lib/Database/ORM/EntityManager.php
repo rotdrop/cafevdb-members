@@ -1,7 +1,7 @@
 <?php
 /**
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -43,6 +43,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Decorator\EntityManagerDecorator;
 use Doctrine\ORM\Mapping\UnderscoreNamingStrategy;
 use Doctrine\ORM\Configuration as OrmConfiguration;
+use Doctrine\ORM\Query\Filter\SQLFilter;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Gedmo\SoftDeleteable\SoftDeleteableListener;
 
@@ -72,6 +73,12 @@ class EntityManager extends EntityManagerDecorator
   const TRANSFORM_ENCRYPT = 'encrypt';
 
   const ROW_ACCESS_TOKEN_KEY = 'rowAccessToken';
+
+  /**
+   * @var string
+   * The name of the soft-deleteable filter
+   */
+  const SOFT_DELETEABLE_FILTER = 'soft-deleteable';
 
   /** @var EntityManagerInterface */
   private $entityManager;
@@ -126,7 +133,7 @@ class EntityManager extends EntityManagerDecorator
       throw $t;
     }
     $this->entityManager = $this->wrapped;
-    if ($this->connected()) {
+    if (true || $this->connected()) {
       $this->registerTypes();
     }
   }
@@ -351,6 +358,7 @@ class EntityManager extends EntityManagerDecorator
       Types\EnumParticipantFieldDataType::class => 'enum',
       Types\EnumParticipantFieldMultiplicity::class => 'enum',
       Types\EnumProjectTemporalType::class => 'enum',
+      Types\EnumVCalendarType::class => 'enum',
       Types\UuidType::class => 'binary',
     ];
 
@@ -437,5 +445,40 @@ class EntityManager extends EntityManagerDecorator
     if (\method_exists($entity, '__wakeup')) {
       $entity->__wakeup();
     }
+  }
+
+  /**
+   * Enable the given filter.
+   *
+   * @param string $filterName
+   *
+   * @param bool $state
+   *
+   * @return bool The previous isEnabled() state of the filter.
+   */
+  public function enableFilter(string $filterName, bool $state = true):bool
+  {
+    if ($this->getFilters()->isEnabled($filterName) !== $state) {
+      $this->getFilters()->enable($filterName);
+      return !$state;
+    }
+    return $state;
+  }
+
+  /**
+   * Disable the given filter. In contrast to the upstream-method does
+   * not throw an exception if the filter is not enabled.
+   *
+   * @param string $filterName
+   *
+   * @return bool The previous isEnabled() state of the filter.
+   */
+  public function disableFilter(string $filterName):bool
+  {
+    if ($this->getFilters()->isEnabled($filterName)) {
+      $this->getFilters()->disable($filterName);
+      return true;
+    }
+    return false;
   }
 }
