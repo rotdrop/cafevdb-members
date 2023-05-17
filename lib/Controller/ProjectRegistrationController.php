@@ -44,6 +44,7 @@ use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFeVDBMembers\Constants;
 use OCA\CAFeVDBMembers\Database\ORM\EntityManager;
 use OCA\CAFeVDBMembers\Database\ORM\Entities;
+use OCA\CAFeVDBMembers\Service\EventsService;
 
 /** AJAX endpoints for a project registration form. */
 class ProjectRegistrationController extends Controller
@@ -73,6 +74,9 @@ class ProjectRegistrationController extends Controller
   /** @var EntityManager */
   private $entityManager;
 
+  /** @var EventsService */
+  private $eventsService;
+
   // phpcs:ignore Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     string $appName,
@@ -85,6 +89,7 @@ class ProjectRegistrationController extends Controller
     IURLGenerator $urlGenerator,
     IInitialState $initialState,
     EntityManager $entityManager,
+    EventsService $eventsService,
   ) {
     parent::__construct($appName, $request);
     $this->l = $l10n;
@@ -95,6 +100,7 @@ class ProjectRegistrationController extends Controller
     $this->urlGenerator = $urlGenerator;
     $this->initialState = $initialState;
     $this->entityManager = $entityManager;
+    $this->eventsService = $eventsService;
   }
   // phpcs:enable
 
@@ -131,11 +137,14 @@ class ProjectRegistrationController extends Controller
     ];
     $projectsList = [];
     $activeProject = -1;
-    $timezone = $this->dateTimeZone->getTimeZone())
+    $timezone = $this->dateTimeZone->getTimeZone();
 
     /** @var Entities\Project $project */
     foreach ($projects as $project) {
       $this->logInfo('PROJECT ' . $project->getName());
+
+      $eventData = $this->eventsService->getProjectEventData($project);
+      $this->logInfo('EVENT DATA ' . print_r($eventData, true));
 
       $startDate = $project->getRegistrationStartDate();
       if (empty($startDate)) {
