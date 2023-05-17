@@ -75,6 +75,16 @@ class Project implements \ArrayAccess
   private $type = Types\EnumProjectTemporalType::TEMPORARY;
 
   /**
+   * @var \DateTimeImmutable
+   *
+   * Optional registration start date. If not set then the online registration
+   * is NOT available.
+   *
+   * @ORM\Column(type="date_immutable", nullable=true)
+   */
+  private $registrationStartDate;
+
+  /**
    * @var DateTimeImmutable
    *
    * Optional registration deadline. If null then the date one day before the
@@ -148,7 +158,7 @@ class Project implements \ArrayAccess
     $this->payments = new ArrayCollection();
     $this->calendarEvents = new ArrayCollection();
     $this->instrumentationNumbers = new ArrayCollection();
-    $this->type = Types\EnumProjectTemporalType->from($this->type);
+    $this->type = Types\EnumProjectTemporalType::from($this->type);
   }
   // phpcs:enable
 
@@ -366,6 +376,29 @@ class Project implements \ArrayAccess
   public function getSepaDebitMandates():Collection
   {
     return $this->sepaDebitMandates;
+  }
+
+  /**
+   * Sets registrationStartDate.
+   *
+   * @param string|int|DateTimeInterface $registrationStartDate
+   *
+   * @return Project
+   */
+  public function setRegistrationStartDate(mixed $registrationStartDate):Project
+  {
+    $this->registrationStartDate = self::convertToDateTime($registrationStartDate);
+    return $this;
+  }
+
+  /**
+   * Returns registrationStartDate.
+   *
+   * @return DateTimeImmutable
+   */
+  public function getRegistrationStartDate():?DateTimeInterface
+  {
+    return $this->registrationStartDate;
   }
 
   /**
