@@ -131,15 +131,30 @@ class ProjectRegistrationController extends Controller
     ];
     $projectsList = [];
     $activeProject = -1;
+    $timezone = $this->dateTimeZone->getTimeZone())
 
     /** @var Entities\Project $project */
     foreach ($projects as $project) {
       $this->logInfo('PROJECT ' . $project->getName());
-      $deadline = $this->getProjectRegistrationDeadline($project);
-      if (empty($deadline)) {
+
+      $startDate = $project->getRegistrationStartDate();
+      if (empty($startDate)) {
+        // there must be a registration start date, otherwise the registration
+        // is considered not open.
         continue;
       }
-      $deadline = self::convertToTimezoneDate($deadline, $this->dateTimeZone->getTimeZone());
+      $startDate = self::convertToTimezoneDate($startDate, $timezone);
+      if ($nowDate < $startDate) {
+        continue;
+      }
+
+      $deadline = $this->getProjectRegistrationDeadline($project);
+      if (empty($deadline)) {
+        // no events configured yet, no explicit deadline -> registration is
+        // not yet open.
+        continue;
+      }
+      $deadline = self::convertToTimezoneDate($deadline, $timezone);
       if ($nowDate > $deadline) {
         continue;
       }
