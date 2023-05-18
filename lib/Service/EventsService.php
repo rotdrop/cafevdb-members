@@ -22,8 +22,10 @@
 
 namespace OCA\CAFeVDBMembers\Service;
 
+use Exception;
 use DateTimeInterface;
 use DateTimeImmutable;
+use DateTimeZone;
 
 use Sabre\VObject;
 use Sabre\VObject\Recur\EventIterator;
@@ -119,7 +121,7 @@ class EventsService
    * calendars or the 'uri' component from
    * OCA\CAFEVDB\Service\ConfigService::CALENDARS.
    *
-   * @param null|string $timezone
+   * @param null|string|DateTimeZone $timezone
    *
    * @param null|string $locale
    *
@@ -135,7 +137,7 @@ class EventsService
   public function getProjectEventData(
     int|Entities\Project $projectOrId,
     ?array $calendarUris = null,
-    ?string $timezone = null,
+    null|string|DateTimeZone $timezone = null,
     ?string $locale = null,
   ):array {
 
@@ -238,7 +240,7 @@ class EventsService
    *
    * @param array $eventObject The corresponding event object from fetchEvent() or events().
    *
-   * @param null|string $timezone Explicit time zone to use, otherwise fetched
+   * @param null|string|DateTimeZone $timezone Explicit time zone to use, otherwise fetched
    * from user-settings.
    *
    * @param null|string $locale Explicit language setting to use, otherwise
@@ -254,7 +256,7 @@ class EventsService
    * ]
    * ```
    */
-  private function getBriefEventData(array $eventObject, ?string $timezone = null, ?string $locale = null):array
+  private function getBriefEventData(array $eventObject, null|string|DateTimeZone $timezone = null, ?string $locale = null):array
   {
     $times = $this->getEventTimes($eventObject, $timezone, $locale);
 
@@ -276,7 +278,7 @@ class EventsService
    *
    * @param array $eventObject The corresponding event object from fetchEvent() or events().
    *
-   * @param null|string $timezone Explicit time zone to use, otherwise fetched
+   * @param null|string|DateTimeZone $timezone Explicit time zone to use, otherwise fetched
    * from user-settings.
    *
    * @param null|string $locale Explicit language setting to use, otherwise
@@ -289,10 +291,12 @@ class EventsService
    *
    * @todo Perhaps convert to DateTime class instead of using strftime().
    */
-  private function getEventTimes(array $eventObject, ?string $timezone = null, ?string $locale = null):array
+  private function getEventTimes(array $eventObject, null|string|DateTimeZone $timezone = null, ?string $locale = null):array
   {
     if ($timezone === null) {
       $timezone = $this->dateTimeZone->getTimeZone();
+    } elseif (is_string($timezone)) {
+      $timezone = new DateTimeZone($timezone);
     }
     if ($locale === null) {
       $locale = $this->l->getLocaleCode();
@@ -320,7 +324,7 @@ class EventsService
     }
 
     return [
-      'timezone' => $timezone,
+      'timezone' => $timezone->getName(),
       'locale' => $locale,
       'allday' => $allDay,
       'start' => [
