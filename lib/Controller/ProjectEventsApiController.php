@@ -83,7 +83,9 @@ class ProjectEventsApiController extends ApiController
   /**
    * @param string $indexObject
    *
-   * @param int $objectId
+   * @param int|string $objectId Numeric or textual identifier. If
+   * $indexObject equal ProjectEventsApiController::INDEX_BY_PROJECT then the
+   * project can as well be identified by its (unique) name.
    *
    * @param string $calendar
    *
@@ -100,7 +102,7 @@ class ProjectEventsApiController extends ApiController
    */
   public function serviceSwitch(
     string $indexObject,
-    int $objectId,
+    int|string $objectId,
     string $calendar,
     ?string $timezone,
     ?string $locale,
@@ -113,6 +115,19 @@ class ProjectEventsApiController extends ApiController
     switch ($indexObject) {
       case self::INDEX_BY_PROJECT:
         $projectId = $objectId;
+        if (is_int($projectId)) {
+          $project = $this->entityManager->getRepository(Entities\Project::class)->find($projectId);
+        } else {
+          $project = $this->entityManager->getRepository(Entities\Project::class)->findOneBy([ 'name' => $projectId ]);
+        }
+        if (empty($project)) {
+          $this->logError('NOT FOUND ' . $indexObject . '@' . $projectId);
+          return new DataResponse([], Http::STATUS_NOT_FOUND);
+        }
+
+        $projectId = $project->getId();
+        $projectName = $project->getName();
+
         if ($calendar == 'all') {
           $calendar = null;
         } else {
@@ -122,8 +137,8 @@ class ProjectEventsApiController extends ApiController
         $timezone = $this->getTimezone($timezone);
         $locale = $this->getLocale($locale);
 
-        $eventData = $this->eventsService->getProjectEventData($projectId, $calendar, $timezone, $locale);
-        return new DataResponse($eventData, Http::STATUS_OK);
+        $eventData = $this->eventsService->getProjectEventData($project, $calendar, $timezone, $locale);
+        return new DataResponse([ 'status' => 200, 'data' => [ $projectName => $eventData, ], ], Http::STATUS_OK);
       case self::INDEX_BY_WEB_PAGE:
         $articleId = $objectId;
 
@@ -148,9 +163,8 @@ class ProjectEventsApiController extends ApiController
           $project = $article->getProject();
           $data[$project->getName()] = $this->eventsService->getProjectEventData($project, $calendar, $timezone, $locale);
         }
-        return new DataResponse($data, Http::STATUS_OK);
+        return new DataResponse([ 'status' => 200, 'data' => $data, ], Http::STATUS_OK);
       default:
-        $this->logInfo('NOT FOUND ' . $indexObject);
         return new DataResponse([], Http::STATUS_NOT_FOUND);
     }
   }
