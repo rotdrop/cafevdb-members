@@ -148,7 +148,6 @@ class ProjectEventsApiController extends ApiController
           $project = $article->getProject();
           $data[$project->getName()] = $this->eventsService->getProjectEventData($project, $calendar, $timezone, $locale);
         }
-        $this->logInfo('RETURNING GOOD');
         return new DataResponse($data, Http::STATUS_OK);
       default:
         $this->logInfo('NOT FOUND ' . $indexObject);
