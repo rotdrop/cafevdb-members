@@ -50,6 +50,7 @@ use Gedmo\SoftDeleteable\SoftDeleteableListener;
 use MyCLabs\Enum\Enum as EnumType;
 use MediaMonks\Doctrine\Transformable;
 
+use OCA\CAFeVDBMembers\Exceptions;
 use OCA\CAFeVDBMembers\Database\ORM\Mapping\ReservedWordQuoteStrategy;
 use OCA\CAFeVDBMembers\Database\DBAL\Types;
 use OCA\CAFeVDBMembers\Database\DBAL\Logging\CloudLogger;
@@ -133,7 +134,7 @@ class EntityManager extends EntityManagerDecorator
       throw $t;
     }
     $this->entityManager = $this->wrapped;
-    if (true || $this->connected()) {
+    if ($this->connected()) {
       $this->registerTypes();
     }
   }
@@ -431,10 +432,14 @@ class EntityManager extends EntityManagerDecorator
   /** {@inheritdoc} */
   public function postConnect(ConnectionEventArgs $args)
   {
-    if (!empty($this->userId)) {
-      $args->getConnection()->executeStatement("SET @CLOUD_USER_ID = '" . $this->userId . "'");
-      $rowAccessTokenHash = $this->authenticationService->getRowAccessToken();
-      $args->getConnection()->executeStatement("SET @ROW_ACCESS_TOKEN = '" . $rowAccessTokenHash . "'");
+    try {
+      if (!empty($this->userId)) {
+        $rowAccessTokenHash = $this->authenticationService->getRowAccessToken();
+        $args->getConnection()->executeStatement("SET @CLOUD_USER_ID = '" . $this->userId . "'");
+        $args->getConnection()->executeStatement("SET @ROW_ACCESS_TOKEN = '" . $rowAccessTokenHash . "'");
+      }
+    } catch (Exceptions\AuthenticationException $e) {
+      $this->logException($e, 'Unable to set row access token');
     }
   }
 
