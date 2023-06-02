@@ -38,6 +38,7 @@ use Sabre\VObject\Property\ICalendar as VProperty;
 
 use Psr\Log\LoggerInterface;
 use OCP\IL10N;
+use OCP\L10N\IFactory as IL10NFactory;
 use OCP\Calendar\ICalendar;
 use OCP\Calendar\IManager as ICalendarManager;
 use OCP\IConfig as ICloudConfig;
@@ -68,10 +69,16 @@ class EventsService
   private const VCARD = VCalendarType::VCARD;
   private const VJOURNAL = VCalendarType::VJOURNAL;
 
+  /* @var string */
+  private $appName;
+
   /** @var IL10N */
   private $l;
 
-  /** @var IDateTimeZone */
+  /** @var IL10NFactory */
+  private $l10nFactory;
+
+  /** @var DateTimeZone */
   private $dateTimeZone;
 
   /** @var IDateTimeFormatter */
@@ -91,8 +98,10 @@ class EventsService
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
+    ?string $appName,
     LoggerInterface $logger,
     IL10N $l10n,
+    IL10NFactory $l10nFactory,
     IDateTimeZone $dateTimeZone,
     IDateTimeFormatter $dateTimeFormatter,
     ICloudConfig $cloudConfig,
@@ -100,9 +109,11 @@ class EventsService
     EntityManager $entityManager,
     CalDavService $calDavService,
   ) {
+    $this->appName = $appName;
     $this->logger = $logger;
     $this->l = $l10n;
-    $this->dateTimeZone = $dateTimeZone;
+    $this->dateTimeZone = $dateTimeZone->getTimeZone();
+    $this->l10nFactory = $l10nFactory;
     $this->dateTimeFormatter = $dateTimeFormatter;
     $this->cloudConfig = $cloudConfig;
     $this->calendarManager = $calendarManager;
@@ -110,6 +121,59 @@ class EventsService
     $this->calDavService = $calDavService;
   }
   // phpcs:enable
+
+  /**
+   * Install the given $locale.
+   *
+   * @param string|IL10N $locale
+   *
+   * @return EventsService
+   */
+  public function setLocale(string|IL10N $locale):EventsService
+  {
+    if (is_string($locale)) {
+      $lang = locale_get_primary_language($locale);
+      $region = locale_get_region($locale);
+
+      $locale = $this->l10nFactory->get($this->appName, $lang, $lang . '_' . $region);
+    }
+
+    $this->l = $locale;
+
+    return $this;
+  }
+
+  /**
+   * @return IL10N Return the language service currently used by this
+   * instance.
+   */
+  public function getL10N():IL10N
+  {
+    return $this->l;
+  }
+
+  /**
+   * @param string|DateTimeZone $timezone
+   *
+   * @return EventsService
+   */
+  public function setTimezone(string|DateTimeZone $timezone):EventsService
+  {
+    if (is_string($timezone)) {
+      $timezone = new DateTimeZone($timezone);
+    }
+    $this->DateTimeZone = $timezone;
+
+    return $this;
+  }
+
+  /**
+   * @return DateTimeZone Return the currently used DateTimeZone object.
+   */
+  public function getDateTimeZone():DateTimeZone
+  {
+    return $this->dateTimeZone;
+  }
 
   /**
    * Return event data for given project id and calendar id. Used in
@@ -121,10 +185,6 @@ class EventsService
    * calendars or the 'uri' component from
    * OCA\CAFEVDB\Service\ConfigService::CALENDARS.
    *
-   * @param null|string|DateTimeZone $timezone
-   *
-   * @param null|string $locale
-   *
    * @return array
    * ```
    * [
@@ -134,12 +194,7 @@ class EventsService
    * ]
    * ```
    */
-  public function getProjectEventData(
-    int|Entities\Project $projectOrId,
-    ?array $calendarUris = null,
-    null|string|DateTimeZone $timezone = null,
-    ?string $locale = null,
-  ):array {
+  public function getProjectEventData(int|Entities\Project $projectOrId, ?array $calendarUris = null):array {
 
     if ($calendarUris === null) {
       $calendarUris = array_filter(array_map(fn(array $cal) => $cal['public'] ? $cal['uri'] : null, ConfigService::CALENDARS));
@@ -167,7 +222,7 @@ class EventsService
 
     foreach ($events as $event) {
       $calendarUri = $event['calendarUri'];
-      $result[$calendarUri]['events'][] = $this->getBriefEventData($event, $timezone, $locale);
+      $result[$calendarUri]['events'][] = $this->getBriefEventData($event);
     }
 
     return $result;
@@ -240,25 +295,19 @@ class EventsService
    *
    * @param array $eventObject The corresponding event object from fetchEvent() or events().
    *
-   * @param null|string|DateTimeZone $timezone Explicit time zone to use, otherwise fetched
-   * from user-settings.
-   *
-   * @param null|string $locale Explicit language setting to use, otherwise
-   * fetched from user-settings.
-   *
    * @return array
    * ```
    * [
-   *   'times' => $this->getEventTimes($eventObject, $timezone, $locale),
+   *   'times' => $this->getEventTimes($eventObject),
    *   'summary' => $eventObject['summary'],
    *   'location' => $eventObject['location'],
    *   'description' => $eventObject['description'],
    * ]
    * ```
    */
-  private function getBriefEventData(array $eventObject, null|string|DateTimeZone $timezone = null, ?string $locale = null):array
+  private function getBriefEventData(array $eventObject):array
   {
-    $times = $this->getEventTimes($eventObject, $timezone, $locale);
+    $times = $this->getEventTimes($eventObject);
 
     $quoted = array('\,' => ',', '\;' => ';');
     $summary = strtr($eventObject['summary'], $quoted);
@@ -278,12 +327,6 @@ class EventsService
    *
    * @param array $eventObject The corresponding event object from fetchEvent() or events().
    *
-   * @param null|string|DateTimeZone $timezone Explicit time zone to use, otherwise fetched
-   * from user-settings.
-   *
-   * @param null|string $locale Explicit language setting to use, otherwise
-   * fetched from user-settings.
-   *
    * @return array
    * ```
    * [ 'start' => array('date' => ..., 'time' => ..., 'allday' => ...), 'end' => ... ]
@@ -291,17 +334,8 @@ class EventsService
    *
    * @todo Perhaps convert to DateTime class instead of using strftime().
    */
-  private function getEventTimes(array $eventObject, null|string|DateTimeZone $timezone = null, ?string $locale = null):array
+  private function getEventTimes(array $eventObject):array
   {
-    if ($timezone === null) {
-      $timezone = $this->dateTimeZone->getTimeZone();
-    } elseif (is_string($timezone)) {
-      $timezone = new DateTimeZone($timezone);
-    }
-    if ($locale === null) {
-      $locale = $this->l->getLocaleCode();
-    }
-
     /** @var DateTimeInterface $start */
     $start = $eventObject['start'];
     /** @var DateTimeInterface $end */
@@ -312,20 +346,20 @@ class EventsService
 
     $endStamp = $end->getTimestamp();
 
-    $startDate = $this->dateTimeFormatter->formatDate($start, 'short', $timezone);
+    $startDate = $this->dateTimeFormatter->formatDate($start, 'short', $this->dateTimeZone, $this->l);
     $startTime = $start->format('H:i');
     $endTime = $end->format('H:i');
     if ($endTime == '00:00') {
       // make whole-day events a little more readable
       $endTime = '24:00';
-      $endDate = $this->dateTimeFormatter->formatDate($endStamp - 1, 'short', $timezone);
+      $endDate = $this->dateTimeFormatter->formatDate($endStamp - 1, 'short', $this->dateTimeZone, $this->l);
     } else {
-      $endDate = $this->dateTimeFormatter->formatDate($endStamp, 'short', $timezone);
+      $endDate = $this->dateTimeFormatter->formatDate($endStamp, 'short', $this->dateTimeZone, $this->l);
     }
 
     return [
-      'timezone' => $timezone->getName(),
-      'locale' => $locale,
+      'timezone' => $this->dateTimeZone->getName(),
+      'locale' => $this->l->getLocaleCode(),
       'allday' => $allDay,
       'start' => [
         'stamp' => $startStamp,
@@ -431,18 +465,17 @@ class EventsService
     $end = $dtEnd->getDateTime();
     $allDay = !$dtStart->hasTime();
 
-    $timeZone = $this->dateTimeZone->getTimeZone();
     if (!$allDay) {
       if ($dtStart->isFloating()) {
-        $start = $start->setTimezone($timeZone);
+        $start = $start->setTimezone($this->dateTimeZone);
       }
       if ($dtEnd->isFloating()) {
-        $end = $end->setTimezone($timeZone);
+        $end = $end->setTimezone($this->dateTimeZone);
       }
     } else {
       // ??
-      $start = new DateTimeImmutable($start->format('Y-m-d H:i:s'), $timeZone);
-      $end = new DateTimeImmutable($end->format('Y-m-d H:i:s'), $timeZone);
+      $start = new DateTimeImmutable($start->format('Y-m-d H:i:s'), $this->dateTimeZone);
+      $end = new DateTimeImmutable($end->format('Y-m-d H:i:s'), $this->dateTimeZone);
     }
 
     $event['start'] = $start;

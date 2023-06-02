@@ -134,10 +134,10 @@ class ProjectEventsApiController extends ApiController
           $calendar = [ $calendar ];
         }
 
-        $timezone = $this->getTimezone($timezone);
-        $locale = $this->getLocale($locale);
+        $this->setTimezone($timezone);
+        $this->setLocale($locale);
 
-        $eventData = $this->eventsService->getProjectEventData($project, $calendar, $timezone, $locale);
+        $eventData = $this->eventsService->getProjectEventData($project, $calendar);
         return new DataResponse([ 'status' => 200, 'data' => [ $projectName => $eventData, ], ], Http::STATUS_OK);
       case self::INDEX_BY_WEB_PAGE:
         $articleId = $objectId;
@@ -148,8 +148,8 @@ class ProjectEventsApiController extends ApiController
           $calendar = [ $calendar ];
         }
 
-        $timezone = $this->getTimezone($timezone);
-        $locale = $this->getLocale($locale);
+        $this->setTimezone($timezone);
+        $this->setLocale($locale);
 
         $articles = $this->entityManager->getRepository(Entities\ProjectWebPage::class)->findBy([
           'articleId' => $articleId
@@ -161,7 +161,7 @@ class ProjectEventsApiController extends ApiController
         /** @var Entities\ProjectWebPage $article */
         foreach ($articles as $article) {
           $project = $article->getProject();
-          $data[$project->getName()] = $this->eventsService->getProjectEventData($project, $calendar, $timezone, $locale);
+          $data[$project->getName()] = $this->eventsService->getProjectEventData($project, $calendar);
         }
         return new DataResponse([ 'status' => 200, 'data' => $data, ], Http::STATUS_OK);
       default:
@@ -172,24 +172,25 @@ class ProjectEventsApiController extends ApiController
   /**
    * @param null|string $timezone
    *
-   * @return DateTimeZone
+   * @return void
    */
-  private function getTimeZone(?string $timezone):DateTimeZone
+  private function setTimeZone(?string $timezone):void
   {
     if ($timezone === null) {
-      return $this->dateTimeZone->getTimeZone();
+      $timezone = $this->dateTimeZone->getTimeZone();
     } else {
       $timezone = rawurldecode($timezone);
-      return new DateTimeZone($timezone);
+      $timezone = new DateTimeZone($timezone);
     }
+    $this->eventsService->setTimezone($timezone);
   }
 
   /**
    * @param null|string $locale
    *
-   * @return string
+   * @return void
    */
-  private function getLocale(?string $locale):string
+  private function setLocale(?string $locale):void
   {
     if ($locale == null) {
       $locale = $this->l->getLocaleCode();
@@ -203,6 +204,6 @@ class ProjectEventsApiController extends ApiController
     } else {
       $locale = rawurldecode($locale);
     }
-    return $locale;
+    $this->eventsService->setLocale($locale);
   }
 }
