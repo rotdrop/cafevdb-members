@@ -86,7 +86,7 @@ export const useMemberDataStore = defineStore('member-data', {
         // do some basic initializations ...
         vueSet(this, 'birthday', new Date(this.birthday))
         vueSet(this, 'selectedInstruments', [])
-        for (const instrument of this.memberData.instruments) {
+        for (const instrument of this.instruments) {
           this.selectedInstruments.push(instrument)
         }
         this.initialized.promise = null
