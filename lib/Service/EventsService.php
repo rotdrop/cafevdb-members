@@ -162,7 +162,7 @@ class EventsService
     if (is_string($timezone)) {
       $timezone = new DateTimeZone($timezone);
     }
-    $this->DateTimeZone = $timezone;
+    $this->dateTimeZone = $timezone;
 
     return $this;
   }
@@ -350,11 +350,15 @@ class EventsService
     $startTime = $start->format('H:i');
     $endTime = $end->format('H:i');
     if ($endTime == '00:00') {
+      $altEndTime = $endTime;
+      $altEndDate = $this->dateTimeFormatter->formatDate($endStamp, 'short', $this->dateTimeZone, $this->l);
       // make whole-day events a little more readable
       $endTime = '24:00';
       $endDate = $this->dateTimeFormatter->formatDate($endStamp - 1, 'short', $this->dateTimeZone, $this->l);
     } else {
       $endDate = $this->dateTimeFormatter->formatDate($endStamp, 'short', $this->dateTimeZone, $this->l);
+      $altEndTime = $endTime;
+      $altEndDate = $endDate;
     }
 
     return [
@@ -370,6 +374,8 @@ class EventsService
         'stamp' => $endStamp,
         'date' => $endDate,
         'time' => $endTime,
+        'altDate' => $altEndDate,
+        'altTime' => $altEndTime,
       ],
     ];
   }
