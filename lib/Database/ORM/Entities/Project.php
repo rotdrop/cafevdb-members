@@ -22,6 +22,9 @@
 
 namespace OCA\CAFeVDBMembers\Database\ORM\Entities;
 
+use DateTimeImmutable;
+use DateTimeInterface;
+
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -33,7 +36,7 @@ use OCA\CAFeVDBMembers\Database\DBAL\Types;
  * Projects
  *
  * @ORM\Table(name="PersonalizedProjectsView")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="OCA\CAFeVDBMembers\Database\ORM\Repositories\ProjectsRepository")
  */
 class Project implements \ArrayAccess
 {
@@ -69,7 +72,33 @@ class Project implements \ArrayAccess
    *
    * @ORM\Column(type="EnumProjectTemporalType", nullable=false)
    */
-  private $type = 'temporary';
+  private $type = Types\EnumProjectTemporalType::TEMPORARY;
+
+  /**
+   * @var \DateTimeImmutable
+   *
+   * Optional registration start date. If not set then the online registration
+   * is NOT available.
+   *
+   * @ORM\Column(type="date_immutable", nullable=true)
+   */
+  private $registrationStartDate;
+
+  /**
+   * @var DateTimeImmutable
+   *
+   * Optional registration deadline. If null then the date one day before the
+   * first rehearsal is used, if set. Otherwise no registration dead-line is
+   * imposed.
+   *
+   * @ORM\Column(type="date_immutable", nullable=true)
+   */
+  private $registrationDeadline;
+
+  /**
+   * @ORM\OneToMany(targetEntity="ProjectInstrumentationNumber", mappedBy="project", fetch="EXTRA_LAZY")
+   */
+  private $instrumentationNumbers;
 
   /**
    * @var bool
@@ -84,6 +113,13 @@ class Project implements \ArrayAccess
    * @ORM\Column(type="boolean")
    */
   private $executiveBoard;
+
+  /**
+   * @var Collection
+   *
+   * @ORM\OneToMany(targetEntity="ProjectEvent", mappedBy="project")
+   */
+  private $calendarEvents;
 
   /**
    * @ORM\OneToMany(targetEntity="ProjectParticipant", mappedBy="project")
@@ -120,6 +156,9 @@ class Project implements \ArrayAccess
     $this->participantFieldsData = new ArrayCollection();
     $this->sepaDebitMandates = new ArrayCollection();
     $this->payments = new ArrayCollection();
+    $this->calendarEvents = new ArrayCollection();
+    $this->instrumentationNumbers = new ArrayCollection();
+    $this->type = Types\EnumProjectTemporalType::from($this->type);
   }
   // phpcs:enable
 
@@ -337,6 +376,100 @@ class Project implements \ArrayAccess
   public function getSepaDebitMandates():Collection
   {
     return $this->sepaDebitMandates;
+  }
+
+  /**
+   * Sets registrationStartDate.
+   *
+   * @param string|int|DateTimeInterface $registrationStartDate
+   *
+   * @return Project
+   */
+  public function setRegistrationStartDate(mixed $registrationStartDate):Project
+  {
+    $this->registrationStartDate = self::convertToDateTime($registrationStartDate);
+    return $this;
+  }
+
+  /**
+   * Returns registrationStartDate.
+   *
+   * @return DateTimeImmutable
+   */
+  public function getRegistrationStartDate():?DateTimeInterface
+  {
+    return $this->registrationStartDate;
+  }
+
+  /**
+   * Sets registrationDeadline.
+   *
+   * @param string|int|DateTimeInterface $registrationDeadline
+   *
+   * @return Project
+   */
+  public function setRegistrationDeadline(mixed $registrationDeadline):Project
+  {
+    $this->registrationDeadline = self::convertToDateTime($registrationDeadline);
+    return $this;
+  }
+
+  /**
+   * Returns registrationDeadline.
+   *
+   * @return DateTimeImmutable
+   */
+  public function getRegistrationDeadline():?DateTimeInterface
+  {
+    return $this->registrationDeadline;
+  }
+
+  /**
+   * Set calendarEvents.
+   *
+   * @param Collection $calendarEvents
+   *
+   * @return Project
+   */
+  public function setCalendarEvents(Collection $calendarEvents):Project
+  {
+    $this->calendarEvents = $calendarEvents;
+
+    return $this;
+  }
+
+  /**
+   * Get calendarEvents.
+   *
+   * @return Collection
+   */
+  public function getCalendarEvents():Collection
+  {
+    return $this->calendarEvents;
+  }
+
+  /**
+   * Set instrumentationNumbers.
+   *
+   * @param Collection $instrumentationNumbers
+   *
+   * @return Project
+   */
+  public function setInstrumentationNumbers(Collection $instrumentationNumbers):Project
+  {
+    $this->instrumentationNumbers = $instrumentationNumbers;
+
+    return $this;
+  }
+
+  /**
+   * Get instrumentationNumbers.
+   *
+   * @return Collection
+   */
+  public function getInstrumentationNumbers()
+  {
+    return $this->instrumentationNumbers;
   }
 
   /**

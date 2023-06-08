@@ -1,3 +1,26 @@
+<script>
+/**
+ * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
+ *
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ *
+ * @license AGPL-3.0-or-later
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+</script>
 <template>
   <Content :app-name="appId">
     <AppNavigation>
@@ -7,35 +30,40 @@
           :title="t(appId, 'Home')"
           icon="icon-home"
           exact
-          @click="showSidebar = false" />
+          @click="showSidebar = false"
+        />
         <AppNavigationItem
           :to="memberDataError ? {} : { name: 'personalProfile' }"
           :title="t(appId, 'Personal Profile')"
           icon="icon-files-dark"
           :class="{ disabled: memberDataError }"
           exact
-          @click="showSidebar = false" />
+          @click="showSidebar = false"
+        />
         <AppNavigationItem
           :to="memberDataError ? {} : { name: 'bankAccounts' }"
           :title="t(appId, 'Bank Accounts')"
           icon="icon-files-dark"
           :class="{ disabled: memberDataError }"
           exact
-          @click="showSidebar = false" />
+          @click="showSidebar = false"
+        />
         <AppNavigationItem
           :to="memberDataError ? {} : { name: 'instrumentInsurances' }"
           :title="t(appId, 'Instrument Insurances')"
           icon="icon-files-dark"
           :class="{ disabled: memberDataError }"
           exact
-          @click="showSidebar = false" />
+          @click="showSidebar = false"
+        />
         <AppNavigationItem
           :to="memberDataError ? {} : { name: 'projects' }"
           :title="t(appId, 'Projects')"
           icon="icon-files-dark"
           :class="{ disabled: memberDataError }"
           exact
-          @click="showSidebar = false" />
+          @click="showSidebar = false"
+        />
       </template>
       <template #footer>
         <AppNavigationSettings>
@@ -72,17 +100,20 @@
     <AppSidebar v-show="showSidebar"
                 :title="sidebarTitle"
                 :loading.sync="loading"
-                @close="closeSidebar">
+                @close="closeSidebar"
+    >
       <AppSidebarTab v-if="sidebarView === 'InstrumentInsurances'"
                      id="details-side-bar"
                      icon="icon-share"
-                     :name="t(appId, 'details')">
+                     :name="t(appId, 'details')"
+      >
         <InsuranceDetails v-bind="sidebarProps" />
       </AppSidebarTab>
       <AppSidebarTab v-if="sidebarView === 'Projects'"
                      id="details-side-bar"
                      icon="icon-share"
-                     :name="t(appId, 'details')">
+                     :name="t(appId, 'details')"
+      >
         <ProjectDetails v-bind="sidebarProps" />
       </AppSidebarTab>
     </AppSidebar>
@@ -112,7 +143,7 @@ import ProjectDetails from './views/Projects/ProjectDetails'
 
 import Icon from '../img/cafevdbmembers.svg'
 
-import { getInitialState } from './services/InitialStateService'
+import { getInitialState } from './toolkit/services/InitialStateService'
 import { useMemberDataStore } from './stores/memberData.js'
 import { useAppDataStore } from './stores/appData.js'
 import { mapWritableState } from 'pinia'

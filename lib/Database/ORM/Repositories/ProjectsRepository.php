@@ -1,8 +1,9 @@
+<?php
 /**
- * @copyright Copyright (c) 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- *
+ * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,24 +18,11 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
-import { appName } from '../config.js'
-import Vue from 'vue'
-import Router from 'vue-router'
-import { generateUrl } from '@nextcloud/router'
-import routes from './router'
+namespace OCA\CAFeVDBMembers\Database\ORM\Repositories;
 
-Vue.use(Router)
-
-const base = generateUrl('/apps/' + appName)
-
-const router = new Router({
-  mode: 'history',
-  base,
-  linkActiveClass: 'active',
-  routes,
-})
-
-export default router
+/** Repository class for Project entities. */
+class ProjectsRepository extends EntityRepository
+{
+}

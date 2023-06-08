@@ -5,3 +5,4 @@ js/
 lib/Toolkit/
 php-toolkit/Service/ArchiveService.php
 php-toolkit/Traits/AssetTrait.php
+src/toolkit/

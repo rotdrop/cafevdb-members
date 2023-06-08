@@ -1,5 +1,5 @@
 /**
- * @copyright Copyright (c) 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
  *
@@ -26,7 +26,7 @@ import { getRequestToken } from '@nextcloud/auth'
 // import { translate, translatePlural } from '@nextcloud/l10n'
 import Vue from 'vue'
 import App from './App'
-import router from './router'
+import router from './router/app-router.js'
 import { createPinia, PiniaVuePlugin } from 'pinia'
 
 Vue.use(PiniaVuePlugin)

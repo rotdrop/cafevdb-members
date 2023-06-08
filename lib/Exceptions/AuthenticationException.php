@@ -20,8 +20,6 @@
 
 namespace OCA\CAFeVDBMembers\Exceptions;
 
-use Exception;
-
 /** Thrown at authentication errors. */
 class AuthenticationException extends Exception
 {

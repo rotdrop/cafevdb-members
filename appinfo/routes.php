@@ -22,12 +22,37 @@ return [
       'requirements' => [ 'path' => '.+' ],
       'postfix' => 'front',
     ],
-    // [
-    //   'name' => 'note_api#preflighted_cors',
-    //   'url' => '/api/0.1/{path}',
-    //   'verb' => 'OPTIONS',
-    //   'requirements' => ['path' => '.+'],
-    // ],
+    [
+      'name' => 'project_registration#page',
+      'url' => '/public/registration/{projectName}/{section}',
+      'verb' => 'GET',
+      'defaults' => [
+        'projectName' => null,
+        'section' => null,
+      ],
+    ],
+    [
+      'name' => 'project_events_api#preflighted_cors',
+      'url' => '/api/{apiVersion}/{path}',
+      'verb' => 'OPTIONS',
+      'requirements' => [
+        'apiVersion' => '0.1',
+        'path' => '.+',
+      ],
+    ],
+    [
+      'name' => 'project_events_api#service_switch',
+      'url' => '/api/{apiVersion}/projects/events/{indexObject}/{objectId}/{calendar}/{timezone}/{locale}',
+      'verb' => 'GET',
+      'defaults' => [
+        'calendar' => 'all',
+        'timezone' => null,
+        'locale' => null,
+      ],
+      'requirements' => [
+        'apiVersion' => '0.1',
+      ],
+    ],
     [
       'name' => 'settings#set_admin',
       'url' => '/settings/admin/{setting}',
