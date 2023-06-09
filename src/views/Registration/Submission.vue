@@ -28,7 +28,7 @@
         {{ t(appId, 'Summary and Submission') }}
       </h2>
       <div class="navigation flex flex-row flex-justify-full flex-center">
-        <RouterButton :#to="{ name: 'projectOptions', params: { projectName } }"
+        <RouterButton :to="{ name: 'registrationProjectOptions', params: { projectName } }"
                       exact
                       icon="icon-history"
                       icon-position="left"

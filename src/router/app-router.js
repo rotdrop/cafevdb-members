@@ -23,11 +23,15 @@ import { appName } from '../config.js'
 import Vue from 'vue'
 import Router from 'vue-router'
 import { generateUrl } from '@nextcloud/router'
-import routes from './app-routes.js'
+import { getCurrentUser } from '@nextcloud/auth'
+import appRoutes from './app-routes.js'
+import registrationRoutes from './registration-routes.js'
 
 Vue.use(Router)
 
 const base = generateUrl('/apps/' + appName)
+
+const routes = getCurrentUser() ? [...appRoutes, ...registrationRoutes] : registrationRoutes
 
 const router = new Router({
   mode: 'history',

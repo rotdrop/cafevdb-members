@@ -28,19 +28,19 @@
         {{ t(appId, 'Project Fees and Options') }}
       </h2>
       <div class="navigation flex flex-row flex-justify-full">
-        <RouterButton :to="{ name: 'participation', params: { projectName } }"
+        <RouterButton :to="{ name: 'registrationParticipation', params: { projectName } }"
                       exact
                       icon="icon-history"
                       icon-position="left"
         >
           {{ t(appId, 'back') }}
         </RouterButton>
-        <RouterButton :to="{ name: 'submission', params: { projectName } }"
+        <RouterButton :to="{ name: 'registrationSubmission', params: { projectName } }"
                       exact
                       icon="icon-confirm"
                       icon-position="right"
         >
-          {{ t(appIqd, 'Summary and Submission') }}
+          {{ t(appId, 'Summary and Submission') }}
         </RouterButton>
       </div>
     </div>

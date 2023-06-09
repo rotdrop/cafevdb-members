@@ -31,6 +31,7 @@ use OCP\AppFramework\Controller;
 use OCP\IRequest;
 use OCP\IL10N;
 use OCP\IDateTimeZone;
+use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Http\Template\PublicTemplateResponse;
 use OCP\AppFramework\Http\Template\SimpleMenuAction;
 use OCP\AppFramework\Services\IInitialState;
@@ -39,6 +40,7 @@ use OCP\Calendar\IManager as ICalendarMananger;
 use OCP\Calendar\ICalendarQuery;
 use OCP\IConfig;
 use OCP\IURLGenerator;
+use OCP\IUserSession;
 
 use OCA\CAFEVDB\Service\ConfigService;
 
@@ -55,6 +57,9 @@ class ProjectRegistrationController extends Controller
 
   /** @var IL10N */
   private $l;
+
+  /** @var IUserSession */
+  private $userSession;
 
   /** @var IConfig */
   private $cloudConfig;
@@ -78,6 +83,7 @@ class ProjectRegistrationController extends Controller
   public function __construct(
     string $appName,
     IRequest $request,
+    IUserSession $userSession,
     IL10N $l10n,
     LoggerInterface $logger,
     IConfig $cloudConfig,
@@ -88,6 +94,7 @@ class ProjectRegistrationController extends Controller
     EntityManager $entityManager,
   ) {
     parent::__construct($appName, $request);
+    $this->userSession = $userSession;
     $this->l = $l10n;
     $this->logger = $logger;
     $this->cloudConfig = $cloudConfig;
@@ -102,7 +109,7 @@ class ProjectRegistrationController extends Controller
   /**
    * @param null|string $projectName
    *
-   * @return PublicTemplateResponse
+   * @return TemplateResponse
    *
    * @todo Check whether we do want CSRF.
    *
@@ -110,7 +117,7 @@ class ProjectRegistrationController extends Controller
    * @NoCSRFRequired
    * @PublicPage
    */
-  public function page(?string $projectName):PublicTemplateResponse
+  public function page(?string $projectName):TemplateResponse
   {
     $nowDate = self::convertToTimezoneDate(new DateTimeImmutable, $this->dateTimeZone->getTimeZone());
     $currentYear = $nowDate->format('Y');
@@ -127,9 +134,6 @@ class ProjectRegistrationController extends Controller
       ],
     );
 
-    $actionMenu = [
-      new SimpleMenuAction('menu-trigger', $this->l->t('Select a Project'), ''),
-    ];
     $projectsList = [];
     $activeProject = -1;
     $timezone = $this->dateTimeZone->getTimeZone();
@@ -163,10 +167,6 @@ class ProjectRegistrationController extends Controller
       if (empty($projectName)) {
         $projectName = $project->getName();
       }
-
-      $link = $this->urlGenerator->linkToRoute($this->appName . '.project_registration.page', [ 'projectName' => $project->getName() ]);
-      $menuItem = new SimpleMenuAction($project->getName(), $project->getName(), 'icon-group', $link);
-      $actionMenu[] = $menuItem;
 
       if ($project->getName() == $projectName) {
         $activeProject = count($projectsList);
@@ -202,12 +202,19 @@ class ProjectRegistrationController extends Controller
       ];
     }
 
-    $response = new PublicTemplateResponse($this->appName, 'project-registration', [
-      'appName' => $this->appName,
-    ]);
-    $response->setFooterVisible(false);
-    $response->setHeaderTitle($this->l->t('Project Application for %s', $projectName));
-    $response->setHeaderActions($actionMenu);
+    if (!empty($this->userSession->getUser())) {
+      $response = new TemplateResponse($this->appName, 'project-registration', [
+        'appName' => $this->appName,
+        'public' => false,
+      ]);
+    } else {
+      $response = new PublicTemplateResponse($this->appName, 'project-registration', [
+        'appName' => $this->appName,
+        'public' => true,
+      ]);
+      $response->setHeaderTitle($this->l->t('Project Application for %s', $projectName));
+      $response->setFooterVisible(false);
+    }
 
     $this->initialState->provideInitialState('projects', $projectsList);
     $this->initialState->provideInitialState('activeProject', $activeProject);

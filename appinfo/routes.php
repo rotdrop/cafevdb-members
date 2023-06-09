@@ -24,7 +24,7 @@ return [
     ],
     [
       'name' => 'project_registration#page',
-      'url' => '/public/registration/{projectName}/{section}',
+      'url' => '/registration/{projectName}/{section}',
       'verb' => 'GET',
       'defaults' => [
         'projectName' => null,

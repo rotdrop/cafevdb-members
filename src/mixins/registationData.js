@@ -35,9 +35,11 @@ export default {
       if (!this.registrationData.initialized.registration) {
         vueSet(this.registrationData, 'whoAmI', '')
         if (getCurrentUser()) {
+          console.info('CURRENT USER', getCurrentUser())
           await this.registrationData.initialize()
           vueSet(this.registrationData, 'firstTimeApplication', 'you-know-me')
         } else {
+          console.info('NOT LOGGED IN')
           vueSet(this.registrationData, 'firstTimeApplication', 'first-time')
         }
         if (!this.registrationData.country) {
@@ -62,6 +64,7 @@ export default {
   },
   computed: {
     routePath() {
+      console.info('ROUTE PATH', this.$route.path)
       return this.$route.path
     },
     ...mapWritableState(useAppDataStore, [
@@ -104,11 +107,13 @@ export default {
   },
   watch: {
     routePath(newValue, oldValue) {
+      console.info('ROUTE PATH WATCHER', newValue, oldValue)
       if (newValue === '/') {
         return
       }
-      const projectName = newValue.split('/')[1]
-      const project = this.projects.find(project => project.name === projectName)
+      const pathComponents = newValue.split('/')
+      const projectName = pathComponents.length >= 3 ? pathComponents[2] : undefined
+      const project = projectName ? this.projects.find(project => project.name === projectName) : undefined
       if (project && project.id !== this.activeProject.id) {
         console.info('Changing active project')
         this.activeProject = project

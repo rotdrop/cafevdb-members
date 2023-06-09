@@ -67,6 +67,7 @@ export const useMemberDataStore = defineStore('member-data', {
   },
   actions: {
     async initialize(silent, reset) {
+      console.info('INIT')
       if (this.initialized.loaded && !reset) {
         return
       }
@@ -122,6 +123,7 @@ export const useMemberDataStore = defineStore('member-data', {
       }
     },
     async load() {
+      console.info('LOAD')
       this.$reset()
       await this.initialize()
     },

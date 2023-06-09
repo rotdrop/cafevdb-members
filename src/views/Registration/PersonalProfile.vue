@@ -185,14 +185,14 @@
         />
       </div>
       <div class="navigation flex flex-row flex-justify-full">
-        <RouterButton :to="{ name: 'home', params: { projectName } }"
+        <RouterButton :to="{ name: 'registrationHome', params: { projectName } }"
                       exact
                       icon="icon-home"
                       icon-position="left"
         >
-          {{ t(appId, 'Start-Page') }}
+          {{ t(appId, 'Registration Start-Page') }}
         </RouterButton>
-        <RouterButton :to="{ name: 'participation', params: { projectName } }"
+        <RouterButton :to="{ name: 'registrationParticipation', params: { projectName } }"
                       exact
                       icon="icon-confirm"
                       icon-position="right"

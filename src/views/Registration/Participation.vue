@@ -49,19 +49,19 @@
         {{ t(appId, 'You do not seem to play any instrument configured for the project: {instruments}.', { instruments: projectInstrumentsText }) }}
       </div>
       <div class="navigation flex flex-row flex-justify-full">
-        <RouterButton :to="{ name: 'personalProfile', params: { projectName } }"
+        <RouterButton :to="{ name: 'registrationPersonalProfile', params: { projectName } }"
                       exact
                       icon="icon-history"
                       icon-position="left"
         >
           {{ t(appId, 'back') }}
         </RouterButton>
-        <RouterButton :to="{ name: 'projectOptions', params: { projectName } }"
+        <RouterButton :to="{ name: 'registrationProjectOptions', params: { projectName } }"
                       exact
                       icon="icon-confirm"
                       icon-position="right"
         >
-          {{ t(appIqd, 'next') }}
+          {{ t(appId, 'next') }}
         </RouterButton>
       </div>
     </div>

@@ -26,34 +26,34 @@
     <AppNavigation>
       <template #list>
         <AppNavigationItem
-          :to="{ name: 'home', params: { projectName } }"
-          :title="t(appId, 'Home')"
+          :to="{ name: 'registrationHome', params: { projectName } }"
+          :title="isPublicPage ? t(appId, 'Home') : t(appId, 'Start Registration')"
           icon="icon-home"
           exact
         />
         <AppNavigationItem
-          :to="{ name: 'personalProfile', params: { projectName } }"
+          :to="{ name: 'registrationPersonalProfile', params: { projectName } }"
           :title="t(appId, 'Personal Profile')"
           icon="icon-user"
           :class="{ disabled: !activeProject }"
           exact
         />
         <AppNavigationItem
-          :to="{ name: 'participation', params: { projectName } }"
+          :to="{ name: 'registrationParticipation', params: { projectName } }"
           :title="t(appId, 'Instrumentation and Events')"
           icon="icon-music"
           :class="{ disabled: !activeProject }"
           exact
         />
         <AppNavigationItem
-          :to="{ name: 'projectOptions', params: { projectName } }"
+          :to="{ name: 'registrationProjectOptions', params: { projectName } }"
           :title="t(appId, 'Options')"
           icon="icon-details"
           :class="{ disabled: !activeProject }"
           exact
         />
         <AppNavigationItem
-          :to="{ name: 'submission', params: { projectName } }"
+          :to="{ name: 'registrationSubmission', params: { projectName } }"
           :title="t(appId, 'Summary and Submission')"
           icon="icon-checkmark"
           :class="{ disabled: !activeProject }"
@@ -81,26 +81,32 @@
           <img :src="icon">
         </template>
         <template #desc>
-          <RouterButton v-if="activeProject"
-                        :to="{ name: 'personalProfile', params: { projectName } }"
-                        exact
-                        icon="icon-confirm"
-                        icon-position="right"
+          <div v-if="activeProject"
+               class="flex-container flex-center"
           >
-            {{ t(appId, 'Start') }}
-          </RouterButton>
+            <Actions v-if="projects.length > 1"
+                     :menu-title="t(appId, 'choose another one')"
+            >
+              <ActionRouter v-for="project in projects"
+                            :key="project.id"
+                            :title="project.name"
+                            :to="{ name: 'registrationHome', params: { projectName: project.name } }"
+              />
+            </Actions>
+            <span v-if="projects.length > 1" class="start-button-junctor">{{ t(appId, 'or') }}</span>
+            <RouterButton :to="{ name: 'registrationPersonalProfile', params: { projectName } }"
+                          exact
+                          icon="icon-confirm"
+                          icon-position="right"
+            >
+              {{ t(appId, 'start') }}
+            </RouterButton>
+          </div>
           <h2 v-else>
             {{ t(appId, 'The project registration for all projects is closed.') }}
           </h2>
         </template>
       </EmptyContent>
-      <!-- <Actions>
-        <ActionRouter v-for="project in projects"
-                      :key="project.id"
-                      :title="project.name"
-                      :to="{ name: 'home', params: { projectName: project.name } }"
-        />
-      </Actions> -->
     </AppContent>
   </Content>
 </template>
@@ -132,6 +138,8 @@ import { mapWritableState } from 'pinia'
 import Icon from '../img/cafevdbmembers.svg'
 
 import mixinRegistrationData from './mixins/registationData.js'
+
+import { prefix as registrationPrefix } from './router/registration-routes.js'
 
 const projects = loadState(appName, 'projects')
 const activeProject = loadState(appName, 'activeProject')
@@ -174,7 +182,6 @@ export default {
   async created() {
     await this.initializeRegistrationData()
     this.setPageTitle()
-    this.attachActionMenuHandlers()
     this.readonly = false
     this.loading = false
   },
@@ -182,7 +189,14 @@ export default {
   },
   computed: {
     isRoot() {
-      return this.$route.path === '/' || this.$route.path === '/' + this.projectName
+      const result = this.$route.path === registrationPrefix
+          || this.$route.path === registrationPrefix + '/'
+          || this.$route.path === registrationPrefix + '/' + this.projectName
+      console.info('ROUTE PATH', this.$route.path, registrationPrefix, this.projectName, result)
+      return result
+    },
+    isPublicPage() {
+      return !getCurrentUser()
     },
   },
   watch: {
@@ -192,49 +206,14 @@ export default {
   },
   methods: {
     setPageTitle() {
+      if (getCurrentUser()) {
+        return
+      }
       const pageTitleElement = document.getElementById('nextcloud')
       const pageTitle = this.activeProject
         ? t(appName, 'Project Application for {projectName}', this)
         : t(appName, 'Project Application')
       pageTitleElement.innerHTML = pageTitle
-    },
-    attachActionMenuHandlers() {
-      const primaryAction = document.querySelector('#header-primary-action a')
-      const headerActionsMenu = document.getElementById('header-actions-menu')
-      if (!headerActionsMenu) {
-        primaryAction.classList.add('hidden')
-        return // no open project registrations
-      }
-      primaryAction.classList.remove('hidden')
-      const headerMenuItems = headerActionsMenu.querySelectorAll('a')
-      const menuToggle = document.getElementById('header-actions-toggle')
-      primaryAction.addEventListener('click', (event) => {
-        const headerActionsMenu = document.getElementById('header-actions-menu')
-        event.preventDefault()
-        event.stopPropagation()
-        primaryAction.classList.toggle('menu-open')
-        if (primaryAction.classList.contains('menu-open')) {
-          headerActionsMenu.classList.add('open')
-        } else {
-          headerActionsMenu.classList.remove('open')
-        }
-      })
-      headerMenuItems.forEach(anchor => anchor.addEventListener('click', (event) => {
-        event.preventDefault()
-        event.stopPropagation()
-        const baseName = anchor.href.split('/').pop()
-        if (baseName !== this.projectName) {
-          this.$router.push('/' + baseName)
-          for (const project of this.projects) {
-            if (project.name === baseName) {
-              this.activeProject = project
-              break
-            }
-          }
-        }
-        headerActionsMenu.classList.remove('open')
-        primaryAction.classList.remove('menu-open')
-      }))
     },
   },
 }
@@ -290,6 +269,17 @@ span {
 #app-navigation-vue.app-navigation--close::v-deep {
   .app-navigation-toggle {
     margin-right: calc(0px - var(--navigation-width) - var(--default-clickable-area));
+  }
+}
+
+.start-button-junctor {
+  margin: 0 1ex;
+}
+
+.flex-container {
+  display: flex;
+  &.flex-center {
+    align-items:center;
   }
 }
 </style>

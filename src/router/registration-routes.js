@@ -19,36 +19,42 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+const prefix = '/registration'
+
 const routes = [
   {
-    path: '/:projectName',
-    name: 'home',
+    path: prefix + '/:projectName',
+    name: 'registrationHome',
     props: true,
   },
   {
-    path: '/:projectName/personal-profile',
+    path: prefix + '/:projectName/personal-profile',
     component: () => import('../views/Registration/PersonalProfile'),
-    name: 'personalProfile',
+    name: 'registrationPersonalProfile',
     props: true,
   },
   {
-    path: '/:projectName/participation',
+    path: prefix + '/:projectName/participation',
     component: () => import('../views/Registration/Participation'),
-    name: 'participation',
+    name: 'registrationParticipation',
     props: true,
   },
   {
-    path: '/:projectName/project-options',
+    path: prefix + '/:projectName/project-options',
     component: () => import('../views/Registration/ProjectOptions'),
-    name: 'projectOptions',
+    name: 'registrationProjectOptions',
     props: true,
   },
   {
-    path: '/:projectName/submission',
+    path: prefix + '/:projectName/submission',
     component: () => import('../views/Registration/Submission'),
-    name: 'submission',
+    name: 'registrationSubmission',
     props: true,
   },
 ]
+
+export {
+  prefix,
+}
 
 export default routes
