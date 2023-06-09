@@ -173,6 +173,7 @@ export default {
   ],
   async created() {
     await this.initializeRegistrationData()
+    this.setPageTitle()
     this.attachActionMenuHandlers()
     this.readonly = false
     this.loading = false
@@ -186,15 +187,26 @@ export default {
   },
   watch: {
     activeProject(newValue, oldValue) {
-      const pageTitle = document.getElementById('nextcloud')
-      pageTitle.innerHTML = t(appName, 'Project Application for {projectName}', this)
+      this.setPageTitle()
     },
   },
   methods: {
+    setPageTitle() {
+      const pageTitleElement = document.getElementById('nextcloud')
+      const pageTitle = this.activeProject
+        ? t(appName, 'Project Application for {projectName}', this)
+        : t(appName, 'Project Application')
+      pageTitleElement.innerHTML = pageTitle
+    },
     attachActionMenuHandlers() {
-      const headerActionsMenu = document.getElementById('header-actions-menu')
-      const headerMenuItems = headerActionsMenu.querySelectorAll('a')
       const primaryAction = document.querySelector('#header-primary-action a')
+      const headerActionsMenu = document.getElementById('header-actions-menu')
+      if (!headerActionsMenu) {
+        primaryAction.classList.add('hidden')
+        return // no open project registrations
+      }
+      primaryAction.classList.remove('hidden')
+      const headerMenuItems = headerActionsMenu.querySelectorAll('a')
       const menuToggle = document.getElementById('header-actions-toggle')
       primaryAction.addEventListener('click', (event) => {
         const headerActionsMenu = document.getElementById('header-actions-menu')

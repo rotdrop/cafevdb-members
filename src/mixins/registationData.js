@@ -48,10 +48,12 @@ export default {
       if (!this.registrationData.project) {
         vueSet(this.registrationData, 'project', {})
       }
-      if (!this.registrationData.project[this.activeProject.id]) {
-        vueSet(this.registrationData.project, this.activeProject.id, {
-          instruments: [],
-        })
+      if (this.activeProject) {
+        if (!this.registrationData.project[this.activeProject.id]) {
+          vueSet(this.registrationData.project, this.activeProject.id, {
+            instruments: [],
+          })
+        }
       }
     },
     info() {
