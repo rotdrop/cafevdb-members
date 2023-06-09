@@ -223,6 +223,7 @@ export default {
         this.memberDataPollTimer = setTimeout(() => this.pollMemberData(), this.memberDataPollTimeout)
       } else {
         this.memberDataPollTimer = null
+        this.loading = false
       }
     },
     async putRecryptionRequest() {
