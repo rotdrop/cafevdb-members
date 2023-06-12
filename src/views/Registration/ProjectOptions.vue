@@ -22,29 +22,27 @@
  */
 </script>
 <template>
-  <Content v-if="activeProject" :app-name="appId" class="project-options-view">
-    <div v-if="!loading" class="page-container">
-      <h2>
-        {{ t(appId, 'Project Fees and Options') }}
-      </h2>
-      <div class="navigation flex flex-row flex-justify-full">
-        <RouterButton :to="{ name: 'registrationParticipation', params: { projectName } }"
-                      exact
-                      icon="icon-history"
-                      icon-position="left"
-        >
-          {{ t(appId, 'back') }}
-        </RouterButton>
-        <RouterButton :to="{ name: 'registrationSubmission', params: { projectName } }"
-                      exact
-                      icon="icon-confirm"
-                      icon-position="right"
-        >
-          {{ t(appId, 'Summary and Submission') }}
-        </RouterButton>
-      </div>
+  <div :class="{ 'icon-loading': loading, 'page-container': true, loading, 'project-options-view': true, }">
+    <h2>
+      {{ t(appId, 'Project Fees and Options') }}
+    </h2>
+    <div class="navigation flex flex-row flex-justify-full">
+      <RouterButton :to="{ name: 'registrationParticipation', params: { projectName } }"
+                    exact
+                    icon="icon-history"
+                    icon-position="left"
+      >
+        {{ t(appId, 'back') }}
+      </RouterButton>
+      <RouterButton :to="{ name: 'registrationSubmission', params: { projectName } }"
+                    exact
+                    icon="icon-confirm"
+                    icon-position="right"
+      >
+        {{ t(appId, 'Summary and Submission') }}
+      </RouterButton>
     </div>
-  </Content>
+  </div>
 </template>
 
 <script>
@@ -54,8 +52,6 @@ import DebugInfo from '../../components/DebugInfo'
 import RouterButton from '../../components/RouterButton'
 
 import { set as vueSet } from 'vue'
-import AppContent from '@nextcloud/vue/dist/Components/NcAppContent'
-import Content from '@nextcloud/vue/dist/Components/NcContent'
 import CheckboxRadioSwitch from '@nextcloud/vue/dist/Components/NcCheckboxRadioSwitch'
 
 import mixinRegistrationData from '../../mixins/registationData.js'
@@ -64,9 +60,7 @@ import { useMemberDataStore } from '../../stores/memberData.js'
 export default {
   name: 'ProjectOptions',
   components: {
-    AppContent,
     CheckboxRadioSwitch,
-    Content,
     DebugInfo,
     InputText,
     RouterButton,
@@ -96,18 +90,18 @@ export default {
 </script>
 <style lang="scss" scoped>
 .page-container {
-  padding-left:0.5rem;
+  padding: 12px 0.5em 0 50px;
+  min-height:100%;
   &.loading {
     width:100%;
+    * {
+      display:none;
+    }
   }
 }
 
-#app-content-vue {
-  overflow:auto;
-}
-
 .navigation {
-  margin-top:0.5em;
+  margin:0.5em 0;
 }
 
 .flex {

@@ -22,38 +22,34 @@
  */
 </script>
 <template>
-  <Content :app-name="appId">
-    <div v-if="loading" class="page-container loading" />
-    <div v-else class="page-container">
-      <h2>
-        {{ t(appId, 'Project-Participation of {publicName}', { publicName: memberData.personalPublicName }) }}
-      </h2>
-      <ul class="project-list">
-        <ListItem v-for="participant in memberData.projectParticipation"
-                  :key="participant.project.id"
-                  :title="participant.project.name"
-                  :bold="true"
-        >
-          <template #details>
-            <Actions class="project-details">
-              <ActionButton icon="icon-info"
-                            @click="requestProjectDetails(participant)"
-              >
-                {{ t(appId, 'details') }}
-              </ActionButton>
-            </Actions>
-          </template>
-        </ListItem>
-      </ul>
-      <DebugInfo :debug-data="memberData" />
-    </div>
-  </Content>
+  <div :class="{ 'icon-loading': loading, 'page-container': true, loading, }">
+    <h2>
+      {{ t(appId, 'Project-Participation of {publicName}', { publicName: memberData.personalPublicName }) }}
+    </h2>
+    <ul class="project-list">
+      <ListItem v-for="participant in memberData.projectParticipation"
+                :key="participant.project.id"
+                :title="participant.project.name"
+                :bold="true"
+      >
+        <template #details>
+          <Actions class="project-details">
+            <ActionButton icon="icon-info"
+                          @click="requestProjectDetails(participant)"
+            >
+              {{ t(appId, 'details') }}
+            </ActionButton>
+          </Actions>
+        </template>
+      </ListItem>
+    </ul>
+    <DebugInfo :debug-data="memberData" />
+  </div>
 </template>
 <script>
 
 import { appName as appId } from '../config.js'
 import Vue from 'vue'
-import Content from '@nextcloud/vue/dist/Components/NcContent'
 import ListItem from '../components/ListItem'
 import DebugInfo from '../components/DebugInfo'
 import Actions from '@nextcloud/vue/dist/Components/NcActions'
@@ -75,7 +71,6 @@ const viewName = 'Projects'
 export default {
   name: viewName,
   components: {
-    Content,
     CheckboxRadioSwitch,
     ListItem,
     ProjectDetails,
@@ -136,9 +131,14 @@ export default {
 </script>
 <style lang="scss" scoped>
 .page-container {
-  padding-left:0.5rem;
+  padding-left:50px;
+  padding-top:12px;
+  min-height:100%;
   &.loading {
     width:100%;
+    * {
+      display:none;
+    }
   }
 }
 

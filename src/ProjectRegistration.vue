@@ -80,7 +80,7 @@
         <template #icon>
           <img :src="icon">
         </template>
-        <template #desc>
+        <template #description>
           <div v-if="activeProject"
                class="flex-container flex-center"
           >
@@ -219,13 +219,6 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.content.root-view::v-deep {
-  height:100%;
-  .app-content {
-    overflow-y: auto;
-  }
-}
-
 span {
   &[class^='icon-'], &[class*=' icon-'] {
     display: inline-block;
@@ -263,12 +256,6 @@ span {
     .hint {
       max-width: 66ex;
     }
-  }
-}
-
-#app-navigation-vue.app-navigation--close::v-deep {
-  .app-navigation-toggle {
-    margin-right: calc(0px - var(--navigation-width) - var(--default-clickable-area));
   }
 }
 

@@ -22,137 +22,133 @@
  */
 </script>
 <template>
-  <Content :app-name="appId">
-    <div v-if="loading" class="page-container loading" />
-    <div v-else class="page-container">
-      <h2>{{ t(appId, 'Instrument Insurances of {publicName}', {publicName: memberData.personalPublicName }) }}</h2>
-      <CheckboxRadioSwitch v-if="haveDeleted" :checked.sync="showDeleted">
-        {{ t(appId, 'show deleted') }}
-      </CheckboxRadioSwitch>
-      <ul class="insurance-sections">
-        <ListItem :title="t(appId, 'Summary')"
-                  :bold="true"
-                  class="summary"
-        >
-          <template #subtitle>
-            <ul class="insurance-summary">
-              <ListItem :title="t(appId, 'Total Insured Value')"
-                        :details="totalInsuredValue + ' ' + currencySymbol"
-              />
-              <ListItem v-if="totalInsuredValue != totalPayableValue"
-                        :title="t(appId, 'Total Payable Value')"
-                        :details="totalPayableValue + ' ' + currencySymbol"
-              />
-              <ListItem :title="t(appId, 'Yearly Insurance fees w/o taxes')"
-                        :details="totalPayableFees.toFixed(2) + ' ' + currencySymbol"
-              />
-              <ListItem :title="t(appId, 'Yearly Insurance fees with {taxes}% taxes', { taxes: taxRate*100.0 })"
-                        :details="(totalPayableFees * (1.0 + taxRate)).toFixed(2) + ' ' + currencySymbol"
-              />
-              <ListItem :title="t(appId, 'Yearly Insurance Bills')">
-                <template #details>
-                  <Actions class="insurance-bill-list">
-                    <ActionLink v-for="receivable in insuranceBills"
-                                :key="receivable.optionKey"
-                                icon="icon-download"
-                                :href="optionDownloadUrl(receivable.optionKey)"
-                    >
-                      {{ receivable.dataOption.label }}
-                    </ActionLink>
-                  </Actions>
-                </template>
-              </ListItem>
-            </ul>
-          </template>
-        </ListItem>
-        <ListItem v-if="memberData.instrumentInsurances.forOthers.length > 0"
-                  :title="t(appId, 'Paid for Others')"
-                  :details="t(appId, 'instrument used by someone else')"
-                  :bold="true"
-        >
-          <template #subtitle>
-            <ul class="insurance-list for-others">
-              <ListItem v-for="insurance in memberData.instrumentInsurances.forOthers"
-                        :key="insurance.id"
-                        :title="insurance.object"
-                        class="insurance-item"
-              >
-                <template #details>
-                  <span class="insurance-amount">{{ insurance.insuranceAmount + ' ' + currencySymbol }}</span>
-                  <Actions class="insurance-details">
-                    <ActionButton icon="icon-info"
-                                  @click="requestInsuranceDetails(insurance)"
-                    >
-                      {{ t(appId, 'details') }}
-                    </ActionButton>
-                  </Actions>
-                </template>
-              </ListItem>
-            </ul>
-          </template>
-        </ListItem>
-        <ListItem v-if="memberData.instrumentInsurances.byOthers.length > 0"
-                  :title="t(appId, 'Paid by Others')"
-                  :details="t(appId, 'instrument owned or used by me')"
-                  :bold="true"
-        >
-          <template #subtitle>
-            <ul class="insurance-list by-others">
-              <ListItem v-for="insurance in memberData.instrumentInsurances.byOthers"
-                        :key="insurance.id"
-                        :title="insurance.object"
-                        class="insurance-item"
-              >
-                <template #details>
-                  <span class="insurance-amount">{{ insurance.insuranceAmount + ' ' + currencySymbol }}</span>
-                  <Actions class="insurance-details">
-                    <ActionButton icon="icon-info"
-                                  @click="requestInsuranceDetails(insurance)"
-                    >
-                      {{ t(appId, 'details') }}
-                    </ActionButton>
-                  </Actions>
-                </template>
-              </ListItem>
-            </ul>
-          </template>
-        </ListItem>
-        <ListItem v-if="memberData.instrumentInsurances.self.length > 0"
-                  :title="haveOthers ? t(appId, 'Self Used and Paid') : t(appId, 'Insured Instruments')"
-                  :details="haveOthers ? t(appId, 'instrument owned or used by me') : ''"
-                  :bold="true"
-        >
-          <template #subtitle>
-            <ul class="insurance-list self">
-              <ListItem v-for="insurance in memberData.instrumentInsurances.self"
-                        :key="insurance.id"
-                        :title="insurance.object"
-                        class="insurance-item"
-              >
-                <template #details>
-                  <span class="insurance-amount">{{ insurance.insuranceAmount + ' ' + currencySymbol }}</span>
-                  <Actions class="insurance-details">
-                    <ActionButton icon="icon-info"
-                                  @click="requestInsuranceDetails(insurance)"
-                    >
-                      {{ t(appId, 'details') }}
-                    </ActionButton>
-                  </Actions>
-                </template>
-              </ListItem>
-            </ul>
-          </template>
-        </ListItem>
-      </ul>
-      <DebugInfo :debug-data="memberData" />
-    </div>
-  </Content>
+  <div :class="{ 'icon-loading': loading, 'page-container': true, loading, }">
+    <h2>{{ t(appId, 'Instrument Insurances of {publicName}', {publicName: memberData.personalPublicName }) }}</h2>
+    <CheckboxRadioSwitch v-if="haveDeleted" :checked.sync="showDeleted">
+      {{ t(appId, 'show deleted') }}
+    </CheckboxRadioSwitch>
+    <ul class="insurance-sections">
+      <ListItem :title="t(appId, 'Summary')"
+                :bold="true"
+                class="summary"
+      >
+        <template #subtitle>
+          <ul class="insurance-summary">
+            <ListItem :title="t(appId, 'Total Insured Value')"
+                      :details="totalInsuredValue + ' ' + currencySymbol"
+            />
+            <ListItem v-if="totalInsuredValue != totalPayableValue"
+                      :title="t(appId, 'Total Payable Value')"
+                      :details="totalPayableValue + ' ' + currencySymbol"
+            />
+            <ListItem :title="t(appId, 'Yearly Insurance fees w/o taxes')"
+                      :details="totalPayableFees.toFixed(2) + ' ' + currencySymbol"
+            />
+            <ListItem :title="t(appId, 'Yearly Insurance fees with {taxes}% taxes', { taxes: taxRate*100.0 })"
+                      :details="(totalPayableFees * (1.0 + taxRate)).toFixed(2) + ' ' + currencySymbol"
+            />
+            <ListItem :title="t(appId, 'Yearly Insurance Bills')">
+              <template #details>
+                <Actions class="insurance-bill-list">
+                  <ActionLink v-for="receivable in insuranceBills"
+                              :key="receivable.optionKey"
+                              icon="icon-download"
+                              :href="optionDownloadUrl(receivable.optionKey)"
+                  >
+                    {{ receivable.dataOption.label }}
+                  </ActionLink>
+                </Actions>
+              </template>
+            </ListItem>
+          </ul>
+        </template>
+      </ListItem>
+      <ListItem v-if="memberData.instrumentInsurances.forOthers.length > 0"
+                :title="t(appId, 'Paid for Others')"
+                :details="t(appId, 'instrument used by someone else')"
+                :bold="true"
+      >
+        <template #subtitle>
+          <ul class="insurance-list for-others">
+            <ListItem v-for="insurance in memberData.instrumentInsurances.forOthers"
+                      :key="insurance.id"
+                      :title="insurance.object"
+                      class="insurance-item"
+            >
+              <template #details>
+                <span class="insurance-amount">{{ insurance.insuranceAmount + ' ' + currencySymbol }}</span>
+                <Actions class="insurance-details">
+                  <ActionButton icon="icon-info"
+                                @click="requestInsuranceDetails(insurance)"
+                  >
+                    {{ t(appId, 'details') }}
+                  </ActionButton>
+                </Actions>
+              </template>
+            </ListItem>
+          </ul>
+        </template>
+      </ListItem>
+      <ListItem v-if="memberData.instrumentInsurances.byOthers.length > 0"
+                :title="t(appId, 'Paid by Others')"
+                :details="t(appId, 'instrument owned or used by me')"
+                :bold="true"
+      >
+        <template #subtitle>
+          <ul class="insurance-list by-others">
+            <ListItem v-for="insurance in memberData.instrumentInsurances.byOthers"
+                      :key="insurance.id"
+                      :title="insurance.object"
+                      class="insurance-item"
+            >
+              <template #details>
+                <span class="insurance-amount">{{ insurance.insuranceAmount + ' ' + currencySymbol }}</span>
+                <Actions class="insurance-details">
+                  <ActionButton icon="icon-info"
+                                @click="requestInsuranceDetails(insurance)"
+                  >
+                    {{ t(appId, 'details') }}
+                  </ActionButton>
+                </Actions>
+              </template>
+            </ListItem>
+          </ul>
+        </template>
+      </ListItem>
+      <ListItem v-if="memberData.instrumentInsurances.self.length > 0"
+                :title="haveOthers ? t(appId, 'Self Used and Paid') : t(appId, 'Insured Instruments')"
+                :details="haveOthers ? t(appId, 'instrument owned or used by me') : ''"
+                :bold="true"
+      >
+        <template #subtitle>
+          <ul class="insurance-list self">
+            <ListItem v-for="insurance in memberData.instrumentInsurances.self"
+                      :key="insurance.id"
+                      :title="insurance.object"
+                      class="insurance-item"
+            >
+              <template #details>
+                <span class="insurance-amount">{{ insurance.insuranceAmount + ' ' + currencySymbol }}</span>
+                <Actions class="insurance-details">
+                  <ActionButton icon="icon-info"
+                                @click="requestInsuranceDetails(insurance)"
+                  >
+                    {{ t(appId, 'details') }}
+                  </ActionButton>
+                </Actions>
+              </template>
+            </ListItem>
+          </ul>
+        </template>
+      </ListItem>
+    </ul>
+    <DebugInfo :debug-data="memberData" />
+  </div>
 </template>
 <script>
 
 import { appName as appId } from '../config.js'
 import { set as vueSet } from 'vue'
-import Content from '@nextcloud/vue/dist/Components/NcContent'
 import ListItem from '../components/ListItem'
 import DebugInfo from '../components/DebugInfo'
 import Actions from '@nextcloud/vue/dist/Components/NcActions'
@@ -174,7 +170,6 @@ const viewName ='InstrumentInsurances'
 export default {
   name: viewName,
   components: {
-    Content,
     CheckboxRadioSwitch,
     ListItem,
     DebugInfo,
@@ -315,9 +310,14 @@ export default {
 </script>
 <style lang="scss" scoped>
 .page-container {
-  padding-left:0.5rem;
+  padding-left:50px;
+  padding-top:12px;
+  min-height:100%;
   &.loading {
     width:100%;
+    * {
+      display:none;
+    }
   }
 }
 

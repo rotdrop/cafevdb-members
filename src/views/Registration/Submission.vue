@@ -22,28 +22,26 @@
  */
 </script>
 <template>
-  <Content v-if="activeProject" :app-name="appId" class="submission-view">
-    <div v-if="!loading" class="page-container">
-      <h2>
-        {{ t(appId, 'Summary and Submission') }}
-      </h2>
-      <div class="navigation flex flex-row flex-justify-full flex-center">
-        <RouterButton :to="{ name: 'registrationProjectOptions', params: { projectName } }"
-                      exact
-                      icon="icon-history"
-                      icon-position="left"
-        >
-          {{ t(appId, 'back') }}
-        </RouterButton>
-        <Button>
-          {{ t(appId, 'Submit') }}
-          <template #icon>
-            <span class="icon-checkmark" />
-          </template>
-        </Button>
-      </div>
+  <div :class="{ 'icon-loading': loading, 'page-container': true, loading, 'submission-view': true, }">
+    <h2>
+      {{ t(appId, 'Summary and Submission') }}
+    </h2>
+    <div class="navigation flex flex-row flex-justify-full flex-center">
+      <RouterButton :to="{ name: 'registrationProjectOptions', params: { projectName } }"
+                    exact
+                    icon="icon-history"
+                    icon-position="left"
+      >
+        {{ t(appId, 'back') }}
+      </RouterButton>
+      <Button>
+        {{ t(appId, 'Submit') }}
+        <template #icon>
+          <span class="icon-checkmark" />
+        </template>
+      </Button>
     </div>
-  </Content>
+  </div>
 </template>
 
 <script>
@@ -53,9 +51,7 @@ import DebugInfo from '../../components/DebugInfo'
 import RouterButton from '../../components/RouterButton'
 
 import { set as vueSet } from 'vue'
-import AppContent from '@nextcloud/vue/dist/Components/NcAppContent'
 import Button from '@nextcloud/vue/dist/Components/NcButton'
-import Content from '@nextcloud/vue/dist/Components/NcContent'
 
 import mixinRegistrationData from '../../mixins/registationData.js'
 import { useMemberDataStore } from '../../stores/memberData.js'
@@ -63,9 +59,7 @@ import { useMemberDataStore } from '../../stores/memberData.js'
 export default {
   name: 'ProjectOptions',
   components: {
-    AppContent,
     Button,
-    Content,
     DebugInfo,
     InputText,
     RouterButton,
@@ -95,21 +89,18 @@ export default {
 </script>
 <style lang="scss" scoped>
 .page-container {
-  padding-left:0.5rem;
+  padding: 12px 0.5em 0 50px;
+  min-height:100%;
   &.loading {
     width:100%;
+    * {
+      display:none;
+    }
   }
-  &::v-deep button {
-    max-height: 44px;
-  }
-}
-
-#app-content-vue {
-  overflow:auto;
 }
 
 .navigation {
-  margin-top:0.5em;
+  margin:0.5em 0;
 }
 
 .flex {
