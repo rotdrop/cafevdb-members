@@ -45,6 +45,8 @@ use OCP\IUserSession;
 use OCA\CAFEVDB\Service\ConfigService;
 
 use OCA\CAFeVDBMembers\Constants;
+use OCA\CAFeVDBMembers\Database\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
+use OCA\CAFeVDBMembers\Database\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFeVDBMembers\Database\ORM\EntityManager;
 use OCA\CAFeVDBMembers\Database\ORM\Entities;
 
@@ -193,12 +195,34 @@ class ProjectRegistrationController extends Controller
         $flatInstrumentationNumbers[] = $flatData;
       }
 
+      $participantFields = $project->getParticipantFields();
+      $flatParticipantFields = [];
+      /** @var Entities\ProjectParticipantField $participantField */
+      foreach ($participantFields as $participantField) {
+        switch ($participantField->getDataType()) {
+        }
+        $flatData = $participantField->toArray();
+        // needed:
+        // - options
+        // - default value
+        // - absence field if there
+        $flatData['dataOpions'] = [];
+        /** @var Entities\ProjectParticipantFieldDataOption $option */
+        foreach ($participantField->getDataOptions() as $option) {
+          $flatOption = $option->toArray();
+          $flatData['dataOpions'][] = $flatOption;
+        }
+        $flatParticipantFields[] = $flatData;
+      }
+
       $projectsList[] = [
         'id' => $project->getId(),
         'name' => $project->getName(),
         'year' => $project->getYear(),
+        'startDate' => $startDate,
         'deadline' => $deadline,
         'instrumentation' => $flatInstrumentationNumbers,
+        'participantFields' => $flatParticipantFields,
       ];
     }
 
