@@ -60,8 +60,8 @@
 
 <script>
 import { getLanguage } from '@nextcloud/l10n'
-import DatetimePicker from '@nextcloud/vue/dist/Components/DatetimePicker'
-import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
+import DatetimePicker from '@nextcloud/vue/dist/Components/NcDatetimePicker'
+import Multiselect from '@nextcloud/vue/dist/Components/NcMultiselect'
 import LockIcon from 'vue-material-design-icons/Lock.vue'
 // The following would interfere with the rest of NC:
 // import 'vue-material-design-icons/styles.css'

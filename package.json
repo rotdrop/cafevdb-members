@@ -31,7 +31,7 @@
     "@nextcloud/l10n": "*",
     "@nextcloud/moment": "*",
     "@nextcloud/router": "*",
-    "@nextcloud/vue": "^5.0.0",
+    "@nextcloud/vue": "^7.0.0",
     "blueimp-md5": "^2.18.0",
     "material-icons": "^1.10.9",
     "pinia": "*",

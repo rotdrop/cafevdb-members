@@ -83,10 +83,10 @@
 
 import { appName as appId } from '../config.js'
 import Vue from 'vue'
-import Content from '@nextcloud/vue/dist/Components/Content'
+import Content from '@nextcloud/vue/dist/Components/NcContent'
 import ListItem from '../components/ListItem'
 import DebugInfo from '../components/DebugInfo'
-import CheckboxRadioSwitch from '@nextcloud/vue/dist/Components/CheckboxRadioSwitch'
+import CheckboxRadioSwitch from '@nextcloud/vue/dist/Components/NcCheckboxRadioSwitch'
 import formatDate from '../mixins/formatDate.js'
 
 import { useMemberDataStore } from '../stores/memberData.js'

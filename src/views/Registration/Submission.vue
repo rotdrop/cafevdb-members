@@ -53,9 +53,9 @@ import DebugInfo from '../../components/DebugInfo'
 import RouterButton from '../../components/RouterButton'
 
 import { set as vueSet } from 'vue'
-import AppContent from '@nextcloud/vue/dist/Components/AppContent'
-import Button from '@nextcloud/vue/dist/Components/Button'
-import Content from '@nextcloud/vue/dist/Components/Content'
+import AppContent from '@nextcloud/vue/dist/Components/NcAppContent'
+import Button from '@nextcloud/vue/dist/Components/NcButton'
+import Content from '@nextcloud/vue/dist/Components/NcContent'
 
 import mixinRegistrationData from '../../mixins/registationData.js'
 import { useMemberDataStore } from '../../stores/memberData.js'

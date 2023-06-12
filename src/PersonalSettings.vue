@@ -34,7 +34,7 @@
 
 <script>
 import { appName } from './config.js'
-import SettingsSection from '@nextcloud/vue/dist/Components/SettingsSection'
+import SettingsSection from '@nextcloud/vue/dist/Components/NcSettingsSection'
 import SettingsInputText from './components/SettingsInputText'
 import { generateUrl } from '@nextcloud/router'
 import axios from '@nextcloud/axios'

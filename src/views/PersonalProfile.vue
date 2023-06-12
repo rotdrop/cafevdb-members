@@ -147,7 +147,7 @@ import InputText from '../components/InputText'
 import DebugInfo from '../components/DebugInfo'
 
 import { set as vueSet } from 'vue'
-import Content from '@nextcloud/vue/dist/Components/Content'
+import Content from '@nextcloud/vue/dist/Components/NcContent'
 
 import { useMemberDataStore } from '../stores/memberData.js'
 
