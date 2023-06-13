@@ -1,7 +1,7 @@
 const path = require('path')
 const webpack = require('webpack')
 const webpackConfig = require('@nextcloud/webpack-vue-config')
-const DeadCodePlugin = require('webpack-deadcode-plugin');
+const DeadCodePlugin = require('webpack-deadcode-plugin')
 const fs = require('fs')
 const xml2js = require('xml2js')
 
