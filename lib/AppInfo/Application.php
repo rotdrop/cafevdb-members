@@ -63,8 +63,6 @@ class Application extends App implements IBootstrap
   public function boot(IBootContext $context):void
   {
     $context->injectFn(function(IInitialState $initialState, IConfig $config) {
-      $initialState->provideInitialState('testValue', '*** INITIAL STATE OF TEST VALUE ***');
-
       $orchestraLocale = $config->getAppValue(self::CAFEVDB_APP, 'orchestraLocale', self::DEFAULT_LOCALE);
       $fmt = new NumberFormatter($orchestraLocale, NumberFormatter::CURRENCY);
       $currencySymbol = $fmt->getSymbol(NumberFormatter::CURRENCY_SYMBOL);

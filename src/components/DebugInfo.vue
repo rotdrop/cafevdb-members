@@ -37,7 +37,7 @@
 <script>
 
 import { appName as appId } from '../config.js'
-import CheckboxRadioSwitch from '@nextcloud/vue/dist/Components/CheckboxRadioSwitch'
+import CheckboxRadioSwitch from '@nextcloud/vue/dist/Components/NcCheckboxRadioSwitch'
 
 import { useAppDataStore } from '../stores/appData.js'
 import { mapWritableState } from 'pinia'

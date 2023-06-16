@@ -33,6 +33,20 @@ import axios from '@nextcloud/axios'
 export const useMemberDataStore = defineStore('member-data', {
   state: () => {
     return {
+      firstName: null,
+      surName: null,
+      nickName: null,
+      personalPublicName: null,
+      addressSupplement: null,
+      street: null,
+      streetNumber: null,
+      postalCode: null,
+      country: null,
+      birthday: null,
+      email: null,
+      emailAddresses: [],
+      mobilePhone: null,
+      fixedLinePhone: null,
       selectedInstruments: [],
       instruments: [],
       sepaBankAccounts: [],
@@ -53,54 +67,63 @@ export const useMemberDataStore = defineStore('member-data', {
   },
   actions: {
     async initialize(silent, reset) {
-      if (!this.initialized.loaded) {
-        if (this.initialized.promise !== null) {
-          await this.initialized.promise
-          return
+      console.info('INIT')
+      if (this.initialized.loaded && !reset) {
+        return
+      }
+      if (this.initialized.promise !== null) {
+        await this.initialized.promise
+        return
+      }
+      if (reset) {
+        this.$reset()
+      }
+      try {
+        this.initialized.promise = axios.get(generateUrl('/apps/' + appId + '/member'))
+        const response = await this.initialized.promise
+        for (const [key, value] of Object.entries(response.data)) {
+          vueSet(this, key, value)
         }
-        if (reset) {
-          this.$reset()
+        // do some basic initializations ...
+        vueSet(this, 'birthday', new Date(this.birthday))
+        vueSet(this, 'selectedInstruments', [])
+        for (const instrument of this.instruments) {
+          this.selectedInstruments.push(instrument)
         }
-        try {
-          this.initialized.promise = axios.get(generateUrl('/apps/' + appId + '/member'))
-          const response = await this.initialized.promise
-          for (const [key, value] of Object.entries(response.data)) {
-            vueSet(this, key, value)
+        this.initialized.promise = null
+        this.initialized.error = false
+        this.initialized.loaded = true
+      } catch (e) {
+        console.error('ERROR', e)
+        let message = t(appId, 'general failure')
+        if (e.response && e.response.data) {
+          message = e.response.data.messages
+          if (Array.isArray(message)) {
+            message = message.join(' ')
           }
-          this.initialized.promise = null
-          this.initialized.error = false
-          this.initialized.loaded = true
-        } catch (e) {
-          console.error('ERROR', e)
-          let message = t(appId, 'general failure')
-          if (e.response && e.response.data) {
-            message = e.response.data.messages
-            if (Array.isArray(message)) {
-              message = message.join(' ')
-            }
-          }
-          this.initialized.error = message
-          if (!silent) {
-            showError(t(appId, 'Could not fetch musician(s): {message}', { message }), { timeout: TOAST_PERMANENT_TIMEOUT })
-          }
-          const cloudUser = getCurrentUser() || {}
-          this.initialized.recryptRequest = null
-          if (cloudUser.uid) {
-            try {
-              const url = generateOcsUrl('apps/cafevdb/api/v1/maintenance/encryption/recrypt/{userId}', {
-                userId: cloudUser.uid,
-              })
-              const response = await axios.get(url + '?format=json')
-              this.initialized.recryptRequest = response.data.ocs.data.request
-            } catch (e) {
-              console.error('Error retrieving recryption request', e)
-            }
-          }
-          this.initialized.promise = null
         }
+        this.initialized.error = message
+        if (!silent) {
+          showError(t(appId, 'Could not fetch musician(s): {message}', { message }), { timeout: TOAST_PERMANENT_TIMEOUT })
+        }
+        const cloudUser = getCurrentUser() || {}
+        this.initialized.recryptRequest = null
+        if (cloudUser.uid) {
+          try {
+            const url = generateOcsUrl('apps/cafevdb/api/v1/maintenance/encryption/recrypt/{userId}', {
+              userId: cloudUser.uid,
+            })
+            const response = await axios.get(url + '?format=json')
+            this.initialized.recryptRequest = response.data.ocs.data.request
+          } catch (e) {
+            console.error('Error retrieving recryption request', e)
+          }
+        }
+        this.initialized.promise = null
       }
     },
     async load() {
+      console.info('LOAD')
       this.$reset()
       await this.initialize()
     },

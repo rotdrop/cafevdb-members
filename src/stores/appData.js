@@ -1,5 +1,5 @@
 /**
- * @copyright Copyright (c) 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
  *
@@ -22,10 +22,42 @@
 
 import { defineStore } from 'pinia'
 
+import { getInitialState } from '../toolkit/services/InitialStateService'
+
+const projects = getInitialState('projects', [])
+let activeProject = getInitialState('activeProject', null)
+const instruments = getInitialState('instruments', [])
+const countries = getInitialState('countries', null)
+const displayLocale = getInitialState('displayLocale', null)
+
+const initialState = getInitialState()
+
 // of course, total over-kill ... just playing around
 export const useAppDataStore = defineStore('app-data', {
-  state: () => ({
-    memberRootFolder: '',
-    debug: false,
-  }),
+  state: () => {
+    // convert the flat array of instruments to grouped options vor Vue Multiselect
+    const groupedInstruments = {}
+    for (const instrument of instruments) {
+      const familyTag = instrument.families.map(family => family.family).join(', ')
+      const optionGroup = groupedInstruments[familyTag] || { family: familyTag, sortOrder: 0, instruments: [] }
+      optionGroup.instruments.push(instrument)
+      optionGroup.sortOrder += instrument.sortOrder
+      groupedInstruments[familyTag] = optionGroup
+    }
+
+    if (activeProject === null && projects) {
+      activeProject = 0
+    }
+
+    return {
+      orchestraName: initialState?.orchestraName || t(this.appId, '[UNKNOWN]'),
+      projects,
+      activeProject: projects && activeProject >= 0 ? projects[activeProject] : null,
+      instruments: Object.values(groupedInstruments).sort((a, b) => a.sortOrder - b.sortOrder),
+      countries,
+      displayLocale,
+      memberRootFolder: '',
+      debug: false,
+    }
+  },
 })

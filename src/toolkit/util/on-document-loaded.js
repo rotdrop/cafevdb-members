@@ -1,5 +1,5 @@
 /**
- * @copyright Copyright (c) 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
  *
@@ -17,16 +17,15 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-import { appName } from '../config.js'
-
-import { loadState } from '@nextcloud/initial-state'
-
-export const getInitialState = () => {
-  try {
-    return loadState(appName, 'config')
-  } catch (err) {
-    return console.error('error in loadState: ', err)
+const onDocumentLoaded = (callback) => {
+  if (document.readyState !== 'loading') {
+    callback();
+  } else {
+    document.addEventListener('DOMContentLoaded', callback);
   }
-}
+};
+
+export default onDocumentLoaded;

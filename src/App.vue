@@ -1,3 +1,26 @@
+<script>
+/**
+ * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
+ *
+ * @author Claus-Justus Heine <himself@claus-justus-heine.de>
+ *
+ * @license AGPL-3.0-or-later
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+</script>
 <template>
   <Content :app-name="appId">
     <AppNavigation>
@@ -7,35 +30,40 @@
           :title="t(appId, 'Home')"
           icon="icon-home"
           exact
-          @click="showSidebar = false" />
+          @click="showSidebar = false"
+        />
         <AppNavigationItem
           :to="memberDataError ? {} : { name: 'personalProfile' }"
           :title="t(appId, 'Personal Profile')"
           icon="icon-files-dark"
           :class="{ disabled: memberDataError }"
           exact
-          @click="showSidebar = false" />
+          @click="showSidebar = false"
+        />
         <AppNavigationItem
           :to="memberDataError ? {} : { name: 'bankAccounts' }"
           :title="t(appId, 'Bank Accounts')"
           icon="icon-files-dark"
           :class="{ disabled: memberDataError }"
           exact
-          @click="showSidebar = false" />
+          @click="showSidebar = false"
+        />
         <AppNavigationItem
           :to="memberDataError ? {} : { name: 'instrumentInsurances' }"
           :title="t(appId, 'Instrument Insurances')"
           icon="icon-files-dark"
           :class="{ disabled: memberDataError }"
           exact
-          @click="showSidebar = false" />
+          @click="showSidebar = false"
+        />
         <AppNavigationItem
           :to="memberDataError ? {} : { name: 'projects' }"
           :title="t(appId, 'Projects')"
           icon="icon-files-dark"
           :class="{ disabled: memberDataError }"
           exact
-          @click="showSidebar = false" />
+          @click="showSidebar = false"
+        />
       </template>
       <template #footer>
         <AppNavigationSettings>
@@ -72,17 +100,20 @@
     <AppSidebar v-show="showSidebar"
                 :title="sidebarTitle"
                 :loading.sync="loading"
-                @close="closeSidebar">
+                @close="closeSidebar"
+    >
       <AppSidebarTab v-if="sidebarView === 'InstrumentInsurances'"
                      id="details-side-bar"
                      icon="icon-share"
-                     :name="t(appId, 'details')">
+                     :name="t(appId, 'details')"
+      >
         <InsuranceDetails v-bind="sidebarProps" />
       </AppSidebarTab>
       <AppSidebarTab v-if="sidebarView === 'Projects'"
                      id="details-side-bar"
                      icon="icon-share"
-                     :name="t(appId, 'details')">
+                     :name="t(appId, 'details')"
+      >
         <ProjectDetails v-bind="sidebarProps" />
       </AppSidebarTab>
     </AppSidebar>
@@ -92,15 +123,15 @@
 <script>
 import { appName as appId } from './config.js'
 import { getCurrentUser } from '@nextcloud/auth'
-import Content from '@nextcloud/vue/dist/Components/Content'
-import AppContent from '@nextcloud/vue/dist/Components/AppContent'
-import AppNavigation from '@nextcloud/vue/dist/Components/AppNavigation'
-import AppNavigationItem from '@nextcloud/vue/dist/Components/AppNavigationItem'
-import AppNavigationSettings from '@nextcloud/vue/dist/Components/AppNavigationSettings'
-import CheckboxRadioSwitch from '@nextcloud/vue/dist/Components/CheckboxRadioSwitch'
-import AppSidebar from '@nextcloud/vue/dist/Components/AppSidebar'
-import AppSidebarTab from '@nextcloud/vue/dist/Components/AppSidebarTab'
-import EmptyContent from '@nextcloud/vue/dist/Components/EmptyContent'
+import Content from '@nextcloud/vue/dist/Components/NcContent'
+import AppContent from '@nextcloud/vue/dist/Components/NcAppContent'
+import AppNavigation from '@nextcloud/vue/dist/Components/NcAppNavigation'
+import AppNavigationItem from '@nextcloud/vue/dist/Components/NcAppNavigationItem'
+import AppNavigationSettings from '@nextcloud/vue/dist/Components/NcAppNavigationSettings'
+import CheckboxRadioSwitch from '@nextcloud/vue/dist/Components/NcCheckboxRadioSwitch'
+import AppSidebar from '@nextcloud/vue/dist/Components/NcAppSidebar'
+import AppSidebarTab from '@nextcloud/vue/dist/Components/NcAppSidebarTab'
+import EmptyContent from '@nextcloud/vue/dist/Components/NcEmptyContent'
 
 import '@nextcloud/dialogs/styles/toast.scss'
 import { generateOcsUrl } from '@nextcloud/router'
@@ -112,7 +143,7 @@ import ProjectDetails from './views/Projects/ProjectDetails'
 
 import Icon from '../img/cafevdbmembers.svg'
 
-import { getInitialState } from './services/InitialStateService'
+import { getInitialState } from './toolkit/services/InitialStateService'
 import { useMemberDataStore } from './stores/memberData.js'
 import { useAppDataStore } from './stores/appData.js'
 import { mapWritableState } from 'pinia'
@@ -192,6 +223,7 @@ export default {
         this.memberDataPollTimer = setTimeout(() => this.pollMemberData(), this.memberDataPollTimeout)
       } else {
         this.memberDataPollTimer = null
+        this.loading = false
       }
     },
     async putRecryptionRequest() {

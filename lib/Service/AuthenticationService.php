@@ -46,7 +46,7 @@ class AuthenticationService
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    string $userId,
+    ?string $userId,
     AsymmetricKeyService $keyService,
     LoggerInterface $logger,
     IL10N $l10n,
@@ -73,6 +73,9 @@ class AuthenticationService
    */
   public function getRowAccessToken()
   {
+    if (empty($this->userId)) {
+      throw new Exceptions\NotLoggedInException($this->l->t('Empty user id, no one seems to be logged in at the moment.'));
+    }
     try {
       $rowAccessToken = $this->keyService->getSharedPrivateValue($this->userId, 'rowAccessToken');
     } catch (CannotDecryptException $e) {

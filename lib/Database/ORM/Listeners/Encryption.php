@@ -3,7 +3,7 @@
  * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022 Claus-Justus Heine
+ * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -30,6 +30,7 @@ use OCP\Authentication\LoginCredentials\IStore as ICredentialsStore;
 use OCP\Authentication\LoginCredentials\ICredentials;
 use MediaMonks\Doctrine\Transformable;
 use OCA\CAFEVDB\Crypto;
+use OCA\CAFEVDB\Exceptions\EncryptionException;
 
 /** Implement transparent encryption/decryption of database fields. */
 class Encryption implements Transformable\Transformer\TransformerInterface
@@ -56,7 +57,11 @@ class Encryption implements Transformable\Transformer\TransformerInterface
     $this->keyService = $keyService;
     $this->sealCryptor = clone $sealCryptor;
     $this->logger = $logger;
-    $this->keyService->initEncryptionKeyPair();
+    try {
+      $this->keyService->initEncryptionKeyPair();
+    } catch (EncryptionException $e) {
+      $this->logInfo('Unable to initialize on-the-fly encryption');
+    }
   }
   // phpcs:enable
 

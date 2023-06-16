@@ -1,5 +1,5 @@
 <!--
-   - @copyright Copyright (c) 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+   - @copyright Copyright (c) 2022, 2023, 2023, 2023, 2023, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
    - @copyright Copyright (c) 2021 Marco Ambrosini <marcoambrosini@pm.me>
    -
    - @author Marco Ambrosini <marcoambrosini@pm.me>
@@ -23,7 +23,8 @@
 <template>
   <!-- This wrapper can be either a router link or a `<li>` -->
   <nav-element class="list-item__wrapper"
-               v-bind="navElement">
+               v-bind="navElement"
+  >
     <a :id="anchorId"
        ref="list-item"
        :class="{ 'list-item--active' : active }"
@@ -36,8 +37,8 @@
        @blur="handleBlur"
        @keydown.tab.exact="handleTab"
        @click="onClick"
-       @keydown.esc="hideActions">
-
+       @keydown.esc="hideActions"
+    >
       <div class="list-item-content__wrapper">
         <!-- @slot This slot is used for the avatar or icon -->
         <slot name="icon" />
@@ -48,23 +49,27 @@
 
             <!-- First line, title and details -->
             <div class="line-one"
-                 :class="{'line-one--bold': bold}">
+                 :class="{'line-one--bold': bold}"
+            >
               <span class="line-one__title">
                 {{ title }}
               </span>
               <span v-if="showDetails && hasDetails"
-                    class="line-one__details">
+                    class="line-one__details"
+              >
                 {{ details }}
               </span>
               <span v-if="showDetails && hasDetailsSlot"
-                    class="line-one__details">
+                    class="line-one__details"
+              >
                 <slot name="details" />
               </span>
             </div>
 
             <!-- Second line, subtitle and counter -->
             <div class="line-two"
-                 :class="{'line-one--bold': bold}">
+                 :class="{'line-one--bold': bold}"
+            >
               <span v-if="hasSubtitle" class="line-two__subtitle">
                 <!-- @slot Slot for the second line of the component -->
                 <slot name="subtitle" />
@@ -73,7 +78,8 @@
               <!-- Counter -->
               <span v-if="showCounter" class="line-two__counter">
                 <CounterBubble v-if="counterNumber != 0"
-                               :type="counterType">
+                               :type="counterType"
+                >
                   {{ counterNumber }}
                 </CounterBubble>
               </span>
@@ -83,11 +89,13 @@
           <!-- Actions -->
           <div v-show="displayActionsOnHoverFocus && !forceDisplayActions"
                class="list-item-content__actions"
-               @click.prevent.stop="">
+               @click.prevent.stop=""
+          >
             <Actions ref="actions"
                      menu-align="right"
                      :aria-label="actionsAriaLabel"
-                     @update:open="handleActionsUpdateOpen">
+                     @update:open="handleActionsUpdateOpen"
+            >
               <!-- @slot Provide the actions for the right side quick menu -->
               <slot name="actions" />
             </Actions>
@@ -96,11 +104,13 @@
         <!-- Actions -->
         <div v-show="forceDisplayActions"
              class="list-item-content__actions"
-             @click.prevent.stop="">
+             @click.prevent.stop=""
+        >
           <Actions ref="actions"
                    menu-align="right"
                    :aria-label="actionsAriaLabel"
-                   @update:open="handleActionsUpdateOpen">
+                   @update:open="handleActionsUpdateOpen"
+          >
             <!-- @slot Provide the actions for the right side quick menu -->
             <slot name="actions" />
           </Actions>
@@ -116,8 +126,8 @@
 </template>
 
 <script>
-import Actions from '@nextcloud/vue/dist/Components/Actions'
-import CounterBubble from '@nextcloud/vue/dist/Components/CounterBubble'
+import Actions from '@nextcloud/vue/dist/Components/NcActions'
+import CounterBubble from '@nextcloud/vue/dist/Components/NcCounterBubble'
 
 export default {
   name: 'ListItem',

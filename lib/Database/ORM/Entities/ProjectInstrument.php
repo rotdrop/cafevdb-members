@@ -101,6 +101,16 @@ class ProjectInstrument implements \ArrayAccess
    */
   private $musicianInstrument;
 
+  /**
+   * @ORM\ManyToOne(targetEntity="ProjectInstrumentationNumber", inversedBy="instruments", fetch="EXTRA_LAZY")
+   * @ORM\JoinColumns(
+   *   @ORM\JoinColumn(name="project_id", referencedColumnName="project_id"),
+   *   @ORM\JoinColumn(name="instrument_id", referencedColumnName="instrument_id"),
+   *   @ORM\JoinColumn(name="voice", referencedColumnName="voice")
+   * )
+   */
+  private $instrumentationNumber;
+
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct()
   {
@@ -292,5 +302,29 @@ class ProjectInstrument implements \ArrayAccess
   public function getMusicianInstrument()
   {
     return $this->musicianInstrument;
+  }
+
+  /**
+   * Set instrumentationNumber.
+   *
+   * @param null|ProjectInstrumentationNumber $instrumentationNumber
+   *
+   * @return ProjectInstrument
+   */
+  public function setInstrumentationNumber(?ProjectInstrumentationNumber $instrumentationNumber):ProjectInstrument
+  {
+    $this->instrumentationNumber = $instrumentationNumber;
+
+    return $this;
+  }
+
+  /**
+   * Get instrumentationNumber.
+   *
+   * @return ProjectInstrumentationNumber
+   */
+  public function getInstrumentationNumber():ProjectInstrumentationNumber
+  {
+    return $this->instrumentationNumber;
   }
 }

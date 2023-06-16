@@ -1,6 +1,6 @@
 <script>
 /**
- * @copyright Copyright (c) 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright Copyright (c) 2022, 2023, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
  *
@@ -25,21 +25,25 @@
 <template>
   <ul v-if="participant !== false" class="project-details">
     <ListItem v-if="participant.projectInstruments.length > 1"
-              :title="t(appId, 'Instruments')">
+              :title="t(appId, 'Instruments')"
+    >
       <template #subtitle>
         <ul class="project-instruments">
           <ListItem v-for="instrument in participant.projectInstruments"
                     :key="instrument.id"
                     :title="instrument.name"
-                    :details="[instrument.voice > 0 ? t(appId, 'voice {voice}', { voice: instrument.voice }) : '', instrument.sectionLeader ? t(appId, 'section leader') : ''].filter(x => x.length > 0).join(', ')" />
+                    :details="[instrument.voice > 0 ? t(appId, 'voice {voice}', { voice: instrument.voice }) : '', instrument.sectionLeader ? t(appId, 'section leader') : ''].filter(x => x.length > 0).join(', ')"
+          />
         </ul>
       </template>
     </ListItem>
     <ListItem v-else-if="participant.projectInstruments.length == 1"
               :title="participant.projectInstruments[0].name"
-              :details="[participant.projectInstruments[0].voice > 0 ? t(appId, 'voice {voice}', { voice: participant.projectInstruments[0].voice }) : '', participant.projectInstruments[0].sectionLeader ? t(appId, 'section leader') : ''].filter(x => x.length > 0).join(', ')" />
+              :details="[participant.projectInstruments[0].voice > 0 ? t(appId, 'voice {voice}', { voice: participant.projectInstruments[0].voice }) : '', participant.projectInstruments[0].sectionLeader ? t(appId, 'section leader') : ''].filter(x => x.length > 0).join(', ')"
+    />
     <ListItem :title="t(appId, 'Photos')"
-              class="photos-item">
+              class="photos-item"
+    >
       <template #details>
         <a :target="md5(projectPathUrl(participant.project))" :href="projectPathUrl(participant.project)">
           {{ projectPath(participant.project) }}

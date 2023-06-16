@@ -27,14 +27,16 @@
       v-model="memberRootFolder"
       :label="t(appName, 'Member-Data Root-Folder')"
       :hint="t(appName, 'Specify the root folder below which all member-data will be mounted.')"
-      @update="saveTextInput(...arguments, 'memberRootFolder')" />
+      @update="saveTextInput(...arguments, 'memberRootFolder')"
+    />
     <div v-if="showSyncProgress">
       <div class="sync-status">
         <span class="sync-text">{{ syncText }}</span>
         <button v-if="syncFinished"
                 class="button primary sync-clear"
                 :title="t(appName, 'Remove the status feedback from the last sync.')"
-                @click="hideProgressFeedback()">
+                @click="hideProgressFeedback()"
+        >
           {{ t(appName, 'Ok') }}
         </button>
         <span class="flex-spacer" />
@@ -42,27 +44,30 @@
       </div>
       <ProgressBar :value="syncPercentage"
                    :error="syncError"
-                   size="medium" />
+                   size="medium"
+      />
     </div>
     <button v-else
             type="button"
             class="button primary"
             :title="t(appName, 'Synchronize the hierarchy of shared folders below {root} with the projects of the {managementApp}-orchestra-management app.', { root: memberRootFolder + '/', managementApp: 'cafevdb' })"
-            @click="synchronizeFolders()">
+            @click="synchronizeFolders()"
+    >
       {{ t(appName, 'Synchronize Folder-Structure') }}
     </button>
     <SettingsInputText
       v-model="cloudUserViewsDatabase"
       :label="t(appName, 'Personalized Views Database')"
       :hint="t(appName, 'The name of the data-base which holds the personalized single-row views which contain the data for the currently logged-on user.')"
-      @update="saveTextInput(...arguments, 'cloudUserViewsDatabase')" />
+      @update="saveTextInput(...arguments, 'cloudUserViewsDatabase')"
+    />
   </SettingsSection>
 </template>
 
 <script>
 import { appName } from './config.js'
-import ProgressBar from '@nextcloud/vue/dist/Components/ProgressBar'
-import SettingsSection from '@nextcloud/vue/dist/Components/SettingsSection'
+import ProgressBar from '@nextcloud/vue/dist/Components/NcProgressBar'
+import SettingsSection from '@nextcloud/vue/dist/Components/NcSettingsSection'
 import SettingsInputText from '@rotdrop/nextcloud-vue-components/lib/components/SettingsInputText'
 import { generateUrl } from '@nextcloud/router'
 import { showError, showSuccess, showInfo, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'

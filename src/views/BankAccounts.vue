@@ -1,6 +1,6 @@
 <script>
 /**
- * @copyright Copyright (c) 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
  *
@@ -22,66 +22,67 @@
  */
 </script>
 <template>
-  <Content :class="'app-' + appId" :app-name="appId">
-    <div v-if="loading" class="page-container loading" />
-    <div v-else class="page-container">
-      <h2>
-        {{ t(appId, 'Bank Accounts of {publicName} ({count})', { publicName: memberData.personalPublicName, count: showDeleted ? memberData.sepaBankAccounts.length : numActiveBankAccounts }) }}
-      </h2>
-      <CheckboxRadioSwitch v-if="haveDeleted" :checked.sync="showDeleted">
-        {{ t(appId, 'show deleted') }}
-      </CheckboxRadioSwitch>
-      <ul v-for="account in memberData.sepaBankAccounts"
-          :key="account.sequence"
-          class="sepa-bank-accounts-list">
-        <ListItem v-if="showDeleted || !account.deleted"
-                  :title="t(appId, 'IBAN')"
-                  :details="account.iban"
-                  :bold="true">
-          <template #subtitle>
-            <ul class="sepa-bank-account-details">
-              <!-- <ListItem :title="t(appId, 'BIC')" :details="account.bic" /> -->
-              <ListItem :title="t(appId, 'account holder')" :details="account.bankAccountOwner" />
-              <ListItem :title="t(appId, 'registered')" :details="formatDate(account.created)" />
-              <ListItem v-if="account.modified" :title="t(appId, 'modified')" :details="formatDate(account.modified)" />
-              <ListItem v-if="account.deleted" :title="t(appId, 'revoked')" :details="formatDate(account.deleted)" />
-              <ListItem v-if="(showDeleted && account.sepaDebitMandates) || (!showDeleted && account.numActiveDebitMandates > 0)"
-                        :title="t(appId, 'Debit Mandates ({count})', { count: showDeleted ? account.sepaDebitMandates.length : account.numActiveDebitMandates, })">
-                <template #subtitle>
-                  <ul v-for="mandate in account.sepaDebitMandates"
-                      :key="mandate.sequence"
-                      class="sepa-debit-mandates-list">
-                    <ListItem v-if="showDeleted || !mandate.deleted"
-                              :title="t(appId, 'reference')"
-                              :details="mandate.mandateReference">
-                      <template v-if="true || showDeleted || !mandate.deleted" #subtitle>
-                        <ul class="sepa-debit-mandate-details">
-                          <ListItem :title="t(appId, 'granted')" :details="formatDate(mandate.mandateDate.date)" />
-                          <ListItem v-if="mandate.lastUsedDate" :title="t(appId, 'last used')" :details="formatDate(mandate.lastUsedDate.date)" />
-                          <ListItem v-if="mandate.modified" :title="t(appId, 'modified')" :details="formatDate(mandate.modified)" />
-                          <ListItem v-if="mandate.deleted" :title="t(appId, 'revoked')" :details="formatDate(mandate.deleted)" />
-                        </ul>
-                      </template>
-                    </ListItem>
-                  </ul>
-                </template>
-              </ListItem>
-            </ul>
-          </template>
-        </ListItem>
-      </ul>
-      <DebugInfo :debug-data="memberData" />
-    </div>
-  </Content>
+  <div :class="{ 'icon-loading': loading, 'page-container': true, loading, }">
+    <h2>
+      {{ t(appId, 'Bank Accounts of {publicName} ({count})', { publicName: memberData.personalPublicName, count: showDeleted ? memberData.sepaBankAccounts.length : numActiveBankAccounts }) }}
+    </h2>
+    <CheckboxRadioSwitch v-if="haveDeleted" :checked.sync="showDeleted">
+      {{ t(appId, 'show deleted') }}
+    </CheckboxRadioSwitch>
+    <ul v-for="account in memberData.sepaBankAccounts"
+        :key="account.sequence"
+        class="sepa-bank-accounts-list"
+    >
+      <ListItem v-if="showDeleted || !account.deleted"
+                :title="t(appId, 'IBAN')"
+                :details="account.iban"
+                :bold="true"
+      >
+        <template #subtitle>
+          <ul class="sepa-bank-account-details">
+            <!-- <ListItem :title="t(appId, 'BIC')" :details="account.bic" /> -->
+            <ListItem :title="t(appId, 'account holder')" :details="account.bankAccountOwner" />
+            <ListItem :title="t(appId, 'registered')" :details="formatDate(account.created)" />
+            <ListItem v-if="account.modified" :title="t(appId, 'modified')" :details="formatDate(account.modified)" />
+            <ListItem v-if="account.deleted" :title="t(appId, 'revoked')" :details="formatDate(account.deleted)" />
+            <ListItem v-if="(showDeleted && account.sepaDebitMandates) || (!showDeleted && account.numActiveDebitMandates > 0)"
+                      :title="t(appId, 'Debit Mandates ({count})', { count: showDeleted ? account.sepaDebitMandates.length : account.numActiveDebitMandates, })"
+            >
+              <template #subtitle>
+                <ul v-for="mandate in account.sepaDebitMandates"
+                    :key="mandate.sequence"
+                    class="sepa-debit-mandates-list"
+                >
+                  <ListItem v-if="showDeleted || !mandate.deleted"
+                            :title="t(appId, 'reference')"
+                            :details="mandate.mandateReference"
+                  >
+                    <template v-if="true || showDeleted || !mandate.deleted" #subtitle>
+                      <ul class="sepa-debit-mandate-details">
+                        <ListItem :title="t(appId, 'granted')" :details="formatDate(mandate.mandateDate.date)" />
+                        <ListItem v-if="mandate.lastUsedDate" :title="t(appId, 'last used')" :details="formatDate(mandate.lastUsedDate.date)" />
+                        <ListItem v-if="mandate.modified" :title="t(appId, 'modified')" :details="formatDate(mandate.modified)" />
+                        <ListItem v-if="mandate.deleted" :title="t(appId, 'revoked')" :details="formatDate(mandate.deleted)" />
+                      </ul>
+                    </template>
+                  </ListItem>
+                </ul>
+              </template>
+            </ListItem>
+          </ul>
+        </template>
+      </ListItem>
+    </ul>
+    <DebugInfo :debug-data="memberData" />
+  </div>
 </template>
 <script>
 
 import { appName as appId } from '../config.js'
 import Vue from 'vue'
-import Content from '@nextcloud/vue/dist/Components/Content'
 import ListItem from '../components/ListItem'
 import DebugInfo from '../components/DebugInfo'
-import CheckboxRadioSwitch from '@nextcloud/vue/dist/Components/CheckboxRadioSwitch'
+import CheckboxRadioSwitch from '@nextcloud/vue/dist/Components/NcCheckboxRadioSwitch'
 import formatDate from '../mixins/formatDate.js'
 
 import { useMemberDataStore } from '../stores/memberData.js'
@@ -91,7 +92,6 @@ const viewName = 'BankAccounts'
 export default {
   name: viewName,
   components: {
-    Content,
     CheckboxRadioSwitch,
     ListItem,
     DebugInfo,
@@ -142,10 +142,15 @@ export default {
 </script>
 <style lang="scss" scoped>
 .page-container {
-  padding-left:0.5rem;
+  padding-left:50px;
+  padding-top:12px;
   &.loading {
     width:100%;
+    * {
+      display:none;
+    }
   }
+  min-height:100%;
 }
 
 .sepa-bank-accounts-list {
