@@ -25,44 +25,39 @@
   <Content :app-name="appId">
     <AppNavigation>
       <template #list>
-        <AppNavigationItem
-          :to="{ name: '/' }"
-          :title="t(appId, 'Home')"
-          icon="icon-home"
-          exact
-          @click="showSidebar = false"
+        <AppNavigationItem :to="{ name: '/' }"
+                           :title="t(appId, 'Home')"
+                           icon="icon-home"
+                           exact
+                           @click="showSidebar = false"
         />
-        <AppNavigationItem
-          :to="memberDataError ? {} : { name: 'personalProfile' }"
-          :title="t(appId, 'Personal Profile')"
-          icon="icon-files-dark"
-          :class="{ disabled: memberDataError }"
-          exact
-          @click="showSidebar = false"
+        <AppNavigationItem :to="memberDataError ? {} : { name: 'personalProfile' }"
+                           :title="t(appId, 'Personal Profile')"
+                           icon="icon-files-dark"
+                           :class="{ disabled: memberDataError }"
+                           exact
+                           @click="showSidebar = false"
         />
-        <AppNavigationItem
-          :to="memberDataError ? {} : { name: 'bankAccounts' }"
-          :title="t(appId, 'Bank Accounts')"
-          icon="icon-files-dark"
-          :class="{ disabled: memberDataError }"
-          exact
-          @click="showSidebar = false"
+        <AppNavigationItem :to="memberDataError ? {} : { name: 'bankAccounts' }"
+                           :title="t(appId, 'Bank Accounts')"
+                           icon="icon-files-dark"
+                           :class="{ disabled: memberDataError }"
+                           exact
+                           @click="showSidebar = false"
         />
-        <AppNavigationItem
-          :to="memberDataError ? {} : { name: 'instrumentInsurances' }"
-          :title="t(appId, 'Instrument Insurances')"
-          icon="icon-files-dark"
-          :class="{ disabled: memberDataError }"
-          exact
-          @click="showSidebar = false"
+        <AppNavigationItem :to="memberDataError ? {} : { name: 'instrumentInsurances' }"
+                           :title="t(appId, 'Instrument Insurances')"
+                           icon="icon-files-dark"
+                           :class="{ disabled: memberDataError }"
+                           exact
+                           @click="showSidebar = false"
         />
-        <AppNavigationItem
-          :to="memberDataError ? {} : { name: 'projects' }"
-          :title="t(appId, 'Projects')"
-          icon="icon-files-dark"
-          :class="{ disabled: memberDataError }"
-          exact
-          @click="showSidebar = false"
+        <AppNavigationItem :to="memberDataError ? {} : { name: 'projects' }"
+                           :title="t(appId, 'Projects')"
+                           icon="icon-files-dark"
+                           :class="{ disabled: memberDataError }"
+                           exact
+                           @click="showSidebar = false"
         />
       </template>
       <template #footer>

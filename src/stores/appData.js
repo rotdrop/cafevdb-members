@@ -22,7 +22,7 @@
 
 import { defineStore } from 'pinia'
 
-import { getInitialState } from '../toolkit/services/InitialStateService'
+import { getInitialState } from '../toolkit/services/InitialStateService.js'
 
 const projects = getInitialState('projects', [])
 let activeProject = getInitialState('activeProject', null)

@@ -23,11 +23,10 @@
 </script>
 <template>
   <SettingsSection :title="t(appName, 'CAFeVDB Database Connector, Admin Settings')">
-    <SettingsInputText
-      v-model="memberRootFolder"
-      :label="t(appName, 'Member-Data Root-Folder')"
-      :hint="t(appName, 'Specify the root folder below which all member-data will be mounted.')"
-      @update="saveTextInput(...arguments, 'memberRootFolder')"
+    <SettingsInputText v-model="memberRootFolder"
+                       :label="t(appName, 'Member-Data Root-Folder')"
+                       :hint="t(appName, 'Specify the root folder below which all member-data will be mounted.')"
+                       @update="saveTextInput(...arguments, 'memberRootFolder')"
     />
     <div v-if="showSyncProgress">
       <div class="sync-status">
@@ -55,11 +54,10 @@
     >
       {{ t(appName, 'Synchronize Folder-Structure') }}
     </button>
-    <SettingsInputText
-      v-model="cloudUserViewsDatabase"
-      :label="t(appName, 'Personalized Views Database')"
-      :hint="t(appName, 'The name of the data-base which holds the personalized single-row views which contain the data for the currently logged-on user.')"
-      @update="saveTextInput(...arguments, 'cloudUserViewsDatabase')"
+    <SettingsInputText v-model="cloudUserViewsDatabase"
+                       :label="t(appName, 'Personalized Views Database')"
+                       :hint="t(appName, 'The name of the data-base which holds the personalized single-row views which contain the data for the currently logged-on user.')"
+                       @update="saveTextInput(...arguments, 'cloudUserViewsDatabase')"
     />
   </SettingsSection>
 </template>

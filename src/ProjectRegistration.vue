@@ -25,39 +25,34 @@
   <Content :class="{ 'icon-loading': loading, 'root-view': true }" :app-name="appId">
     <AppNavigation>
       <template #list>
-        <AppNavigationItem
-          :to="{ name: 'registrationHome', params: { projectName } }"
-          :title="isPublicPage ? t(appId, 'Home') : t(appId, 'Start Registration')"
-          icon="icon-home"
-          exact
+        <AppNavigationItem :to="{ name: 'registrationHome', params: { projectName } }"
+                           :title="isPublicPage ? t(appId, 'Home') : t(appId, 'Start Registration')"
+                           icon="icon-home"
+                           exact
         />
-        <AppNavigationItem
-          :to="{ name: 'registrationPersonalProfile', params: { projectName } }"
-          :title="t(appId, 'Personal Profile')"
-          icon="icon-user"
-          :class="{ disabled: !activeProject }"
-          exact
+        <AppNavigationItem :to="{ name: 'registrationPersonalProfile', params: { projectName } }"
+                           :title="t(appId, 'Personal Profile')"
+                           icon="icon-user"
+                           :class="{ disabled: !activeProject }"
+                           exact
         />
-        <AppNavigationItem
-          :to="{ name: 'registrationParticipation', params: { projectName } }"
-          :title="t(appId, 'Instrumentation and Events')"
-          icon="icon-music"
-          :class="{ disabled: !activeProject }"
-          exact
+        <AppNavigationItem :to="{ name: 'registrationParticipation', params: { projectName } }"
+                           :title="t(appId, 'Instrumentation and Events')"
+                           icon="icon-music"
+                           :class="{ disabled: !activeProject }"
+                           exact
         />
-        <AppNavigationItem
-          :to="{ name: 'registrationProjectOptions', params: { projectName } }"
-          :title="t(appId, 'Options')"
-          icon="icon-details"
-          :class="{ disabled: !activeProject }"
-          exact
+        <AppNavigationItem :to="{ name: 'registrationProjectOptions', params: { projectName } }"
+                           :title="t(appId, 'Options')"
+                           icon="icon-details"
+                           :class="{ disabled: !activeProject }"
+                           exact
         />
-        <AppNavigationItem
-          :to="{ name: 'registrationSubmission', params: { projectName } }"
-          :title="t(appId, 'Summary and Submission')"
-          icon="icon-checkmark"
-          :class="{ disabled: !activeProject }"
-          exact
+        <AppNavigationItem :to="{ name: 'registrationSubmission', params: { projectName } }"
+                           :title="t(appId, 'Summary and Submission')"
+                           icon="icon-checkmark"
+                           :class="{ disabled: !activeProject }"
+                           exact
         />
       </template>
       <template #footer>
