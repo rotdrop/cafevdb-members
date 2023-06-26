@@ -25,7 +25,7 @@ import { generateFilePath } from '@nextcloud/router'
 import { getRequestToken } from '@nextcloud/auth'
 
 import Vue from 'vue'
-import ProjectRegistation from './ProjectRegistration'
+import ProjectRegistation from './ProjectRegistration.vue'
 import router from './router/app-router.js'
 import { createPinia, PiniaVuePlugin } from 'pinia'
 import { Tooltip } from '@nextcloud/vue'

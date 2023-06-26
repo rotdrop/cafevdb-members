@@ -25,7 +25,7 @@ import { getRequestToken } from '@nextcloud/auth'
 // import { sync } from 'vuex-router-sync'
 // import { translate, translatePlural } from '@nextcloud/l10n'
 import Vue from 'vue'
-import App from './App'
+import App from './App.vue'
 import router from './router/app-router.js'
 import { createPinia, PiniaVuePlugin } from 'pinia'
 

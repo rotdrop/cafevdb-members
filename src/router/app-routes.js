@@ -30,7 +30,7 @@ const routes = [
   },
   {
     path: '/f/personalProfile',
-    component: () => import('../views/PersonalProfile'),
+    component: () => import('../views/PersonalProfile.vue'),
     name: 'personalProfile',
     props: router => ({
       rootTitle: t(appName, 'Personal Profile'),
@@ -38,7 +38,7 @@ const routes = [
   },
   {
     path: '/f/bankAccounts',
-    component: () => import('../views/BankAccounts'),
+    component: () => import('../views/BankAccounts.vue'),
     name: 'bankAccounts',
     props: router => ({
       rootTitle: t(appName, 'Bank Accounts'),
@@ -46,7 +46,7 @@ const routes = [
   },
   {
     path: '/f/instrumentInsurances',
-    component: () => import('../views/InstrumentInsurances'),
+    component: () => import('../views/InstrumentInsurances.vue'),
     name: 'instrumentInsurances',
     props: router => ({
       rootTitle: t(appName, 'Instrument Insurances'),
@@ -54,7 +54,7 @@ const routes = [
   },
   {
     path: '/f/projects',
-    component: () => import('../views/Projects'),
+    component: () => import('../views/Projects.vue'),
     name: 'projects',
     props: router => ({
       rootTitle: t(appName, 'Projects'),
