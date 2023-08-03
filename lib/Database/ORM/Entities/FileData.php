@@ -3,7 +3,7 @@
  * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022 Claus-Justus Heine
+ * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -79,31 +79,6 @@ class FileData implements \ArrayAccess
   // phpcs:enable
 
   /**
-   * Set data.
-   *
-   * @param string $data
-   *
-   * @param string $format
-   *
-   * @return FileData
-   */
-  public function setData(string $data, string $format = 'binary'):FileData
-  {
-    switch ($format) {
-      case 'base64':
-        $this->data = base64_decode($data);
-        break;
-      default:
-      case 'resource':
-      case 'binary':
-        $this->data = $data;
-        break;
-    }
-
-    return $this;
-  }
-
-  /**
    * Get data.
    *
    * @param string $format
@@ -139,20 +114,6 @@ class FileData implements \ArrayAccess
           return $this->data;
       }
     }
-  }
-
-  /**
-   * Set file.
-   *
-   * @param File $file
-   *
-   * @return FileData
-   */
-  public function setFile(File $file):FileData
-  {
-    $this->file = $file;
-
-    return $this;
   }
 
   /**

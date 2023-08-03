@@ -76,20 +76,6 @@ class InsuranceBroker implements \ArrayAccess
   // phpcs:enable
 
   /**
-   * Set shortName.
-   *
-   * @param string $shortName
-   *
-   * @return InsuranceBroker
-   */
-  public function setShortName(string $shortName):InsuranceBroker
-  {
-    $this->shortName = $shortName;
-
-    return $this;
-  }
-
-  /**
    * Get shortName.
    *
    * @return string
@@ -97,20 +83,6 @@ class InsuranceBroker implements \ArrayAccess
   public function getShortName():string
   {
     return $this->shortName;
-  }
-
-  /**
-   * Set longName.
-   *
-   * @param string $longName
-   *
-   * @return InsuranceBroker
-   */
-  public function setLongName(string $longName):InsuranceBroker
-  {
-    $this->longName = $longName;
-
-    return $this;
   }
 
   /**
@@ -124,20 +96,6 @@ class InsuranceBroker implements \ArrayAccess
   }
 
   /**
-   * Set address.
-   *
-   * @param string $address
-   *
-   * @return InsuranceBroker
-   */
-  public function setAddress(string $address):InsuranceBroker
-  {
-    $this->address = $address;
-
-    return $this;
-  }
-
-  /**
    * Get address.
    *
    * @return string
@@ -145,20 +103,6 @@ class InsuranceBroker implements \ArrayAccess
   public function getAddress():string
   {
     return $this->address;
-  }
-
-  /**
-   * Set insuranceRates.
-   *
-   * @param ArrayCollection $insuranceRates
-   *
-   * @return InsuranceBroker
-   */
-  public function setInsuranceRates(Collection $insuranceRates):InsuranceBroker
-  {
-    $this->insuranceRates = $insuranceRates;
-
-    return $this;
   }
 
   /**

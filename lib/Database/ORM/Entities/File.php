@@ -3,7 +3,7 @@
  * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022 Claus-Justus Heine
+ * @copyright Copyright (c) 2022, 2023, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -84,7 +84,7 @@ class File implements \ArrayAccess
    * inverse side we use a OneToMany - ManyToOne trick which inserts a lazy
    * association in between.
    *
-   * @ORM\OneToMany(targetEntity="FileData", mappedBy="file", cascade={"all"}, orphanRemoval=true, fetch="EXTRA_LAZY")
+   * @ORM\OneToMany(targetEntity="FileData", mappedBy="file", fetch="EXTRA_LAZY")
    */
   protected $fileData;
 
@@ -102,16 +102,9 @@ class File implements \ArrayAccess
   protected $updated;
 
   // phpcs:ignore Squiz.Commenting.FunctionComment.Missing
-  public function __construct($fileName = null, $data = null, $mimeType = null)
+  public function __construct()
   {
     $this->arrayCTOR();
-    $this->setFileName($fileName);
-    $this->setMimeType($mimeType);
-    $data = $data ?? '';
-    $fileData = new FileData;
-    $fileData->setData($data);
-    $this->setFileData($fileData)
-      ->setSize(strlen($data));
   }
   // phpcs:enable
 
@@ -126,20 +119,6 @@ class File implements \ArrayAccess
   }
 
   /**
-   * Set mimeType.
-   *
-   * @param string|null $mimeType
-   *
-   * @return File
-   */
-  public function setMimeType($mimeType = null):File
-  {
-    $this->mimeType = $mimeType;
-
-    return $this;
-  }
-
-  /**
    * Get mimeType.
    *
    * @return string|null
@@ -147,20 +126,6 @@ class File implements \ArrayAccess
   public function getMimeType()
   {
     return $this->mimeType;
-  }
-
-  /**
-   * Set fileName.
-   *
-   * @param string|null $fileName
-   *
-   * @return File
-   */
-  public function setFileName($fileName = null):File
-  {
-    $this->fileName = $fileName;
-
-    return $this;
   }
 
   /**
@@ -174,19 +139,6 @@ class File implements \ArrayAccess
   }
 
   /**
-   * Set only the dir-name.
-   *
-   * @param string $dirName
-   *
-   * @return File
-   */
-  public function setDirName(string $dirName):File
-  {
-    $this->fileName = trim($dirName, self::PATH_SEPARATOR) . self::PATH_SEPARATOR . ($this->getBaseName()??'');
-    return $this;
-  }
-
-  /**
    * Get the dir-part of the file-name
    *
    * @return null|string
@@ -194,19 +146,6 @@ class File implements \ArrayAccess
   public function getDirName():?string
   {
     return is_string($this->fileName) ? dirname($this->fileName) : null;
-  }
-
-  /**
-   * Set only the base-name.
-   *
-   * @param string $baseName
-   *
-   * @return File
-   */
-  public function setBaseName(string $baseName):File
-  {
-    $this->fileName = ($this->getDirName()??'') . self::PATH_SEPARATOR . trim($baseName, self::PATH_SEPARATOR);
-    return $this;
   }
 
   /**
@@ -222,20 +161,6 @@ class File implements \ArrayAccess
   }
 
   /**
-   * Set dataHash.
-   *
-   * @param string|null $dataHash
-   *
-   * @return File
-   */
-  public function setDataHash($dataHash = null):File
-  {
-    $this->dataHash = $dataHash;
-
-    return $this;
-  }
-
-  /**
    * Get dataHash.
    *
    * @return string|null
@@ -243,20 +168,6 @@ class File implements \ArrayAccess
   public function getDataHash()
   {
     return $this->dataHash;
-  }
-
-  /**
-   * Set $size.
-   *
-   * @param int $size
-   *
-   * @return File
-   */
-  public function setSize(int $size = -1):File
-  {
-    $this->size = $size;
-
-    return $this;
   }
 
   /**
@@ -270,27 +181,12 @@ class File implements \ArrayAccess
   }
 
   /**
-   * Set FileData.
-   *
-   * @param FileData $fileData
-   *
-   * @return File
-   */
-  public function setFileData(FileData $fileData):File
-  {
-    $this->fileData = $fileData;
-    $fileData->setFile($this);
-
-    return $this;
-  }
-
-  /**
    * Get FileData.
    *
    * @return FileData
    */
   public function getFileData():FileData
   {
-    return $this->fileData;
+    return $this->fileData->first();
   }
 }

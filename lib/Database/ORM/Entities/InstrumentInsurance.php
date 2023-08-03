@@ -140,20 +140,6 @@ class InstrumentInsurance implements \ArrayAccess
   // phpcs:enable
 
   /**
-   * Set id.
-   *
-   * @param int $id
-   *
-   * @return InstrumentInsurance
-   */
-  public function setId(int $id):InstrumentInsurance
-  {
-    $this->id = $id;
-
-    return $this;
-  }
-
-  /**
    * Get id.
    *
    * @return int
@@ -184,20 +170,6 @@ class InstrumentInsurance implements \ArrayAccess
   }
 
   /**
-   * Set object.
-   *
-   * @param null|string $object
-   *
-   * @return InstrumentInsurance
-   */
-  public function setObject(?string $object):InstrumentInsurance
-  {
-    $this->object = $object;
-
-    return $this;
-  }
-
-  /**
    * Get object.
    *
    * @return string
@@ -205,20 +177,6 @@ class InstrumentInsurance implements \ArrayAccess
   public function getObject():string
   {
     return $this->object;
-  }
-
-  /**
-   * Set accessory.
-   *
-   * @param bool $accessory
-   *
-   * @return InstrumentInsurance
-   */
-  public function setAccessory(bool $accessory):InstrumentInsurance
-  {
-    $this->accessory = $accessory;
-
-    return $this;
   }
 
   /**
@@ -232,20 +190,6 @@ class InstrumentInsurance implements \ArrayAccess
   }
 
   /**
-   * Set manufacturer.
-   *
-   * @param null|string $manufacturer
-   *
-   * @return InstrumentInsurance
-   */
-  public function setManufacturer(?string $manufacturer):InstrumentInsurance
-  {
-    $this->manufacturer = $manufacturer;
-
-    return $this;
-  }
-
-  /**
    * Get manufacturer.
    *
    * @return string
@@ -253,20 +197,6 @@ class InstrumentInsurance implements \ArrayAccess
   public function getManufacturer():string
   {
     return $this->manufacturer;
-  }
-
-  /**
-   * Set yearOfConstruction.
-   *
-   * @param null|string $yearOfConstruction
-   *
-   * @return InstrumentInsurance
-   */
-  public function setYearOfConstruction(?string $yearOfConstruction):InstrumentInsurance
-  {
-    $this->yearOfConstruction = $yearOfConstruction;
-
-    return $this;
   }
 
   /**
@@ -280,20 +210,6 @@ class InstrumentInsurance implements \ArrayAccess
   }
 
   /**
-   * Set insuranceAmount.
-   *
-   * @param int $insuranceAmount
-   *
-   * @return InstrumentInsurance
-   */
-  public function setInsuranceAmount(int $insuranceAmount):InstrumentInsurance
-  {
-    $this->insuranceAmount = $insuranceAmount;
-
-    return $this;
-  }
-
-  /**
    * Get insuranceAmount.
    *
    * @return int
@@ -301,20 +217,6 @@ class InstrumentInsurance implements \ArrayAccess
   public function getInsuranceAmount():int
   {
     return $this->insuranceAmount;
-  }
-
-  /**
-   * Set musician.
-   *
-   * @param null|Musician $musician
-   *
-   * @return InstrumentInsurance
-   */
-  public function setMusician(?Musician $musician):InstrumentInsurance
-  {
-    $this->musician = $musician;
-
-    return $this;
   }
 
   /**
@@ -328,20 +230,6 @@ class InstrumentInsurance implements \ArrayAccess
   }
 
   /**
-   * Set startOfInsurance.
-   *
-   * @param mixed $startOfInsurance
-   *
-   * @return InstrumentInsurance
-   */
-  public function setStartOfInsurance(mixed $startOfInsurance):InstrumentInsurance
-  {
-    $this->startOfInsurance = self::convertToDateTime($startOfInsurance);
-
-    return $this;
-  }
-
-  /**
    * Get startOfInsurance.
    *
    * @return \DateTimeInterface
@@ -349,19 +237,6 @@ class InstrumentInsurance implements \ArrayAccess
   public function getStartOfInsurance():?\DateTimeInterface
   {
     return $this->startOfInsurance;
-  }
-
-  /**
-   * Set insuranceRate.
-   *
-   * @param null|InsuranceRate $insuranceRate
-   *
-   * @return InstrumentInsurance
-   */
-  public function setInsuranceRate(?InsuranceRate $insuranceRate):InstrumentInsurance
-  {
-    $this->insuranceRate = $insuranceRate;
-    return $this;
   }
 
   /**
@@ -375,19 +250,6 @@ class InstrumentInsurance implements \ArrayAccess
   }
 
   /**
-   * Set isDebitor.
-   *
-   * @param bool $isDebitor
-   *
-   * @return InstrumentInsurance
-   */
-  public function setIsDebitor(bool $isDebitor):InstrumentInsurance
-  {
-    $this->isDebitor = $isDebitor;
-    return $this;
-  }
-
-  /**
    * Get isDebitor.
    *
    * @return bool
@@ -398,19 +260,6 @@ class InstrumentInsurance implements \ArrayAccess
   }
 
   /**
-   * Set isHolder.
-   *
-   * @param bool $isHolder
-   *
-   * @return InstrumentInsurance
-   */
-  public function setIsHolder(bool $isHolder):InstrumentInsurance
-  {
-    $this->isHolder = $isHolder;
-    return $this;
-  }
-
-  /**
    * Get isHolder.
    *
    * @return bool
@@ -418,19 +267,6 @@ class InstrumentInsurance implements \ArrayAccess
   public function getIsHolder():bool
   {
     return $this->isHolder;
-  }
-
-  /**
-   * Set isOwner.
-   *
-   * @param bool $isOwner
-   *
-   * @return InstrumentInsurance
-   */
-  public function setIsOwner(bool $isOwner):InstrumentInsurance
-  {
-    $this->isOwner = $isOwner;
-    return $this;
   }
 
   /**

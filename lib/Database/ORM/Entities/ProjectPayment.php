@@ -116,21 +116,6 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
   // phpcs:enable
 
   /**
-   * Set id.
-   *
-   * @param null|int $id
-   *
-   * @return ProjectPayment
-   */
-  public function setId(?int $id):ProjectPayment
-  {
-    if (empty($id)) {
-      $this->id = null; // flag auto-increment on insert
-    }
-    return $this;
-  }
-
-  /**
    * Get id.
    *
    * @return int
@@ -138,20 +123,6 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
   public function getId():?int
   {
     return $this->id;
-  }
-
-  /**
-   * Set compositePayment.
-   *
-   * @param null|CompositePayment $compositePayment
-   *
-   * @return ProjectPayment
-   */
-  public function setCompositePayment(?CompositePayment $compositePayment):ProjectPayment
-  {
-    $this->compositePayment = $compositePayment;
-
-    return $this;
   }
 
   /**
@@ -165,20 +136,6 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
   }
 
   /**
-   * Set projectParticipant.
-   *
-   * @param null|ProjectParticipant $projectParticipant
-   *
-   * @return ProjectPayment
-   */
-  public function setProjectParticipant(?ProjectParticipant $projectParticipant):ProjectPayment
-  {
-    $this->projectParticipant = $projectParticipant;
-
-    return $this;
-  }
-
-  /**
    * Get projectParticipant.
    *
    * @return ProjectParticipant
@@ -186,20 +143,6 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
   public function getProjectParticipant()
   {
     return $this->projectParticipant;
-  }
-
-  /**
-   * Set project.
-   *
-   * @param null|Project $project
-   *
-   * @return ProjectPayment
-   */
-  public function setProject(?Project $project):ProjectPayment
-  {
-    $this->project = $project;
-
-    return $this;
   }
 
   /**
@@ -213,20 +156,6 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
   }
 
   /**
-   * Set musician.
-   *
-   * @param null|Musician $musician
-   *
-   * @return ProjectPayment
-   */
-  public function setMusician(?Musician $musician):ProjectPayment
-  {
-    $this->musician = $musician;
-
-    return $this;
-  }
-
-  /**
    * Get musician.
    *
    * @return Musician
@@ -234,20 +163,6 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
   public function getMusician()
   {
     return $this->musician;
-  }
-
-  /**
-   * Set amount.
-   *
-   * @param float|null $amount
-   *
-   * @return ProjectPayment
-   */
-  public function setAmount(?float $amount):ProjectPayment
-  {
-    $this->amount = $amount;
-
-    return $this;
   }
 
   /**
@@ -261,20 +176,6 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
   }
 
   /**
-   * Set subject.
-   *
-   * @param null|string $subject
-   *
-   * @return ProjectPayment
-   */
-  public function setSubject(?string $subject):ProjectPayment
-  {
-    $this->subject = $subject;
-
-    return $this;
-  }
-
-  /**
    * Get subject.
    *
    * @return string
@@ -285,20 +186,6 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
   }
 
   /**
-   * Set receivable.
-   *
-   * @param ProjectParticipantFieldDatum $receivable
-   *
-   * @return ProjectPayment
-   */
-  public function setReceivable(ProjectParticipantFieldDatum $receivable):ProjectPayment
-  {
-    $this->receivable = $receivable;
-
-    return $this;
-  }
-
-  /**
    * Get receivable.
    *
    * @return ProjectParticipantFieldDatum
@@ -306,20 +193,6 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
   public function getReceivable():ProjectParticipantFieldDatum
   {
     return $this->receivable;
-  }
-
-  /**
-   * Set receivableOption.
-   *
-   * @param null|ProjectParticipantFieldDataOption $receivableOption
-   *
-   * @return ProjectPayment
-   */
-  public function setReceivableOption(?ProjectParticipantFieldDataOption $receivableOption):ProjectPayment
-  {
-    $this->receivableOption = $receivableOption;
-
-    return $this;
   }
 
   /**

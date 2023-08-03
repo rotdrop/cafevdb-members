@@ -3,7 +3,7 @@
  * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022 Claus-Justus Heine
+ * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -129,11 +129,11 @@ class CompositePayment implements \ArrayAccess
   private $musician;
 
   /**
-   * @var EncryptedFile
+   * @var DatabaseStorageFile
    *
    * Optional. ATM only used for particular auto-generated monetary fields.
    *
-   * @ORM\OneToOne(targetEntity="EncryptedFile", fetch="EXTRA_LAZY")
+   * @ORM\OneToOne(targetEntity="DatabaseStorageFile", fetch="EXTRA_LAZY")
    *
    * @todo Support more than one supporting document.
    */
@@ -158,20 +158,6 @@ class CompositePayment implements \ArrayAccess
   }
 
   /**
-   * Set projectPayments.
-   *
-   * @param Collection $projectPayments
-   *
-   * @return CompositePayment
-   */
-  public function setProjectPayments(Collection $projectPayments):CompositePayment
-  {
-    $this->projectPayments = $projectPayments;
-
-    return $this;
-  }
-
-  /**
    * Get projectPayments.
    *
    * @return Collection
@@ -179,20 +165,6 @@ class CompositePayment implements \ArrayAccess
   public function getProjectPayments():Collection
   {
     return $this->projectPayments;
-  }
-
-  /**
-   * Set amount.
-   *
-   * @param float|null $amount
-   *
-   * @return ProjectPayment
-   */
-  public function setAmount(?float $amount):CompositePayment
-  {
-    $this->amount = $amount;
-
-    return $this;
   }
 
   /**
@@ -222,20 +194,6 @@ class CompositePayment implements \ArrayAccess
   }
 
   /**
-   * Set musician.
-   *
-   * @param mixed $musician
-   *
-   * @return CompositePayment
-   */
-  public function setMusician(mixed $musician):CompositePayment
-  {
-    $this->musician = $musician;
-
-    return $this;
-  }
-
-  /**
    * Get musician.
    *
    * @return Musician
@@ -243,20 +201,6 @@ class CompositePayment implements \ArrayAccess
   public function getMusician()
   {
     return $this->musician;
-  }
-
-  /**
-   * Set dateOfReceipt.
-   *
-   * @param \DateTime|null $dateOfReceipt
-   *
-   * @return CompositePayment
-   */
-  public function setDateOfReceipt($dateOfReceipt = null):CompositePayment
-  {
-    $this->dateOfReceipt = self::convertToDateTime($dateOfReceipt);
-
-    return $this;
   }
 
   /**
@@ -270,20 +214,6 @@ class CompositePayment implements \ArrayAccess
   }
 
   /**
-   * Set subject.
-   *
-   * @param null|string $subject
-   *
-   * @return CompositePayment
-   */
-  public function setSubject(?string $subject):CompositePayment
-  {
-    $this->subject = $subject;
-
-    return $this;
-  }
-
-  /**
    * Get subject.
    *
    * @return string
@@ -291,20 +221,6 @@ class CompositePayment implements \ArrayAccess
   public function getSubject()
   {
     return $this->subject;
-  }
-
-  /**
-   * Set debitNote.
-   *
-   * @param SepaDebitNote|null $debitNote
-   *
-   * @return CompositePayment
-   */
-  public function setDebitNote($debitNote):CompositePayment
-  {
-    $this->debitNote = $debitNote;
-
-    return $this;
   }
 
   /**
@@ -318,20 +234,6 @@ class CompositePayment implements \ArrayAccess
   }
 
   /**
-   * Set sepaBankAccount.
-   *
-   * @param string|null $sepaBankAccount
-   *
-   * @return CompositePayment
-   */
-  public function setSepaBankAccount(?SepaBankAccount $sepaBankAccount):CompositePayment
-  {
-    $this->sepaBankAccount = $sepaBankAccount;
-
-    return $this;
-  }
-
-  /**
    * Get sepaBankAccount.
    *
    * @return SepaBankAccount|null
@@ -342,20 +244,6 @@ class CompositePayment implements \ArrayAccess
   }
 
   /**
-   * Set sepaDebitMandate.
-   *
-   * @param string|null $sepaDebitMandate
-   *
-   * @return CompositePayment
-   */
-  public function setSepaDebitMandate(?SepaDebitMandate $sepaDebitMandate):CompositePayment
-  {
-    $this->sepaDebitMandate = $sepaDebitMandate;
-
-    return $this;
-  }
-
-  /**
    * Get sepaDebitMandate.
    *
    * @return SepaDebitMandate|null
@@ -363,44 +251,6 @@ class CompositePayment implements \ArrayAccess
   public function getSepaDebitMandate():?SepaDebitMandate
   {
     return $this->sepaDebitMandate;
-  }
-
-  // /**
-  //  * Set sepaTransaction.
-  //  *
-  //  * @param string|null $sepaTransaction
-  //  *
-  //  * @return CompositePayment
-  //  */
-  // public function setSepaTransaction(?SepaBulkTransaction $sepaTransaction):CompositePayment
-  // {
-  //   $this->sepaTransaction = $sepaTransaction;
-
-  //   return $this;
-  // }
-
-  // /**
-  //  * Get sepaTransaction.
-  //  *
-  //  * @return SepaTransaction|null
-  //  */
-  // public function getSepaTransaction():?SepaBulkTransaction
-  // {
-  //   return $this->sepaTransaction;
-  // }
-
-  /**
-   * Set notificationMessageId.
-   *
-   * @param null|string $notificationMessageId
-   *
-   * @return CompositePayment
-   */
-  public function setNotificationMessageId(?string $notificationMessageId):CompositePayment
-  {
-    $this->notificationMessageId = $notificationMessageId;
-
-    return $this;
   }
 
   /**
@@ -414,25 +264,11 @@ class CompositePayment implements \ArrayAccess
   }
 
   /**
-   * Set supportingDocument.
-   *
-   * @param null|EncryptedFile $supportingDocument
-   *
-   * @return CompositePayment
-   */
-  public function setSupportingDocument(?EncryptedFile $supportingDocument):CompositePayment
-  {
-    $this->supportingDocument = $supportingDocument;
-
-    return $this;
-  }
-
-  /**
    * Get supportingDocument.
    *
-   * @return null|EncryptedFile
+   * @return null|DatabaseStorageFile
    */
-  public function getSupportingDocument():?EncryptedFile
+  public function getSupportingDocument():?DatabaseStorageFile
   {
     return $this->supportingDocument;
   }

@@ -163,20 +163,6 @@ class Project implements \ArrayAccess
   // phpcs:enable
 
   /**
-   * Set id.
-   *
-   * @param int $id
-   *
-   * @return Project
-   */
-  public function setId(int $id):Project
-  {
-    $this->id = $id;
-
-    return $this;
-  }
-
-  /**
    * Get id.
    *
    * @return int
@@ -184,20 +170,6 @@ class Project implements \ArrayAccess
   public function getId()
   {
     return $this->id;
-  }
-
-  /**
-   * Set year.
-   *
-   * @param null|int $year
-   *
-   * @return Project
-   */
-  public function setYear(?int $year):Project
-  {
-    $this->year = $year;
-
-    return $this;
   }
 
   /**
@@ -211,20 +183,6 @@ class Project implements \ArrayAccess
   }
 
   /**
-   * Set name.
-   *
-   * @param null|string $name
-   *
-   * @return Project
-   */
-  public function setName(?string $name):Project
-  {
-    $this->name = $name;
-
-    return $this;
-  }
-
-  /**
    * Get name.
    *
    * @return string
@@ -232,20 +190,6 @@ class Project implements \ArrayAccess
   public function getName()
   {
     return $this->name;
-  }
-
-  /**
-   * Set type.
-   *
-   * @param EnumProjectTemporalType|string $type
-   *
-   * @return Project
-   */
-  public function setType($type):Project
-  {
-    $this->type = new Types\EnumProjectTemporalType($type);
-
-    return $this;
   }
 
   /**
@@ -259,20 +203,6 @@ class Project implements \ArrayAccess
   }
 
   /**
-   * Set participants.
-   *
-   * @param Collection $participants
-   *
-   * @return Project
-   */
-  public function setParticipants(Collection $participants):Project
-  {
-    $this->participants = $participants;
-
-    return $this;
-  }
-
-  /**
    * Get participants.
    *
    * @return Collection
@@ -280,20 +210,6 @@ class Project implements \ArrayAccess
   public function getParticipants():Collection
   {
     return $this->participants;
-  }
-
-  /**
-   * Set participantFields.
-   *
-   * @param Collection $participantFields
-   *
-   * @return Project
-   */
-  public function setParticipantFields(Collection $participantFields):Project
-  {
-    $this->participantFields = $participantFields;
-
-    return $this;
   }
 
   /**
@@ -307,20 +223,6 @@ class Project implements \ArrayAccess
   }
 
   /**
-   * Set participantFieldsData.
-   *
-   * @param Collection $participantFieldsData
-   *
-   * @return Project
-   */
-  public function setParticipantFieldsData(Collection $participantFieldsData):Project
-  {
-    $this->participantFieldsData = $participantFieldsData;
-
-    return $this;
-  }
-
-  /**
    * Get participantFieldsData.
    *
    * @return Collection
@@ -328,20 +230,6 @@ class Project implements \ArrayAccess
   public function getParticipantFieldsData():Collection
   {
     return $this->participantFieldsData;
-  }
-
-  /**
-   * Set payments.
-   *
-   * @param ArrayCollection $payments
-   *
-   * @return Project
-   */
-  public function setPayments(Collection $payments):Project
-  {
-    $this->payments = $payments;
-
-    return $this;
   }
 
   /**
@@ -355,20 +243,6 @@ class Project implements \ArrayAccess
   }
 
   /**
-   * Set sepaDebitMandates.
-   *
-   * @param Collection $sepaDebitMandates
-   *
-   * @return Project
-   */
-  public function setSepaDebitMandates(Collection $sepaDebitMandates):Project
-  {
-    $this->sepaDebitMandates = $sepaDebitMandates;
-
-    return $this;
-  }
-
-  /**
    * Get sepaDebitMandates.
    *
    * @return Collection
@@ -376,19 +250,6 @@ class Project implements \ArrayAccess
   public function getSepaDebitMandates():Collection
   {
     return $this->sepaDebitMandates;
-  }
-
-  /**
-   * Sets registrationStartDate.
-   *
-   * @param string|int|DateTimeInterface $registrationStartDate
-   *
-   * @return Project
-   */
-  public function setRegistrationStartDate(mixed $registrationStartDate):Project
-  {
-    $this->registrationStartDate = self::convertToDateTime($registrationStartDate);
-    return $this;
   }
 
   /**
@@ -402,19 +263,6 @@ class Project implements \ArrayAccess
   }
 
   /**
-   * Sets registrationDeadline.
-   *
-   * @param string|int|DateTimeInterface $registrationDeadline
-   *
-   * @return Project
-   */
-  public function setRegistrationDeadline(mixed $registrationDeadline):Project
-  {
-    $this->registrationDeadline = self::convertToDateTime($registrationDeadline);
-    return $this;
-  }
-
-  /**
    * Returns registrationDeadline.
    *
    * @return DateTimeImmutable
@@ -422,20 +270,6 @@ class Project implements \ArrayAccess
   public function getRegistrationDeadline():?DateTimeInterface
   {
     return $this->registrationDeadline;
-  }
-
-  /**
-   * Set calendarEvents.
-   *
-   * @param Collection $calendarEvents
-   *
-   * @return Project
-   */
-  public function setCalendarEvents(Collection $calendarEvents):Project
-  {
-    $this->calendarEvents = $calendarEvents;
-
-    return $this;
   }
 
   /**
@@ -449,20 +283,6 @@ class Project implements \ArrayAccess
   }
 
   /**
-   * Set instrumentationNumbers.
-   *
-   * @param Collection $instrumentationNumbers
-   *
-   * @return Project
-   */
-  public function setInstrumentationNumbers(Collection $instrumentationNumbers):Project
-  {
-    $this->instrumentationNumbers = $instrumentationNumbers;
-
-    return $this;
-  }
-
-  /**
    * Get instrumentationNumbers.
    *
    * @return Collection
@@ -473,20 +293,6 @@ class Project implements \ArrayAccess
   }
 
   /**
-   * Set clubMembers.
-   *
-   * @param bool $clubMembers
-   *
-   * @return Project
-   */
-  public function setClubMembers(bool $clubMembers):Project
-  {
-    $this->clubMembers = $clubMembers;
-
-    return $this;
-  }
-
-  /**
    * Get clubMembers.
    *
    * @return bool
@@ -494,20 +300,6 @@ class Project implements \ArrayAccess
   public function getClubMembers():bool
   {
     return $this->clubMembers;
-  }
-
-  /**
-   * Set executiveBoard.
-   *
-   * @param bool $executiveBoard
-   *
-   * @return Project
-   */
-  public function setExecutiveBoard(bool $executiveBoard):Project
-  {
-    $this->executiveBoard = $executiveBoard;
-
-    return $this;
   }
 
   /**

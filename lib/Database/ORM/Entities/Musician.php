@@ -321,20 +321,6 @@ class Musician implements \ArrayAccess, \JsonSerializable
   }
 
   /**
-   * Set surName.
-   *
-   * @param null|string $surName
-   *
-   * @return Musician
-   */
-  public function setSurName(?string $surName):Musician
-  {
-    $this->surName = $surName;
-
-    return $this;
-  }
-
-  /**
    * Get surName.
    *
    * @return string
@@ -342,20 +328,6 @@ class Musician implements \ArrayAccess, \JsonSerializable
   public function getSurName()
   {
     return $this->surName;
-  }
-
-  /**
-   * Set firstName.
-   *
-   * @param null|string $firstName
-   *
-   * @return Musician
-   */
-  public function setFirstName(?string $firstName):Musician
-  {
-    $this->firstName = $firstName;
-
-    return $this;
   }
 
   /**
@@ -369,20 +341,6 @@ class Musician implements \ArrayAccess, \JsonSerializable
   }
 
   /**
-   * Set city.
-   *
-   * @param null|string $city
-   *
-   * @return Musician
-   */
-  public function setCity(?string $city):Musician
-  {
-    $this->city = $city;
-
-    return $this;
-  }
-
-  /**
    * Get city.
    *
    * @return string
@@ -390,20 +348,6 @@ class Musician implements \ArrayAccess, \JsonSerializable
   public function getCity()
   {
     return $this->city;
-  }
-
-  /**
-   * Set street.
-   *
-   * @param null|string $street
-   *
-   * @return Musician
-   */
-  public function setStreet(?string $street):Musician
-  {
-    $this->street = $street;
-
-    return $this;
   }
 
   /**
@@ -417,20 +361,6 @@ class Musician implements \ArrayAccess, \JsonSerializable
   }
 
   /**
-   * Set streetNumber.
-   *
-   * @param null|string $streetNumber
-   *
-   * @return Musician
-   */
-  public function setStreetNumber($streetNumber):Musician
-  {
-    $this->streetNumber = $streetNumber;
-
-    return $this;
-  }
-
-  /**
    * Get streetNumber.
    *
    * @return string
@@ -438,20 +368,6 @@ class Musician implements \ArrayAccess, \JsonSerializable
   public function getStreetNumber()
   {
     return $this->streetNumber;
-  }
-
-  /**
-   * Set addressSupplement.
-   *
-   * @param null|string $addressSupplement
-   *
-   * @return Musician
-   */
-  public function setAddressSupplement($addressSupplement):Musician
-  {
-    $this->addressSupplement = $addressSupplement;
-
-    return $this;
   }
 
   /**
@@ -465,20 +381,6 @@ class Musician implements \ArrayAccess, \JsonSerializable
   }
 
   /**
-   * Set postalCode.
-   *
-   * @param int|null $postalCode
-   *
-   * @return Musician
-   */
-  public function setPostalCode($postalCode = null):Musician
-  {
-    $this->postalCode = $postalCode;
-
-    return $this;
-  }
-
-  /**
    * Get postalCode.
    *
    * @return int|null
@@ -486,20 +388,6 @@ class Musician implements \ArrayAccess, \JsonSerializable
   public function getPostalCode()
   {
     return $this->postalCode;
-  }
-
-  /**
-   * Set country.
-   *
-   * @param null|string $country
-   *
-   * @return Musician
-   */
-  public function setCountry($country):Musician
-  {
-    $this->country = $country;
-
-    return $this;
   }
 
   /**
@@ -513,20 +401,6 @@ class Musician implements \ArrayAccess, \JsonSerializable
   }
 
   /**
-   * Set language.
-   *
-   * @param null|string $language
-   *
-   * @return Musician
-   */
-  public function setLanguage($language):Musician
-  {
-    $this->language = $language;
-
-    return $this;
-  }
-
-  /**
    * Get language.
    *
    * @return string
@@ -534,20 +408,6 @@ class Musician implements \ArrayAccess, \JsonSerializable
   public function getLanguage()
   {
     return $this->language;
-  }
-
-  /**
-   * Set mobilePhone.
-   *
-   * @param null|string $mobilePhone
-   *
-   * @return Musician
-   */
-  public function setMobilePhone($mobilePhone):Musician
-  {
-    $this->mobilePhone = $mobilePhone;
-
-    return $this;
   }
 
   /**
@@ -561,20 +421,6 @@ class Musician implements \ArrayAccess, \JsonSerializable
   }
 
   /**
-   * Set fixedLinePhone.
-   *
-   * @param null|string $fixedLinePhone
-   *
-   * @return Musician
-   */
-  public function setFixedLinePhone($fixedLinePhone):Musician
-  {
-    $this->fixedLinePhone = $fixedLinePhone;
-
-    return $this;
-  }
-
-  /**
    * Get fixedLinePhone.
    *
    * @return string
@@ -582,20 +428,6 @@ class Musician implements \ArrayAccess, \JsonSerializable
   public function getFixedLinePhone()
   {
     return $this->fixedLinePhone;
-  }
-
-  /**
-   * Set birthday.
-   *
-   * @param string|int|\DateTimeInterface $birthday
-   *
-   * @return Musician
-   */
-  public function setBirthday($birthday):Musician
-  {
-    $this->birthday = self::convertToDateTime($birthday);
-
-    return $this;
   }
 
   /**
@@ -609,20 +441,6 @@ class Musician implements \ArrayAccess, \JsonSerializable
   }
 
   /**
-   * Set email.
-   *
-   * @param null|string $email
-   *
-   * @return Musician
-   */
-  public function setEmail($email):Musician
-  {
-    $this->email = $email;
-
-    return $this;
-  }
-
-  /**
    * Get email.
    *
    * @return string
@@ -630,20 +448,6 @@ class Musician implements \ArrayAccess, \JsonSerializable
   public function getEmail()
   {
     return $this->email;
-  }
-
-  /**
-   * Set emailAddresses.
-   *
-   * @param Collection $emailAddresses
-   *
-   * @return Musician
-   */
-  public function setEmailAddresses(Collection $emailAddresses):Musician
-  {
-    $this->emailAddresses = $emailAddresses;
-
-    return $this;
   }
 
   /**
@@ -657,20 +461,6 @@ class Musician implements \ArrayAccess, \JsonSerializable
   }
 
   /**
-   * Set memberStatus.
-   *
-   * @param string|EnumMemberStatus $memberStatus
-   *
-   * @return Musician
-   */
-  public function setMemberStatus($memberStatus):Musician
-  {
-    $this->memberStatus = new Types\EnumMemberStatus($memberStatus);
-
-    return $this;
-  }
-
-  /**
    * Get memberStatus.
    *
    * @return EnumMemberStatus
@@ -678,20 +468,6 @@ class Musician implements \ArrayAccess, \JsonSerializable
   public function getMemberStatus():Types\EnumMemberStatus
   {
     return $this->memberStatus;
-  }
-
-  /**
-   * Set remarks.
-   *
-   * @param null|string $remarks
-   *
-   * @return Musician
-   */
-  public function setRemarks(?string $remarks = null):Musician
-  {
-    $this->remarks = $remarks;
-
-    return $this;
   }
 
   /**
@@ -705,20 +481,6 @@ class Musician implements \ArrayAccess, \JsonSerializable
   }
 
   /**
-   * Set cloudAccountDisabled.
-   *
-   * @param null|bool $cloudAccountDisabled
-   *
-   * @return Musician
-   */
-  public function setCloudAccountDisabled(?bool $cloudAccountDisabled):Musician
-  {
-    $this->CloudAccountDisabled = $cloudAccountDisabled;
-
-    return $this;
-  }
-
-  /**
    * Get cloudAccountDisabled.
    *
    * @return null|bool
@@ -726,20 +488,6 @@ class Musician implements \ArrayAccess, \JsonSerializable
   public function getCloudAccountDisabled():?bool
   {
     return $this->cloudAccountDisabled;
-  }
-
-  /**
-   * Set cloudAccountDeactivated.
-   *
-   * @param null|bool $cloudAccountDeactivated
-   *
-   * @return Musician
-   */
-  public function setCloudAccountDeactivated(?bool $cloudAccountDeactivated):Musician
-  {
-    $this->CloudAccountDeactivated = $cloudAccountDeactivated;
-
-    return $this;
   }
 
   /**
@@ -753,20 +501,6 @@ class Musician implements \ArrayAccess, \JsonSerializable
   }
 
   /**
-   * Set instruments.
-   *
-   * @param Collection $instruments
-   *
-   * @return Musician
-   */
-  public function setInstruments(Collection $instruments):Musician
-  {
-    $this->instruments = $instruments;
-
-    return $this;
-  }
-
-  /**
    * Get instruments.
    *
    * @return Collection
@@ -774,20 +508,6 @@ class Musician implements \ArrayAccess, \JsonSerializable
   public function getInstruments():Collection
   {
     return $this->instruments;
-  }
-
-  /**
-   * Set encryptedFiles.
-   *
-   * @param Collection $encryptedFiles
-   *
-   * @return Musician
-   */
-  public function setEncryptedFiles(Collection $encryptedFiles):Musician
-  {
-    $this->encryptedFiles = $encryptedFiles;
-
-    return $this;
   }
 
   /**
@@ -801,20 +521,6 @@ class Musician implements \ArrayAccess, \JsonSerializable
   }
 
   /**
-   * Set displayName.
-   *
-   * @param null|string $displayName
-   *
-   * @return Musician
-   */
-  public function setDisplayName(?string $displayName):Musician
-  {
-    $this->displayName = $displayName;
-
-    return $this;
-  }
-
-  /**
    * Get displayName.
    *
    * @return string
@@ -822,20 +528,6 @@ class Musician implements \ArrayAccess, \JsonSerializable
   public function getDisplayName():?string
   {
     return $this->displayName;
-  }
-
-  /**
-   * Set nickName.
-   *
-   * @param null|string $nickName
-   *
-   * @return Musician
-   */
-  public function setNickName(?string $nickName):Musician
-  {
-    $this->nickName = $nickName;
-
-    return $this;
   }
 
   /**
@@ -870,20 +562,6 @@ class Musician implements \ArrayAccess, \JsonSerializable
   }
 
   /**
-   * Set userPassphrase.
-   *
-   * @param null|string $userPassphrase
-   *
-   * @return Musician
-   */
-  public function setUserPassphrase(?string $userPassphrase):Musician
-  {
-    $this->userPassphrase = $userPassphrase;
-
-    return $this;
-  }
-
-  /**
    * Get userPassphrase.
    *
    * @return string
@@ -891,20 +569,6 @@ class Musician implements \ArrayAccess, \JsonSerializable
   public function getUserPassphrase():?string
   {
     return $this->userPassphrase;
-  }
-
-  /**
-   * Set userIdSlug.
-   *
-   * @param null|string $userIdSlug
-   *
-   * @return Musician
-   */
-  public function setUserIdSlug(?string $userIdSlug):Musician
-  {
-    $this->userIdSlug = $userIdSlug;
-
-    return $this;
   }
 
   /**
@@ -918,20 +582,6 @@ class Musician implements \ArrayAccess, \JsonSerializable
   }
 
   /**
-   * Set projectInstruments.
-   *
-   * @param Collection $projectInstruments
-   *
-   * @return Musician
-   */
-  public function setProjectInstruments(Collection $projectInstruments):Musician
-  {
-    $this->projectInstruments = $projectInstruments;
-
-    return $this;
-  }
-
-  /**
    * Get projectInstruments.
    *
    * @return Collection
@@ -939,20 +589,6 @@ class Musician implements \ArrayAccess, \JsonSerializable
   public function getProjectInstruments():Collection
   {
     return $this->projectInstruments;
-  }
-
-  /**
-   * Set projectParticipation.
-   *
-   * @param Collection $projectParticipation
-   *
-   * @return Musician
-   */
-  public function setProjectParticipation(Collection $projectParticipation):Musician
-  {
-    $this->projectParticipation = $projectParticipation;
-
-    return $this;
   }
 
   /**
@@ -1015,20 +651,6 @@ class Musician implements \ArrayAccess, \JsonSerializable
   }
 
   /**
-   * Set payments.
-   *
-   * @param Collection $payments
-   *
-   * @return Musician
-   */
-  public function setPayments(Collection $payments):Musician
-  {
-    $this->payments = $payments;
-
-    return $this;
-  }
-
-  /**
    * Get payments.
    *
    * @return Collection
@@ -1039,20 +661,6 @@ class Musician implements \ArrayAccess, \JsonSerializable
   }
 
   /**
-   * Set sepaBankAccounts.
-   *
-   * @param Collection $sepaBankAccounts
-   *
-   * @return Musician
-   */
-  public function setSepaBankAccounts(Collection $sepaBankAccounts):Musician
-  {
-    $this->sepaBankAccounts = $sepaBankAccounts;
-
-    return $this;
-  }
-
-  /**
    * Get sepaBankAccounts.
    *
    * @return Collection
@@ -1060,20 +668,6 @@ class Musician implements \ArrayAccess, \JsonSerializable
   public function getSepaBankAccounts():Collection
   {
     return $this->sepaBankAccounts;
-  }
-
-  /**
-   * Set sepaDebitMandates.
-   *
-   * @param Collection $sepaDebitMandates
-   *
-   * @return Musician
-   */
-  public function setSepaDebitMandates(Collection $sepaDebitMandates):Musician
-  {
-    $this->sepaDebitMandates = $sepaDebitMandates;
-
-    return $this;
   }
 
   /**
@@ -1093,20 +687,6 @@ class Musician implements \ArrayAccess, \JsonSerializable
     return array_merge($this->toArray(), [
       'publicName' => $this->getPublicName(true),
     ]);
-  }
-
-  /**
-   * Set projectParticipantFieldsData.
-   *
-   * @param Collection $projectParticipantFieldsData
-   *
-   * @return Musician
-   */
-  public function setProjectParticipantFieldsData(Collection $projectParticipantFieldsData):Musician
-  {
-    $this->projectParticipantFieldsData = $projectParticipantFieldsData;
-
-    return $this;
   }
 
   /**
@@ -1130,20 +710,6 @@ class Musician implements \ArrayAccess, \JsonSerializable
   public function getProjectParticipantFieldsDatum(mixed $key):?ProjectParticipantFieldDatum
   {
     return $this->getByUuid($this->projectParticipantFieldsData, $key, 'optionKey');
-  }
-
-  /**
-   * Set instrumentInsurances.
-   *
-   * @param Collection $instrumentInsurances
-   *
-   * @return Musician
-   */
-  public function setInstrumentInsurances(Collection $instrumentInsurances):Musician
-  {
-    $this->instrumentInsurances = $instrumentInsurances;
-
-    return $this;
   }
 
   /**

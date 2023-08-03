@@ -110,9 +110,10 @@ class MemberDataService
     switch ($dataType) {
       case FieldDataType::DB_FILE:
         $fileId = (int)$fieldDatum->getOptionValue();
-        $file = $this->entityManager->find(Entities\File::class, $fileId);
+        $file = $this->entityManager->find(Entities\DatabaseStorageFile::class, $fileId);
         break;
-      case FieldDataType::SERVICE_FEE:
+      case FieldDataType::LIABILITIES:
+      case FieldDataType::RECEIVABLES:
         $file = $fieldDatum->getSupportingDocument();
         break;
       default:
@@ -121,7 +122,7 @@ class MemberDataService
     if (empty($file)) {
       return null;
     }
-    /** @var Entities\File $file */
+    /** @var Entities\DatabaseStorageFile $file */
     $dbFileName = $file->getFileName();
     $extension = pathinfo($dbFileName, PATHINFO_EXTENSION);
     $fieldName = $field->getName();

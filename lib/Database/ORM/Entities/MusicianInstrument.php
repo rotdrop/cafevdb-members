@@ -76,20 +76,6 @@ class MusicianInstrument implements \ArrayAccess
   // phpcs:enable
 
   /**
-   * Set musician.
-   *
-   * @param null|int $musician
-   *
-   * @return MusicianInstrument
-   */
-  public function setMusician(?int $musician):MusicianInstrument
-  {
-    $this->musician = $musician;
-
-    return $this;
-  }
-
-  /**
    * Get musician.
    *
    * @return Musician
@@ -100,20 +86,6 @@ class MusicianInstrument implements \ArrayAccess
   }
 
   /**
-   * Set instrument.
-   *
-   * @param null|Instrument $instrument
-   *
-   * @return MusicianInstrument
-   */
-  public function setInstrument(?Instrument $instrument):MusicianInstrument
-  {
-    $this->instrument = $instrument;
-
-    return $this;
-  }
-
-  /**
    * Get instrument.
    *
    * @return Instrument
@@ -121,20 +93,6 @@ class MusicianInstrument implements \ArrayAccess
   public function getInstrument():Instrument
   {
     return $this->instrument;
-  }
-
-  /**
-   * Set ranking.
-   *
-   * @param int $ranking
-   *
-   * @return MusicianInstrument
-   */
-  public function setRanking(int $ranking):MusicianInstrument
-  {
-    $this->ranking = $ranking;
-
-    return $this;
   }
 
   /**

@@ -44,12 +44,6 @@ use MyCLabs\Enum\Enum as EnumType;
  * @method static EnumParticipantFieldDataType DATETIME()
  *   A date with time information.
  *
- * @method static EnumParticipantFieldDataType SERVICE_FEE()
- * @deprecated Use RECEIVABLES or LIABILITIES
- * A service-fee value with the convention that positive values denote
- * receivables and negative values denote liabilities (from the view
- * of the orchestra.
- *
  * @method static EnumParticipantFieldDataType RECEIVABLES()
  * A monetary value with the convention that positive values denote
  * receivables and negative values denote liabilities (from the view

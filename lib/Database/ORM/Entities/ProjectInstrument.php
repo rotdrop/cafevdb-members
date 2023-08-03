@@ -119,20 +119,6 @@ class ProjectInstrument implements \ArrayAccess
   // phpcs:enable
 
   /**
-   * Set project.
-   *
-   * @param null|Project $project
-   *
-   * @return ProjectInstrument
-   */
-  public function setProject(?Project $project):ProjectInstrument
-  {
-    $this->project = $project;
-
-    return $this;
-  }
-
-  /**
    * Get project.
    *
    * @return int
@@ -140,20 +126,6 @@ class ProjectInstrument implements \ArrayAccess
   public function getProject()
   {
     return $this->project;
-  }
-
-  /**
-   * Set musician.
-   *
-   * @param null|Musician $musician
-   *
-   * @return ProjectInstrument
-   */
-  public function setMusician(?Musician $musician):ProjectInstrument
-  {
-    $this->musician = $musician;
-
-    return $this;
   }
 
   /**
@@ -167,20 +139,6 @@ class ProjectInstrument implements \ArrayAccess
   }
 
   /**
-   * Set instrument.
-   *
-   * @param null|Instrument $instrument
-   *
-   * @return ProjectInstrument
-   */
-  public function setInstrument(?Instrument $instrument):ProjectInstrument
-  {
-    $this->instrument = $instrument;
-
-    return $this;
-  }
-
-  /**
    * Get instrument.
    *
    * @return int
@@ -188,20 +146,6 @@ class ProjectInstrument implements \ArrayAccess
   public function getInstrument()
   {
     return $this->instrument;
-  }
-
-  /**
-   * Set voice.
-   *
-   * @param int|null $voice
-   *
-   * @return ProjectInstrument
-   */
-  public function setVoice($voice = null)
-  {
-    $this->voice = $voice;
-
-    return $this;
   }
 
   /**
@@ -215,20 +159,6 @@ class ProjectInstrument implements \ArrayAccess
   }
 
   /**
-   * Set sectionLeader.
-   *
-   * @param bool $sectionLeader
-   *
-   * @return ProjectInstrument
-   */
-  public function setSectionLeader(bool $sectionLeader):ProjectInstrument
-  {
-    $this->sectionLeader = $sectionLeader;
-
-    return $this;
-  }
-
-  /**
    * Get sectionLeader.
    *
    * @return bool
@@ -236,29 +166,6 @@ class ProjectInstrument implements \ArrayAccess
   public function getSectionLeader()
   {
     return $this->sectionLeader;
-  }
-
-  /**
-   * Set projectParticipant.
-   *
-   * @param null|ProjectParticipant $projectParticipant
-   *
-   * @return ProjectInstrument
-   */
-  public function setProjectParticipant(?ProjectParticipant $projectParticipant):ProjectInstrument
-  {
-    $this->projectParticipant = $projectParticipant;
-
-    if (!empty($this->projectParticipant)) {
-      if (empty($this->project)) {
-        $this->project = $this->projectParticipant->getProject();
-      }
-      if (empty($this->musician)) {
-        $this->musician = $this->projectParticipant->getMusician();
-      }
-    }
-
-    return $this;
   }
 
   /**
@@ -272,29 +179,6 @@ class ProjectInstrument implements \ArrayAccess
   }
 
   /**
-   * Set musicianInstrument.
-   *
-   * @param null|MusicianInstrument $musicianInstrument
-   *
-   * @return ProjectInstrument
-   */
-  public function setMusicianInstrument(?MusicianInstrument $musicianInstrument):ProjectInstrument
-  {
-    $this->musicianInstrument = $musicianInstrument;
-
-    if (!empty($this->musicianInstrument)) {
-      if (empty($this->instrument)) {
-        $this->instrument = $this->musicianInstrument->getInstrument();
-      }
-      if (empty($this->musician)) {
-        $this->musician = $this->musicianInstrument->getMusician();
-      }
-    }
-
-    return $this;
-  }
-
-  /**
    * Get musicianInstrument.
    *
    * @return int
@@ -302,20 +186,6 @@ class ProjectInstrument implements \ArrayAccess
   public function getMusicianInstrument()
   {
     return $this->musicianInstrument;
-  }
-
-  /**
-   * Set instrumentationNumber.
-   *
-   * @param null|ProjectInstrumentationNumber $instrumentationNumber
-   *
-   * @return ProjectInstrument
-   */
-  public function setInstrumentationNumber(?ProjectInstrumentationNumber $instrumentationNumber):ProjectInstrument
-  {
-    $this->instrumentationNumber = $instrumentationNumber;
-
-    return $this;
   }
 
   /**

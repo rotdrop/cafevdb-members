@@ -121,28 +121,23 @@ class SepaBankAccount implements \ArrayAccess
    */
   private $sepaDebitMandates;
 
+  /**
+   * @var Collection
+   *
+   * @ORM\OneToMany(targetEntity="CompositePayment",
+   *                mappedBy="sepaBankAccount",
+   *                fetch="EXTRA_LAZY")
+   */
+  private $payments;
+
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct()
   {
     $this->arrayCTOR();
     $this->sepaDebitMandates = new ArrayCollection();
-    // $this->payments = new ArrayCollection();
+    $this->payments = new ArrayCollection();
   }
   // phpcs:enable
-
-  /**
-   * Set iban.
-   *
-   * @param null|string $iban
-   *
-   * @return SepaBankAccount
-   */
-  public function setIban(?string $iban):SepaBankAccount
-  {
-    $this->iban = $iban;
-
-    return $this;
-  }
 
   /**
    * Get iban.
@@ -152,20 +147,6 @@ class SepaBankAccount implements \ArrayAccess
   public function getIban()
   {
     return $this->iban;
-  }
-
-  /**
-   * Set BIC.
-   *
-   * @param null|string $bic
-   *
-   * @return SepaBankAccount
-   */
-  public function setBic(?string $bic):SepaBankAccount
-  {
-    $this->bic = $bic;
-
-    return $this;
   }
 
   /**
@@ -179,20 +160,6 @@ class SepaBankAccount implements \ArrayAccess
   }
 
   /**
-   * Set blz.
-   *
-   * @param null|string $blz
-   *
-   * @return SepaBankAccount
-   */
-  public function setBlz(?string $blz):SepaBankAccount
-  {
-    $this->blz = $blz;
-
-    return $this;
-  }
-
-  /**
    * Get blz.
    *
    * @return string
@@ -200,20 +167,6 @@ class SepaBankAccount implements \ArrayAccess
   public function getBlz()
   {
     return $this->blz;
-  }
-
-  /**
-   * Set bankAccountOwner.
-   *
-   * @param null|string $bankAccountOwner
-   *
-   * @return SepaBankAccount
-   */
-  public function setBankAccountOwner(?string $bankAccountOwner):SepaBankAccount
-  {
-    $this->bankAccountOwner = $bankAccountOwner;
-
-    return $this;
   }
 
   /**
@@ -227,20 +180,6 @@ class SepaBankAccount implements \ArrayAccess
   }
 
   /**
-   * Set musician.
-   *
-   * @param Musician|null $musician
-   *
-   * @return SepaBankAccount
-   */
-  public function setMusician($musician = null):SepaBankAccount
-  {
-    $this->musician = $musician;
-
-    return $this;
-  }
-
-  /**
    * Get musician.
    *
    * @return Musician|null
@@ -248,20 +187,6 @@ class SepaBankAccount implements \ArrayAccess
   public function getMusician():?Musician
   {
     return $this->musician;
-  }
-
-  /**
-   * Set sequence.
-   *
-   * @param int $sequence
-   *
-   * @return SepaBankAccount
-   */
-  public function setSequence(?int $sequence = null):SepaBankAccount
-  {
-    $this->sequence = $sequence;
-
-    return $this;
   }
 
   /**
@@ -274,42 +199,14 @@ class SepaBankAccount implements \ArrayAccess
     return $this->sequence;
   }
 
-  // /**
-  //  * Set payments.
-  //  *
-  //  * @param int $payments
-  //  *
-  //  * @return SepaBankAccount
-  //  */
-  // public function setPayments(Collection $payments):SepaBankAccount
-  // {
-  //   $this->payments = $payments;
-
-  //   return $this;
-  // }
-
-  // /**
-  //  * Get payments.
-  //  *
-  //  * @return Collection
-  //  */
-  // public function getPayments():Collection
-  // {
-  //   return $this->payments;
-  // }
-
   /**
-   * Set sepaDebitMandates.
+   * Get payments.
    *
-   * @param Collection $sepaDebitMandates
-   *
-   * @return SepaBankAccount
+   * @return Collection
    */
-  public function setSepaDebitMandates(Collection $sepaDebitMandates):SepaBankAccount
+  public function getPayments():Collection
   {
-    $this->sepaDebitMandates = $sepaDebitMandates;
-
-    return $this;
+    return $this->payments;
   }
 
   /**
@@ -320,20 +217,6 @@ class SepaBankAccount implements \ArrayAccess
   public function getSepaDebitMandates():Collection
   {
     return $this->sepaDebitMandates;
-  }
-
-  /**
-   * Set encryptionContext.
-   *
-   * @param array $encryptionContext
-   *
-   * @return SepaBankAccount
-   */
-  public function setEncryptionContext(array $encryptionContext):SepaBankAccount
-  {
-    $this->encryptionContext = $encryptionContext;
-
-    return $this;
   }
 
   /**

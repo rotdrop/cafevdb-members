@@ -102,20 +102,6 @@ class ProjectParticipant implements \ArrayAccess
   // phpcs:enable
 
   /**
-   * Set project.
-   *
-   * @param null|Project $project
-   *
-   * @return ProjectParticipant
-   */
-  public function setProject(?Project $project):ProjectParticipant
-  {
-    $this->project = $project;
-
-    return $this;
-  }
-
-  /**
    * Get project.
    *
    * @return Project
@@ -123,20 +109,6 @@ class ProjectParticipant implements \ArrayAccess
   public function getProject():?Project
   {
     return $this->project;
-  }
-
-  /**
-   * Set musician.
-   *
-   * @param null|Musician $musician
-   *
-   * @return ProjectParticipant
-   */
-  public function setMusician(?Musician $musician):ProjectParticipant
-  {
-    $this->musician = $musician;
-
-    return $this;
   }
 
   /**
@@ -150,20 +122,6 @@ class ProjectParticipant implements \ArrayAccess
   }
 
   /**
-   * Set registration.
-   *
-   * @param bool $registration
-   *
-   * @return ProjectParticipant
-   */
-  public function setRegistration(bool $registration):ProjectParticipant
-  {
-    $this->registration = $registration;
-
-    return $this;
-  }
-
-  /**
    * Get registration.
    *
    * @return bool
@@ -171,20 +129,6 @@ class ProjectParticipant implements \ArrayAccess
   public function getRegistration()
   {
     return $this->registration;
-  }
-
-  /**
-   * Set projectInstruments.
-   *
-   * @param Collection $projectInstruments
-   *
-   * @return ProjectParticipant
-   */
-  public function setProjectInstruments(Collection $projectInstruments):ProjectParticipant
-  {
-    $this->projectInstruments = $projectInstruments;
-
-    return $this;
   }
 
   /**
@@ -198,20 +142,6 @@ class ProjectParticipant implements \ArrayAccess
   }
 
   /**
-   * Set participantFieldsData.
-   *
-   * @param Collection $participantFieldsData
-   *
-   * @return ProjectParticipant
-   */
-  public function setParticipantFieldsData(Collection $participantFieldsData):ProjectParticipant
-  {
-    $this->participantFieldsData = $participantFieldsData;
-
-    return $this;
-  }
-
-  /**
    * Get participantFieldsData.
    *
    * @return Collection
@@ -220,16 +150,6 @@ class ProjectParticipant implements \ArrayAccess
   {
     return $this->participantFieldsData;
   }
-
-  // /**
-  //  * Get participantFieldsDataChanged.
-  //  *
-  //  * @return Collection
-  //  */
-  // public function getParticipantFieldsDataChanged():?\DateTimeInterface
-  // {
-  //   return $this->participantFieldsDataChanged;
-  // }
 
   /**
    * Get one specific participant-field datum indexed by its key
@@ -245,20 +165,6 @@ class ProjectParticipant implements \ArrayAccess
   }
 
   /**
-   * Set payments.
-   *
-   * @param Collection $payments
-   *
-   * @return ProjectParticipant
-   */
-  public function setPayments(Collection $payments):ProjectParticipant
-  {
-    $this->payments = $payments;
-
-    return $this;
-  }
-
-  /**
    * Get payments.
    *
    * @return Collection
@@ -266,20 +172,6 @@ class ProjectParticipant implements \ArrayAccess
   public function getPayments():Collection
   {
     return $this->payments;
-  }
-
-  /**
-   * Set sepaBankAccount.
-   *
-   * @param null|SepaBankAccountl $sepaBankAccount
-   *
-   * @return ProjectParticipant
-   */
-  public function setSepaBankAccount(?SepaBankAccount $sepaBankAccount):ProjectParticipant
-  {
-    $this->sepaBankAccount = $sepaBankAccount;
-
-    return $this;
   }
 
   /**
@@ -293,20 +185,6 @@ class ProjectParticipant implements \ArrayAccess
   }
 
   /**
-   * Set sepaDebitMandate.
-   *
-   * @param null|SepaDebitMandate $sepaDebitMandate
-   *
-   * @return ProjectParticipant
-   */
-  public function setSepaDebitMandate(?SepaDebitMandate $sepaDebitMandate):ProjectParticipant
-  {
-    $this->sepaDebitMandate = $sepaDebitMandate;
-
-    return $this;
-  }
-
-  /**
    * Get sepaDebitMandate.
    *
    * @return SepaDebitMandate|null
@@ -315,14 +193,4 @@ class ProjectParticipant implements \ArrayAccess
   {
     return $this->sepaDebitMandate;
   }
-
-  // /**
-  //  * Return the number of "serious" items which "use" this entity. For
-  //  * project participant this is (for now) the number of payments. In
-  //  * the long run: only open payments/receivables should count.
-  //  */
-  // public function usage():int
-  // {
-  //   return $this->payments->count();
-  // }
 }

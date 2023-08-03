@@ -3,7 +3,7 @@
  * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022 Claus-Justus Heine
+ * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -74,20 +74,6 @@ class Image extends File
   private $height;
 
   /**
-   * Set $width.
-   *
-   * @param int $width
-   *
-   * @return Image
-   */
-  public function setWidth(int $width = -1):Image
-  {
-    $this->width = $width;
-
-    return $this;
-  }
-
-  /**
    * Get $width.
    *
    * @return int
@@ -95,20 +81,6 @@ class Image extends File
   public function getWidth():int
   {
     return $this->width;
-  }
-
-  /**
-   * Set $height.
-   *
-   * @param int $height
-   *
-   * @return Image
-   */
-  public function setHeight(int $height = -1):Image
-  {
-    $this->height = $height;
-
-    return $this;
   }
 
   /**

@@ -3,7 +3,7 @@
  * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022 Claus-Justus Heine
+ * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -65,34 +65,11 @@ class EncryptedFile extends File
   private $owners;
 
   // phpcs:ignore Squiz.Commenting.FunctionComment.Missing
-  public function __construct($fileName = null, $data = null, $mimeType = null, ?Musician $owner = null)
+  public function __construct()
   {
-    parent::__construct($fileName, null, $mimeType);
-    $this->owners = new ArrayCollection;
-    $data = $data ?? '';
-    $fileData = new EncryptedFileData;
-    $fileData->setData($data);
-    $this->setFileData($fileData)
-      ->setSize(strlen($data));
-    if (!empty($owner)) {
-      $this->addOwner($owner);
-    }
+    parent::__construct();
   }
   // phpcs:enable
-
-  /**
-   * Set Owners.
-   *
-   * @param Collection $owners
-   *
-   * @return EncryptedFile
-   */
-  public function setOwners(Collection $owners):EncryptedFile
-  {
-    $this->owners = $owners;
-
-    return $this;
-  }
 
   /**
    * Get Owners.
@@ -102,35 +79,5 @@ class EncryptedFile extends File
   public function getOwners():Collection
   {
     return $this->owners;
-  }
-
-  /**
-   * Add the given musician to the list of owners.
-   *
-   * @param Musician $musician
-   *
-   * @return EncryptedFile
-   */
-  public function addOwner(Musician $musician):EncryptedFile
-  {
-    $musicianId = $musician->getId();
-    if (!$this->owners->containsKey($musicianId)) {
-      $this->owners->set($musicianId, $musician);
-    }
-    return $this;
-  }
-
-  /**
-   * Remove the given musician from the list of owners
-   *
-   * @param Musician $musician
-   *
-   * @return EncryptedFile
-   */
-  public function removeOwner(Musician $musician):EncryptedFile
-  {
-    $this->owners->remove($musician->getId());
-
-    return $this;
   }
 }
