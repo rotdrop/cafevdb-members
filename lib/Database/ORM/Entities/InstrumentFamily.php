@@ -3,7 +3,7 @@
  * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022 Claus-Justus Heine
+ * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -89,20 +89,6 @@ class InstrumentFamily implements \ArrayAccess
   }
 
   /**
-   * Set family.
-   *
-   * @param string $family
-   *
-   * @return InstrumentFamily
-   */
-  public function setFamily(string $family):InstrumentFamily
-  {
-    $this->family = $family;
-
-    return $this;
-  }
-
-  /**
    * Get family.
    *
    * @return string
@@ -120,20 +106,6 @@ class InstrumentFamily implements \ArrayAccess
   public function getUntranslatedFamily():string
   {
     return $this->untranslatedFamily;
-  }
-
-  /**
-   * Set instruments.
-   *
-   * @param Collection $instruments
-   *
-   * @return InstrumentFamily
-   */
-  public function setInstruments(Collection $instruments):InstrumentFamily
-  {
-    $this->instruments = $instruments;
-
-    return $this;
   }
 
   /**

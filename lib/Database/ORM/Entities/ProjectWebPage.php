@@ -77,20 +77,6 @@ class ProjectWebPage implements \ArrayAccess
   // phpcs:enable
 
   /**
-   * Set project.
-   *
-   * @param null|Project $project
-   *
-   * @return ProjectWebPage
-   */
-  public function setProject($project):ProjectWebPage
-  {
-    $this->project = $project;
-
-    return $this;
-  }
-
-  /**
    * Get project.
    *
    * @return Project
@@ -98,20 +84,6 @@ class ProjectWebPage implements \ArrayAccess
   public function getProject():Project
   {
     return $this->project;
-  }
-
-  /**
-   * Set articleId.
-   *
-   * @param int $articleId
-   *
-   * @return ProjectWebPage
-   */
-  public function setArticleId(int $articleId):ProjectWebPage
-  {
-    $this->articleId = $articleId;
-
-    return $this;
   }
 
   /**
@@ -125,20 +97,6 @@ class ProjectWebPage implements \ArrayAccess
   }
 
   /**
-   * Set articleName.
-   *
-   * @param string $articleName
-   *
-   * @return ProjectWebPage
-   */
-  public function setArticleName(string $articleName):ProjectWebPage
-  {
-    $this->articleName = $articleName;
-
-    return $this;
-  }
-
-  /**
    * Get articleName.
    *
    * @return string
@@ -149,20 +107,6 @@ class ProjectWebPage implements \ArrayAccess
   }
 
   /**
-   * Set categoryId.
-   *
-   * @param null|int $categoryId
-   *
-   * @return ProjectWebPage
-   */
-  public function setCategoryId($categoryId):ProjectWebPage
-  {
-    $this->categoryId = $categoryId;
-
-    return $this;
-  }
-
-  /**
    * Get categoryId.
    *
    * @return int
@@ -170,20 +114,6 @@ class ProjectWebPage implements \ArrayAccess
   public function getCategoryId():int
   {
     return $this->categoryId;
-  }
-
-  /**
-   * Set priority.
-   *
-   * @param null|int $priority
-   *
-   * @return ProjectWebPages
-   */
-  public function setPriority($priority):ProjectWebPage
-  {
-    $this->priority = $priority;
-
-    return $this;
   }
 
   /**

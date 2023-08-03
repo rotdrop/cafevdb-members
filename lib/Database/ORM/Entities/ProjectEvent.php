@@ -156,20 +156,6 @@ class ProjectEvent implements \ArrayAccess
   // phpcs:enable
 
   /**
-   * Set id.
-   *
-   * @param int $id
-   *
-   * @return IdEvent
-   */
-  public function setId(int $id):ProjectEvent
-  {
-    $this->id = $id;
-
-    return $this;
-  }
-
-  /**
    * Get id.
    *
    * @return int
@@ -177,20 +163,6 @@ class ProjectEvent implements \ArrayAccess
   public function getId():int
   {
     return $this->id;
-  }
-
-  /**
-   * Set projectId.
-   *
-   * @param null|Project $project
-   *
-   * @return ProjectEvent
-   */
-  public function setProject($project):ProjectEvent
-  {
-    $this->project = $project;
-
-    return $this;
   }
 
   /**
@@ -204,20 +176,6 @@ class ProjectEvent implements \ArrayAccess
   }
 
   /**
-   * Set calendarId.
-   *
-   * @param null|int $calendarId
-   *
-   * @return ProjectEvent
-   */
-  public function setCalendarId($calendarId):ProjectEvent
-  {
-    $this->calendarId = $calendarId;
-
-    return $this;
-  }
-
-  /**
    * Get calendarId.
    *
    * @return int
@@ -225,20 +183,6 @@ class ProjectEvent implements \ArrayAccess
   public function getCalendarId()
   {
     return $this->calendarId;
-  }
-
-  /**
-   * Set calendarUri.
-   *
-   * @param string $calendarUri
-   *
-   * @return ProjectEvent
-   */
-  public function setCalendarUri(string $calendarUri):ProjectEvent
-  {
-    $this->calendarUri = $calendarUri;
-
-    return $this;
   }
 
   /**
@@ -252,20 +196,6 @@ class ProjectEvent implements \ArrayAccess
   }
 
   /**
-   * Set eventUri.
-   *
-   * @param string|null $eventUri
-   *
-   * @return ProjectEvent
-   */
-  public function setEventUri($eventUri)
-  {
-    $this->eventUri = $eventUri;
-
-    return $this;
-  }
-
-  /**
    * Get eventUri.
    *
    * @return string|null
@@ -273,20 +203,6 @@ class ProjectEvent implements \ArrayAccess
   public function getEventUri()
   {
     return $this->eventUri;
-  }
-
-  /**
-   * Set eventUid.
-   *
-   * @param string|null $eventUid
-   *
-   * @return ProjectEvent
-   */
-  public function setEventUid($eventUid):ProjectEvent
-  {
-    $this->eventUid = $eventUid;
-
-    return $this;
   }
 
   /**
@@ -300,22 +216,6 @@ class ProjectEvent implements \ArrayAccess
   }
 
   /**
-   * Set seriesUid.
-   *
-   * @param string|null $seriesUid
-   *
-   * @return ProjectEvent
-   */
-  public function setSeriesUid(mixed $seriesUid):ProjectEvent
-  {
-    $seriesUid = Uuid::asUuid($seriesUid);
-
-    $this->seriesUid = $seriesUid;
-
-    return $this;
-  }
-
-  /**
    * Get seriesUid.
    *
    * @return UuidInterface
@@ -323,20 +223,6 @@ class ProjectEvent implements \ArrayAccess
   public function getSeriesUid():?UuidInterface
   {
     return $this->seriesUid;
-  }
-
-  /**
-   * Set sequence.
-   *
-   * @param int $sequence
-   *
-   * @return ProjectEvent
-   */
-  public function setSequence(int $sequence):ProjectEvent
-  {
-    $this->sequence = $sequence;
-
-    return $this;
   }
 
   /**
@@ -350,23 +236,6 @@ class ProjectEvent implements \ArrayAccess
   }
 
   /**
-   * Set recurrenceId.
-   *
-   * @param mixed $recurrenceId
-   *
-   * @return ProjectEvent
-   */
-  public function setRecurrenceId(mixed $recurrenceId):ProjectEvent
-  {
-    if ($recurrenceId instanceof DateTimeInterface) {
-      $recurrenceId = $recurrenceId->getTimestamp();
-    }
-    $this->recurrenceId = $recurrenceId;
-
-    return $this;
-  }
-
-  /**
    * Get recurrenceId.
    *
    * @return int
@@ -377,24 +246,6 @@ class ProjectEvent implements \ArrayAccess
   }
 
   /**
-   * Set type.
-   *
-   * @param Types\EnumVCalendarType|null|string $type
-   *
-   * @return ProjectEvent
-   */
-  public function setType(mixed $type = null):ProjectEvent
-  {
-    if ($type === null) {
-      $this->type = $type;
-    } else {
-      $this->type = new Types\EnumVCalendarType($type);
-    }
-
-    return $this;
-  }
-
-  /**
    * Get type.
    *
    * @return Types\EnumVCalendarType|null
@@ -402,20 +253,6 @@ class ProjectEvent implements \ArrayAccess
   public function getType(): ?Types\EnumVCalendarType
   {
     return $this->type;
-  }
-
-  /**
-   * Set absenceField.
-   *
-   * @param null|ProjectParticipantField $absenceField
-   *
-   * @return ProjectEvent
-   */
-  public function setAbsenceField(?ProjectParticipantField $absenceField):ProjectEvent
-  {
-    $this->absenceField = $absenceField;
-
-    return $this;
   }
 
   /**

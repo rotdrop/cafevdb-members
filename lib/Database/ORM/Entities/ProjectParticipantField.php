@@ -182,25 +182,6 @@ class ProjectParticipantField implements \ArrayAccess
   // phpcs:enable
 
   /** {@inheritdoc} */
-  public function __clone()
-  {
-    if (!$this->id) {
-      return;
-    }
-    $oldDataOptions = $this->dataOptions;
-    $oldDefaultValue = $this->defaultValue;
-    $this->__construct();
-    foreach ($oldDataOptions as $oldDataOption) {
-      $dataOption = clone $oldDataOption;
-      $dataOption->setField($this);
-      $this->dataOptions->add($dataOption);
-      if ($oldDataOption == $oldDefaultValue) {
-        $this->defaultValue = $dataOption;
-      }
-    }
-  }
-
-  /** {@inheritdoc} */
   public function __wakeup()
   {
     $this->arrayCTOR();
@@ -217,34 +198,6 @@ class ProjectParticipantField implements \ArrayAccess
   }
 
   /**
-   * Set id.
-   *
-   * @param int $id
-   *
-   * @return ProjectParticipantField
-   */
-  public function setId(int $id):ProjectParticipantField
-  {
-    $this->id = $id;
-
-    return $this;
-  }
-
-  /**
-   * Set project.
-   *
-   * @param null|Project $project
-   *
-   * @return ProjectParticipantField
-   */
-  public function setProject(?Project $project):ProjectParticipantField
-  {
-    $this->project = $project;
-
-    return $this;
-  }
-
-  /**
    * Get project.
    *
    * @return Project
@@ -252,20 +205,6 @@ class ProjectParticipantField implements \ArrayAccess
   public function getProject():Project
   {
     return $this->project;
-  }
-
-  /**
-   * Set dataOption.
-   *
-   * @param Collection $dataOptions
-   *
-   * @return ProjectParticipantField
-   */
-  public function setDataOptions(Collection $dataOptions):ProjectParticipantField
-  {
-    $this->dataOptions = $dataOptions;
-
-    return $this;
   }
 
   /**
@@ -320,20 +259,6 @@ class ProjectParticipantField implements \ArrayAccess
   }
 
   /**
-   * Set fieldData.
-   *
-   * @param Collection $fieldData
-   *
-   * @return ProjectParticipantField
-   */
-  public function setFieldData(Collection $fieldData):ProjectParticipantField
-  {
-    $this->fieldData = $fieldData;
-
-    return $this;
-  }
-
-  /**
    * Get fieldData.
    *
    * @return Collection
@@ -354,20 +279,6 @@ class ProjectParticipantField implements \ArrayAccess
   }
 
   /**
-   * Set displayOrder.
-   *
-   * @param int|null $displayOrder
-   *
-   * @return ProjectParticipantField
-   */
-  public function setDisplayOrder($displayOrder):ProjectParticipantField
-  {
-    $this->displayOrder = $displayOrder;
-
-    return $this;
-  }
-
-  /**
    * Get displayOrder.
    *
    * @return int|null
@@ -375,22 +286,6 @@ class ProjectParticipantField implements \ArrayAccess
   public function getDisplayOrder()
   {
     return $this->displayOrder;
-  }
-
-  /**
-   * Set name.
-   *
-   * @param null|string $name
-   *
-   * @return ProjectParticipantField
-   */
-  public function setName(?string $name):ProjectParticipantField
-  {
-    $this->name = $name;
-    if ($this->getLocale() == ConfigService::DEFAULT_LOCALE) {
-      $this->untranslatedName = $this->name;
-    }
-    return $this;
   }
 
   /**
@@ -404,19 +299,6 @@ class ProjectParticipantField implements \ArrayAccess
   }
 
   /**
-   * Set untranslatedName.
-   *
-   * @param null|string $untranslatedName
-   *
-   * @return ProjectParticipantField
-   */
-  public function setUntranslatedName(?string $untranslatedName):ProjectParticipantField
-  {
-    throw new Exceptions\DatabaseReadonlyException('The property "untranslatedName" cannot be set, it is read-only.');
-    return $this;
-  }
-
-  /**
    * Get untranslatedName.
    *
    * @return string
@@ -424,20 +306,6 @@ class ProjectParticipantField implements \ArrayAccess
   public function getUntranslatedName()
   {
     return $this->untranslatedName;
-  }
-
-  /**
-   * Set multiplicity.
-   *
-   * @param EnumParticipantFieldMultiplicity|string $multiplicity
-   *
-   * @return ProjectParticipantField
-   */
-  public function setMultiplicity($multiplicity):ProjectParticipantField
-  {
-    $this->multiplicity = new Types\EnumParticipantFieldMultiplicity($multiplicity);
-
-    return $this;
   }
 
   /**
@@ -451,19 +319,6 @@ class ProjectParticipantField implements \ArrayAccess
   }
 
   /**
-   * Set dataType.
-   *
-   * @param EnumParticipantFieldDataType|string $dataType
-   *
-   * @return ProjectParticipantField
-   */
-  public function setDataType($dataType):ProjectParticipantField
-  {
-    $this->dataType = new Types\EnumParticipantFieldDataType($dataType);
-    return $this;
-  }
-
-  /**
    * Get dataType.
    *
    * @return EnumParticipantFieldDataType
@@ -471,19 +326,6 @@ class ProjectParticipantField implements \ArrayAccess
   public function getDataType():Types\EnumParticipantFieldDataType
   {
     return $this->dataType;
-  }
-
-  /**
-   * Set dueDate.
-   *
-   * @param string|null|\DateTimeInterface $dueDate
-   *
-   * @return ProjectParticipantField
-   */
-  public function setDueDate($dueDate):ProjectParticipantField
-  {
-    $this->dueDate = self::convertToDateTime($dueDate);
-    return $this;
   }
 
   /**
@@ -497,19 +339,6 @@ class ProjectParticipantField implements \ArrayAccess
   }
 
   /**
-   * Set depositDueDate.
-   *
-   * @param string|null|\DateTimeInterface $depositDueDate
-   *
-   * @return ProjectParticipantField
-   */
-  public function setDepositDueDate($depositDueDate):ProjectParticipantField
-  {
-    $this->depositDueDate = self::convertToDateTime($depositDueDate);
-    return $this;
-  }
-
-  /**
    * Get depositDueDate.
    *
    * @return \DateTimeImmutable|null
@@ -517,20 +346,6 @@ class ProjectParticipantField implements \ArrayAccess
   public function getDepositDueDate():?\DateTimeImmutable
   {
     return $this->depositDueDate;
-  }
-
-  /**
-   * Set defaultValue.
-   *
-   * @param null|ProjectParticipantFieldDataOption $defaultValue
-   *
-   * @return ProjectParticipantField
-   */
-  public function setDefaultValue($defaultValue):ProjectParticipantField
-  {
-    $this->defaultValue = $defaultValue;
-
-    return $this;
   }
 
   /**
@@ -544,20 +359,6 @@ class ProjectParticipantField implements \ArrayAccess
   }
 
   /**
-   * Set tooltip.
-   *
-   * @param null|string $tooltip
-   *
-   * @return ProjectParticipantField
-   */
-  public function setTooltip(?string $tooltip):ProjectParticipantField
-  {
-    $this->tooltip = $tooltip;
-
-    return $this;
-  }
-
-  /**
    * Get tooltip.
    *
    * @return string
@@ -565,20 +366,6 @@ class ProjectParticipantField implements \ArrayAccess
   public function getTooltip()
   {
     return $this->tooltip;
-  }
-
-  /**
-   * Set tab.
-   *
-   * @param null|string $tab
-   *
-   * @return ProjectParticipantField
-   */
-  public function setTab(?string $tab):ProjectParticipantField
-  {
-    $this->tab = $tab;
-
-    return $this;
   }
 
   /**
@@ -592,19 +379,6 @@ class ProjectParticipantField implements \ArrayAccess
   }
 
   /**
-   * Set untranslatedTab.
-   *
-   * @param null|string $untranslatedTab
-   *
-   * @return ProjectParticipantField
-   */
-  public function setUntranslatedTab(?string $untranslatedTab):ProjectParticipantField
-  {
-    throw new Exceptions\DatabaseReadonlyException('The property "untranslatedTab" cannot be set, it is read-only.');
-    return $this;
-  }
-
-  /**
    * Get untranslatedTab.
    *
    * @return string
@@ -615,20 +389,6 @@ class ProjectParticipantField implements \ArrayAccess
   }
 
   /**
-   * Set encrypted.
-   *
-   * @param bool|null $encrypted
-   *
-   * @return ProjectParticipantField
-   */
-  public function setEncrypted($encrypted):ProjectParticipantField
-  {
-    $this->encrypted = $encrypted;
-
-    return $this;
-  }
-
-  /**
    * Get encrypted.
    *
    * @return bool|null
@@ -636,53 +396,5 @@ class ProjectParticipantField implements \ArrayAccess
   public function getEncrypted()
   {
     return $this->encrypted;
-  }
-
-  /**
-   * Set readers.
-   *
-   * @param string|null $readers
-   *
-   * @return ProjectParticipantField
-   */
-  public function setReaders($readers):ProjectParticipantField
-  {
-    $this->readers = $readers;
-
-    return $this;
-  }
-
-  /**
-   * Get readers.
-   *
-   * @return string|null
-   */
-  public function getReaders()
-  {
-    return $this->readers;
-  }
-
-  /**
-   * Set writers.
-   *
-   * @param string|null $writers
-   *
-   * @return ProjectParticipantField
-   */
-  public function setWriters($writers):ProjectParticipantField
-  {
-    $this->writers = $writers;
-
-    return $this;
-  }
-
-  /**
-   * Get writers.
-   *
-   * @return string|null
-   */
-  public function getWriters()
-  {
-    return $this->writers;
   }
 }

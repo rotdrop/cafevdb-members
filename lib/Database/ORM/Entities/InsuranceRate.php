@@ -92,20 +92,6 @@ class InsuranceRate implements \ArrayAccess
   // phpcs:enable
 
   /**
-   * Set broker.
-   *
-   * @param null|string $broker
-   *
-   * @return InsuranceRate
-   */
-  public function setBroker(?string $broker):InsuranceRate
-  {
-    $this->broker = $broker;
-
-    return $this;
-  }
-
-  /**
    * Get broker.
    *
    * @return string
@@ -113,20 +99,6 @@ class InsuranceRate implements \ArrayAccess
   public function getBroker():InsuranceBroker
   {
     return $this->broker;
-  }
-
-  /**
-   * Set geographicalScope.
-   *
-   * @param string|Types\EnumGeographicalScope $geographicalScope
-   *
-   * @return InsuranceRate
-   */
-  public function setGeographicalScope($geographicalScope):InsuranceRate
-  {
-    $this->geographicalScope = new Types\EnumGeographicalScope($geographicalScope);
-
-    return $this;
   }
 
   /**
@@ -140,20 +112,6 @@ class InsuranceRate implements \ArrayAccess
   }
 
   /**
-   * Set rate.
-   *
-   * @param float $rate
-   *
-   * @return InsuranceRate
-   */
-  public function setRate(float $rate):InsuranceRate
-  {
-    $this->rate = $rate;
-
-    return $this;
-  }
-
-  /**
    * Get rate.
    *
    * @return float
@@ -161,19 +119,6 @@ class InsuranceRate implements \ArrayAccess
   public function getRate():float
   {
     return $this->rate;
-  }
-
-  /**
-   * Set dueDate.
-   *
-   * @param string|\DateTimeInterface $dueDate
-   *
-   * @return InsuranceRate
-   */
-  public function setDueDate($dueDate):InsuranceRate
-  {
-    $this->dueDate = self::convertToDateTime($dueDate);
-    return $this;
   }
 
   /**
@@ -187,20 +132,6 @@ class InsuranceRate implements \ArrayAccess
   }
 
   /**
-   * Set policyNumber.
-   *
-   * @param string $policyNumber
-   *
-   * @return InsuranceRate
-   */
-  public function setPolicyNumber(?string $policyNumber):InsuranceRate
-  {
-    $this->policyNumber = $policyNumber;
-
-    return $this;
-  }
-
-  /**
    * Get policyNumber.
    *
    * @return string
@@ -208,20 +139,6 @@ class InsuranceRate implements \ArrayAccess
   public function getPolicyNumber():?string
   {
     return $this->policyNumber;
-  }
-
-  /**
-   * Set instrumentInsurances.
-   *
-   * @param ArrayCollection $instrumentInsurances
-   *
-   * @return InsuranceBroker
-   */
-  public function setInstrumentInsurances(Collection $instrumentInsurances):InsuranceRate
-  {
-    $this->instrumentInsurances = $instrumentInsurances;
-
-    return $this;
   }
 
   /**

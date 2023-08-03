@@ -108,20 +108,6 @@ class Instrument implements \ArrayAccess
   }
 
   /**
-   * Set name.
-   *
-   * @param string $name
-   *
-   * @return Instrument
-   */
-  public function setName(string $name):Instrument
-  {
-    $this->name = $name;
-
-    return $this;
-  }
-
-  /**
    * Get name.
    *
    * @return string
@@ -142,20 +128,6 @@ class Instrument implements \ArrayAccess
   }
 
   /**
-   * Set familie.
-   *
-   * @param Collection $families
-   *
-   * @return Instrument
-   */
-  public function setFamilies(Collection $families):Instrument
-  {
-    $this->families = $families;
-
-    return $this;
-  }
-
-  /**
    * Get families.
    *
    * @return Collection
@@ -166,20 +138,6 @@ class Instrument implements \ArrayAccess
   }
 
   /**
-   * Set sortOrder.
-   *
-   * @param int $sortOrder
-   *
-   * @return Instrument
-   */
-  public function setSortOrder(int $sortOrder):Instrument
-  {
-    $this->sortOrder = $sortOrder;
-
-    return $this;
-  }
-
-  /**
    * Get sortOrder.
    *
    * @return int
@@ -187,20 +145,6 @@ class Instrument implements \ArrayAccess
   public function getSortOrder():int
   {
     return $this->sortOrder;
-  }
-
-  /**
-   * Set musicianInstruments.
-   *
-   * @param Collection $musicianInstruments
-   *
-   * @return Instrument
-   */
-  public function setMusicianInstruments(Collection $musicianInstruments):Instrument
-  {
-    $this->musicianInstruments = $musicianInstruments;
-
-    return $this;
   }
 
   /**

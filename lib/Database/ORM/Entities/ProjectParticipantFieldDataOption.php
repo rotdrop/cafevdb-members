@@ -160,20 +160,6 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   }
 
   /**
-   * Set field.
-   *
-   * @param null|ProjectParticipantField $field
-   *
-   * @return ProjectParticipantFieldDataOption
-   */
-  public function setField(?ProjectParticipantField $field):ProjectParticipantFieldDataOption
-  {
-    $this->field = $field;
-
-    return $this;
-  }
-
-  /**
    * Get field.
    *
    * @return ProjectParticipantField
@@ -181,24 +167,6 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   public function getField():ProjectParticipantField
   {
     return $this->field;
-  }
-
-  /**
-   * Set key.
-   *
-   * @param mixed $key
-   *
-   * @return ProjectParticipantFieldDataOption
-   */
-  public function setKey(mixed $key):ProjectParticipantFieldDataOption
-  {
-    $key = Uuid::asUuid($key);
-    if (empty($key)) {
-      throw new Exception("UUID DATA: ".$key);
-    }
-    $this->key = $key;
-
-    return $this;
   }
 
   /**
@@ -212,22 +180,6 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   }
 
   /**
-   * Set label.
-   *
-   * @param null|string $label
-   *
-   * @return ProjectParticipantFieldDataOption
-   */
-  public function setLabel(?string $label):ProjectParticipantFieldDataOption
-  {
-    $this->label = $label;
-    if ($this->getLocale() == ConfigService::DEFAULT_LOCALE) {
-      $this->untranslatedLabel = $this->label;
-    }
-    return $this;
-  }
-
-  /**
    * Get label.
    *
    * @return string|null
@@ -235,19 +187,6 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   public function getLabel():?string
   {
     return $this->label;
-  }
-
-  /**
-   * Set untranslatedLabel.
-   *
-   * @param null|string $untranslatedLabel
-   *
-   * @return ProjectParticipantFieldDataOption
-   */
-  public function setUntranslatedLabel(?string $untranslatedLabel):ProjectParticipantFieldDataOption
-  {
-    throw new Exceptions\DatabaseReadonlyException('The property "untranslatedLabel" cannot be set, it is read-only.');
-    return $this;
   }
 
   /**
@@ -261,20 +200,6 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   }
 
   /**
-   * Set data.
-   *
-   * @param null|string $data
-   *
-   * @return ProjectParticipantFieldDataOption
-   */
-  public function setData(?string $data):ProjectParticipantFieldDataOption
-  {
-    $this->data = $data;
-
-    return $this;
-  }
-
-  /**
    * Get data.
    *
    * @return null|string
@@ -282,20 +207,6 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   public function getData():?string
   {
     return $this->data;
-  }
-
-  /**
-   * Set deposit.
-   *
-   * @param null|float $deposit
-   *
-   * @return ProjectParticipantFieldDatum
-   */
-  public function setDeposit(?float $deposit):ProjectParticipantFieldDataOption
-  {
-    $this->deposit = $deposit;
-
-    return $this;
   }
 
   /**
@@ -309,20 +220,6 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   }
 
   /**
-   * Set tooltip.
-   *
-   * @param string|null $tooltip
-   *
-   * @return ProjectParticipantFieldDataOption
-   */
-  public function setTooltip(?string $tooltip):ProjectParticipantFieldDataOption
-  {
-    $this->tooltip = $tooltip;
-
-    return $this;
-  }
-
-  /**
    * Get tooltip.
    *
    * @return string
@@ -330,20 +227,6 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   public function getTooltip():?string
   {
     return $this->tooltip;
-  }
-
-  /**
-   * Set limit.
-   *
-   * @param null|int $limit
-   *
-   * @return ProjectParticipantFieldDataOption
-   */
-  public function setLimit(?int $limit):ProjectParticipantFieldDataOption
-  {
-    $this->limit = $limit;
-
-    return $this;
   }
 
   /**
@@ -357,20 +240,6 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   }
 
   /**
-   * Set fieldData.
-   *
-   * @param Collection $fieldData
-   *
-   * @return ProjectParticipantFieldDataOption
-   */
-  public function setFieldData(Collection $fieldData):ProjectParticipantFieldDataOption
-  {
-    $this->fieldData = $fieldData;
-
-    return $this;
-  }
-
-  /**
    * Get fieldData.
    *
    * @return Collection
@@ -378,20 +247,6 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   public function getFieldData():Collection
   {
     return $this->fieldData;
-  }
-
-  /**
-   * Set payments.
-   *
-   * @param Collection $payments
-   *
-   * @return ProjectParticipantPaymentsOption
-   */
-  public function setPayments(Collection $payments):ProjectParticipantFieldDataOption
-  {
-    $this->payments = $payments;
-
-    return $this;
   }
 
   /**

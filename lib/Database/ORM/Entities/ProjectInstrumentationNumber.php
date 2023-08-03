@@ -83,20 +83,6 @@ class ProjectInstrumentationNumber implements \ArrayAccess
   // phpcs:enable
 
   /**
-   * Set instrument.
-   *
-   * @param null|Instrument $instrument
-   *
-   * @return ProjectInstrumentationNumber
-   */
-  public function setInstrument($instrument):ProjectInstrumentationNumber
-  {
-    $this->instrument = $instrument;
-
-    return $this;
-  }
-
-  /**
    * Get instrument.
    *
    * @return Instrument
@@ -104,20 +90,6 @@ class ProjectInstrumentationNumber implements \ArrayAccess
   public function getInstrument():Instrument
   {
     return $this->instrument;
-  }
-
-  /**
-   * Set project.
-   *
-   * @param null|Project $project
-   *
-   * @return ProjectInstrumentationNumber
-   */
-  public function setProject($project)
-  {
-    $this->project = $project;
-
-    return $this;
   }
 
   /**
@@ -131,20 +103,6 @@ class ProjectInstrumentationNumber implements \ArrayAccess
   }
 
   /**
-   * Set voice.
-   *
-   * @param int $voice
-   *
-   * @return ProjectInstrumentationNumber
-   */
-  public function setVoice(int $voice):ProjectInstrumentationNumber
-  {
-    $this->voice = $voice;
-
-    return $this;
-  }
-
-  /**
    * Get voice.
    *
    * @return int
@@ -155,20 +113,6 @@ class ProjectInstrumentationNumber implements \ArrayAccess
   }
 
   /**
-   * Set quantity
-   *
-   * @param int $quantity
-   *
-   * @return ProjectInstrumentationNumber
-   */
-  public function setQuantity(int $quantity):ProjectInstrumentationNumber
-  {
-    $this->quantity = $quantity;
-
-    return $this;
-  }
-
-  /**
    * Get quantity.
    *
    * @return int
@@ -176,20 +120,6 @@ class ProjectInstrumentationNumber implements \ArrayAccess
   public function getQuantity():int
   {
     return $this->quantity;
-  }
-
-  /**
-   * Set instruments
-   *
-   * @param Collection $instruments
-   *
-   * @return ProjectInstrumentationNumber
-   */
-  public function setInstruments(Collection $instruments):ProjectInstrumentationNumber
-  {
-    $this->instruments = $instruments;
-
-    return $this;
   }
 
   /**
