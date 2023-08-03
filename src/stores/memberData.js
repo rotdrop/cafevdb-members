@@ -50,7 +50,8 @@ export const useMemberDataStore = defineStore('member-data', {
       selectedInstruments: [],
       instruments: [],
       sepaBankAccounts: [],
-      instrumentInsurances: {
+      instrumentInsurances: [],
+      insuranceDetails: {
         self: [],
         forOthers: [],
         byOthers: [],
