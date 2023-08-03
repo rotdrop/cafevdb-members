@@ -63,14 +63,14 @@
           </ul>
         </template>
       </ListItem>
-      <ListItem v-if="memberData.instrumentInsurances.forOthers.length > 0"
+      <ListItem v-if="memberData.insuranceDetails.forOthers.length > 0"
                 :title="t(appId, 'Paid for Others')"
                 :details="t(appId, 'instrument used by someone else')"
                 :bold="true"
       >
         <template #subtitle>
           <ul class="insurance-list for-others">
-            <ListItem v-for="insurance in memberData.instrumentInsurances.forOthers"
+            <ListItem v-for="insurance in memberData.insuranceDetails.forOthers"
                       :key="insurance.id"
                       :title="insurance.object"
                       class="insurance-item"
@@ -89,14 +89,14 @@
           </ul>
         </template>
       </ListItem>
-      <ListItem v-if="memberData.instrumentInsurances.byOthers.length > 0"
+      <ListItem v-if="memberData.insuranceDetails.byOthers.length > 0"
                 :title="t(appId, 'Paid by Others')"
                 :details="t(appId, 'instrument owned or used by me')"
                 :bold="true"
       >
         <template #subtitle>
           <ul class="insurance-list by-others">
-            <ListItem v-for="insurance in memberData.instrumentInsurances.byOthers"
+            <ListItem v-for="insurance in memberData.insuranceDetails.byOthers"
                       :key="insurance.id"
                       :title="insurance.object"
                       class="insurance-item"
@@ -115,14 +115,14 @@
           </ul>
         </template>
       </ListItem>
-      <ListItem v-if="memberData.instrumentInsurances.self.length > 0"
+      <ListItem v-if="memberData.insuranceDetails.self.length > 0"
                 :title="haveOthers ? t(appId, 'Self Used and Paid') : t(appId, 'Insured Instruments')"
                 :details="haveOthers ? t(appId, 'instrument owned or used by me') : ''"
                 :bold="true"
       >
         <template #subtitle>
           <ul class="insurance-list self">
-            <ListItem v-for="insurance in memberData.instrumentInsurances.self"
+            <ListItem v-for="insurance in memberData.insuranceDetails.self"
                       :key="insurance.id"
                       :title="insurance.object"
                       class="insurance-item"
@@ -208,7 +208,7 @@ export default {
   },
   computed: {
     insuranceBills() {
-      return this.memberData.instrumentInsurances.receivables.filter(x => x.supportingDocumentId)
+      return this.memberData.insuranceDetails.receivables.filter(x => x.supportingDocumentId)
     },
   },
   async created() {
@@ -230,10 +230,10 @@ export default {
           insurancesByOthers.push(insurance)
         }
       }
-      vueSet(this.memberData, 'instrumentInsurances', {})
-      vueSet(this.memberData.instrumentInsurances, 'forOthers', insurancesForOthers)
-      vueSet(this.memberData.instrumentInsurances, 'byOthers', insurancesByOthers)
-      vueSet(this.memberData.instrumentInsurances, 'self', ownInsurances)
+      vueSet(this.memberData, 'insuranceDetails', {})
+      vueSet(this.memberData.insuranceDetails, 'forOthers', insurancesForOthers)
+      vueSet(this.memberData.insuranceDetails, 'byOthers', insurancesByOthers)
+      vueSet(this.memberData.insuranceDetails, 'self', ownInsurances)
 
       const insuranceReceivables = [];
       for (const participant of this.memberData.projectParticipation) {
@@ -253,7 +253,7 @@ export default {
       }
       insuranceReceivables.sort((left, right) => - parseInt(left.dataOption.data) + parseInt(right.dataOption.data))
 
-      vueSet(this.memberData.instrumentInsurances, 'receivables', insuranceReceivables)
+      vueSet(this.memberData.insuranceDetails, 'receivables', insuranceReceivables)
 
       this.memberData.initialized[viewName] = true;
     }
@@ -261,9 +261,9 @@ export default {
     if (this.memberData.initialized[viewName]) {
 
       this.totalInsuredValue = 0.0;
-      for (const insurance of this.memberData.instrumentInsurances.self.concat(
-        this.memberData.instrumentInsurances.forOthers,
-        this.memberData.instrumentInsurances.byOthers
+      for (const insurance of this.memberData.insuranceDetails.self.concat(
+        this.memberData.insuranceDetails.forOthers,
+        this.memberData.insuranceDetails.byOthers
       )) {
         insurance.showDetails = false
         if (insurance.deleted) {
@@ -277,9 +277,9 @@ export default {
         }
       }
       this.haveOthers = (
-        this.memberData.instrumentInsurances.byOthers.length
+        this.memberData.insuranceDetails.byOthers.length
         +
-        this.memberData.instrumentInsurances.forOthers.length
+        this.memberData.insuranceDetails.forOthers.length
       ) > 0
     }
 
