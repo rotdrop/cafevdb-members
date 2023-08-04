@@ -66,14 +66,16 @@
     <AppContent :class="{ 'icon-loading': loading }">
       <router-view v-show="!loading" :loading.sync="loading" />
       <EmptyContent v-if="isRoot" class="emp-content">
-        <div v-if="activeProject">
-          {{ t(appId, '{orchestraName} project registration for {projectName}', { orchestraName, projectName }) }}
-        </div>
-        <div v-else>
-          {{ t(appId, '{orchestraName} project registration', { orchestraName }) }}
-        </div>
         <template #icon>
           <img :src="icon">
+        </template>
+        <template #title>
+          <div v-if="activeProject">
+            {{ t(appId, '{orchestraName} project registration for {projectName}', { orchestraName, projectName }) }}
+          </div>
+          <div v-else>
+            {{ t(appId, '{orchestraName} project registration', { orchestraName }) }}
+          </div>
         </template>
         <template #description>
           <div v-if="activeProject"
