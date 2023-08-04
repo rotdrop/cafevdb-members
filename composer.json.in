@@ -11,8 +11,8 @@
   ],
   "require": {
     "acelaya/doctrine-enum-type": "^2.5",
-    "doctrine/orm": "^2.10.0",
-    "gedmo/doctrine-extensions": "3.9.x-dev",
+    "doctrine/orm": "^2.14.0",
+    "gedmo/doctrine-extensions": "3.12.x-dev",
     "mediamonks/doctrine-extensions": "0.1.x-dev",
     "myclabs/php-enum": "^1.8",
     "nesbot/carbon": "^2.46",
