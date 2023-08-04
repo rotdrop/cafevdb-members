@@ -23,30 +23,30 @@ const prefix = '/registration'
 
 const routes = [
   {
-    path: prefix + '/:projectName',
+    path: prefix + '/:projectName?',
     name: 'registrationHome',
     props: true,
   },
   {
-    path: prefix + '/:projectName/personal-profile',
+    path: prefix + '/:projectName?/personal-profile',
     component: () => import('../views/Registration/PersonalProfile.vue'),
     name: 'registrationPersonalProfile',
     props: true,
   },
   {
-    path: prefix + '/:projectName/participation',
+    path: prefix + '/:projectName?/participation',
     component: () => import('../views/Registration/Participation.vue'),
     name: 'registrationParticipation',
     props: true,
   },
   {
-    path: prefix + '/:projectName/project-options',
+    path: prefix + '/:projectName?/project-options',
     component: () => import('../views/Registration/ProjectOptions.vue'),
     name: 'registrationProjectOptions',
     props: true,
   },
   {
-    path: prefix + '/:projectName/submission',
+    path: prefix + '/:projectName?/submission',
     component: () => import('../views/Registration/Submission.vue'),
     name: 'registrationSubmission',
     props: true,

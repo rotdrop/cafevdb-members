@@ -61,6 +61,14 @@ export default {
     info() {
       console.info('INFO', arguments)
     },
+    routerDestination(routeName) {
+      // The Vue-Rouer can handle optional parameters, but seemingly not empty parameters
+      const params = this.projectName ? { projectName: this.projectName } : {}
+      return { name: routeName, params }
+    },
+    routerGoHome() {
+      this.$router.replace(this.routerDestination('registrationHome'))
+    },
   },
   computed: {
     routePath() {
@@ -78,7 +86,7 @@ export default {
       'debug',
     ]),
     projectName() {
-      return this.activeProject ? this.activeProject.name : null
+      return this.activeProject ? this.activeProject.name : ''
     },
     projectInstruments() {
       if (!this.activeProject) {

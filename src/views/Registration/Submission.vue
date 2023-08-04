@@ -78,6 +78,10 @@ export default {
     }
   },
   async created() {
+    if (!this.activeProject) {
+      this.routerGoHome()
+      return
+    }
     await this.initializeRegistrationData()
     this.readonly = false
     this.loading = false
