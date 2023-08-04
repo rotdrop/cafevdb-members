@@ -33,6 +33,8 @@ const base = generateUrl('/apps/' + appName)
 
 const routes = getCurrentUser() ? [...appRoutes, ...registrationRoutes] : registrationRoutes
 
+console.info('ROUTES', routes)
+
 const router = new Router({
   mode: 'history',
   base,

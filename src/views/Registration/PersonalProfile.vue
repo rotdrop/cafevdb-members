@@ -240,6 +240,10 @@ export default {
     }
   },
   async created() {
+    if (!this.activeProject) {
+      this.routerGoHome()
+      return
+    }
     await this.initializeRegistrationData()
     this.registrationCountry = this.countries.find(country => country.code === this.registrationData.country)
     this.readonly = false

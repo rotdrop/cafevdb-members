@@ -25,30 +25,30 @@
   <Content :class="{ 'icon-loading': loading, 'root-view': true }" :app-name="appId">
     <AppNavigation>
       <template #list>
-        <AppNavigationItem :to="{ name: 'registrationHome', params: { projectName } }"
+        <AppNavigationItem :to="routerDestination('registrationHome')"
                            :title="isPublicPage ? t(appId, 'Home') : t(appId, 'Start Registration')"
                            icon="icon-home"
                            exact
         />
-        <AppNavigationItem :to="{ name: 'registrationPersonalProfile', params: { projectName } }"
+        <AppNavigationItem :to="routerDestination('registrationPersonalProfile')"
                            :title="t(appId, 'Personal Profile')"
                            icon="icon-user"
                            :class="{ disabled: !activeProject }"
                            exact
         />
-        <AppNavigationItem :to="{ name: 'registrationParticipation', params: { projectName } }"
+        <AppNavigationItem :to="routerDestination('registrationParticipation')"
                            :title="t(appId, 'Instrumentation and Events')"
                            icon="icon-music"
                            :class="{ disabled: !activeProject }"
                            exact
         />
-        <AppNavigationItem :to="{ name: 'registrationProjectOptions', params: { projectName } }"
+        <AppNavigationItem :to="routerDestination('registrationProjectOptions')"
                            :title="t(appId, 'Options')"
                            icon="icon-details"
                            :class="{ disabled: !activeProject }"
                            exact
         />
-        <AppNavigationItem :to="{ name: 'registrationSubmission', params: { projectName } }"
+        <AppNavigationItem :to="routerDestination('registrationSubmission')"
                            :title="t(appId, 'Summary and Submission')"
                            icon="icon-checkmark"
                            :class="{ disabled: !activeProject }"
@@ -89,7 +89,7 @@
               />
             </Actions>
             <span v-if="projects.length > 1" class="start-button-junctor">{{ t(appId, 'or') }}</span>
-            <RouterButton :to="{ name: 'registrationPersonalProfile', params: { projectName } }"
+            <RouterButton :to="{ name: 'registrationPersonalProfile', params: projectName ? { projectName } : {} }"
                           exact
                           icon="icon-confirm"
                           icon-position="right"
@@ -226,7 +226,7 @@ span {
   }
 }
 
-.app-navigation-entry.disabled::v-deep {
+.app-navigation-entry-wrapper.balhdisabled::v-deep {
   opacity: 0.5;
   &, & * {
     cursor: default !important;
