@@ -165,7 +165,6 @@ endif
 $(WEBPACK_TARGETS): $(WEBPACK_DEPS) $(BUILD_FLAVOUR_FILE)
 	make webpack-clean
 	$(NPM) run $(shell cat $(BUILD_FLAVOUR_FILE)) || rm -f $(WEBPACK_TARGETS)
-	$(NPM) run lint
 
 #@private
 npm-dev: build-flavour-dev $(WEBPACK_TARGETS)
