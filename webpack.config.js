@@ -32,7 +32,7 @@ webpackConfig.plugins.push(new DeadCodePlugin({
     'style/**/*.scss',
   ],
   exclude: [
-    'src/toolkit/**/(settings-sync|ajax|dialogs|jquery|on-document-loaded|pangram|print-r|file-download).js',
+    'src/toolkit/**/(settings-sync|ajax|dialogs|jquery|on-document-loaded|pangram|print-r|file-download|generate-url).js',
   ],
 }))
 
