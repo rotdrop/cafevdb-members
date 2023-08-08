@@ -275,11 +275,16 @@ class Project implements \ArrayAccess
   /**
    * Get calendarEvents.
    *
+   * @param bool $includeDeleted
+   *
    * @return Collection
    */
-  public function getCalendarEvents():Collection
+  public function getCalendarEvents(bool $includeDeleted = false):Collection
   {
-    return $this->calendarEvents;
+    if ($includeDeleted) {
+      return $this->calendarEvents;
+    }
+    return $this->calendarEvents->filter(fn(ProjectEvent $event) => $event->getDeleted() === null);
   }
 
   /**
