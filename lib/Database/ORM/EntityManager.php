@@ -243,7 +243,7 @@ class EntityManager extends EntityManagerDecorator
     $softDeletableListener = new SoftDeleteableListener();
     $softDeletableListener->setAnnotationReader($cachedAnnotationReader);
     $eventManager->addEventSubscriber($softDeletableListener);
-    $config->addFilter('soft-deleteable', \Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter::class);
+    $config->addFilter(self::SOFT_DELETEABLE_FILTER, \Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter::class);
 
     // encryption
     $transformerPool = new Transformable\Transformer\TransformerPool();
