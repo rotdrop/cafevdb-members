@@ -202,17 +202,52 @@ class ProjectRegistrationController extends Controller
         switch ($participantField->getDataType()) {
         }
         $flatData = $participantField->toArray();
+        $flatData['project'] = $project->getId();
         // needed:
         // - options
         // - default value
         // - absence field if there
-        $flatData['dataOpions'] = [];
+        $flatData['dataOptions'] = [];
         /** @var Entities\ProjectParticipantFieldDataOption $option */
         foreach ($participantField->getDataOptions() as $option) {
           $flatOption = $option->toArray();
-          $flatData['dataOpions'][] = $flatOption;
+          $flatOption['field'] = $participantField->getId();
+          $flatOption['fieldData'] = [];
+          /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
+          foreach ($option->getFieldData() as $fieldDatum) {
+            $flatOption['fieldData'][] = [
+              'field' => $participantField->getId(),
+              'project' => $project->getId(),
+              'musician' => $fieldDatum->getMusician()->getId(),
+              'optionKey' => $fieldDatum->getOptionKey(),
+            ];
+          }
+          $flatData['dataOptions'][] = $flatOption;
         }
+        $flatData['fieldData'] = [];
+        /** @var Entities\ProjectParticipantFieldDatum $datum */
+        foreach ($participantField->getFieldData() as $datum) {
+          $flatDatum = $datum->toArray();
+          $flatDatum['field'] = $participantField->getId();
+          $flatDatum['project'] = $project->getId();
+          $flatDatum['musician'] = $datum->getMusician()->getId();
+          $flatData['fieldData'][] = $flatDatum;
+        }
+        unset($flatData['payments']);
         $flatParticipantFields[] = $flatData;
+      }
+
+      $calendarEvents = $project->getCalendarEvents();
+      $flatCalendarEvents = [];
+      /** @var Entities\ProjectEvent $projectEvent */
+      foreach ($calendarEvents as $projectEvent) {
+        $flatData = $projectEvent->toArray();
+        unset($flatData['project']);
+        $flatData['project'] = $project->getId();
+        $absenceField = $projectEvent->getAbsenceField();
+        $flatData['absenceField'] = $absenceField ? $absenceField->getId() : -1;
+        $flatData['calendarObject'] = $this->getProjectCalendarEvent($projectEvent);
+        $flatCalendarEvents[] = $flatData;
       }
 
       $projectsList[] = [
@@ -223,6 +258,7 @@ class ProjectRegistrationController extends Controller
         'deadline' => $deadline,
         'instrumentation' => $flatInstrumentationNumbers,
         'participantFields' => $flatParticipantFields,
+        'projectEvents' => $flatCalendarEvents,
       ];
     }
 
@@ -301,6 +337,34 @@ class ProjectRegistrationController extends Controller
   }
 
   /**
+   * Fetch the CalDAV event for the given project event.
+   */
+  private function getProjectCalendarEvent(Entities\ProjectEvent $projectEvent):?array
+  {
+    $shareOwner = $this->cloudConfig->getAppValue(Constants::CAFEVDB_APP_ID, ConfigService::SHAREOWNER_KEY);
+    if (empty($shareOwner)) {
+      return null;
+    }
+
+    $principalUri = 'principals/users/' . $shareOwner;
+
+    $calendarUri = $projectEvent->getCalendarUri();
+    $calendars = $this->calendarManager->getCalendarsForPrincipal($principalUri, [ $calendarUri ]);
+    if (count($calendars) != 1) {
+      return null;
+    }
+    /** @var ICalendar $calendar */
+    $calendar = reset($calendars);
+    $calendarObjects = $calendar->search('', [], [ 'uid' => $projectEvent->getEventUid() ]);
+
+    if (count($calendarObjects) != 1) {
+      return null;
+    }
+
+    return $calendarObjects[0];
+  }
+
+  /**
    * @param Entities\Project $project
    *
    * @return null|DateTimeInterface
@@ -316,6 +380,7 @@ class ProjectRegistrationController extends Controller
     if (empty($shareOwner)) {
       return null;
     }
+
     $principalUri = 'principals/users/' . $shareOwner;
     $projectCategory = $project->getName();
     $query = $this->calendarManager->newQuery($principalUri);
