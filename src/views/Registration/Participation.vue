@@ -30,6 +30,23 @@
       {{ t(appId, 'Please configure the instrument or the role you intend to play in this project. Please also inform us about rehearsals or even concerts that you cannot participate in.') }}
     </h3>
     <div class="input-row">
+      <InputText v-model="registrationData.selectedInstruments"
+                 type="multiselect"
+                 :label="t(appId, 'All my Instruments or Roles')"
+                 :options="instruments"
+                 group-values="instruments"
+                 group-label="family"
+                 track-by="id"
+                 option-label="name"
+                 :auto-limit="true"
+                 :tag-width="100"
+                 :readonly="readonly"
+                 :multiple="true"
+                 :placeholder="t(appId, 'e.g. double bass')"
+                 :required="true"
+      />
+    </div>
+    <div class="input-row">
       <InputText v-model="registrationData.project[activeProject.id].instruments"
                  type="multiselect"
                  :label="t(appId, 'Project Instruments or Roles')"
