@@ -22,6 +22,10 @@
 
 namespace OCA\CAFeVDBMembers\Service;
 
+use Sabre\VObject;
+
+use OCP\Cache\CappedMemoryCache;
+
 use OCA\DAV\CalDAV\CalDavBackend;
 
 /**
@@ -36,11 +40,15 @@ class CalDavService
   /** @var CalDavBackend */
   private $calDavBackend;
 
+  /** @var CappedMemoryCache */
+  private $calendarObjectCache;
+
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     CalDavBackend $calDavBackend,
   ) {
     $this->calDavBackend = $calDavBackend;
+    $this->calendarObjectCache = new CappedMemoryCache;
   }
   // phpcs:enable
 
@@ -64,11 +72,10 @@ class CalDavService
    *
    * @param int $calendarId
    *
-   * @param string $objectIdentifier Either the URI or the UID of the
-   * object. If $objectIdentifier ends with '.ics' it is assumed to be an URI,
-   * otherwise the UID.
+   * @param string $localUri The local URI of the event.
    *
-   * @return array|null
+   * @return array|null The returned 'calendardata' array member is already a
+   * Sabre VObject.
    *
    * @bug This function uses internal APIs. This could be changed to a
    * CalDav call which would then only return the serialized data,
@@ -77,10 +84,60 @@ class CalDavService
    */
   public function getCalendarObject(int $calendarId, string $localUri):?array
   {
-    $result = $this->calDavBackend->getCalendarObject($calendarId, $localUri);
+    $result = $this->getFromCache($calendarId, $localUri);
+
     if (!empty($result)) {
-      $result['calendarid'] = $calendarId;
+      return $result;
+    }
+
+    $result = $this->calDavBackend->getCalendarObject($calendarId, $localUri);
+
+    if ($result) {
+      $result['calendardata'] = VObject\Reader::read($result['calendardata']);
+      $this->addToCache($result);
     }
     return $result;
+  }
+  /**
+   * Generate the cache key for the calendar object cache
+   *
+   * @param int $calendarId
+   *
+   * @param string $localUri
+   *
+   * @return string
+   */
+  private static function objectCacheKey(int $calendarId, string $localUri):string
+  {
+    return $calendarId . ':' . $localUri;
+  }
+
+  /**
+   * Adds the given calendar data to the cache
+   *
+   * @param array $calendarObject
+   *
+   * @return void
+   */
+  private function addToCache(array $calendarObject):void
+  {
+    $calendarId = $calendarObject['calendarid'];
+    $localUri = $calendarObject['uri'];
+
+    $this->calendarObjectCache->set(self::objectCacheKey($calendarId, $localUri), $calendarObject);
+  }
+
+  /**
+   * Fetch an object from the calendar object cache.
+   *
+   * @param int $calendarId
+   *
+   * @param string $localUri
+   *
+   * @return null|array
+   */
+  private function getFromCache(int $calendarId, string $localUri):?array
+  {
+    return $this->calendarObjectCache->get(self::objectCacheKey($calendarId, $localUri));
   }
 }

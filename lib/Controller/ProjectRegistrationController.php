@@ -24,6 +24,7 @@ namespace OCA\CAFeVDBMembers\Controller;
 
 use DateTimeImmutable;
 use DateTimeInterface;
+use DateTime;
 
 use Psr\Log\LoggerInterface;
 
@@ -49,6 +50,7 @@ use OCA\CAFeVDBMembers\Database\DBAL\Types\EnumParticipantFieldDataType as Field
 use OCA\CAFeVDBMembers\Database\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFeVDBMembers\Database\ORM\EntityManager;
 use OCA\CAFeVDBMembers\Database\ORM\Entities;
+use OCA\CAFeVDBMembers\Service\EventsService;
 
 /** AJAX endpoints for a project registration form. */
 class ProjectRegistrationController extends Controller
@@ -81,6 +83,9 @@ class ProjectRegistrationController extends Controller
   /** @var EntityManager */
   private $entityManager;
 
+  /** @var EventsService */
+  private $eventsService;
+
   // phpcs:ignore Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     string $appName,
@@ -94,6 +99,7 @@ class ProjectRegistrationController extends Controller
     IURLGenerator $urlGenerator,
     IInitialState $initialState,
     EntityManager $entityManager,
+    EventsService $eventsService,
   ) {
     parent::__construct($appName, $request);
     $this->userSession = $userSession;
@@ -105,6 +111,7 @@ class ProjectRegistrationController extends Controller
     $this->urlGenerator = $urlGenerator;
     $this->initialState = $initialState;
     $this->entityManager = $entityManager;
+    $this->eventsService = $eventsService;
   }
   // phpcs:enable
 
@@ -234,7 +241,7 @@ class ProjectRegistrationController extends Controller
           $flatData['fieldData'][] = $flatDatum;
         }
         unset($flatData['payments']);
-        $flatParticipantFields[] = $flatData;
+        $flatParticipantFields[$participantField->getId()] = $flatData;
       }
 
       $calendarEvents = $project->getCalendarEvents();
@@ -246,7 +253,17 @@ class ProjectRegistrationController extends Controller
         $flatData['project'] = $project->getId();
         $absenceField = $projectEvent->getAbsenceField();
         $flatData['absenceField'] = $absenceField ? $absenceField->getId() : -1;
-        $flatData['calendarObject'] = $this->getProjectCalendarEvent($projectEvent);
+        $eventData = $this->eventsService->getEventData($projectEvent);
+        if ($eventData['allday']) {
+          $eventData['start'] = $eventData['start']->format('Y-m-d');
+          $eventData['end'] = $eventData['end']->format('Y-m-d');
+        } else {
+          $eventData['start'] = $eventData['start']->format(DateTime::W3C);
+          $eventData['end'] = $eventData['end']->format(DateTime::W3C);
+        }
+        unset($eventData['sibling']);
+        unset($eventData['calendardata']);
+        $flatData['calendarObject'] = $eventData;
         $flatCalendarEvents[] = $flatData;
       }
 
@@ -254,8 +271,8 @@ class ProjectRegistrationController extends Controller
         'id' => $project->getId(),
         'name' => $project->getName(),
         'year' => $project->getYear(),
-        'startDate' => $startDate,
-        'deadline' => $deadline,
+        'startDate' => $startDate->format('Y-m-d'),
+        'deadline' => $deadline->format('Y-m-d'),
         'instrumentation' => $flatInstrumentationNumbers,
         'participantFields' => $flatParticipantFields,
         'projectEvents' => $flatCalendarEvents,
@@ -334,34 +351,6 @@ class ProjectRegistrationController extends Controller
     ]);
 
     return $response;
-  }
-
-  /**
-   * Fetch the CalDAV event for the given project event.
-   */
-  private function getProjectCalendarEvent(Entities\ProjectEvent $projectEvent):?array
-  {
-    $shareOwner = $this->cloudConfig->getAppValue(Constants::CAFEVDB_APP_ID, ConfigService::SHAREOWNER_KEY);
-    if (empty($shareOwner)) {
-      return null;
-    }
-
-    $principalUri = 'principals/users/' . $shareOwner;
-
-    $calendarUri = $projectEvent->getCalendarUri();
-    $calendars = $this->calendarManager->getCalendarsForPrincipal($principalUri, [ $calendarUri ]);
-    if (count($calendars) != 1) {
-      return null;
-    }
-    /** @var ICalendar $calendar */
-    $calendar = reset($calendars);
-    $calendarObjects = $calendar->search('', [], [ 'uid' => $projectEvent->getEventUid() ]);
-
-    if (count($calendarObjects) != 1) {
-      return null;
-    }
-
-    return $calendarObjects[0];
   }
 
   /**

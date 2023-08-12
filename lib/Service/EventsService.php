@@ -96,6 +96,13 @@ class EventsService
   /** @var CalDavService */
   private $calDavService;
 
+  /**
+   * @var array Cache the siblings of recurring events by calendar-id,
+   * event-uid, sequence, recurrence-id. This cache contains calendar VEvent
+   * instances.
+   */
+  private $eventSiblings;
+
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     ?string $appName,
@@ -423,8 +430,10 @@ class EventsService
       $this->logDebug('Orphan project event found: ' . print_r($event, true) . (new Exception())->getTraceAsString());
       return null;
     }
+
     /** @var VCalendar $vCalendar */
-    $vCalendar = VObject\Reader::read($calendarObject['calendardata']);
+    $vCalendar = $calendarObject['calendardata'];
+
     // /** @var VEvent $sibling */
     $siblings = $this->getVEventSiblings($event['calendarid'], $vCalendar);
     $vEvent = $siblings[$event['recurrenceId']] ?? null;
@@ -432,6 +441,7 @@ class EventsService
       $this->logError('Unable to find the event-sibling for uri ' . $event['uri'] . ' and recurrence-id ' . $event['recurrenceId'] . ' ' . print_r(array_keys($siblings), true));
       return null;
     }
+    $event['sibling'] = $vEvent;
     $this->fillEventDataFromVObject($vEvent, $event);
 
     $vObject = self::getVObject($vCalendar);

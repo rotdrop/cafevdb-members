@@ -24,10 +24,10 @@
 <template>
   <div :class="{ 'icon-loading': loading, 'page-container': true, loading, 'participation-view': true, }">
     <h2>
-      {{ t(appId, 'Instrumentation, Rehearsals and Concerts') }}
+      {{ t(appId, 'Instrumentation, Rehearsals and Concerts for "{name}"', activeProject) }}
     </h2>
     <h3>
-      {{ t(appId, 'Please configure the instrument or the role you intend to play in this project. Please also inform us about rehearsals or even concerts that you cannot participate in.') }}
+      {{ t(appId, 'Please configure the instrument or the role you intend to play in this project.') }}
     </h3>
     <div class="input-row">
       <InputText v-model="registrationData.selectedInstruments"
@@ -64,6 +64,65 @@
     <div v-if="personalProjectInstrumentOptions.length === 0">
       {{ t(appId, 'You do not seem to play any instrument configured for the project: {instruments}.', { instruments: projectInstrumentsText }) }}
     </div>
+    <div class="event-list">
+      <h3>
+        {{ t(appId, 'Timetable') }}
+      </h3>
+      <CheckboxRadioSwitch :checked.sync="noAbsence">
+        {{ t(appId, 'I will participate in all events and not miss a single one!') }}
+      </CheckboxRadioSwitch>
+      <div v-if="!noAbsence"
+           class="absence-instructions"
+      >
+        {{ t(appId, 'Please open the dots menu for each particular event you cannot participate in, toggle the contained checkbox and give a short explanation!') }}
+      </div>
+      <div v-if="!noAbsence"
+           class="absence-instructions"
+      >
+        {{ t(appId, 'Please understand that applications of people without or with less absence are preferred.') }}
+      </div>
+      <ul class="event-list">
+        <ListItem v-for="event in activeProject.projectEvents"
+                  :key="event.id"
+                  :title="calendarDateTime(event.calendarObject)"
+                  :details="event.calendarObject.summary"
+                  :force-display-actions="true"
+                  class="calendar-event"
+        >
+          <template v-if="event.calendarObject.location" #subtitle>
+            {{ event.calendarObject.location }}
+          </template>
+          <template v-if="absence[event.id]" #indicator>
+            <AbsenceIndicator :size="24" fill-color="#ff0000" />
+          </template>
+          <template v-if="!noAbsence && event.absenceField > 0" #actions>
+            <ActionCheckbox value="absent"
+                            :checked="absence[event.id]"
+                            @check="absence[event.id] = true"
+                            @uncheck="absence[event.id] = false"
+            >
+              {{ t(appId, 'I cannot participate') }}
+            </ActionCheckbox>
+            <ActionTextEditable v-if="absence[event.id]"
+                                ref="absenceReason"
+                                :value="absenceReasons[event.id]"
+                                :name="t(appId, '... because ...')"
+                                required
+                                @submit="absenceReasons[event.id] = $event.target.getElementsByTagName('textarea')[0].value"
+            >
+              <template #icon>
+                <Pencil :size="20" />
+              </template>
+            </ActionTextEditable>
+          </template>
+          <template #extra>
+            <div class="event-description">
+              {{ event.calendarObject.description }}
+            </div>
+          </template>
+        </ListItem>
+      </ul>
+    </div>
     <div class="navigation flex flex-row flex-justify-full">
       <RouterButton :to="{ name: 'registrationPersonalProfile', params: { projectName } }"
                     exact
@@ -83,6 +142,9 @@
   </div>
 </template>
 <script>
+import Vue from 'vue'
+import Pencil from 'vue-material-design-icons/Pencil.vue'
+import AbsenceIndicator from 'vue-material-design-icons/AlertOctagon'
 import { appName } from '../../config.js'
 import InputText from '../../components/InputText'
 import DebugInfo from '../../components/DebugInfo'
@@ -90,6 +152,10 @@ import RouterButton from '../../components/RouterButton'
 
 import { set as vueSet } from 'vue'
 import CheckboxRadioSwitch from '@nextcloud/vue/dist/Components/NcCheckboxRadioSwitch'
+import ActionCheckbox from '@nextcloud/vue/dist/Components/NcActionCheckbox'
+import ActionTextEditable from '@nextcloud/vue/dist/Components/NcActionTextEditable'
+import Highlight from '@nextcloud/vue/dist/Components/NcHighlight'
+import ListItem from '@nextcloud/vue/dist/Components/NcListItem'
 
 import mixinRegistrationData from '../../mixins/registationData.js'
 import { useMemberDataStore } from '../../stores/memberData.js'
@@ -97,9 +163,15 @@ import { useMemberDataStore } from '../../stores/memberData.js'
 export default {
   name: 'Participation',
   components: {
+    AbsenceIndicator,
+    ActionCheckbox,
+    ActionTextEditable,
     CheckboxRadioSwitch,
     DebugInfo,
+    Highlight,
     InputText,
+    ListItem,
+    Pencil,
     RouterButton,
   },
   setup() {
@@ -113,6 +185,10 @@ export default {
     return {
       loading: true,
       readonly: true,
+      // @todo This should go to the result set in order to be remembered when applicants switch projects
+      noAbsence: true,
+      absence: {},
+      absenceReasons: {},
     }
   },
   async created() {
@@ -123,10 +199,61 @@ export default {
     await this.initializeRegistrationData()
     this.readonly = false
     this.loading = false
+    this.absence = {}
+    this.absenceReasons = {}
+    for (const event of this.activeProject.projectEvents) {
+      Vue.set(this.absence, event.id, false)
+      Vue.set(this.absenceReasons, event.id, null)
+    }
   },
   computed: {},
   watch: {},
-  methods: {},
+  methods: {
+    info() {
+      console.info(...arguments)
+    },
+    calendarDateTime(calendarEvent) {
+      if (calendarEvent.allday) {
+        const end = new Date(calendarEvent.end)
+        // end dates of whole day event always point to midnight of the day AFTER the event
+        end.setDate(end.getDate() - 1)
+        if (end <= calendarEvent.start) {
+          return this.localeDate(calendarEvent.start)
+        } else {
+          return this.localeDate(calendarEvent.start) + ' - ' + this.localeDate(end)
+        }
+      } else {
+        const startDate = this.localeDate(calendarEvent.start)
+        const endDate = this.localeDate(calendarEvent.end)
+        const startTime = this.localeTime(calendarEvent.start)
+        const endTime = this.localeTime(calendarEvent.end)
+        if (startDate === endDate) {
+          return startDate + ', ' + startTime + ' - ' + endTime
+        } else {
+          return startDate + ', ' + startTime + ' - ' + endDate + ', ' + endTime
+        }
+      }
+    },
+    localeDateTime(dateTime) {
+      const options = {
+        timeStyle: 'short',
+        dateStyle: 'medium',
+      }
+      return dateTime.toLocaleString(undefined, options)
+    },
+    localeTime(dateTime) {
+      const options = {
+        timeStyle: 'short',
+      }
+      return dateTime.toLocaleTimeString(undefined, options)
+    },
+    localeDate(dateTime) {
+      const options = {
+        dateStyle: 'medium',
+      }
+      return dateTime.toLocaleDateString(undefined, options)
+    },
+  },
 }
 </script>
 <style lang="scss" scoped>
@@ -174,5 +301,14 @@ export default {
   ::v-deep .input-effect {
     margin-bottom:0;
   }
+}
+
+.WIP {
+  color:red;
+  font-weight:bold;
+}
+
+.event-description {
+  padding-left: 1ex;
 }
 </style>

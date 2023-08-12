@@ -35,7 +35,7 @@ const initialState = getInitialState()
 // of course, total over-kill ... just playing around
 export const useAppDataStore = defineStore('app-data', {
   state: () => {
-    // convert the flat array of instruments to grouped options vor Vue Multiselect
+    // convert the flat array of instruments to grouped options for Vue Multiselect
     const groupedInstruments = {}
     for (const instrument of instruments) {
       const familyTag = instrument.families.map(family => family.family).join(', ')
@@ -48,6 +48,16 @@ export const useAppDataStore = defineStore('app-data', {
     if (activeProject === null && projects) {
       activeProject = 0
     }
+
+    for (const project of projects) {
+      for (const event of project.projectEvents) {
+        event.calendarObject.start = new Date(event.calendarObject.start)
+        event.calendarObject.end = new Date(event.calendarObject.end)
+      }
+      project.projectEvents.sort((a, b) => a.calendarObject.start.getTime() - b.calendarObject.start.getTime())
+    }
+
+    console.info('PROJECTS', projects)
 
     return {
       orchestraName: initialState?.orchestraName || t(this.appId, '[UNKNOWN]'),
