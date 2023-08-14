@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nextcloud 3.14159\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2023-08-12 17:09+0200\n"
+"POT-Creation-Date: 2023-08-14 13:52+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -59,7 +59,7 @@ msgstr ""
 msgid "Access to the member-data is not authorized: %s"
 msgstr ""
 
-#: lib/Controller/ProjectRegistrationController.php:299
+#: lib/Controller/ProjectRegistrationController.php:292
 #, php-format
 msgid "Project Application for %s"
 msgstr ""
@@ -145,7 +145,7 @@ msgstr ""
 
 #. TRANSLATORS src/views/Projects/ProjectDetails.vue:84
 #: lib/Service/ProjectGroupService.php:154
-#: specialVueFakeDummyForL10nScript.js:282
+#: specialVueFakeDummyForL10nScript.js:286
 msgid "projects"
 msgstr ""
 
@@ -268,17 +268,17 @@ msgstr ""
 msgid "Expose a member's data record for the respective member"
 msgstr ""
 
-#. TRANSLATORS tdocs/nextcloud-git-27/apps/cafevdbmembers/3rdparty/rotdrop-nextcloud-vue-components/lib/components/FilePrefixPicker.vue:93
+#. TRANSLATORS extcloud-git-27/apps/cafevdbmembers/3rdparty/rotdrop-nextcloud-vue-components/lib/components/FilePrefixPicker.vue:93
 #: specialVueFakeDummyForL10nScript.js:2
 msgid "Choose a prefix-folder"
 msgstr ""
 
-#. TRANSLATORS tdocs/nextcloud-git-27/apps/cafevdbmembers/3rdparty/rotdrop-nextcloud-vue-components/lib/components/FilePrefixPicker.vue:140
+#. TRANSLATORS extcloud-git-27/apps/cafevdbmembers/3rdparty/rotdrop-nextcloud-vue-components/lib/components/FilePrefixPicker.vue:140
 #: specialVueFakeDummyForL10nScript.js:4
 msgid "Invalid path selected: \"{dir}\"."
 msgstr ""
 
-#. TRANSLATORS tdocs/nextcloud-git-27/apps/cafevdbmembers/3rdparty/rotdrop-nextcloud-vue-components/lib/components/FilePrefixPicker.vue:146
+#. TRANSLATORS extcloud-git-27/apps/cafevdbmembers/3rdparty/rotdrop-nextcloud-vue-components/lib/components/FilePrefixPicker.vue:146
 #: specialVueFakeDummyForL10nScript.js:6
 msgid "Selected path: \"{dir}/{base}/\"."
 msgstr ""
@@ -346,7 +346,7 @@ msgstr ""
 #: specialVueFakeDummyForL10nScript.js:32
 #: specialVueFakeDummyForL10nScript.js:40
 #: specialVueFakeDummyForL10nScript.js:78
-#: specialVueFakeDummyForL10nScript.js:288
+#: specialVueFakeDummyForL10nScript.js:292
 msgid "reason unknown"
 msgstr ""
 
@@ -395,7 +395,7 @@ msgstr ""
 #. TRANSLATORS src/views/Registration/PersonalProfile.vue:30
 #: specialVueFakeDummyForL10nScript.js:50
 #: specialVueFakeDummyForL10nScript.js:90
-#: specialVueFakeDummyForL10nScript.js:324
+#: specialVueFakeDummyForL10nScript.js:328
 #: src/router/app-routes.js:36
 msgid "Personal Profile"
 msgstr ""
@@ -423,7 +423,7 @@ msgstr ""
 #. TRANSLATORS src/components/DebugInfo.vue:28
 #: specialVueFakeDummyForL10nScript.js:58
 #: specialVueFakeDummyForL10nScript.js:98
-#: specialVueFakeDummyForL10nScript.js:116
+#: specialVueFakeDummyForL10nScript.js:120
 msgid "Enable Debug"
 msgstr ""
 
@@ -455,10 +455,10 @@ msgstr ""
 #. TRANSLATORS src/views/Projects.vue:40
 #: specialVueFakeDummyForL10nScript.js:68
 #: specialVueFakeDummyForL10nScript.js:70
-#: specialVueFakeDummyForL10nScript.js:196
-#: specialVueFakeDummyForL10nScript.js:202
-#: specialVueFakeDummyForL10nScript.js:208
-#: specialVueFakeDummyForL10nScript.js:286
+#: specialVueFakeDummyForL10nScript.js:200
+#: specialVueFakeDummyForL10nScript.js:206
+#: specialVueFakeDummyForL10nScript.js:212
+#: specialVueFakeDummyForL10nScript.js:290
 msgid "details"
 msgstr ""
 
@@ -516,8 +516,8 @@ msgstr ""
 #. TRANSLATORS src/views/Registration/ProjectOptions.vue:42
 #. TRANSLATORS src/views/Registration/Submission.vue:27
 #: specialVueFakeDummyForL10nScript.js:96
-#: specialVueFakeDummyForL10nScript.js:398
-#: specialVueFakeDummyForL10nScript.js:400
+#: specialVueFakeDummyForL10nScript.js:402
+#: specialVueFakeDummyForL10nScript.js:404
 msgid "Summary and Submission"
 msgstr ""
 
@@ -538,471 +538,477 @@ msgstr ""
 
 #. TRANSLATORS src/ProjectRegistration.vue:93
 #: specialVueFakeDummyForL10nScript.js:106
+#: specialVueFakeDummyForL10nScript.js:110
 msgid "or"
 msgstr ""
 
 #. TRANSLATORS src/ProjectRegistration.vue:99
 #: specialVueFakeDummyForL10nScript.js:108
-msgid "start"
+msgid "register"
 msgstr ""
 
-#. TRANSLATORS src/ProjectRegistration.vue:103
-#: specialVueFakeDummyForL10nScript.js:110
+#. TRANSLATORS src/ProjectRegistration.vue:108
+#: specialVueFakeDummyForL10nScript.js:112
+msgid "login and register"
+msgstr ""
+
+#. TRANSLATORS src/ProjectRegistration.vue:112
+#: specialVueFakeDummyForL10nScript.js:114
 msgid "The project registration for all projects is closed."
 msgstr ""
 
-#. TRANSLATORS src/ProjectRegistration.vue:211
-#: specialVueFakeDummyForL10nScript.js:112
+#. TRANSLATORS src/ProjectRegistration.vue:220
+#: specialVueFakeDummyForL10nScript.js:116
 msgid "Project Application for {projectName}"
 msgstr ""
 
-#. TRANSLATORS src/ProjectRegistration.vue:212
-#: specialVueFakeDummyForL10nScript.js:114
+#. TRANSLATORS src/ProjectRegistration.vue:221
+#: specialVueFakeDummyForL10nScript.js:118
 msgid "Project Application"
 msgstr ""
 
 #. TRANSLATORS src/components/DebugInfo.vue:31
-#: specialVueFakeDummyForL10nScript.js:118
+#: specialVueFakeDummyForL10nScript.js:122
 msgid "DEBUG: all data"
 msgstr ""
 
 #. TRANSLATORS src/views/BankAccounts.vue:27
-#: specialVueFakeDummyForL10nScript.js:120
+#: specialVueFakeDummyForL10nScript.js:124
 msgid "Bank Accounts of {publicName} ({count})"
 msgstr ""
 
 #. TRANSLATORS src/views/BankAccounts.vue:30
 #. TRANSLATORS src/views/InstrumentInsurances.vue:28
-#: specialVueFakeDummyForL10nScript.js:122
-#: specialVueFakeDummyForL10nScript.js:178
+#: specialVueFakeDummyForL10nScript.js:126
+#: specialVueFakeDummyForL10nScript.js:182
 msgid "show deleted"
 msgstr ""
 
 #. TRANSLATORS src/views/BankAccounts.vue:37
-#: specialVueFakeDummyForL10nScript.js:124
+#: specialVueFakeDummyForL10nScript.js:128
 msgid "IBAN"
 msgstr ""
 
 #. TRANSLATORS src/views/BankAccounts.vue:43
-#: specialVueFakeDummyForL10nScript.js:126
+#: specialVueFakeDummyForL10nScript.js:130
 msgid "BIC"
 msgstr ""
 
 #. TRANSLATORS src/views/BankAccounts.vue:44
-#: specialVueFakeDummyForL10nScript.js:128
+#: specialVueFakeDummyForL10nScript.js:132
 msgid "account holder"
 msgstr ""
 
 #. TRANSLATORS src/views/BankAccounts.vue:45
-#: specialVueFakeDummyForL10nScript.js:130
+#: specialVueFakeDummyForL10nScript.js:134
 msgid "registered"
 msgstr ""
 
 #. TRANSLATORS src/views/BankAccounts.vue:46
-#: specialVueFakeDummyForL10nScript.js:132
-#: specialVueFakeDummyForL10nScript.js:144
+#: specialVueFakeDummyForL10nScript.js:136
+#: specialVueFakeDummyForL10nScript.js:148
 msgid "modified"
 msgstr ""
 
 #. TRANSLATORS src/views/BankAccounts.vue:47
-#: specialVueFakeDummyForL10nScript.js:134
-#: specialVueFakeDummyForL10nScript.js:146
+#: specialVueFakeDummyForL10nScript.js:138
+#: specialVueFakeDummyForL10nScript.js:150
 msgid "revoked"
 msgstr ""
 
 #. TRANSLATORS src/views/BankAccounts.vue:49
-#: specialVueFakeDummyForL10nScript.js:136
+#: specialVueFakeDummyForL10nScript.js:140
 msgid "Debit Mandates ({count})"
 msgstr ""
 
 #. TRANSLATORS src/views/BankAccounts.vue:57
-#: specialVueFakeDummyForL10nScript.js:138
+#: specialVueFakeDummyForL10nScript.js:142
 msgid "reference"
 msgstr ""
 
 #. TRANSLATORS src/views/BankAccounts.vue:62
-#: specialVueFakeDummyForL10nScript.js:140
+#: specialVueFakeDummyForL10nScript.js:144
 msgid "granted"
 msgstr ""
 
 #. TRANSLATORS src/views/BankAccounts.vue:63
-#: specialVueFakeDummyForL10nScript.js:142
+#: specialVueFakeDummyForL10nScript.js:146
 msgid "last used"
 msgstr ""
 
 #. TRANSLATORS src/views/InstrumentInsurances/InsuranceDetails.vue:26
-#: specialVueFakeDummyForL10nScript.js:148
+#: specialVueFakeDummyForL10nScript.js:152
 msgid "manufacturer"
 msgstr ""
 
 #. TRANSLATORS src/views/InstrumentInsurances/InsuranceDetails.vue:27
-#: specialVueFakeDummyForL10nScript.js:150
+#: specialVueFakeDummyForL10nScript.js:154
 msgid "manufacturered"
 msgstr ""
 
 #. TRANSLATORS src/views/InstrumentInsurances/InsuranceDetails.vue:28
-#: specialVueFakeDummyForL10nScript.js:152
+#: specialVueFakeDummyForL10nScript.js:156
 msgid "insurance broker"
 msgstr ""
 
 #. TRANSLATORS src/views/InstrumentInsurances/InsuranceDetails.vue:29
-#: specialVueFakeDummyForL10nScript.js:154
+#: specialVueFakeDummyForL10nScript.js:158
 msgid "insurance start"
 msgstr ""
 
 #. TRANSLATORS src/views/InstrumentInsurances/InsuranceDetails.vue:30
-#: specialVueFakeDummyForL10nScript.js:156
+#: specialVueFakeDummyForL10nScript.js:160
 msgid "geographical scope"
 msgstr ""
 
 #. TRANSLATORS src/views/InstrumentInsurances/InsuranceDetails.vue:31
-#: specialVueFakeDummyForL10nScript.js:158
+#: specialVueFakeDummyForL10nScript.js:162
 msgid "insurance rate"
 msgstr ""
 
 #. TRANSLATORS src/views/InstrumentInsurances/InsuranceDetails.vue:32
-#: specialVueFakeDummyForL10nScript.js:160
+#: specialVueFakeDummyForL10nScript.js:164
 msgid "value"
 msgstr ""
 
 #. TRANSLATORS src/views/InstrumentInsurances/InsuranceDetails.vue:33
-#: specialVueFakeDummyForL10nScript.js:162
+#: specialVueFakeDummyForL10nScript.js:166
 msgid "insurance fee"
 msgstr ""
 
 #. TRANSLATORS src/views/InstrumentInsurances/InsuranceDetails.vue:34
-#: specialVueFakeDummyForL10nScript.js:164
+#: specialVueFakeDummyForL10nScript.js:168
 msgid "due date"
 msgstr ""
 
 #. TRANSLATORS src/views/InstrumentInsurances/InsuranceDetails.vue:35
-#: specialVueFakeDummyForL10nScript.js:166
+#: specialVueFakeDummyForL10nScript.js:170
 msgid "my role"
 msgstr ""
 
 #. TRANSLATORS src/views/InstrumentInsurances/InsuranceDetails.vue:56
-#: specialVueFakeDummyForL10nScript.js:168
+#: specialVueFakeDummyForL10nScript.js:172
 msgid "debitor"
 msgstr ""
 
 #. TRANSLATORS src/views/InstrumentInsurances/InsuranceDetails.vue:58
-#: specialVueFakeDummyForL10nScript.js:170
 #: specialVueFakeDummyForL10nScript.js:174
+#: specialVueFakeDummyForL10nScript.js:178
 msgid "owner"
 msgstr ""
 
 #. TRANSLATORS src/views/InstrumentInsurances/InsuranceDetails.vue:59
-#: specialVueFakeDummyForL10nScript.js:172
+#: specialVueFakeDummyForL10nScript.js:176
 msgid "holder"
 msgstr ""
 
 #. TRANSLATORS src/views/InstrumentInsurances.vue:26
-#: specialVueFakeDummyForL10nScript.js:176
+#: specialVueFakeDummyForL10nScript.js:180
 msgid "Instrument Insurances of {publicName}"
 msgstr ""
 
 #. TRANSLATORS src/views/InstrumentInsurances.vue:31
-#: specialVueFakeDummyForL10nScript.js:180
+#: specialVueFakeDummyForL10nScript.js:184
 msgid "Summary"
 msgstr ""
 
 #. TRANSLATORS src/views/InstrumentInsurances.vue:37
-#: specialVueFakeDummyForL10nScript.js:182
+#: specialVueFakeDummyForL10nScript.js:186
 msgid "Total Insured Value"
 msgstr ""
 
 #. TRANSLATORS src/views/InstrumentInsurances.vue:41
-#: specialVueFakeDummyForL10nScript.js:184
+#: specialVueFakeDummyForL10nScript.js:188
 msgid "Total Payable Value"
 msgstr ""
 
 #. TRANSLATORS src/views/InstrumentInsurances.vue:44
-#: specialVueFakeDummyForL10nScript.js:186
+#: specialVueFakeDummyForL10nScript.js:190
 msgid "Yearly Insurance fees w/o taxes"
 msgstr ""
 
 #. TRANSLATORS src/views/InstrumentInsurances.vue:47
-#: specialVueFakeDummyForL10nScript.js:188
+#: specialVueFakeDummyForL10nScript.js:192
 msgid "Yearly Insurance fees with {taxes}% taxes"
 msgstr ""
 
 #. TRANSLATORS src/views/InstrumentInsurances.vue:50
-#: specialVueFakeDummyForL10nScript.js:190
+#: specialVueFakeDummyForL10nScript.js:194
 msgid "Yearly Insurance Bills"
 msgstr ""
 
 #. TRANSLATORS src/views/InstrumentInsurances.vue:67
-#: specialVueFakeDummyForL10nScript.js:192
+#: specialVueFakeDummyForL10nScript.js:196
 msgid "Paid for Others"
 msgstr ""
 
 #. TRANSLATORS src/views/InstrumentInsurances.vue:68
-#: specialVueFakeDummyForL10nScript.js:194
+#: specialVueFakeDummyForL10nScript.js:198
 msgid "instrument used by someone else"
 msgstr ""
 
 #. TRANSLATORS src/views/InstrumentInsurances.vue:93
-#: specialVueFakeDummyForL10nScript.js:198
+#: specialVueFakeDummyForL10nScript.js:202
 msgid "Paid by Others"
 msgstr ""
 
 #. TRANSLATORS src/views/InstrumentInsurances.vue:94
 #. TRANSLATORS src/views/InstrumentInsurances.vue:120
-#: specialVueFakeDummyForL10nScript.js:200
-#: specialVueFakeDummyForL10nScript.js:206
+#: specialVueFakeDummyForL10nScript.js:204
+#: specialVueFakeDummyForL10nScript.js:210
 msgid "instrument owned or used by me"
 msgstr ""
 
 #. TRANSLATORS src/views/InstrumentInsurances.vue:119
-#: specialVueFakeDummyForL10nScript.js:204
+#: specialVueFakeDummyForL10nScript.js:208
 msgid "Self Used and Paid"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:204
+#: specialVueFakeDummyForL10nScript.js:208
 msgid "Insured Instruments"
 msgstr ""
 
 #. TRANSLATORS src/views/InstrumentInsurances.vue:245
-#: specialVueFakeDummyForL10nScript.js:210
-#: specialVueFakeDummyForL10nScript.js:212
+#: specialVueFakeDummyForL10nScript.js:214
+#: specialVueFakeDummyForL10nScript.js:216
 msgid "Instrument Insurance"
 msgstr ""
 
 #. TRANSLATORS src/views/InstrumentInsurances.vue:295
-#: specialVueFakeDummyForL10nScript.js:214
+#: specialVueFakeDummyForL10nScript.js:218
 msgid "{insuredObject} ({insuredValue} {currencySymbol})"
 msgstr ""
 
 #. TRANSLATORS src/views/PersonalProfile.vue:26
 #. TRANSLATORS src/views/Registration/PersonalProfile.vue:27
-#: specialVueFakeDummyForL10nScript.js:216
-#: specialVueFakeDummyForL10nScript.js:322
+#: specialVueFakeDummyForL10nScript.js:220
+#: specialVueFakeDummyForL10nScript.js:326
 msgid "Personal Profile of {publicName}"
 msgstr ""
 
 #. TRANSLATORS src/views/PersonalProfile.vue:29
 #. TRANSLATORS src/views/Registration/PersonalProfile.vue:34
-#: specialVueFakeDummyForL10nScript.js:218
-#: specialVueFakeDummyForL10nScript.js:326
+#: specialVueFakeDummyForL10nScript.js:222
+#: specialVueFakeDummyForL10nScript.js:330
 msgid "First Name"
 msgstr ""
 
 #. TRANSLATORS src/views/PersonalProfile.vue:30
 #. TRANSLATORS src/views/Registration/PersonalProfile.vue:35
-#: specialVueFakeDummyForL10nScript.js:220
-#: specialVueFakeDummyForL10nScript.js:328
+#: specialVueFakeDummyForL10nScript.js:224
+#: specialVueFakeDummyForL10nScript.js:332
 msgid "e.g. Jonathan"
 msgstr ""
 
 #. TRANSLATORS src/views/PersonalProfile.vue:34
 #. TRANSLATORS src/views/Registration/PersonalProfile.vue:41
-#: specialVueFakeDummyForL10nScript.js:222
-#: specialVueFakeDummyForL10nScript.js:330
+#: specialVueFakeDummyForL10nScript.js:226
+#: specialVueFakeDummyForL10nScript.js:334
 msgid "Sur Name"
 msgstr ""
 
 #. TRANSLATORS src/views/PersonalProfile.vue:35
 #. TRANSLATORS src/views/Registration/PersonalProfile.vue:42
-#: specialVueFakeDummyForL10nScript.js:224
-#: specialVueFakeDummyForL10nScript.js:332
+#: specialVueFakeDummyForL10nScript.js:228
+#: specialVueFakeDummyForL10nScript.js:336
 msgid "e.g. Smith"
 msgstr ""
 
 #. TRANSLATORS src/views/PersonalProfile.vue:41
-#: specialVueFakeDummyForL10nScript.js:226
+#: specialVueFakeDummyForL10nScript.js:230
 msgid "Nick Name"
 msgstr ""
 
 #. TRANSLATORS src/views/PersonalProfile.vue:42
 #. TRANSLATORS src/views/Registration/PersonalProfile.vue:51
-#: specialVueFakeDummyForL10nScript.js:228
-#: specialVueFakeDummyForL10nScript.js:336
+#: specialVueFakeDummyForL10nScript.js:232
+#: specialVueFakeDummyForL10nScript.js:340
 msgid "e.g. Jonny"
 msgstr ""
 
 #. TRANSLATORS src/views/PersonalProfile.vue:48
 #. TRANSLATORS src/views/Registration/PersonalProfile.vue:58
-#: specialVueFakeDummyForL10nScript.js:230
-#: specialVueFakeDummyForL10nScript.js:338
+#: specialVueFakeDummyForL10nScript.js:234
+#: specialVueFakeDummyForL10nScript.js:342
 msgid "Address Supplement"
 msgstr ""
 
 #. TRANSLATORS src/views/PersonalProfile.vue:49
 #. TRANSLATORS src/views/Registration/PersonalProfile.vue:59
-#: specialVueFakeDummyForL10nScript.js:232
-#: specialVueFakeDummyForL10nScript.js:340
+#: specialVueFakeDummyForL10nScript.js:236
+#: specialVueFakeDummyForL10nScript.js:344
 msgid "e.g. c/o Doe"
 msgstr ""
 
 #. TRANSLATORS src/views/PersonalProfile.vue:55
 #. TRANSLATORS src/views/Registration/PersonalProfile.vue:65
-#: specialVueFakeDummyForL10nScript.js:234
-#: specialVueFakeDummyForL10nScript.js:342
+#: specialVueFakeDummyForL10nScript.js:238
+#: specialVueFakeDummyForL10nScript.js:346
 msgid "Street"
 msgstr ""
 
 #. TRANSLATORS src/views/PersonalProfile.vue:56
 #. TRANSLATORS src/views/Registration/PersonalProfile.vue:66
-#: specialVueFakeDummyForL10nScript.js:236
-#: specialVueFakeDummyForL10nScript.js:344
+#: specialVueFakeDummyForL10nScript.js:240
+#: specialVueFakeDummyForL10nScript.js:348
 msgid "e.g. Underhill"
 msgstr ""
 
 #. TRANSLATORS src/views/PersonalProfile.vue:61
 #. TRANSLATORS src/views/Registration/PersonalProfile.vue:71
-#: specialVueFakeDummyForL10nScript.js:238
-#: specialVueFakeDummyForL10nScript.js:346
+#: specialVueFakeDummyForL10nScript.js:242
+#: specialVueFakeDummyForL10nScript.js:350
 msgid "Number"
 msgstr ""
 
 #. TRANSLATORS src/views/PersonalProfile.vue:62
 #. TRANSLATORS src/views/Registration/PersonalProfile.vue:72
-#: specialVueFakeDummyForL10nScript.js:240
-#: specialVueFakeDummyForL10nScript.js:348
+#: specialVueFakeDummyForL10nScript.js:244
+#: specialVueFakeDummyForL10nScript.js:352
 msgid "e.g. 13"
 msgstr ""
 
 #. TRANSLATORS src/views/PersonalProfile.vue:69
 #. TRANSLATORS src/views/Registration/PersonalProfile.vue:79
-#: specialVueFakeDummyForL10nScript.js:242
-#: specialVueFakeDummyForL10nScript.js:350
+#: specialVueFakeDummyForL10nScript.js:246
+#: specialVueFakeDummyForL10nScript.js:354
 msgid "Postal Code"
 msgstr ""
 
 #. TRANSLATORS src/views/PersonalProfile.vue:70
 #. TRANSLATORS src/views/Registration/PersonalProfile.vue:80
-#: specialVueFakeDummyForL10nScript.js:244
-#: specialVueFakeDummyForL10nScript.js:352
+#: specialVueFakeDummyForL10nScript.js:248
+#: specialVueFakeDummyForL10nScript.js:356
 msgid "e.g. 4711"
 msgstr ""
 
 #. TRANSLATORS src/views/PersonalProfile.vue:74
 #. TRANSLATORS src/views/Registration/PersonalProfile.vue:84
-#: specialVueFakeDummyForL10nScript.js:246
-#: specialVueFakeDummyForL10nScript.js:354
+#: specialVueFakeDummyForL10nScript.js:250
+#: specialVueFakeDummyForL10nScript.js:358
 msgid "City"
 msgstr ""
 
 #. TRANSLATORS src/views/PersonalProfile.vue:75
 #. TRANSLATORS src/views/Registration/PersonalProfile.vue:85
-#: specialVueFakeDummyForL10nScript.js:248
-#: specialVueFakeDummyForL10nScript.js:356
+#: specialVueFakeDummyForL10nScript.js:252
+#: specialVueFakeDummyForL10nScript.js:360
 msgid "e.g. Bagend"
 msgstr ""
 
 #. TRANSLATORS src/views/PersonalProfile.vue:82
 #. TRANSLATORS src/views/Registration/PersonalProfile.vue:93
-#: specialVueFakeDummyForL10nScript.js:250
-#: specialVueFakeDummyForL10nScript.js:358
+#: specialVueFakeDummyForL10nScript.js:254
+#: specialVueFakeDummyForL10nScript.js:362
 msgid "Country"
 msgstr ""
 
 #. TRANSLATORS src/views/PersonalProfile.vue:83
 #. TRANSLATORS src/views/Registration/PersonalProfile.vue:94
-#: specialVueFakeDummyForL10nScript.js:252
-#: specialVueFakeDummyForL10nScript.js:360
+#: specialVueFakeDummyForL10nScript.js:256
+#: specialVueFakeDummyForL10nScript.js:364
 msgid "e.g. The Shire"
 msgstr ""
 
 #. TRANSLATORS src/views/PersonalProfile.vue:89
 #. TRANSLATORS src/views/Registration/PersonalProfile.vue:105
-#: specialVueFakeDummyForL10nScript.js:254
-#: specialVueFakeDummyForL10nScript.js:362
+#: specialVueFakeDummyForL10nScript.js:258
+#: specialVueFakeDummyForL10nScript.js:366
 msgid "Birthday"
 msgstr ""
 
 #. TRANSLATORS src/views/PersonalProfile.vue:90
 #. TRANSLATORS src/views/Registration/PersonalProfile.vue:106
-#: specialVueFakeDummyForL10nScript.js:256
-#: specialVueFakeDummyForL10nScript.js:364
+#: specialVueFakeDummyForL10nScript.js:260
+#: specialVueFakeDummyForL10nScript.js:368
 msgid "e.g. 01.01.1970"
 msgstr ""
 
 #. TRANSLATORS src/views/PersonalProfile.vue:96
 #. TRANSLATORS src/views/Registration/PersonalProfile.vue:113
-#: specialVueFakeDummyForL10nScript.js:258
-#: specialVueFakeDummyForL10nScript.js:366
+#: specialVueFakeDummyForL10nScript.js:262
+#: specialVueFakeDummyForL10nScript.js:370
 msgid "Email"
 msgstr ""
 
 #. TRANSLATORS src/views/PersonalProfile.vue:97
 #. TRANSLATORS src/views/Registration/PersonalProfile.vue:114
-#: specialVueFakeDummyForL10nScript.js:260
-#: specialVueFakeDummyForL10nScript.js:368
+#: specialVueFakeDummyForL10nScript.js:264
+#: specialVueFakeDummyForL10nScript.js:372
 msgid "e.g. me@you.tld"
 msgstr ""
 
 #. TRANSLATORS src/views/PersonalProfile.vue:107
 #. TRANSLATORS src/views/Registration/PersonalProfile.vue:125
-#: specialVueFakeDummyForL10nScript.js:262
-#: specialVueFakeDummyForL10nScript.js:370
+#: specialVueFakeDummyForL10nScript.js:266
+#: specialVueFakeDummyForL10nScript.js:374
 msgid "All Email Addresses"
 msgstr ""
 
 #. TRANSLATORS src/views/PersonalProfile.vue:117
 #. TRANSLATORS src/views/Registration/PersonalProfile.vue:135
-#: specialVueFakeDummyForL10nScript.js:264
-#: specialVueFakeDummyForL10nScript.js:372
+#: specialVueFakeDummyForL10nScript.js:268
+#: specialVueFakeDummyForL10nScript.js:376
 msgid "Mobile Phone"
 msgstr ""
 
 #. TRANSLATORS src/views/PersonalProfile.vue:118
 #. TRANSLATORS src/views/Registration/PersonalProfile.vue:136
-#: specialVueFakeDummyForL10nScript.js:266
 #: specialVueFakeDummyForL10nScript.js:270
-#: specialVueFakeDummyForL10nScript.js:374
+#: specialVueFakeDummyForL10nScript.js:274
 #: specialVueFakeDummyForL10nScript.js:378
+#: specialVueFakeDummyForL10nScript.js:382
 msgid "e.g. +12 34 5678 901234"
 msgstr ""
 
 #. TRANSLATORS src/views/PersonalProfile.vue:122
 #. TRANSLATORS src/views/Registration/PersonalProfile.vue:140
-#: specialVueFakeDummyForL10nScript.js:268
-#: specialVueFakeDummyForL10nScript.js:376
+#: specialVueFakeDummyForL10nScript.js:272
+#: specialVueFakeDummyForL10nScript.js:380
 msgid "Fixed Line Phone"
 msgstr ""
 
 #. TRANSLATORS src/views/PersonalProfile.vue:130
 #. TRANSLATORS src/views/Projects/ProjectDetails.vue:28
-#: specialVueFakeDummyForL10nScript.js:272
-#: specialVueFakeDummyForL10nScript.js:274
+#: specialVueFakeDummyForL10nScript.js:276
+#: specialVueFakeDummyForL10nScript.js:278
 msgid "Instruments"
 msgstr ""
 
 #. TRANSLATORS src/views/Projects/ProjectDetails.vue:35
 #. TRANSLATORS src/views/Projects/ProjectDetails.vue:42
-#: specialVueFakeDummyForL10nScript.js:276
-#: specialVueFakeDummyForL10nScript.js:278
+#: specialVueFakeDummyForL10nScript.js:280
+#: specialVueFakeDummyForL10nScript.js:282
 msgid "voice {voice}"
 msgstr ""
 
-#: specialVueFakeDummyForL10nScript.js:276
-#: specialVueFakeDummyForL10nScript.js:278
+#: specialVueFakeDummyForL10nScript.js:280
+#: specialVueFakeDummyForL10nScript.js:282
 msgid "section leader"
 msgstr ""
 
 #. TRANSLATORS src/views/Projects/ProjectDetails.vue:44
-#: specialVueFakeDummyForL10nScript.js:280
+#: specialVueFakeDummyForL10nScript.js:284
 msgid "Photos"
 msgstr ""
 
 #. TRANSLATORS src/views/Projects.vue:27
-#: specialVueFakeDummyForL10nScript.js:284
+#: specialVueFakeDummyForL10nScript.js:288
 msgid "Project-Participation of {publicName}"
 msgstr ""
 
 #. TRANSLATORS src/views/Projects.vue:111
-#: specialVueFakeDummyForL10nScript.js:290
+#: specialVueFakeDummyForL10nScript.js:294
 msgid "Could not fetch root-folder of member file space: {message}"
 msgstr ""
 
 #. TRANSLATORS src/views/Registration/Participation.vue:27
-#: specialVueFakeDummyForL10nScript.js:292
+#: specialVueFakeDummyForL10nScript.js:296
 msgid "Instrumentation, Rehearsals and Concerts for \"{name}\""
 msgstr ""
 
 #. TRANSLATORS src/views/Registration/Participation.vue:30
-#: specialVueFakeDummyForL10nScript.js:294
+#: specialVueFakeDummyForL10nScript.js:298
 msgid ""
 "Please configure the instrument or the role you intend to play in this "
 "project."
@@ -1010,113 +1016,113 @@ msgstr ""
 
 #. TRANSLATORS src/views/Registration/Participation.vue:35
 #. TRANSLATORS src/views/Registration/PersonalProfile.vue:148
-#: specialVueFakeDummyForL10nScript.js:296
-#: specialVueFakeDummyForL10nScript.js:380
+#: specialVueFakeDummyForL10nScript.js:300
+#: specialVueFakeDummyForL10nScript.js:384
 msgid "All my Instruments or Roles"
 msgstr ""
 
 #. TRANSLATORS src/views/Registration/Participation.vue:45
 #. TRANSLATORS src/views/Registration/PersonalProfile.vue:158
-#: specialVueFakeDummyForL10nScript.js:298
 #: specialVueFakeDummyForL10nScript.js:302
-#: specialVueFakeDummyForL10nScript.js:382
+#: specialVueFakeDummyForL10nScript.js:306
+#: specialVueFakeDummyForL10nScript.js:386
 msgid "e.g. double bass"
 msgstr ""
 
 #. TRANSLATORS src/views/Registration/Participation.vue:52
-#: specialVueFakeDummyForL10nScript.js:300
+#: specialVueFakeDummyForL10nScript.js:304
 msgid "Project Instruments or Roles"
 msgstr ""
 
 #. TRANSLATORS src/views/Registration/Participation.vue:65
-#: specialVueFakeDummyForL10nScript.js:304
+#: specialVueFakeDummyForL10nScript.js:308
 msgid ""
 "You do not seem to play any instrument configured for the project: "
 "{instruments}."
 msgstr ""
 
 #. TRANSLATORS src/views/Registration/Participation.vue:69
-#: specialVueFakeDummyForL10nScript.js:306
+#: specialVueFakeDummyForL10nScript.js:310
 msgid "Timetable"
 msgstr ""
 
 #. TRANSLATORS src/views/Registration/Participation.vue:74
-#: specialVueFakeDummyForL10nScript.js:308
+#: specialVueFakeDummyForL10nScript.js:312
 msgid "I will participate in all events and not miss a single one!"
 msgstr ""
 
 #. TRANSLATORS src/views/Registration/Participation.vue:79
-#: specialVueFakeDummyForL10nScript.js:310
+#: specialVueFakeDummyForL10nScript.js:314
 msgid ""
 "Please open the dots menu for each particular event you cannot participate "
 "in, toggle the contained checkbox and give a short explanation!"
 msgstr ""
 
 #. TRANSLATORS src/views/Registration/Participation.vue:84
-#: specialVueFakeDummyForL10nScript.js:312
+#: specialVueFakeDummyForL10nScript.js:316
 msgid ""
 "Please understand that applications of people without or with less absence "
 "are preferred."
 msgstr ""
 
 #. TRANSLATORS src/views/Registration/Participation.vue:106
-#: specialVueFakeDummyForL10nScript.js:314
+#: specialVueFakeDummyForL10nScript.js:318
 msgid "I cannot participate"
 msgstr ""
 
 #. TRANSLATORS src/views/Registration/Participation.vue:110
-#: specialVueFakeDummyForL10nScript.js:316
+#: specialVueFakeDummyForL10nScript.js:320
 msgid "... because ..."
 msgstr ""
 
 #. TRANSLATORS src/views/Registration/Participation.vue:133
 #. TRANSLATORS src/views/Registration/ProjectOptions.vue:35
 #. TRANSLATORS src/views/Registration/Submission.vue:35
-#: specialVueFakeDummyForL10nScript.js:318
-#: specialVueFakeDummyForL10nScript.js:396
-#: specialVueFakeDummyForL10nScript.js:402
+#: specialVueFakeDummyForL10nScript.js:322
+#: specialVueFakeDummyForL10nScript.js:400
+#: specialVueFakeDummyForL10nScript.js:406
 msgid "back"
 msgstr ""
 
 #. TRANSLATORS src/views/Registration/Participation.vue:140
 #. TRANSLATORS src/views/Registration/PersonalProfile.vue:199
-#: specialVueFakeDummyForL10nScript.js:320
-#: specialVueFakeDummyForL10nScript.js:392
+#: specialVueFakeDummyForL10nScript.js:324
+#: specialVueFakeDummyForL10nScript.js:396
 msgid "next"
 msgstr ""
 
 #. TRANSLATORS src/views/Registration/PersonalProfile.vue:50
-#: specialVueFakeDummyForL10nScript.js:334
+#: specialVueFakeDummyForL10nScript.js:338
 msgid "Nick Name (optional)"
 msgstr ""
 
 #. TRANSLATORS src/views/Registration/PersonalProfile.vue:168
-#: specialVueFakeDummyForL10nScript.js:384
+#: specialVueFakeDummyForL10nScript.js:388
 msgid "First time application"
 msgstr ""
 
 #. TRANSLATORS src/views/Registration/PersonalProfile.vue:175
-#: specialVueFakeDummyForL10nScript.js:386
+#: specialVueFakeDummyForL10nScript.js:390
 msgid "You know me"
 msgstr ""
 
 #. TRANSLATORS src/views/Registration/PersonalProfile.vue:181
-#: specialVueFakeDummyForL10nScript.js:388
+#: specialVueFakeDummyForL10nScript.js:392
 msgid "Please introduce yourself!"
 msgstr ""
 
 #. TRANSLATORS src/views/Registration/PersonalProfile.vue:192
-#: specialVueFakeDummyForL10nScript.js:390
+#: specialVueFakeDummyForL10nScript.js:394
 msgid "Registration Start-Page"
 msgstr ""
 
 #. TRANSLATORS src/views/Registration/ProjectOptions.vue:27
-#: specialVueFakeDummyForL10nScript.js:394
+#: specialVueFakeDummyForL10nScript.js:398
 msgid "Project Fees and Options"
 msgstr ""
 
 #. TRANSLATORS src/views/Registration/Submission.vue:38
-#: specialVueFakeDummyForL10nScript.js:404
+#: specialVueFakeDummyForL10nScript.js:408
 msgid "Submit"
 msgstr ""
 
