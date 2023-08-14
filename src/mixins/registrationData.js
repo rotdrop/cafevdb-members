@@ -23,6 +23,7 @@
 import { appName } from '../config.js'
 import { set as vueSet } from 'vue'
 import { getCurrentUser } from '@nextcloud/auth'
+import { generateUrl as nextcloudGenerateUrl } from '@nextcloud/router'
 import { loadState } from '@nextcloud/initial-state'
 import { useAppDataStore } from '../stores/appData.js'
 import { mapWritableState } from 'pinia'
@@ -76,6 +77,11 @@ export default {
     },
     routerGoHome() {
       this.$router.replace(this.routerDestination('registrationHome'))
+    },
+    loginRedirection(routeName) {
+      const finalDestination = this.$router.resolve(this.routerDestination(routeName))
+      console.info('FINAL', finalDestination)
+      return nextcloudGenerateUrl('/login?redirect_url=') + encodeURIComponent(finalDestination.href)
     },
   },
   computed: {

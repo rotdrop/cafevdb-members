@@ -156,6 +156,7 @@ import ActionCheckbox from '@nextcloud/vue/dist/Components/NcActionCheckbox'
 import ActionTextEditable from '@nextcloud/vue/dist/Components/NcActionTextEditable'
 import Highlight from '@nextcloud/vue/dist/Components/NcHighlight'
 import ListItem from '@nextcloud/vue/dist/Components/NcListItem'
+import { getCanonicalLocale } from '@nextcloud/l10n'
 
 import mixinRegistrationData from '../../mixins/registrationData.js'
 import { useMemberDataStore } from '../../stores/memberData.js'
@@ -198,7 +199,11 @@ export default {
     this.loading = false
     this.noAbsenceCheck = this.noAbsence
   },
-  computed: {},
+  computed: {
+    locale() {
+      return getCanonicalLocale()
+    },
+  },
   watch: {},
   methods: {
     info() {
@@ -231,19 +236,19 @@ export default {
         timeStyle: 'short',
         dateStyle: 'medium',
       }
-      return dateTime.toLocaleString(undefined, options)
+      return dateTime.toLocaleString(this.locale, options)
     },
     localeTime(dateTime) {
       const options = {
         timeStyle: 'short',
       }
-      return dateTime.toLocaleTimeString(undefined, options)
+      return dateTime.toLocaleTimeString(this.locale, options)
     },
     localeDate(dateTime) {
       const options = {
         dateStyle: 'medium',
       }
-      return dateTime.toLocaleDateString(undefined, options)
+      return dateTime.toLocaleDateString(this.locale, options)
     },
   },
 }

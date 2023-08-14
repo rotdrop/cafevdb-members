@@ -22,7 +22,8 @@
  */
 </script>
 <template>
-  <router-link class="button router"
+  <router-link v-if="!external"
+               class="button router"
                :to="to"
                :exact="exact"
   >
@@ -36,6 +37,20 @@
           :class="[ icon, 'right-icon' ]"
     />
   </router-link>
+  <a v-else
+     class="button router"
+     :href="to"
+  >
+    <slot v-if="hasIconSlot && iconLeft" name="icon" />
+    <span v-else-if="icon && iconLeft"
+          :class="[ icon, 'left-icon' ]"
+    />
+    <slot />
+    <slot v-if="hasIconSlot && iconRight" name="icon" />
+    <span v-else-if="icon && iconRight"
+          :class="[ icon, 'right-icon' ]"
+    />
+  </a>
 </template>
 <script>
 
@@ -53,6 +68,10 @@ export default {
      * router-link exact prop [https://router.vuejs.org/api/#exact](https://router.vuejs.org/api/#exact)
      */
     exact: {
+      type: Boolean,
+      default: false,
+    },
+    external: {
       type: Boolean,
       default: false,
     },

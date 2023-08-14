@@ -96,7 +96,16 @@
                           icon="icon-confirm"
                           icon-position="right"
             >
-              {{ t(appId, 'start') }}
+              {{ t(appId, 'register') }}
+            </RouterButton>
+            <span v-if="isPublicPage" class="start-button-junctor">{{ t(appId, 'or') }}</span>
+            <RouterButton v-if="isPublicPage"
+                          :to="loginRedirection('registrationHome')"
+                          :external="true"
+                          icon="icon-confirm"
+                          icon-position="right"
+            >
+              {{ t(appId, 'login and register') }}
             </RouterButton>
           </div>
           <h2 v-else>
