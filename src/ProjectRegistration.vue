@@ -134,7 +134,7 @@ import { mapWritableState } from 'pinia'
 
 import Icon from '../img/cafevdbmembers.svg'
 
-import mixinRegistrationData from './mixins/registationData.js'
+import mixinRegistrationData from './mixins/registrationData.js'
 
 import { prefix as registrationPrefix } from './router/registration-routes.js'
 

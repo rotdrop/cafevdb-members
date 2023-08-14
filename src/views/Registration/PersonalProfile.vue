@@ -45,7 +45,7 @@
                  @input="updatePublicName"
       />
     </div>
-    <div v-show="registrationData.nickName" class="input-row">
+    <div class="input-row">
       <InputText v-model="registrationData.nickName"
                  :label="t(appId, 'Nick Name (optional)')"
                  :placeholder="t(appId, 'e.g. Jonny')"
@@ -213,7 +213,7 @@ import { set as vueSet } from 'vue'
 import CheckboxRadioSwitch from '@nextcloud/vue/dist/Components/NcCheckboxRadioSwitch'
 import RichContenteditable from '@nextcloud/vue/dist/Components/NcRichContenteditable'
 
-import mixinRegistrationData from '../../mixins/registationData.js'
+import mixinRegistrationData from '../../mixins/registrationData.js'
 import { useMemberDataStore } from '../../stores/memberData.js'
 
 export default {

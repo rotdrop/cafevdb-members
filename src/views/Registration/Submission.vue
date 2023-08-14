@@ -53,7 +53,7 @@ import RouterButton from '../../components/RouterButton'
 import { set as vueSet } from 'vue'
 import Button from '@nextcloud/vue/dist/Components/NcButton'
 
-import mixinRegistrationData from '../../mixins/registationData.js'
+import mixinRegistrationData from '../../mixins/registrationData.js'
 import { useMemberDataStore } from '../../stores/memberData.js'
 
 export default {

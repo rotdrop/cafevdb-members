@@ -47,7 +47,7 @@
       />
     </div>
     <div class="input-row">
-      <InputText v-model="registrationData.project[activeProject.id].instruments"
+      <InputText v-model="registrationProject.instruments"
                  type="multiselect"
                  :label="t(appId, 'Project Instruments or Roles')"
                  :options="personalProjectInstrumentOptions"
@@ -68,15 +68,17 @@
       <h3>
         {{ t(appId, 'Timetable') }}
       </h3>
-      <CheckboxRadioSwitch :checked.sync="noAbsence">
+      <CheckboxRadioSwitch :checked.sync="noAbsenceCheck"
+                           :disabled="!noAbsence"
+      >
         {{ t(appId, 'I will participate in all events and not miss a single one!') }}
       </CheckboxRadioSwitch>
-      <div v-if="!noAbsence"
+      <div v-if="!noAbsenceCheck"
            class="absence-instructions"
       >
         {{ t(appId, 'Please open the dots menu for each particular event you cannot participate in, toggle the contained checkbox and give a short explanation!') }}
       </div>
-      <div v-if="!noAbsence"
+      <div v-if="!noAbsenceCheck"
            class="absence-instructions"
       >
         {{ t(appId, 'Please understand that applications of people without or with less absence are preferred.') }}
@@ -92,23 +94,22 @@
           <template v-if="event.calendarObject.location" #subtitle>
             {{ event.calendarObject.location }}
           </template>
-          <template v-if="absence[event.id]" #indicator>
+          <template v-if="registrationProject.absence[event.id]" #indicator>
             <AbsenceIndicator :size="24" fill-color="#ff0000" />
           </template>
-          <template v-if="!noAbsence && event.absenceField > 0" #actions>
+          <template v-if="!noAbsenceCheck && event.absenceField > 0" #actions>
             <ActionCheckbox value="absent"
-                            :checked="absence[event.id]"
-                            @check="absence[event.id] = true"
-                            @uncheck="absence[event.id] = false"
+                            :checked="registrationProject.absence[event.id]"
+                            @check="registrationProject.absence[event.id] = true"
+                            @uncheck="registrationProject.absence[event.id] = false"
             >
               {{ t(appId, 'I cannot participate') }}
             </ActionCheckbox>
-            <ActionTextEditable v-if="absence[event.id]"
-                                ref="absenceReason"
-                                :value="absenceReasons[event.id]"
+            <ActionTextEditable v-if="registrationProject.absence[event.id]"
+                                :value="registrationProject.absenceReasons[event.id]"
                                 :name="t(appId, '... because ...')"
                                 required
-                                @submit="absenceReasons[event.id] = $event.target.getElementsByTagName('textarea')[0].value"
+                                @submit="registrationProject.absenceReasons[event.id] = $event.target.getElementsByTagName('textarea')[0].value"
             >
               <template #icon>
                 <Pencil :size="20" />
@@ -142,7 +143,6 @@
   </div>
 </template>
 <script>
-import Vue from 'vue'
 import Pencil from 'vue-material-design-icons/Pencil.vue'
 import AbsenceIndicator from 'vue-material-design-icons/AlertOctagon'
 import { appName } from '../../config.js'
@@ -157,7 +157,7 @@ import ActionTextEditable from '@nextcloud/vue/dist/Components/NcActionTextEdita
 import Highlight from '@nextcloud/vue/dist/Components/NcHighlight'
 import ListItem from '@nextcloud/vue/dist/Components/NcListItem'
 
-import mixinRegistrationData from '../../mixins/registationData.js'
+import mixinRegistrationData from '../../mixins/registrationData.js'
 import { useMemberDataStore } from '../../stores/memberData.js'
 
 export default {
@@ -185,10 +185,7 @@ export default {
     return {
       loading: true,
       readonly: true,
-      // @todo This should go to the result set in order to be remembered when applicants switch projects
-      noAbsence: true,
-      absence: {},
-      absenceReasons: {},
+      noAbsenceCheck: true,
     }
   },
   async created() {
@@ -199,12 +196,7 @@ export default {
     await this.initializeRegistrationData()
     this.readonly = false
     this.loading = false
-    this.absence = {}
-    this.absenceReasons = {}
-    for (const event of this.activeProject.projectEvents) {
-      Vue.set(this.absence, event.id, false)
-      Vue.set(this.absenceReasons, event.id, null)
-    }
+    this.noAbsenceCheck = this.noAbsence
   },
   computed: {},
   watch: {},

@@ -54,7 +54,7 @@ import RouterButton from '../../components/RouterButton'
 import { set as vueSet } from 'vue'
 import CheckboxRadioSwitch from '@nextcloud/vue/dist/Components/NcCheckboxRadioSwitch'
 
-import mixinRegistrationData from '../../mixins/registationData.js'
+import mixinRegistrationData from '../../mixins/registrationData.js'
 import { useMemberDataStore } from '../../stores/memberData.js'
 
 export default {

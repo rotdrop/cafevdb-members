@@ -64,6 +64,7 @@ export const useMemberDataStore = defineStore('member-data', {
         error: false,
         recryptRequest: null,
       },
+      projectApplication: [],
     }
   },
   actions: {
