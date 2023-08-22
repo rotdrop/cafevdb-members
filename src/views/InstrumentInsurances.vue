@@ -27,7 +27,10 @@
     <CheckboxRadioSwitch v-if="haveDeleted" :checked.sync="showDeleted">
       {{ t(appId, 'show deleted') }}
     </CheckboxRadioSwitch>
-    <ul class="insurance-sections">
+    <div v-if="memberData.instrumentInsurances.length === 0">
+      {{ t(appId, 'You do not have any instrument insurances.') }}
+    </div>
+    <ul v-else class="insurance-sections">
       <ListItem :title="t(appId, 'Summary')"
                 :bold="true"
                 class="summary"
@@ -208,7 +211,7 @@ export default {
   },
   computed: {
     insuranceBills() {
-      return this.memberData.insuranceDetails.receivables.filter(x => x.supportingDocumentId)
+        return this.memberData.insuranceDetails.receivables.filter(x => x.supportingDocumentId)
     },
   },
   async created() {
@@ -230,21 +233,23 @@ export default {
           insurancesByOthers.push(insurance)
         }
       }
-      vueSet(this.memberData, 'insuranceDetails', {})
       vueSet(this.memberData.insuranceDetails, 'forOthers', insurancesForOthers)
       vueSet(this.memberData.insuranceDetails, 'byOthers', insurancesByOthers)
       vueSet(this.memberData.insuranceDetails, 'self', ownInsurances)
 
       const insuranceReceivables = [];
       for (const participant of this.memberData.projectParticipation) {
+        console.info('PROJECT', participant)
         if (participant.project.clubMembers) {
           // extract insurance receivables and supporting documents
           for (const [id, field] of Object.entries(participant.participantFields)) {
+            console.info('FIELD', id, field)
             if (field.name === 'Instrument Insurance'
                 || field.untranslatedName === 'Instrument Insurance'
                 || field.name === t(appId, 'Instrument Insurance')
                 || field.untranslatedName === t(appId, 'Instrument Insurance')) {
               for (const [key, receivable] of Object.entries(field.fieldData)) {
+                console.info('RECEIVABLE', key, receivable)
                 insuranceReceivables.push(receivable)
               }
             }

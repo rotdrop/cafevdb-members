@@ -29,7 +29,11 @@
     <CheckboxRadioSwitch v-if="haveDeleted" :checked.sync="showDeleted">
       {{ t(appId, 'show deleted') }}
     </CheckboxRadioSwitch>
+    <div v-if="memberData.sepaBankAccounts.length === 0">
+      {{ t(appId, 'We have no information about your bank-accounts.') }}
+    </div>
     <ul v-for="account in memberData.sepaBankAccounts"
+        v-else
         :key="account.sequence"
         class="sepa-bank-accounts-list"
     >
