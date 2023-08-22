@@ -26,4 +26,7 @@
     <!-- <personal>OCA\CAFeVDBMembers\Settings\Personal</personal> -->
     <!-- <personal-section>OCA\CAFeVDBMembers\Settings\PersonalSection</personal-section> -->
   </settings>
+  <commands>
+    <command>OCA\CAFeVDBMembers\Command\EnsureGroupFolders</command>
+  </commands>
 </info>

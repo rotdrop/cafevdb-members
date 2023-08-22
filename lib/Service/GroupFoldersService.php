@@ -27,6 +27,10 @@ use RuntimeException;
 use Psr\Log\LoggerInterface;
 use OCP\IL10N;
 use OCP\Constants;
+use OCP\Files\IRootFolder;
+
+use OCA\GroupFolders\Folder\FolderManager;
+use OCA\GroupFolders\Mount\MountProvider;
 
 use OCA\CAFeVDBMembers\Toolkit\Service\GroupFoldersService as ToolkitService;
 
@@ -41,9 +45,17 @@ class GroupFoldersService extends ToolkitService
   public function __construct(
     LoggerInterface $logger,
     IL10N $l10n,
-    RequestService $requestService,
+    IRootFolder $rootFolder,
+    FolderManager $folderManager,
+    MountProvider $mountProvider,
   ) {
-    parent::__construct(logger: $logger, requestService: $requestService, l10n: $l10n);
+    parent::__construct(
+      logger: $logger,
+      rootFolder: $rootFolder,
+      folderManager: $folderManager,
+      mountProvider: $mountProvider,
+      l10n: $l10n,
+    );
   }
   // phpcs:enable Squiz.Commenting.FunctionComment.Missing
 }

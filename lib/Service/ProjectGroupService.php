@@ -30,17 +30,20 @@ use OCP\IL10N;
 use OCP\IGroupManager;
 use OCP\IGroup;
 
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumProjectTemporalType as ProjectType;
+use OCA\CAFeVDBMembers\Database\DBAL\Types\EnumProjectTemporalType as ProjectType;
 use OCA\CAFEVDB\Events\PostProjectUpdatedEvent;
 use OCA\CAFEVDB\Events\BeforeProjectDeletedEvent;
 use OCA\CAFEVDB\Events\ProjectCreatedEvent;
+use OCA\CAFEVDB\Service\CloudUserConnectorService;
+
+use OCA\CAFeVDBMembers\Constants;
 
 /** Manage the shared project-group folders. */
 class ProjectGroupService
 {
   use \OCA\CAFeVDBMembers\Toolkit\Traits\LoggerTrait;
 
-  const GROUP_ID_PREFIX = 'cafevdb:';
+  const GROUP_ID_PREFIX = Constants::CAFEVDB_APP_ID . CloudUserConnectorService::GROUP_ID_SEPARATOR;
 
   const MANAGEMENT_PERMISSIONS = GroupFoldersService::PERMISSION_ALL;
   const GROUP_LEAF_PERMISSIONS = GroupFoldersService::PERMISSION_DELETE|GroupFoldersService::PERMISSION_WRITE;
@@ -240,7 +243,7 @@ class ProjectGroupService
     if (empty($leafFolder)) {
       throw new RuntimeException($this->l->t('Unable to make sure the the group-shared folder "%1$s" for group "%2$s" exists.', [ $leafMountPoint, $group->getDisplayName() ]));
     }
-    if ($leafFolder['groups'][$groupId] != self::GROUP_LEAF_PERMISSIONS) {
+    if ($leafFolder['groups'][$groupId]['permissions'] != self::GROUP_LEAF_PERMISSIONS) {
       // add write-access to the leaf-folder, this lazily just performs the necessary steps.
       $this->groupFoldersService->addGroupToFolder(
         $leafMountPoint,
@@ -248,7 +251,7 @@ class ProjectGroupService
         self::GROUP_LEAF_PERMISSIONS,
         canManage: false);
     }
-    if ($leafFolder['groups'][$this->appManagementGroup] != self::MANAGEMENT_PERMISSIONS) {
+    if ($leafFolder['groups'][$this->appManagementGroup]['permissions'] != self::MANAGEMENT_PERMISSIONS) {
       // add write-access to the leaf-folder, this lazily just performs the necessary steps.
       $this->groupFoldersService->addGroupToFolder(
         $leafMountPoint,
@@ -288,7 +291,7 @@ class ProjectGroupService
     $groupId = $group->getGID();
     $groupFolders = [];
     foreach ($this->groupFoldersService->searchFolders($groupId, GroupFoldersService::SEARCH_TOPIC_GROUP) as $folderInfo) {
-      if (($folderInfo['groups'][$groupId] & self::GROUP_LEAF_PERMISSIONS) != GroupFoldersService::PERMISSION_READ) {
+      if (($folderInfo['groups'][$groupId]['permissions'] & self::GROUP_LEAF_PERMISSIONS) != GroupFoldersService::PERMISSION_READ) {
         $groupFolders[] = $folderInfo;
 
       }
