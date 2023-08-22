@@ -194,7 +194,7 @@ class MemberDataController extends Controller
         unset($flatProjectField['dataOptions']);
         $defaultValue = $projectField->getDefaultValue();
         if (!empty($defaultValue)) {
-          $flatDefaultValue = array_filter($defaultValue->toArray());
+          $flatDefaultValue = array_filter($defaultValue->toArray(), fn($x) => $x === null);
           foreach (['field', 'fieldData', 'payments'] as $key) {
             unset($flatDefaultValue[$key]);
           }
@@ -212,7 +212,7 @@ class MemberDataController extends Controller
           unset($flatProjectDatum['field']);
           unset($flatProjectDatum['projectParticipant']);
           $dataOption = $projectDatum->getDataOption();
-          $flatDataOption = array_filter($dataOption->toArray());
+          $flatDataOption = array_filter($dataOption->toArray(), fn($x) => $x === null);
           foreach (['field', 'fieldData', 'payments'] as $key) {
             unset($flatDataOption[$key]);
           }
@@ -239,13 +239,14 @@ class MemberDataController extends Controller
             $flatCompositePayment['sepaBankAccount'] = empty($bankAccount) ? null : $bankAccount->getIban();
             $debitMandate = $compositePayment->getSepaDebitMandate();
             $flatCompositePayment['sepaDebitMandate'] = empty($debitMandate) ? null : $debitMandate->getMandateReference();
-            $flatPayment['compositePayment'] = array_filter($flatCompositePayment);
-            $payments[] = array_filter($flatPayment);
+            $flatPayment['compositePayment'] = array_filter($flatCompositePayment, fn($x) => $x === null);
+            $payments[] = array_filter($flatPayment, fn($x) => $x === null);
           }
           $flatProjectDatum['payments'] = $payments;
-          $flatProjectField['fieldData'][(string)$projectDatum->getOptionKey()] = array_filter($flatProjectDatum);
+          $flatProjectField['fieldData'][(string)$projectDatum->getOptionKey()] =
+            array_filter($flatProjectDatum, fn($x) => $x === null);
         }
-        $projectFields[$projectField->getId()] = array_filter($flatProjectField);
+        $projectFields[$projectField->getId()] = array_filter($flatProjectField, fn($x) => $x === null);
       }
       $flatParticipant['participantFields'] = $projectFields;
       unset($flatParticipant['participantFieldsData']);
