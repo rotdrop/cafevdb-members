@@ -103,16 +103,6 @@ export default {
     show: false,
   }),
   created() {
-    if (this.isDatePickerType !== false) {
-      const oldComputedPlaceholder = DatetimePicker.computed.placeholder
-      const explicitPlaceholder = this.placeholder
-      DatetimePicker.computed.placeholder = function() {
-        if (explicitPlaceholder) {
-          return explicitPlaceholder
-        }
-        return apply(this, oldComputedPlaceholder)
-      }
-    }
   },
   computed: {
     filled() {
