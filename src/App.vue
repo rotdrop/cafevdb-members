@@ -76,7 +76,7 @@
         <template #icon>
           <img :src="icon">
         </template>
-        <template #desc>
+        <template #description>
           <div v-if="memberDataError" class="error-section">
             <p class="error-info">
               {{ t(appId, 'Error') + ': ' + memberDataError }}
