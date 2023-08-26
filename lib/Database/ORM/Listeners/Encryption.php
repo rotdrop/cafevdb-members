@@ -60,7 +60,7 @@ class Encryption implements Transformable\Transformer\TransformerInterface
     try {
       $this->keyService->initEncryptionKeyPair();
     } catch (EncryptionException $e) {
-      $this->logInfo('Unable to initialize on-the-fly encryption');
+      $this->logDebug('Unable to initialize on-the-fly encryption');
     }
   }
   // phpcs:enable
