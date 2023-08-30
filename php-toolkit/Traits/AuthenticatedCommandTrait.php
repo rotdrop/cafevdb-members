@@ -31,9 +31,7 @@ use OCP\IUserManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Question\Question;
-use Symfony\Component\Console\Helper\ProgressBar;
 
 /** Trait in order to handle authentication with the cloud */
 trait AuthenticatedCommandTrait
@@ -41,13 +39,13 @@ trait AuthenticatedCommandTrait
   use LoggerTrait;
 
   /** @var IL10N */
-  protected $l;
+  protected IL10N $l;
 
   /** @var IUserManager */
-  protected $userManager;
+  protected IUserManager $userManager;
 
   /** @var IUserSession */
-  protected $userSession;
+  protected IUserSession $userSession;
 
   /** @var string */
   protected string $userId;
@@ -63,9 +61,9 @@ trait AuthenticatedCommandTrait
   protected function authenticate(InputInterface $input, OutputInterface $output):int
   {
     $helper = $this->getHelper('question');
-    $question = new Question($this->l->t('User: '), '');
+    $question = new Question($this->l->t('User') . ': ', '');
     $userId = $helper->ask($input, $output, $question);
-    $question = (new Question($this->l->t('Password: '), ''))->setHidden(true);
+    $question = (new Question($this->l->t('Password') . ': ', ''))->setHidden(true);
     $password = $helper->ask($input, $output, $question);
 
     // $output->writeln($this->l->t('Your Answers: "%s:%s"', [ $userId, $password ]));
