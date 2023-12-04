@@ -115,7 +115,7 @@ export default {
         return []
       }
       const possibleInstruments = this.activeProject.instrumentation.filter(
-        instrumentationNumber => instrumentationNumber.voice === 0
+        instrumentationNumber => instrumentationNumber.voice === 0,
       )
       return possibleInstruments.map(instrumentationNumber => instrumentationNumber.instrument)
     },
@@ -130,7 +130,7 @@ export default {
         return []
       }
       const possibleInstruments = this.activeProject.instrumentation.filter(
-        instrumentationNumber => instrumentationNumber.voice === 0 && this.registrationData.selectedInstruments.find(instrument => instrument.id === instrumentationNumber.instrument.id)
+        instrumentationNumber => instrumentationNumber.voice === 0 && this.registrationData.selectedInstruments.find(instrument => instrument.id === instrumentationNumber.instrument.id),
       )
       return possibleInstruments.map(instrumentationNumber => instrumentationNumber.instrument)
     },
