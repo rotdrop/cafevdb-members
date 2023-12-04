@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: translations\\@example.com\n"
-"POT-Creation-Date: 2023-08-22 17:33+0200\n"
-"PO-Revision-Date: 2023-08-22 17:36+0200\n"
+"POT-Creation-Date: 2023-08-30 12:50+0200\n"
+"PO-Revision-Date: 2023-08-30 12:51+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -276,19 +276,19 @@ msgid "Error response from call to internal route \"%1$s\": %2$s --  %3$s"
 msgstr ""
 "Fehler diagnostiziert für Anfrage an interne Route \"%1$s\": %2$s -- %3$s"
 
+#: php-toolkit/Traits/AuthenticatedCommandTrait.php:64
+msgid "User"
+msgstr "Benutzer"
+
 #: php-toolkit/Traits/AuthenticatedCommandTrait.php:66
-msgid "User: "
-msgstr "Benutzer: "
+msgid "Password"
+msgstr "Passwort"
 
-#: php-toolkit/Traits/AuthenticatedCommandTrait.php:68
-msgid "Password: "
-msgstr "Passwort: "
-
-#: php-toolkit/Traits/AuthenticatedCommandTrait.php:77
+#: php-toolkit/Traits/AuthenticatedCommandTrait.php:75
 msgid "Login succeeded."
 msgstr "Anmeldung erfolgreich."
 
-#: php-toolkit/Traits/AuthenticatedCommandTrait.php:79
+#: php-toolkit/Traits/AuthenticatedCommandTrait.php:77
 msgid "Login failed."
 msgstr "Anmeldung fehlgeschlagen."
 
