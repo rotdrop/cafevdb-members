@@ -1,6 +1,6 @@
 {
   "name": "cafevdbmembers",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "private": true,
   "description": "Expose a member's data record for the respective member",
   "homepage": "https://github.com/rotdrop/cafevdb-members.git",
