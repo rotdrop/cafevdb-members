@@ -3,7 +3,7 @@
  * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine
+ * @copyright Copyright (c) 2022-2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -38,10 +38,9 @@ class CatchAllController extends Controller
   public function __construct(
     string $appName,
     IRequest $request,
-    IL10N $l10n,
+    protected IL10N $l,
   ) {
     parent::__construct($this->appName, $request);
-    $this->l = $l10n;
   }
   // phpcs:enable
 

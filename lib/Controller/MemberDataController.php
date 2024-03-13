@@ -3,7 +3,7 @@
  * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine
+ * @copyright Copyright (c) 2022-2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -45,36 +45,19 @@ class MemberDataController extends Controller
   use \OCA\CAFeVDBMembers\Toolkit\Traits\ResponseTrait;
   use \OCA\CAFeVDBMembers\Toolkit\Traits\LoggerTrait;
 
-  /** @var string */
-  private $userId;
-
-  /** @var AuthenticationService */
-  private $authenticationService;
-
-  /** @var MemberDataService */
-  private $dataService;
-
-  /** @var EntityManager */
-  private $entityManager;
-
   // phpcs:ignore Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     string $appName,
     IRequest $request,
-    ?string $userId,
-    IL10N $l10n,
-    LoggerInterface $logger,
-    MemberDataService $dataService,
-    AuthenticationService $authenticationService,
-    EntityManager $entityManager,
+    private ?string $userId,
+    protected IL10N $l,
+    protected LoggerInterface $logger,
+    private MemberDataService $dataService,
+    private AuthenticationService $authenticationService,
+    private EntityManager $entityManager,
   ) {
     parent::__construct($appName, $request);
     $this->userId = $userId;
-    $this->l = $l10n;
-    $this->logger = $logger;
-    $this->authenticationService = $authenticationService;
-    $this->dataService = $dataService;
-    $this->entityManager = $entityManager;
   }
   // phpcs:enable
 

@@ -3,7 +3,7 @@
  * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine
+ * @copyright Copyright (c) 2022-2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -40,18 +40,12 @@ class MemberDataService
 
   const PATH_SEP = '/';
 
-  /** @var EntityManager */
-  private $entityManager;
-
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    EntityManager $entityManager,
-    LoggerInterface $logger,
-    IL10N $l10n,
+    private EntityManager $entityManager,
+    protected LoggerInterface $logger,
+    protected IL10N $l,
   ) {
-    $this->entityManager = $entityManager;
-    $this->logger = $logger;
-    $this->l = $l10n;
   }
   // phpcs:enable
 

@@ -1,7 +1,7 @@
 <?php
 /**
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright Copyright (c) 2022, 2023, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -84,49 +84,20 @@ class EntityManager extends EntityManagerDecorator
   /** @var EntityManagerInterface */
   private $entityManager;
 
-  /** @var string */
-  private $appName;
-
-  /** @var AuthenticationService */
-  private $authenticationService;
-
-  /** @var IConfig */
-  private $cloudConfig;
-
-  /** @var IAppContainer */
-  private $appContainer;
-
-  /** @var IL10N */
-  private $l;
-
-  /** @var CloudLogger */
-  private $sqlLogger;
-
-  /** @var string */
-  private $userId;
-
   /** @var bool */
   private $typesBound = false;
 
   // phpcs:ignore Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    string $appName,
-    ?string $userId,
-    AuthenticationService $authenticationService,
-    IAppContainer $appContainer,
-    IConfig $cloudConfig,
-    IL10N $l10n,
-    LoggerInterface $logger,
-    CloudLogger $sqlLogger,
+    private string $appName,
+    private ?string $userId,
+    private AuthenticationService $authenticationService,
+    private IAppContainer $appContainer,
+    private IConfig $cloudConfig,
+    protected IL10N $l,
+    protected LoggerInterface $logger,
+    private CloudLogger $sqlLogger,
   ) {
-    $this->appName = $appName;
-    $this->userId = $userId;
-    $this->authenticationService = $authenticationService;
-    $this->appContainer = $appContainer;
-    $this->cloudConfig = $cloudConfig;
-    $this->l = $l10n;
-    $this->logger = $logger;
-    $this->sqlLogger = $sqlLogger;
     try {
       parent::__construct($this->getEntityManager());
     } catch (\Throwable $t) {

@@ -3,7 +3,7 @@
  * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2023 Claus-Justus Heine
+ * @copyright Copyright (c) 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -49,34 +49,17 @@ class ProjectEventsApiController extends ApiController
   const INDEX_BY_PROJECT = 'byProject';
   const INDEX_BY_WEB_PAGE = 'byWebPage';
 
-  /** @var IL10N */
-  private $l;
-
-  /** @var IDateTimeZone */
-  private $dateTimeZone;
-
-  /** @var EventsService */
-  private $eventsService;
-
-  /** @var EntityManager */
-  private $entityManager;
-
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     ?string $appName,
     IRequest $request,
-    IL10N $l10n,
-    IDateTimeZone $dateTimeZone,
-    ILogger $logger,
-    EventsService $eventsService,
-    EntityManager $entityManager,
+    private IL10N $l,
+    private IDateTimeZone $dateTimeZone,
+    protected ILogger $logger,
+    private EventsService $eventsService,
+    private EntityManager $entityManager,
   ) {
     parent::__construct($appName, $request);
-    $this->eventsService = $eventsService;
-    $this->entityManager = $entityManager;
-    $this->l = $l10n;
-    $this->dateTimeZone = $dateTimeZone;
-    $this->logger = $logger;
   }
   // phpcs:enable
 

@@ -3,7 +3,7 @@
  * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine
+ * @copyright Copyright (c) 2022-2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -44,41 +44,19 @@ class SettingsController extends Controller
   const SYNCHRONIZE_KEY = 'synchronize';
   const USER_VIEWS_DATABASE_KEY = 'cloudUserViewsDatabase';
 
-  /** @var IConfig */
-  private $config;
-
-  /** @var string */
-  private $userId;
-
-  /** @var GroupFoldersService */
-  private $groupFoldersService;
-
-  /** @var ProjectGroupService */
-  private $projectGroupService;
-
-  /** @var string */
-  private $appManagementGroup;
-
   // phpcs:ignore Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     string $appName,
-    string $appManagementGroup,
     IRequest $request,
-    ?string $userId,
-    LoggerInterface $logger,
-    IL10N $l10n,
-    IConfig $config,
-    GroupFoldersService $groupFoldersService,
-    ProjectGroupService $projectGroupService,
+    private string $appManagementGroup,
+    private ?string $userId,
+    protected LoggerInterface $logger,
+    protected IL10N $l,
+    private IConfig $config,
+    private GroupFoldersService $groupFoldersService,
+    private ProjectGroupService $projectGroupService,
   ) {
     parent::__construct($appName, $request);
-    $this->appManagementGroup = $appManagementGroup;
-    $this->logger = $logger;
-    $this->l = $l10n;
-    $this->config = $config;
-    $this->userId = $userId;
-    $this->groupFoldersService = $groupFoldersService;
-    $this->projectGroupService = $projectGroupService;
   }
   // phpcs:enable
 

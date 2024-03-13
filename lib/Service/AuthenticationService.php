@@ -3,7 +3,7 @@
  * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine
+ * @copyright Copyright (c) 2022-2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -38,23 +38,13 @@ class AuthenticationService
   use \OCA\CAFeVDBMembers\Toolkit\Traits\LoggerTrait;
   use \OCA\CAFeVDBMembers\Toolkit\Traits\UtilTrait;
 
-  /** @var string */
-  private $userId;
-
-  /** @var AsymmetricKeyService */
-  private $keyService;
-
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    ?string $userId,
-    AsymmetricKeyService $keyService,
-    LoggerInterface $logger,
-    IL10N $l10n,
+    private ?string $userId,
+    private AsymmetricKeyService $keyService,
+    protected LoggerInterface $logger,
+    protected IL10N $l,
   ) {
-    $this->userId = $userId;
-    $this->keyService = $keyService;
-    $this->logger = $logger;
-    $this->l = $l10n;
   }
   // phpcs:enable
 

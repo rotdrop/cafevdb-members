@@ -3,7 +3,7 @@
  * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine
+ * @copyright Copyright (c) 2022-2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -69,33 +69,6 @@ class EventsService
   private const VCARD = VCalendarType::VCARD;
   private const VJOURNAL = VCalendarType::VJOURNAL;
 
-  /* @var string */
-  private $appName;
-
-  /** @var IL10N */
-  private $l;
-
-  /** @var IL10NFactory */
-  private $l10nFactory;
-
-  /** @var DateTimeZone */
-  private $dateTimeZone;
-
-  /** @var IDateTimeFormatter */
-  private $dateTimeFormatter;
-
-  /** @var ICloudConfig */
-  private $cloudConfig;
-
-  /** @var ICalendarManager */
-  private $calendarManager;
-
-  /** @var EntityManager */
-  private $entityManager;
-
-  /** @var CalDavService */
-  private $calDavService;
-
   /**
    * @var array Cache the siblings of recurring events by calendar-id,
    * event-uid, sequence, recurrence-id. This cache contains calendar VEvent
@@ -105,27 +78,17 @@ class EventsService
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    ?string $appName,
-    LoggerInterface $logger,
-    IL10N $l10n,
-    IL10NFactory $l10nFactory,
-    IDateTimeZone $dateTimeZone,
-    IDateTimeFormatter $dateTimeFormatter,
-    ICloudConfig $cloudConfig,
-    ICalendarManager $calendarManager,
-    EntityManager $entityManager,
-    CalDavService $calDavService,
+    private ?string $appName,
+    protected LoggerInterface $logger,
+    protected IL10N $l,
+    private IL10NFactory $l10nFactory,
+    private IDateTimeZone $dateTimeZone,
+    private IDateTimeFormatter $dateTimeFormatter,
+    private ICloudConfig $cloudConfig,
+    private ICalendarManager $calendarManager,
+    private EntityManager $entityManager,
+    private CalDavService $calDavService,
   ) {
-    $this->appName = $appName;
-    $this->logger = $logger;
-    $this->l = $l10n;
-    $this->dateTimeZone = $dateTimeZone->getTimeZone();
-    $this->l10nFactory = $l10nFactory;
-    $this->dateTimeFormatter = $dateTimeFormatter;
-    $this->cloudConfig = $cloudConfig;
-    $this->calendarManager = $calendarManager;
-    $this->entityManager = $entityManager;
-    $this->calDavService = $calDavService;
   }
   // phpcs:enable
 

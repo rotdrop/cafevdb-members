@@ -3,7 +3,7 @@
  * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine
+ * @copyright Copyright (c) 2022-2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -37,26 +37,13 @@ class Encryption implements Transformable\Transformer\TransformerInterface
 {
   use \OCA\CAFeVDBMembers\Toolkit\Traits\LoggerTrait;
 
-  /** @var IUserSession */
-  private $userSession;
-
-  /** @var Crypto\AsymmetricKeyService */
-  private $keyService;
-
-  /** @var Crypto\SealCryptor */
-  private $sealCryptor;
-
   // phpcs:ignore Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    IUserSession $userSession,
-    Crypto\AsymmetricKeyService $keyService,
-    Crypto\SealCryptor $sealCryptor,
-    LoggerInterface $logger,
+    private IUserSession $userSession,
+    private Crypto\AsymmetricKeyService $keyService,
+    private Crypto\SealCryptor $sealCryptor,
+    protected LoggerInterface $logger,
   ) {
-    $this->userSession = $userSession;
-    $this->keyService = $keyService;
-    $this->sealCryptor = clone $sealCryptor;
-    $this->logger = $logger;
     try {
       $this->keyService->initEncryptionKeyPair();
     } catch (EncryptionException $e) {

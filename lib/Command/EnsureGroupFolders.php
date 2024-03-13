@@ -3,7 +3,7 @@
  * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine>
+ * @copyright Copyright (c) 2022-2024 Claus-Justus Heine>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -35,24 +35,12 @@ use OCA\CAFeVDBMembers\Service\ProjectGroupService;
 /** Synchronize the group-folders structure with the existing orchestra projects. */
 class EnsureGroupFolders extends Command
 {
-  /** @vasr string */
-  private $appName;
-
-  /** @var IL10N */
-  protected $l;
-
-  /** @var ProjectGroupService */
-  private $projectGroupsService;
-
-  /** {@inheritdoc} */
+   /** {@inheritdoc} */
   public function __construct(
-    string $appName,
-    IL10N $l10n,
-    ProjectGroupService $projectGroupsService,
+    private string $appName,
+    protected IL10N $l,
+    private ProjectGroupService $projectGroupsService,
   ) {
-    $this->appName = $appName;
-    $this->l = $l10n;
-    $this->projectGroupsService = $projectGroupsService;
     parent::__construct();
   }
 

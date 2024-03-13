@@ -1,7 +1,7 @@
 <?php
 /**
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine
+ * @copyright Copyright (c) 2022-2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,24 +27,12 @@ use OCP\Settings\IIconSection;
 /** Implementation of admin settings section. */
 class AdminSection implements IIconSection
 {
-  /** @var string */
-  private $appName;
-
-  /** @var IL10N */
-  private $l;
-
-  /** @var IURLGenerator */
-  private $urlGenerator;
-
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    string $appName,
-    IL10N $l10n,
-    IURLGenerator $urlGenerator,
+    private string $appName,
+    private IL10N $l,
+    private IURLGenerator $urlGenerator,
   ) {
-    $this->appName = $appName;
-    $this->l = $l10n;
-    $this->urlGenerator = $urlGenerator;
   }
   // phpcs:enable
 

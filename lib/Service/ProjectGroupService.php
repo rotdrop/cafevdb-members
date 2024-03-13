@@ -3,7 +3,7 @@
  * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine
+ * @copyright Copyright (c) 2022-2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -49,36 +49,15 @@ class ProjectGroupService
   const GROUP_LEAF_PERMISSIONS = GroupFoldersService::PERMISSION_DELETE|GroupFoldersService::PERMISSION_WRITE;
   const GROUP_PARENT_PERMISSIONS = GroupFoldersService::PERMISSION_READ;
 
-  /** @var IL10N */
-  private $l;
-
-  /** @var IGroupManager */
-  private $groupManager;
-
-  /** @var GroupFoldersService */
-  private $groupFoldersService;
-
-  /** @var string */
-  private $memberRootFolder;
-
-  /** @var string */
-  private $appManagementGroup;
-
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    string $appManagementGroup,
-    string $memberRootFolder,
-    LoggerInterface $logger,
-    IL10N $l10n,
-    IGroupManager $groupManager,
-    GroupFoldersService $groupFoldersService,
+    private string $appManagementGroup,
+    private string $memberRootFolder,
+    protected LoggerInterface $logger,
+    protected IL10N $l,
+    private IGroupManager $groupManager,
+    private GroupFoldersService $groupFoldersService,
   ) {
-    $this->appManagementGroup = $appManagementGroup;
-    $this->memberRootFolder = $memberRootFolder;
-    $this->logger = $logger;
-    $this->l = $l10n;
-    $this->groupManager = $groupManager;
-    $this->groupFoldersService = $groupFoldersService;
   }
   // phpcs:enable
 

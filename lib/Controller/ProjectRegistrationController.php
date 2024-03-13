@@ -3,7 +3,7 @@
  * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2023 Claus-Justus Heine
+ * @copyright Copyright (c) 2023, 2024 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -59,59 +59,22 @@ class ProjectRegistrationController extends Controller
   use \OCA\CAFeVDBMembers\Toolkit\Traits\LoggerTrait;
   use \OCA\CAFeVDBMembers\Toolkit\Traits\DateTimeTrait;
 
-  /** @var IL10N */
-  private $l;
-
-  /** @var IUserSession */
-  private $userSession;
-
-  /** @var IConfig */
-  private $cloudConfig;
-
-  /** @var ICalendarMananger */
-  private $calendarManager;
-
-  /** @var IDateTimeZone */
-  private $dateTimeZone;
-
-  /** @var IURLGenerator */
-  private $urlGenerator;
-
-  /** @var IInitialState */
-  private $initialState;
-
-  /** @var EntityManager */
-  private $entityManager;
-
-  /** @var EventsService */
-  private $eventsService;
-
   // phpcs:ignore Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     string $appName,
     IRequest $request,
-    IUserSession $userSession,
-    IL10N $l10n,
-    LoggerInterface $logger,
-    IConfig $cloudConfig,
-    ICalendarMananger $calendarManager,
-    IDateTimeZone $dateTimeZone,
-    IURLGenerator $urlGenerator,
-    IInitialState $initialState,
-    EntityManager $entityManager,
-    EventsService $eventsService,
+    private IUserSession $userSession,
+    private IL10N $l,
+    protected LoggerInterface $logger,
+    private IConfig $cloudConfig,
+    private ICalendarMananger $calendarManager,
+    private IDateTimeZone $dateTimeZone,
+    private IURLGenerator $urlGenerator,
+    private IInitialState $initialState,
+    private EntityManager $entityManager,
+    private EventsService $eventsService,
   ) {
     parent::__construct($appName, $request);
-    $this->userSession = $userSession;
-    $this->l = $l10n;
-    $this->logger = $logger;
-    $this->cloudConfig = $cloudConfig;
-    $this->calendarManager = $calendarManager;
-    $this->dateTimeZone = $dateTimeZone;
-    $this->urlGenerator = $urlGenerator;
-    $this->initialState = $initialState;
-    $this->entityManager = $entityManager;
-    $this->eventsService = $eventsService;
   }
   // phpcs:enable
 
