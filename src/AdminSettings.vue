@@ -19,12 +19,15 @@
  - along with this program. If not, see <http://www.gnu.org/licenses/>.
  -->
 <template>
-  <SettingsSection :title="t(appName, 'CAFeVDB Database Connector, Admin Settings')">
-    <AppSettingsSection :title="t(appname, 'Settings for Registered Members')">
-      <SettingsInputText v-model="memberRootFolder"
-                         :label="t(appName, 'Member-Data Root-Folder')"
-                         :hint="t(appName, 'Specify the root folder below which all member-data will be mounted.')"
-                         @update="saveTextInput(...arguments, 'memberRootFolder')"
+  <div :class="templateroot">
+    <h1 class="title">
+      {{ t(appName, 'CAFeVDB Database Connector, Admin Settings') }}
+    </h1>
+    <NcSettingsSection :name="t(appname, 'Settings for Registered Members')">
+      <TextField :value.sync="memberRootFolder"
+                 :label="t(appName, 'Member-Data Root-Folder')"
+                 :hint="t(appName, 'Specify the root folder below which all member-data will be mounted.')"
+                 @submit="saveTextInput('memberRootFolder')"
       />
       <div v-if="showSyncProgress">
         <div class="sync-status">
@@ -39,9 +42,9 @@
           <span class="flex-spacer" />
           <span class="sync-counter">{{ syncCounter }}</span>
         </div>
-        <ProgressBar :value="syncPercentage"
-                     :error="syncError"
-                     size="medium"
+        <NcProgressBar :value="syncPercentage"
+                       :error="syncError"
+                       size="medium"
         />
       </div>
       <button v-else
@@ -52,26 +55,27 @@
       >
         {{ t(appName, 'Synchronize Folder-Structure') }}
       </button>
-      <SettingsInputText v-model="cloudUserViewsDatabase"
-                         :label="t(appName, 'Personalized Views Database')"
-                         :hint="t(appName, 'The name of the data-base which holds the personalized single-row views which contain the data for the currently logged-on user.')"
-                         @update="saveTextInput(...arguments, 'cloudUserViewsDatabase')"
+      <TextField :value.sync="cloudUserViewsDatabase"
+                 :label="t(appName, 'Personalized Views Database')"
+                 :hint="t(appName, 'The name of the data-base which holds the personalized single-row views which contain the data for the currently logged-on user.')"
+                 @submit="saveTextInput('cloudUserViewsDatabase')"
       />
-    </AppSettingsSection>
-    <AppSettingsSection :title="t(appName, 'Project Registration Settings')">
+    </NcSettingsSection>
+    <NcSettingsSection :name="t(appName, 'Project Registration Settings')">
       <div>TODO</div>
       <div>{{ t(appName, 'Terms and Conditions') }}</div>
       <div>{{ t(appName, 'Privacy Statement') }}</div>
-    </AppSettingsSection>
-  </SettingsSection>
+    </NcSettingsSection>
+  </div>
 </template>
 
 <script>
 import { appName } from './config.js'
-import ProgressBar from '@nextcloud/vue/dist/Components/NcProgressBar'
-import SettingsSection from '@nextcloud/vue/dist/Components/NcSettingsSection'
-import AppSettingsSection from '@nextcloud/vue/dist/Components/NcAppSettingsSection'
-import SettingsInputText from '@rotdrop/nextcloud-vue-components/lib/components/SettingsInputText'
+import {
+  NcProgressBar,
+  NcSettingsSection,
+} from '@nextcloud/vue'
+import TextField from '@rotdrop/nextcloud-vue-components/lib/components/TextFieldWithSubmitButton.vue'
 import { generateUrl } from '@nextcloud/router'
 import { showError, showSuccess, showInfo, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
 import axios from '@nextcloud/axios'
@@ -79,10 +83,9 @@ import axios from '@nextcloud/axios'
 export default {
   name: 'AdminSettings',
   components: {
-    AppSettingsSection,
-    ProgressBar,
-    SettingsInputText,
-    SettingsSection,
+    NcSettingsSection,
+    NcProgressBar,
+    TextField,
   },
   data() {
     return {
@@ -96,9 +99,6 @@ export default {
       syncCounter: '',
       cloudUserViewsDatabase: '',
     }
-  },
-  created() {
-    this.getData()
   },
   computed: {
     showSyncProgress() {
@@ -114,8 +114,11 @@ export default {
       return this.syncLabel
     },
     syncFinished() {
-      return (this.syncDone > 0 && this.syncDone == this.syncTotals) || this.syncFailure
-    }
+      return (this.syncDone > 0 && this.syncDone === this.syncTotals) || this.syncFailure
+    },
+  },
+  created() {
+    this.getData()
   },
   methods: {
     async getData() {
@@ -131,21 +134,24 @@ export default {
       this.memberFolderGroups = response.data.value
       console.info('FOLDER GROUPS', this.memberFolderGroups)
     },
-    async saveTextInput(value, settingsKey, force) {
+    async saveTextInput(settingsKey, value, force) {
+      if (value === undefined) {
+        value = this[settingsKey] || ''
+      }
       const self = this
       console.info('ARGS', arguments)
       console.info('SAVE INPUTTEST', this.memberRootFolder)
       console.info('THIS', this)
       try {
         const response = await axios.post(generateUrl('apps/' + appName + '/settings/admin/' + settingsKey), { value, force })
-        const responseData = response.data;
-        if (responseData.status == 'unconfirmed') {
+        const responseData = response.data
+        if (responseData.status === 'unconfirmed') {
           OC.dialogs.confirm(
             responseData.feedback,
             t(appName, 'Confirmation Required'),
             function(answer) {
               if (answer) {
-                self.saveTextInput(value, settingsKey, true);
+                self.saveTextInput(value, settingsKey, true)
               } else {
                 showInfo(t(appName, 'Unconfirmed, reverting to old value.'))
                 self.getData()
@@ -170,7 +176,6 @@ export default {
       }
     },
     async synchronizeFolders() {
-      const self = this
       this.synchronizing = true
       this.syncTotals = this.memberFolderGroups.length
       this.syncDone = 0
@@ -181,7 +186,7 @@ export default {
         this.syncLabel = t(appName, 'Synchronizing for group {group}', { group: group.displayName })
         this.syncCounter = t(appName, '{current} of {totals}', { current: this.syncDone + 1, totals: this.syncTotals })
         try {
-          const response = await axios.post(generateUrl('apps/' + appName + '/settings/admin/synchronize'), { value: group.gid })
+          await axios.post(generateUrl('apps/' + appName + '/settings/admin/synchronize'), { value: group.gid })
         } catch (e) {
           let message = t(appName, 'reason unknown')
           if (e.response && e.response.data && e.response.data.messages) {
@@ -193,13 +198,16 @@ export default {
           }
           showError(t(appName, 'Folder for "{group}" could not be created: {message}', { group: group.displayName, message }), { timeout: TOAST_PERMANENT_TIMEOUT })
           this.syncFailure = true
-          break;
+          break
         }
         ++this.syncDone
       }
       this.syncLabel = this.syncFailure
-        ? t(appName, 'Failed at group "{group}" after {numFolders} have been processed successfully, {remainingFolders} are remaining.',
-            { group: group.displayName, numFolders: this.syncDone, remainingFolders: this.syncTotals - this.syncDone } )
+        ? t(appName, 'Failed at group "{group}" after {numFolders} have been processed successfully, {remainingFolders} are remaining.', {
+          group: group.displayName,
+          numFolders: this.syncDone,
+          remainingFolders: this.syncTotals - this.syncDone,
+        })
         : t(appName, 'All done, folder structure for all {numFolders} folders is up to date.', { numFolders: this.syncTotals })
     },
     hideProgressFeedback() {
@@ -210,28 +218,28 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-  .settings-section {
-    ::v-deep &__title {
-      padding-left:60px;
-      background-image:url('../img/cafevdbmembers.svg');
-      background-repeat:no-repeat;
-      background-origin:border-box;
-      background-size:45px;
-      background-position:left center;
-      height:30px;
-    }
-    .sync-status {
-      display:flex;
-      flex-direction:row;
-      align-items:center;
+.templateroot {
+  h1.title {
+    padding-left:60px;
+    background-image:url('../img/cafevdbmembers.svg');
+    background-repeat:no-repeat;
+    background-origin:border-box;
+    background-size:45px;
+    background-position:left center;
+    height:30px;
+  }
+  .sync-status {
+    display:flex;
+    flex-direction:row;
+    align-items:center;
       width:100%;
-      .flex-spacer {
-        flex-grow:4;
-        height:34px
-      }
-      button.sync-clear {
-        margin-left:1ex;
-      }
+    .flex-spacer {
+      flex-grow:4;
+      height:34px
+    }
+    button.sync-clear {
+      margin-left:1ex;
     }
   }
+}
 </style>

@@ -21,9 +21,9 @@
 <template>
   <div :class="{ 'icon-loading': loading, 'page-container': true, loading, }">
     <h2>{{ t(appId, 'Instrument Insurances of {publicName}', {publicName: memberData.personalPublicName }) }}</h2>
-    <CheckboxRadioSwitch v-if="haveDeleted" :checked.sync="showDeleted">
+    <NcCheckboxRadioSwitch v-if="haveDeleted" :checked.sync="showDeleted">
       {{ t(appId, 'show deleted') }}
-    </CheckboxRadioSwitch>
+    </NcCheckboxRadioSwitch>
     <div v-if="memberData.instrumentInsurances.length === 0">
       {{ t(appId, 'You do not have any instrument insurances.') }}
     </div>
@@ -49,15 +49,15 @@
             />
             <ListItem :title="t(appId, 'Yearly Insurance Bills')">
               <template #details>
-                <Actions class="insurance-bill-list">
-                  <ActionLink v-for="receivable in insuranceBills"
-                              :key="receivable.optionKey"
-                              icon="icon-download"
-                              :href="optionDownloadUrl(receivable.optionKey)"
+                <NcActions class="insurance-bill-list">
+                  <NcActionLink v-for="receivable in insuranceBills"
+                                :key="receivable.optionKey"
+                                icon="icon-download"
+                                :href="optionDownloadUrl(receivable.optionKey)"
                   >
                     {{ receivable.dataOption.label }}
-                  </ActionLink>
-                </Actions>
+                  </NcActionLink>
+                </NcActions>
               </template>
             </ListItem>
           </ul>
@@ -77,13 +77,13 @@
             >
               <template #details>
                 <span class="insurance-amount">{{ insurance.insuranceAmount + ' ' + currencySymbol }}</span>
-                <Actions class="insurance-details">
-                  <ActionButton icon="icon-info"
-                                @click="requestInsuranceDetails(insurance)"
+                <NcActions class="insurance-details">
+                  <NcActionButton icon="icon-info"
+                                  @click="requestInsuranceDetails(insurance)"
                   >
                     {{ t(appId, 'details') }}
-                  </ActionButton>
-                </Actions>
+                  </NcActionButton>
+                </NcActions>
               </template>
             </ListItem>
           </ul>
@@ -103,13 +103,13 @@
             >
               <template #details>
                 <span class="insurance-amount">{{ insurance.insuranceAmount + ' ' + currencySymbol }}</span>
-                <Actions class="insurance-details">
-                  <ActionButton icon="icon-info"
-                                @click="requestInsuranceDetails(insurance)"
+                <NcActions class="insurance-details">
+                  <NcActionButton icon="icon-info"
+                                  @click="requestInsuranceDetails(insurance)"
                   >
                     {{ t(appId, 'details') }}
-                  </ActionButton>
-                </Actions>
+                  </NcActionButton>
+                </NcActions>
               </template>
             </ListItem>
           </ul>
@@ -129,13 +129,13 @@
             >
               <template #details>
                 <span class="insurance-amount">{{ insurance.insuranceAmount + ' ' + currencySymbol }}</span>
-                <Actions class="insurance-details">
-                  <ActionButton icon="icon-info"
-                                @click="requestInsuranceDetails(insurance)"
+                <NcActions class="insurance-details">
+                  <NcActionButton icon="icon-info"
+                                  @click="requestInsuranceDetails(insurance)"
                   >
                     {{ t(appId, 'details') }}
-                  </ActionButton>
-                </Actions>
+                  </NcActionButton>
+                </NcActions>
               </template>
             </ListItem>
           </ul>
@@ -149,35 +149,34 @@
 
 import { appName as appId } from '../config.js'
 import { set as vueSet } from 'vue'
-import ListItem from '../components/ListItem'
-import DebugInfo from '../components/DebugInfo'
-import Actions from '@nextcloud/vue/dist/Components/NcActions'
-import ActionLink from '@nextcloud/vue/dist/Components/NcActionLink'
-import ActionButton from '@nextcloud/vue/dist/Components/NcActionButton'
-import CheckboxRadioSwitch from '@nextcloud/vue/dist/Components/NcCheckboxRadioSwitch'
-import AppSidebar from '@nextcloud/vue/dist/Components/NcAppSidebar'
-import AppSidebarTab from '@nextcloud/vue/dist/Components/NcAppSidebarTab'
-import { generateUrl } from '@nextcloud/router'
-import { getLocale, getCanonicalLocale, } from '@nextcloud/l10n'
-import { getInitialState } from '../toolkit/services/InitialStateService'
-import { getRequestToken } from '@nextcloud/auth'
+import ListItem from '../components/ListItem.vue'
+import DebugInfo from '../components/DebugInfo.vue'
 
-const initialState = getInitialState()
+import {
+  NcActions,
+  NcActionLink,
+  NcActionButton,
+  NcCheckboxRadioSwitch,
+} from '@nextcloud/vue'
+
+import { generateUrl } from '@nextcloud/router'
+import { getInitialState } from '../toolkit/services/InitialStateService.js'
+import { getRequestToken } from '@nextcloud/auth'
 import { useMemberDataStore } from '../stores/memberData.js'
 
-const viewName ='InstrumentInsurances'
+const initialState = getInitialState()
+
+const viewName = 'InstrumentInsurances'
 
 export default {
   name: viewName,
   components: {
-    CheckboxRadioSwitch,
-    ListItem,
     DebugInfo,
-    Actions,
-    ActionLink,
-    ActionButton,
-    AppSidebar,
-    AppSidebarTab,
+    ListItem,
+    NcActionButton,
+    NcActionLink,
+    NcActions,
+    NcCheckboxRadioSwitch,
   },
   mixins: [
     {
@@ -208,7 +207,7 @@ export default {
   },
   computed: {
     insuranceBills() {
-        return this.memberData.insuranceDetails.receivables.filter(x => x.supportingDocumentId)
+      return this.memberData.insuranceDetails.receivables.filter(x => x.supportingDocumentId)
     },
   },
   async created() {
@@ -216,13 +215,13 @@ export default {
 
     if (this.memberData.initialized.loaded && !this.memberData.initialized[viewName]) {
       // extract insurances information
-      const ownInsurances = []; // holder or owner === debitor
-      const insurancesForOthers = []; // debitor === thisMember, holder and owner different
-      const insurancesByOthers = []; // holder or owner === thisMember, debitor different
+      const ownInsurances = [] // holder or owner === debitor
+      const insurancesForOthers = [] // debitor === thisMember, holder and owner different
+      const insurancesByOthers = [] // holder or owner === thisMember, debitor different
       for (const insurance of this.memberData.instrumentInsurances) {
         if (insurance.isDebitor) {
           if (insurance.isHolder) {
-            ownInsurances.push(insurance);
+            ownInsurances.push(insurance)
           } else {
             insurancesForOthers.push(insurance)
           }
@@ -234,7 +233,7 @@ export default {
       vueSet(this.memberData.insuranceDetails, 'byOthers', insurancesByOthers)
       vueSet(this.memberData.insuranceDetails, 'self', ownInsurances)
 
-      const insuranceReceivables = [];
+      const insuranceReceivables = []
       for (const participant of this.memberData.projectParticipation) {
         console.info('PROJECT', participant)
         if (participant.project.clubMembers) {
@@ -253,19 +252,19 @@ export default {
           }
         }
       }
-      insuranceReceivables.sort((left, right) => - parseInt(left.dataOption.data) + parseInt(right.dataOption.data))
+      insuranceReceivables.sort((left, right) => -parseInt(left.dataOption.data) + parseInt(right.dataOption.data))
 
       vueSet(this.memberData.insuranceDetails, 'receivables', insuranceReceivables)
 
-      this.memberData.initialized[viewName] = true;
+      this.memberData.initialized[viewName] = true
     }
 
     if (this.memberData.initialized[viewName]) {
 
-      this.totalInsuredValue = 0.0;
+      this.totalInsuredValue = 0.0
       for (const insurance of this.memberData.insuranceDetails.self.concat(
         this.memberData.insuranceDetails.forOthers,
-        this.memberData.insuranceDetails.byOthers
+        this.memberData.insuranceDetails.byOthers,
       )) {
         insurance.showDetails = false
         if (insurance.deleted) {
@@ -280,8 +279,7 @@ export default {
       }
       this.haveOthers = (
         this.memberData.insuranceDetails.byOthers.length
-        +
-        this.memberData.insuranceDetails.forOthers.length
+        + this.memberData.insuranceDetails.forOthers.length
       ) > 0
     }
 
@@ -304,7 +302,7 @@ export default {
           taxRate: this.taxRate,
           currencySymbol: this.currencySymbol,
           includeRole: this.haveOthers,
-        }
+        },
       })
     },
   },

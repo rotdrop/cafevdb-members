@@ -34,34 +34,49 @@
 </template>
 <script>
 import { appName as appId } from '../../config.js'
-import ListItem from '../../components/ListItem'
+import ListItem from '../../components/ListItem.vue'
 import formatDate from '../../mixins/formatDate.js'
 
 export default {
   components: {
     ListItem,
   },
+  mixins: [
+    formatDate,
+  ],
   props: {
-    insurance: { type: [Object,Boolean], required: true, default: false },
-    taxRate: { type: Number, required: true, default: 0.0 },
-    currencySymbol: { type: String, required: true, default: '' },
-    includeRole: true,
+    insurance: {
+      type: [Object, Boolean],
+      required: true,
+      default: false,
+    },
+    taxRate: {
+      type: Number,
+      required: true,
+      default: 0.0,
+    },
+    currencySymbol: {
+      type: String,
+      required: true,
+      default: '',
+    },
+    includeRole: {
+      type: Boolean,
+      default: true,
+    },
   },
   computed: {
     roles() {
       const roles = []
       this.insurance.isDebitor && roles.push(t(appId, 'debitor'))
-      if (this.insurance.isHolder != this.insurance.isOwner) {
+      if (this.insurance.isHolder !== this.insurance.isOwner) {
         this.insurance.isOwner && roles.push(t(appId, 'owner'))
         this.insurance.isHolder && roles.push(t(appId, 'holder'))
       } else {
         this.insurance.isOwner && roles.push(t(appId, 'owner'))
       }
       return roles.join('; ')
-    }
+    },
   },
-  mixins: [
-    formatDate,
-  ],
 }
 </script>

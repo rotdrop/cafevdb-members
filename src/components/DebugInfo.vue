@@ -20,20 +20,18 @@
  -->
 <template>
   <div v-if="debug" class="debug-container">
-    <CheckboxRadioSwitch :checked.sync="debug">
+    <NcCheckboxRadioSwitch :checked.sync="debug">
       {{ t(appId, 'Enable Debug') }}
-    </CheckboxRadioSwitch>
+    </NcCheckboxRadioSwitch>
     <div class="debug">
       <div>{{ t(appId, 'DEBUG: all data') }}</div>
       <pre>{{ stringify(debugData) }}</pre>
     </div>
   </div>
 </template>
-
 <script>
 
-import { appName as appId } from '../config.js'
-import CheckboxRadioSwitch from '@nextcloud/vue/dist/Components/NcCheckboxRadioSwitch'
+import { NcCheckboxRadioSwitch } from '@nextcloud/vue'
 
 import { useAppDataStore } from '../stores/appData.js'
 import { mapWritableState } from 'pinia'
@@ -41,10 +39,14 @@ import { mapWritableState } from 'pinia'
 export default {
   name: 'DebugInfo',
   components: {
-    CheckboxRadioSwitch,
+    NcCheckboxRadioSwitch,
   },
   props: {
-    debugData: { type: Object, required: true, default: {} },
+    debugData: {
+      type: Object,
+      required: true,
+      default: () => {},
+    },
   },
   computed: {
     ...mapWritableState(useAppDataStore, ['debug']),
@@ -54,12 +56,12 @@ export default {
       console.info('DATA', data)
       try {
         const getCircularReplacer = () => {
-          const seen = new WeakSet
+          const seen = new WeakSet()
           return (key, value) => {
             if (key.startsWith('$') || key.startsWith('_')) {
               return
             }
-            if (typeof value === "object" && value !== null) {
+            if (typeof value === 'object' && value !== null) {
               if (seen.has(value)) {
                 return
               }

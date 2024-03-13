@@ -1,5 +1,5 @@
 /**
- * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright Copyright (c) 2022-2024 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
  *
@@ -24,7 +24,6 @@ import { defineStore } from 'pinia'
 
 import { appName as appId } from '../config.js'
 import { set as vueSet } from 'vue'
-import '@nextcloud/dialogs/styles/toast.scss'
 import { generateUrl, generateOcsUrl } from '@nextcloud/router'
 import { getCurrentUser } from '@nextcloud/auth'
 import { showError, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'

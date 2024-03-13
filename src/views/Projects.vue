@@ -1,5 +1,5 @@
 <!--
- * @copyright Copyright (c) 2022-2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ - @copyright Copyright (c) 2022-2024 Claus-Justus Heine <himself@claus-justus-heine.de>
  -
  - @author Claus-Justus Heine <himself@claus-justus-heine.de>
  -
@@ -31,13 +31,13 @@
                 :bold="true"
       >
         <template #details>
-          <Actions class="project-details">
-            <ActionButton icon="icon-info"
-                          @click="requestProjectDetails(participant)"
+          <NcActions class="project-details">
+            <NcActionButton icon="icon-info"
+                            @click="requestProjectDetails(participant)"
             >
               {{ t(appId, 'details') }}
-            </ActionButton>
-          </Actions>
+            </NcActionButton>
+          </NcActions>
         </template>
       </ListItem>
     </ul>
@@ -47,18 +47,15 @@
 <script>
 
 import { appName as appId } from '../config.js'
-import Vue from 'vue'
-import ListItem from '../components/ListItem'
-import DebugInfo from '../components/DebugInfo'
-import Actions from '@nextcloud/vue/dist/Components/NcActions'
-import ActionButton from '@nextcloud/vue/dist/Components/NcActionButton'
-import CheckboxRadioSwitch from '@nextcloud/vue/dist/Components/NcCheckboxRadioSwitch'
-import '@nextcloud/dialogs/styles/toast.scss'
+import ListItem from '../components/ListItem.vue'
+import DebugInfo from '../components/DebugInfo.vue'
+import {
+  NcActions,
+  NcActionButton,
+} from '@nextcloud/vue'
 import { generateUrl } from '@nextcloud/router'
 import { showError, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
 import axios from '@nextcloud/axios'
-
-import ProjectDetails from './Projects/ProjectDetails'
 
 import { useAppDataStore } from '../stores/appData.js'
 import { useMemberDataStore } from '../stores/memberData.js'
@@ -69,12 +66,10 @@ const viewName = 'Projects'
 export default {
   name: viewName,
   components: {
-    CheckboxRadioSwitch,
-    ListItem,
-    ProjectDetails,
-    Actions,
-    ActionButton,
     DebugInfo,
+    ListItem,
+    NcActionButton,
+    NcActions,
   },
   setup() {
     const memberData = useMemberDataStore()
@@ -93,7 +88,7 @@ export default {
 
     if (this.memberRootFolder === '') {
       try {
-        let response = await axios.get(generateUrl('apps/' + appId + '/settings/app/memberRootFolder'), {})
+        const response = await axios.get(generateUrl('apps/' + appId + '/settings/app/memberRootFolder'), {})
         this.memberRootFolder = response.data.value
       } catch (e) {
         console.error('ERROR', e)
@@ -121,7 +116,7 @@ export default {
         props: {
           participant,
           memberRootFolder: this.memberRootFolder,
-        }
+        },
       })
     },
   },

@@ -19,50 +19,50 @@
  - along with this program. If not, see <http://www.gnu.org/licenses/>.
  -->
 <template>
-  <Content :class="{ 'icon-loading': loading, 'root-view': true }" :app-name="appId">
-    <AppNavigation>
+  <NcContent :class="{ 'icon-loading': loading, 'root-view': true }" :app-name="appId">
+    <NcAppNavigation>
       <template #list>
-        <AppNavigationItem :to="routerDestination('registrationHome')"
-                           :title="isPublicPage ? t(appId, 'Home') : t(appId, 'Start Registration')"
-                           icon="icon-home"
-                           exact
+        <NcAppNavigationItem :to="routerDestination('registrationHome')"
+                             :title="isPublicPage ? t(appId, 'Home') : t(appId, 'Start Registration')"
+                             icon="icon-home"
+                             exact
         />
-        <AppNavigationItem :to="routerDestination('registrationPersonalProfile')"
-                           :title="t(appId, 'Personal Profile')"
-                           icon="icon-user"
-                           :class="{ disabled: !activeProject }"
-                           exact
+        <NcAppNavigationItem :to="routerDestination('registrationPersonalProfile')"
+                             :title="t(appId, 'Personal Profile')"
+                             icon="icon-user"
+                             :class="{ disabled: !activeProject }"
+                             exact
         />
-        <AppNavigationItem :to="routerDestination('registrationParticipation')"
-                           :title="t(appId, 'Instrumentation and Events')"
-                           icon="icon-music"
-                           :class="{ disabled: !activeProject }"
-                           exact
+        <NcAppNavigationItem :to="routerDestination('registrationParticipation')"
+                             :title="t(appId, 'Instrumentation and Events')"
+                             icon="icon-music"
+                             :class="{ disabled: !activeProject }"
+                             exact
         />
-        <AppNavigationItem :to="routerDestination('registrationProjectOptions')"
-                           :title="t(appId, 'Options')"
-                           icon="icon-details"
-                           :class="{ disabled: !activeProject }"
-                           exact
+        <NcAppNavigationItem :to="routerDestination('registrationProjectOptions')"
+                             :title="t(appId, 'Options')"
+                             icon="icon-details"
+                             :class="{ disabled: !activeProject }"
+                             exact
         />
-        <AppNavigationItem :to="routerDestination('registrationSubmission')"
-                           :title="t(appId, 'Summary and Submission')"
-                           icon="icon-checkmark"
-                           :class="{ disabled: !activeProject }"
-                           exact
+        <NcAppNavigationItem :to="routerDestination('registrationSubmission')"
+                             :title="t(appId, 'Summary and Submission')"
+                             icon="icon-checkmark"
+                             :class="{ disabled: !activeProject }"
+                             exact
         />
       </template>
       <template #footer>
-        <AppNavigationSettings>
-          <CheckboxRadioSwitch :checked.sync="debug">
+        <NcAppNavigationSettings>
+          <NcCheckboxRadioSwitch :checked.sync="debug">
             {{ t(appId, 'Enable Debug') }}
-          </CheckboxRadioSwitch>
-        </AppNavigationSettings>
+          </NcCheckboxRadioSwitch>
+        </NcAppNavigationSettings>
       </template>
-    </AppNavigation>
-    <AppContent :class="{ 'icon-loading': loading }">
+    </NcAppNavigation>
+    <NcAppContent :class="{ 'icon-loading': loading }">
       <router-view v-show="!loading" :loading.sync="loading" />
-      <EmptyContent v-if="isRoot" class="emp-content">
+      <NcEmptyContent v-if="isRoot" class="emp-content">
         <template #icon>
           <img :src="icon">
         </template>
@@ -78,15 +78,15 @@
           <div v-if="activeProject"
                class="flex-container flex-center"
           >
-            <Actions v-if="projects.length > 1"
-                     :menu-title="t(appId, 'choose another one')"
+            <NcActions v-if="projects.length > 1"
+                       :menu-title="t(appId, 'choose another one')"
             >
-              <ActionRouter v-for="project in projects"
-                            :key="project.id"
-                            :title="project.name"
-                            :to="{ name: 'registrationHome', params: { projectName: project.name } }"
+              <NcActionRouter v-for="project in projects"
+                              :key="project.id"
+                              :title="project.name"
+                              :to="{ name: 'registrationHome', params: { projectName: project.name } }"
               />
-            </Actions>
+            </NcActions>
             <span v-if="projects.length > 1" class="start-button-junctor">{{ t(appId, 'or') }}</span>
             <RouterButton :to="{ name: 'registrationPersonalProfile', params: projectName ? { projectName } : {} }"
                           exact
@@ -109,34 +109,29 @@
             {{ t(appId, 'The project registration for all projects is closed.') }}
           </h2>
         </template>
-      </EmptyContent>
-    </AppContent>
-  </Content>
+      </NcEmptyContent>
+    </NcAppContent>
+  </NcContent>
 </template>
 
 <script>
 import { appName } from './config.js'
-import InputText from './components/InputText'
-import DebugInfo from './components/DebugInfo'
 
-import { set as vueSet } from 'vue'
-import Actions from '@nextcloud/vue/dist/Components/NcActions'
-import ActionRouter from '@nextcloud/vue/dist/Components/NcActionRouter'
-import AppContent from '@nextcloud/vue/dist/Components/NcAppContent'
-import AppNavigation from '@nextcloud/vue/dist/Components/NcAppNavigation'
-import AppNavigationItem from '@nextcloud/vue/dist/Components/NcAppNavigationItem'
-import AppNavigationSettings from '@nextcloud/vue/dist/Components/NcAppNavigationSettings'
-import Content from '@nextcloud/vue/dist/Components/NcContent'
-import CheckboxRadioSwitch from '@nextcloud/vue/dist/Components/NcCheckboxRadioSwitch'
-import EmptyContent from '@nextcloud/vue/dist/Components/NcEmptyContent'
+import {
+  NcActions,
+  NcActionRouter,
+  NcAppContent,
+  NcAppNavigation,
+  NcAppNavigationItem,
+  NcAppNavigationSettings,
+  NcContent,
+  NcCheckboxRadioSwitch,
+  NcEmptyContent,
+} from '@nextcloud/vue'
 import { getCurrentUser } from '@nextcloud/auth'
-import { loadState } from '@nextcloud/initial-state'
-import RouterButton from './components/RouterButton'
+import RouterButton from './components/RouterButton.vue'
 
-import { getInitialState } from './toolkit/services/InitialStateService'
 import { useMemberDataStore } from './stores/memberData.js'
-import { useAppDataStore } from './stores/appData.js'
-import { mapWritableState } from 'pinia'
 
 import Icon from '../img/cafevdbmembers.svg'
 
@@ -144,30 +139,23 @@ import mixinRegistrationData from './mixins/registrationData.js'
 
 import { prefix as registrationPrefix } from './router/registration-routes.js'
 
-const projects = loadState(appName, 'projects')
-const activeProject = loadState(appName, 'activeProject')
-const instruments = loadState(appName, 'instruments')
-const countries = loadState(appName, 'countries')
-const displayLocale = loadState(appName, 'displayLocale')
-
-const initialState = getInitialState()
-
 export default {
   name: 'ProjectRegistration',
   components: {
-    Actions,
-    ActionRouter,
-    AppContent,
-    AppNavigation,
-    AppNavigationItem,
-    AppNavigationSettings,
-    CheckboxRadioSwitch,
-    Content,
-    DebugInfo,
-    EmptyContent,
-    InputText,
+    NcActionRouter,
+    NcActions,
+    NcAppContent,
+    NcAppNavigation,
+    NcAppNavigationItem,
+    NcAppNavigationSettings,
+    NcCheckboxRadioSwitch,
+    NcContent,
+    NcEmptyContent,
     RouterButton,
   },
+  mixins: [
+    mixinRegistrationData,
+  ],
   setup() {
     const registrationData = useMemberDataStore()
     return { registrationData }
@@ -178,17 +166,6 @@ export default {
       loading: true,
       readonly: true,
     }
-  },
-  mixins: [
-    mixinRegistrationData,
-  ],
-  async created() {
-    await this.initializeRegistrationData()
-    this.setPageTitle()
-    this.readonly = false
-    this.loading = false
-  },
-  mounted() {
   },
   computed: {
     isRoot() {
@@ -206,6 +183,12 @@ export default {
     activeProject(newValue, oldValue) {
       this.setPageTitle()
     },
+  },
+  async created() {
+    await this.initializeRegistrationData()
+    this.setPageTitle()
+    this.readonly = false
+    this.loading = false
   },
   methods: {
     setPageTitle() {

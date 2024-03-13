@@ -157,27 +157,27 @@
       />
     </div>
     <div class="input-row">
-      <CheckboxRadioSwitch :checked.sync="registrationData.firstTimeApplication"
-                           type="radio"
-                           value="first-time"
-                           :required="true"
+      <NcCheckboxRadioSwitch :checked.sync="registrationData.firstTimeApplication"
+                             type="radio"
+                             value="first-time"
+                             :required="true"
       >
         {{ t(appId, 'First time application') }}
-      </CheckboxRadioSwitch>
-      <CheckboxRadioSwitch :checked.sync="registrationData.firstTimeApplication"
-                           type="radio"
-                           value="you-know-me"
-                           :required="true"
+      </NcCheckboxRadioSwitch>
+      <NcCheckboxRadioSwitch :checked.sync="registrationData.firstTimeApplication"
+                             type="radio"
+                             value="you-know-me"
+                             :required="true"
       >
         {{ t(appId, 'You know me') }}
-      </CheckboxRadioSwitch>
-      <RichContenteditable v-if="registrationData.firstTimeApplication === 'first-time'"
-                           :value.sync="registrationData.whoAmI"
-                           :maxlength="1024"
-                           :auto-complete="autoComplete"
-                           :placeholder="t(appId, 'Please introduce yourself!')"
-                           :multiline="true"
-                           :required="registrationData.firstTimeApplication === 'first-time'"
+      </NcCheckboxRadioSwitch>
+      <NcRichContenteditable v-if="registrationData.firstTimeApplication === 'first-time'"
+                             :value.sync="registrationData.whoAmI"
+                             :maxlength="1024"
+                             :auto-complete="autoComplete"
+                             :placeholder="t(appId, 'Please introduce yourself!')"
+                             :multiline="true"
+                             :required="registrationData.firstTimeApplication === 'first-time'"
       />
     </div>
     <div class="navigation flex flex-row flex-justify-full">
@@ -201,14 +201,15 @@
 </template>
 
 <script>
-import { appName } from '../../config.js'
-import InputText from '../../components/InputText'
-import DebugInfo from '../../components/DebugInfo'
-import RouterButton from '../../components/RouterButton'
-
 import { set as vueSet } from 'vue'
-import CheckboxRadioSwitch from '@nextcloud/vue/dist/Components/NcCheckboxRadioSwitch'
-import RichContenteditable from '@nextcloud/vue/dist/Components/NcRichContenteditable'
+import InputText from '../../components/InputText.vue'
+import DebugInfo from '../../components/DebugInfo.vue'
+import RouterButton from '../../components/RouterButton.vue'
+
+import {
+  NcCheckboxRadioSwitch,
+  NcRichContenteditable,
+} from '@nextcloud/vue'
 
 import mixinRegistrationData from '../../mixins/registrationData.js'
 import { useMemberDataStore } from '../../stores/memberData.js'
@@ -216,25 +217,30 @@ import { useMemberDataStore } from '../../stores/memberData.js'
 export default {
   name: 'PersonalProfile',
   components: {
-    CheckboxRadioSwitch,
     DebugInfo,
     InputText,
-    RichContenteditable,
+    NcCheckboxRadioSwitch,
+    NcRichContenteditable,
     RouterButton,
-  },
-  setup() {
-    const registrationData = useMemberDataStore()
-    return { registrationData }
   },
   mixins: [
     mixinRegistrationData,
   ],
+  setup() {
+    const registrationData = useMemberDataStore()
+    return { registrationData }
+  },
   data() {
     return {
       loading: true,
       readonly: true,
       registrationCountry: null,
     }
+  },
+  watch: {
+    registrationCountry(newValue, oldValue) {
+      vueSet(this.registrationData, 'country', newValue.code)
+    },
   },
   async created() {
     if (!this.activeProject) {
@@ -245,12 +251,6 @@ export default {
     this.registrationCountry = this.countries.find(country => country.code === this.registrationData.country)
     this.readonly = false
     this.loading = false
-  },
-  computed: {},
-  watch: {
-    registrationCountry(newValue, oldValue) {
-      vueSet(this.registrationData, 'country', newValue.code)
-    },
   },
   methods: {
     updatePublicName() {

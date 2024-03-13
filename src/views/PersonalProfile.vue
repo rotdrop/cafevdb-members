@@ -136,11 +136,8 @@
   </div>
 </template>
 <script>
-import { appName as appId } from '../config.js'
-import InputText from '../components/InputText'
-import DebugInfo from '../components/DebugInfo'
-
-import { set as vueSet } from 'vue'
+import InputText from '../components/InputText.vue'
+import DebugInfo from '../components/DebugInfo.vue'
 
 import { useMemberDataStore } from '../stores/memberData.js'
 
@@ -149,8 +146,8 @@ const viewName = 'PersonalProfile'
 export default {
   name: viewName,
   components: {
-    InputText,
     DebugInfo,
+    InputText,
   },
   setup() {
     const memberData = useMemberDataStore()

@@ -23,9 +23,9 @@
     <h2>
       {{ t(appId, 'Bank Accounts of {publicName} ({count})', { publicName: memberData.personalPublicName, count: showDeleted ? memberData.sepaBankAccounts.length : numActiveBankAccounts }) }}
     </h2>
-    <CheckboxRadioSwitch v-if="haveDeleted" :checked.sync="showDeleted">
+    <NcCheckboxRadioSwitch v-if="haveDeleted" :checked.sync="showDeleted">
       {{ t(appId, 'show deleted') }}
-    </CheckboxRadioSwitch>
+    </NcCheckboxRadioSwitch>
     <div v-if="memberData.sepaBankAccounts.length === 0">
       {{ t(appId, 'We have no information about your bank-accounts.') }}
     </div>
@@ -79,11 +79,9 @@
 </template>
 <script>
 
-import { appName as appId } from '../config.js'
-import Vue from 'vue'
-import ListItem from '../components/ListItem'
-import DebugInfo from '../components/DebugInfo'
-import CheckboxRadioSwitch from '@nextcloud/vue/dist/Components/NcCheckboxRadioSwitch'
+import ListItem from '../components/ListItem.vue'
+import DebugInfo from '../components/DebugInfo.vue'
+import { NcCheckboxRadioSwitch } from '@nextcloud/vue'
 import formatDate from '../mixins/formatDate.js'
 
 import { useMemberDataStore } from '../stores/memberData.js'
@@ -93,17 +91,17 @@ const viewName = 'BankAccounts'
 export default {
   name: viewName,
   components: {
-    CheckboxRadioSwitch,
-    ListItem,
     DebugInfo,
-  },
-  setup() {
-    const memberData = useMemberDataStore()
-    return { memberData }
+    ListItem,
+    NcCheckboxRadioSwitch,
   },
   mixins: [
     formatDate,
   ],
+  setup() {
+    const memberData = useMemberDataStore()
+    return { memberData }
+  },
   data() {
     return {
       loading: true,
@@ -122,15 +120,15 @@ export default {
         account.numDeletedDebitMandates = account.sepaDebitMandates.filter(mandate => !!mandate.deleted).length
         account.numActiveDebitMandates = account.sepaDebitMandates.length - account.numDeletedDebitMandates
       })
-      this.memberData.initialized[viewName] = true;
+      this.memberData.initialized[viewName] = true
     }
 
     if (this.memberData.initialized[viewName]) {
 
       this.numDeletedBankAccounts = this.memberData.sepaBankAccounts.filter(account => !!account.deleted).length
-      this.haveDeleted = this.numDeletedBankAccounts > 0;
+      this.haveDeleted = this.numDeletedBankAccounts > 0
       this.numActiveBankAccounts = this.memberData.sepaBankAccounts.length - this.numDeletedBankAccounts
-      const self = this;
+      const self = this
       this.memberData.sepaBankAccounts.forEach((account, index) => {
         self.haveDeleted = self.haveDeleted || (account.numDeletedDebitMandates > 0)
       })

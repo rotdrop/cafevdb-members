@@ -19,28 +19,30 @@
  - along with this program. If not, see <http://www.gnu.org/licenses/>.
  -->
 <template>
-  <SettingsSection :title="t(appName, 'CAFeVDB Database Connector, Personal Settings')">
-    <SettingsInputText :id="'test-input'"
-                       v-model="inputTest"
-                       :label="t(appName, 'Test Input')"
-                       :hint="t(appName, 'Test Hint')"
-                       @update="saveInputTest"
+  <NcSettingsSection :name="t(appName, 'CAFeVDB Database Connector, Personal Settings')">
+    <TextField :id="'test-input'"
+               :value.sync="inputTest"
+               :label="t(appName, 'Test Input')"
+               :hint="t(appName, 'Test Hint')"
+               @submit="saveInputTest"
     />
-  </SettingsSection>
+  </NcSettingsSection>
 </template>
 
 <script>
 import { appName } from './config.js'
-import SettingsSection from '@nextcloud/vue/dist/Components/NcSettingsSection'
-import SettingsInputText from './components/SettingsInputText'
+import {
+  NcSettingsSection,
+} from '@nextcloud/vue'
+import TextField from '@rotdrop/nextcloud-vue-components/lib/components/TextFieldWithSubmitButton.vue'
 import { generateUrl } from '@nextcloud/router'
 import axios from '@nextcloud/axios'
 
 export default {
   name: 'PersonalSettings',
   components: {
-    SettingsSection,
-    SettingsInputText,
+    NcSettingsSection,
+    TextField,
   },
   data() {
     return {
@@ -66,15 +68,15 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-  .settings-section {
-    ::v-deep &__title {
-      padding-left:60px;
-      background-image:url('../img/cafevdbmembers.svg');
-      background-repeat:no-repeat;
-      background-origin:border-box;
-      background-size:45px;
-      background-position:left center;
-      height:30px;
-    }
+.settings-section {
+  ::v-deep &__name {
+    padding-left:60px;
+    background-image:url('../img/cafevdbmembers.svg');
+    background-repeat:no-repeat;
+    background-origin:border-box;
+    background-size:45px;
+    background-position:left center;
+    height:30px;
   }
+}
 </style>

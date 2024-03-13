@@ -65,11 +65,11 @@
       <h3>
         {{ t(appId, 'Timetable') }}
       </h3>
-      <CheckboxRadioSwitch :checked.sync="noAbsenceCheck"
-                           :disabled="!noAbsence"
+      <NcCheckboxRadioSwitch :checked.sync="noAbsenceCheck"
+                             :disabled="!noAbsence"
       >
         {{ t(appId, 'I will participate in all events and not miss a single one!') }}
-      </CheckboxRadioSwitch>
+      </NcCheckboxRadioSwitch>
       <div v-if="!noAbsenceCheck"
            class="absence-instructions"
       >
@@ -81,12 +81,12 @@
         {{ t(appId, 'Please understand that applications of people without or with less absence are preferred.') }}
       </div>
       <ul class="event-list">
-        <ListItem v-for="event in activeProject.projectEvents"
-                  :key="event.id"
-                  :title="calendarDateTime(event.calendarObject)"
-                  :details="event.calendarObject.summary"
-                  :force-display-actions="true"
-                  class="calendar-event"
+        <NcListItem v-for="event in activeProject.projectEvents"
+                    :key="event.id"
+                    :title="calendarDateTime(event.calendarObject)"
+                    :details="event.calendarObject.summary"
+                    :force-display-actions="true"
+                    class="calendar-event"
         >
           <template v-if="event.calendarObject.location" #subtitle>
             {{ event.calendarObject.location }}
@@ -95,30 +95,30 @@
             <AbsenceIndicator :size="24" fill-color="#ff0000" />
           </template>
           <template v-if="!noAbsenceCheck && event.absenceField > 0" #actions>
-            <ActionCheckbox value="absent"
-                            :checked="registrationProject.absence[event.id]"
-                            @check="registrationProject.absence[event.id] = true"
-                            @uncheck="registrationProject.absence[event.id] = false"
+            <NcActionCheckbox value="absent"
+                              :checked="registrationProject.absence[event.id]"
+                              @check="registrationProject.absence[event.id] = true"
+                              @uncheck="registrationProject.absence[event.id] = false"
             >
               {{ t(appId, 'I cannot participate') }}
-            </ActionCheckbox>
-            <ActionTextEditable v-if="registrationProject.absence[event.id]"
-                                :value="registrationProject.absenceReasons[event.id]"
-                                :name="t(appId, '... because ...')"
-                                required
-                                @submit="registrationProject.absenceReasons[event.id] = $event.target.getElementsByTagName('textarea')[0].value"
+            </NcActionCheckbox>
+            <NcActionTextEditable v-if="registrationProject.absence[event.id]"
+                                  :value="registrationProject.absenceReasons[event.id]"
+                                  :name="t(appId, '... because ...')"
+                                  required
+                                  @submit="registrationProject.absenceReasons[event.id] = $event.target.getElementsByTagName('textarea')[0].value"
             >
               <template #icon>
                 <Pencil :size="20" />
               </template>
-            </ActionTextEditable>
+            </NcActionTextEditable>
           </template>
           <template #extra>
             <div class="event-description">
               {{ event.calendarObject.description }}
             </div>
           </template>
-        </ListItem>
+        </NcListItem>
       </ul>
     </div>
     <div class="navigation flex flex-row flex-justify-full">
@@ -141,18 +141,17 @@
 </template>
 <script>
 import Pencil from 'vue-material-design-icons/Pencil.vue'
-import AbsenceIndicator from 'vue-material-design-icons/AlertOctagon'
-import { appName } from '../../config.js'
-import InputText from '../../components/InputText'
-import DebugInfo from '../../components/DebugInfo'
-import RouterButton from '../../components/RouterButton'
+import AbsenceIndicator from 'vue-material-design-icons/AlertOctagon.vue'
+import InputText from '../../components/InputText.vue'
+import RouterButton from '../../components/RouterButton.vue'
 
-import { set as vueSet } from 'vue'
-import CheckboxRadioSwitch from '@nextcloud/vue/dist/Components/NcCheckboxRadioSwitch'
-import ActionCheckbox from '@nextcloud/vue/dist/Components/NcActionCheckbox'
-import ActionTextEditable from '@nextcloud/vue/dist/Components/NcActionTextEditable'
-import Highlight from '@nextcloud/vue/dist/Components/NcHighlight'
-import ListItem from '@nextcloud/vue/dist/Components/NcListItem'
+import {
+  NcCheckboxRadioSwitch,
+  NcActionCheckbox,
+  NcActionTextEditable,
+  NcListItem,
+} from '@nextcloud/vue'
+
 import { getCanonicalLocale } from '@nextcloud/l10n'
 
 import mixinRegistrationData from '../../mixins/registrationData.js'
@@ -162,29 +161,32 @@ export default {
   name: 'Participation',
   components: {
     AbsenceIndicator,
-    ActionCheckbox,
-    ActionTextEditable,
-    CheckboxRadioSwitch,
-    DebugInfo,
-    Highlight,
+    NcActionCheckbox,
+    NcActionTextEditable,
+    NcCheckboxRadioSwitch,
     InputText,
-    ListItem,
+    NcListItem,
     Pencil,
     RouterButton,
-  },
-  setup() {
-    const registrationData = useMemberDataStore()
-    return { registrationData }
   },
   mixins: [
     mixinRegistrationData,
   ],
+  setup() {
+    const registrationData = useMemberDataStore()
+    return { registrationData }
+  },
   data() {
     return {
       loading: true,
       readonly: true,
       noAbsenceCheck: true,
     }
+  },
+  computed: {
+    locale() {
+      return getCanonicalLocale()
+    },
   },
   async created() {
     if (!this.activeProject) {
@@ -196,12 +198,6 @@ export default {
     this.loading = false
     this.noAbsenceCheck = this.noAbsence
   },
-  computed: {
-    locale() {
-      return getCanonicalLocale()
-    },
-  },
-  watch: {},
   methods: {
     info() {
       console.info(...arguments)

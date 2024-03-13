@@ -20,56 +20,56 @@
  -
  -->
 <template>
-  <Content :app-name="appId">
-    <AppNavigation>
+  <NcContent :app-name="appId">
+    <NcAppNavigation>
       <template #list>
-        <AppNavigationItem :to="{ name: '/' }"
-                           :title="t(appId, 'Home')"
-                           icon="icon-home"
-                           exact
-                           @click="showSidebar = false"
+        <NcAppNavigationItem :to="{ name: '/' }"
+                             :name="t(appId, 'Home')"
+                             icon="icon-home"
+                             exact
+                             @click="showSidebar = false"
         />
-        <AppNavigationItem :to="memberDataError ? {} : { name: 'personalProfile' }"
-                           :title="t(appId, 'Personal Profile')"
-                           icon="icon-files-dark"
-                           :class="{ disabled: memberDataError }"
-                           exact
-                           @click="showSidebar = false"
+        <NcAppNavigationItem :to="memberDataError ? {} : { name: 'personalProfile' }"
+                             :name="t(appId, 'Personal Profile')"
+                             icon="icon-files-dark"
+                             :class="{ disabled: memberDataError }"
+                             exact
+                             @click="showSidebar = false"
         />
-        <AppNavigationItem :to="memberDataError ? {} : { name: 'bankAccounts' }"
-                           :title="t(appId, 'Bank Accounts')"
-                           icon="icon-files-dark"
-                           :class="{ disabled: memberDataError }"
-                           exact
-                           @click="showSidebar = false"
+        <NcAppNavigationItem :to="memberDataError ? {} : { name: 'bankAccounts' }"
+                             :name="t(appId, 'Bank Accounts')"
+                             icon="icon-files-dark"
+                             :class="{ disabled: memberDataError }"
+                             exact
+                             @click="showSidebar = false"
         />
-        <AppNavigationItem :to="memberDataError ? {} : { name: 'instrumentInsurances' }"
-                           :title="t(appId, 'Instrument Insurances')"
-                           icon="icon-files-dark"
-                           :class="{ disabled: memberDataError }"
-                           exact
-                           @click="showSidebar = false"
+        <NcAppNavigationItem :to="memberDataError ? {} : { name: 'instrumentInsurances' }"
+                             :name="t(appId, 'Instrument Insurances')"
+                             icon="icon-files-dark"
+                             :class="{ disabled: memberDataError }"
+                             exact
+                             @click="showSidebar = false"
         />
-        <AppNavigationItem :to="memberDataError ? {} : { name: 'projects' }"
-                           :title="t(appId, 'Projects')"
-                           icon="icon-files-dark"
-                           :class="{ disabled: memberDataError }"
-                           exact
-                           @click="showSidebar = false"
+        <NcAppNavigationItem :to="memberDataError ? {} : { name: 'projects' }"
+                             :name="t(appId, 'Projects')"
+                             icon="icon-files-dark"
+                             :class="{ disabled: memberDataError }"
+                             exact
+                             @click="showSidebar = false"
         />
       </template>
       <template #footer>
-        <AppNavigationSettings>
-          <CheckboxRadioSwitch :checked.sync="debug">
+        <NcAppNavigationSettings>
+          <NcCheckboxRadioSwitch :checked.sync="debug">
             {{ t(appId, 'Enable Debug') }}
-          </CheckboxRadioSwitch>
-        </AppNavigationSettings>
+          </NcCheckboxRadioSwitch>
+        </NcAppNavigationSettings>
       </template>
-    </AppNavigation>
+    </NcAppNavigation>
 
-    <AppContent :class="{ 'icon-loading': loading }" @insurance-details="showSidebar = true">
+    <NcAppContent :class="{ 'icon-loading': loading }" @insurance-details="showSidebar = true">
       <router-view v-show="!loading && !memberDataError" :loading.sync="loading" @view-details="handleDetailsRequest" />
-      <EmptyContent v-if="isRoot || memberDataError" class="emp-content">
+      <NcEmptyContent v-if="isRoot || memberDataError" class="emp-content">
         {{ t(appId, '{orchestraName} Orchestra Member Portal', { orchestraName, }) }}
         <template #icon>
           <img :src="icon">
@@ -87,56 +87,57 @@
             </p>
           </div>
         </template>
-      </EmptyContent>
-    </AppContent>
+      </NcEmptyContent>
+    </NcAppContent>
 
-    <AppSidebar v-show="showSidebar"
-                :title="sidebarTitle"
-                :loading.sync="loading"
-                @close="closeSidebar"
+    <NcAppSidebar v-show="showSidebar"
+                  :name="sidebarTitle"
+                  :loading.sync="loading"
+                  @close="closeSidebar"
     >
-      <AppSidebarTab v-if="sidebarView === 'InstrumentInsurances'"
-                     id="details-side-bar"
-                     icon="icon-share"
-                     :name="t(appId, 'details')"
+      <NcAppSidebarTab v-if="sidebarView === 'InstrumentInsurances'"
+                       id="details-side-bar"
+                       icon="icon-share"
+                       :name="t(appId, 'details')"
       >
         <InsuranceDetails v-bind="sidebarProps" />
-      </AppSidebarTab>
-      <AppSidebarTab v-if="sidebarView === 'Projects'"
-                     id="details-side-bar"
-                     icon="icon-share"
-                     :name="t(appId, 'details')"
+      </NcAppSidebarTab>
+      <NcAppSidebarTab v-if="sidebarView === 'Projects'"
+                       id="details-side-bar"
+                       icon="icon-share"
+                       :name="t(appId, 'details')"
       >
         <ProjectDetails v-bind="sidebarProps" />
-      </AppSidebarTab>
-    </AppSidebar>
-  </Content>
+      </NcAppSidebarTab>
+    </NcAppSidebar>
+  </NcContent>
 </template>
 
 <script>
 import { appName as appId } from './config.js'
 import { getCurrentUser } from '@nextcloud/auth'
-import Content from '@nextcloud/vue/dist/Components/NcContent'
-import AppContent from '@nextcloud/vue/dist/Components/NcAppContent'
-import AppNavigation from '@nextcloud/vue/dist/Components/NcAppNavigation'
-import AppNavigationItem from '@nextcloud/vue/dist/Components/NcAppNavigationItem'
-import AppNavigationSettings from '@nextcloud/vue/dist/Components/NcAppNavigationSettings'
-import CheckboxRadioSwitch from '@nextcloud/vue/dist/Components/NcCheckboxRadioSwitch'
-import AppSidebar from '@nextcloud/vue/dist/Components/NcAppSidebar'
-import AppSidebarTab from '@nextcloud/vue/dist/Components/NcAppSidebarTab'
-import EmptyContent from '@nextcloud/vue/dist/Components/NcEmptyContent'
+import {
+  NcContent,
+  NcAppContent,
+  NcAppNavigation,
+  NcAppNavigationItem,
+  NcAppNavigationSettings,
+  NcCheckboxRadioSwitch,
+  NcAppSidebar,
+  NcAppSidebarTab,
+  NcEmptyContent,
+} from '@nextcloud/vue'
 
-import '@nextcloud/dialogs/styles/toast.scss'
 import { generateOcsUrl } from '@nextcloud/router'
 import { showError, showInfo, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
 import axios from '@nextcloud/axios'
 
-import InsuranceDetails from './views/InstrumentInsurances/InsuranceDetails'
-import ProjectDetails from './views/Projects/ProjectDetails'
+import InsuranceDetails from './views/InstrumentInsurances/InsuranceDetails.vue'
+import ProjectDetails from './views/Projects/ProjectDetails.vue'
 
 import Icon from '../img/cafevdbmembers.svg'
 
-import { getInitialState } from './toolkit/services/InitialStateService'
+import { getInitialState } from './toolkit/services/InitialStateService.js'
 import { useMemberDataStore } from './stores/memberData.js'
 import { useAppDataStore } from './stores/appData.js'
 import { mapWritableState } from 'pinia'
@@ -146,15 +147,15 @@ const initialState = getInitialState()
 export default {
   name: 'App',
   components: {
-    AppContent,
-    AppNavigation,
-    AppNavigationItem,
-    AppNavigationSettings,
-    CheckboxRadioSwitch,
-    Content,
-    EmptyContent,
-    AppSidebar,
-    AppSidebarTab,
+    NcAppContent,
+    NcAppNavigation,
+    NcAppNavigationItem,
+    NcAppNavigationSettings,
+    NcCheckboxRadioSwitch,
+    NcContent,
+    NcEmptyContent,
+    NcAppSidebar,
+    NcAppSidebarTab,
     InsuranceDetails,
     ProjectDetails,
   },

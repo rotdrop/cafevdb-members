@@ -48,13 +48,12 @@
     </ListItem>
   </ul>
 </template>
-
 <script>
 
 import { appName as appId } from '../../config.js'
 import md5 from 'blueimp-md5'
 import { generateUrl } from '@nextcloud/router'
-import ListItem from '../../components/ListItem'
+import ListItem from '../../components/ListItem.vue'
 
 export default {
   components: {
@@ -64,7 +63,7 @@ export default {
     {
       methods: {
         md5,
-      }
+      },
     },
   ],
   props: {
@@ -80,17 +79,16 @@ export default {
         components.push(t(appId, 'projects'))
         components.push(project.year)
       }
-      components.push(project.name);
+      components.push(project.name)
       return '/' + components.join('/')
     },
     projectPathUrl(project) {
       const path = this.projectPath(project)
       return generateUrl('apps/files') + '?dir=' + path
-    }
+    },
   },
 }
 </script>
-
 <style lang="scss" scoped>
 .project-details {
   ::v-deep {

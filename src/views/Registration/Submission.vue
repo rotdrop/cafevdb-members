@@ -31,49 +31,45 @@
       >
         {{ t(appId, 'back') }}
       </RouterButton>
-      <Button>
+      <NcButton>
         {{ t(appId, 'Submit') }}
         <template #icon>
           <span class="icon-checkmark" />
         </template>
-      </Button>
+      </NcButton>
     </div>
   </div>
 </template>
 
 <script>
-import { appName } from '../../config.js'
-import InputText from '../../components/InputText'
-import DebugInfo from '../../components/DebugInfo'
-import RouterButton from '../../components/RouterButton'
+import RouterButton from '../../components/RouterButton.vue'
 
-import { set as vueSet } from 'vue'
-import Button from '@nextcloud/vue/dist/Components/NcButton'
+import { NcButton } from '@nextcloud/vue'
 
 import mixinRegistrationData from '../../mixins/registrationData.js'
 import { useMemberDataStore } from '../../stores/memberData.js'
 
 export default {
-  name: 'ProjectOptions',
+  name: 'Submission',
   components: {
-    Button,
-    DebugInfo,
-    InputText,
+    NcButton,
     RouterButton,
-  },
-  setup() {
-    const registrationData = useMemberDataStore()
-    return { registrationData }
   },
   mixins: [
     mixinRegistrationData,
   ],
+  setup() {
+    const registrationData = useMemberDataStore()
+    return { registrationData }
+  },
   data() {
     return {
       loading: true,
       readonly: true,
     }
   },
+  computed: {},
+  watch: {},
   async created() {
     if (!this.activeProject) {
       this.routerGoHome()
@@ -83,8 +79,6 @@ export default {
     this.readonly = false
     this.loading = false
   },
-  computed: {},
-  watch: {},
   methods: {},
 }
 </script>

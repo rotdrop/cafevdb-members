@@ -21,6 +21,7 @@
  - along with this program. If not, see <http://www.gnu.org/licenses/>.
  -->
 <template>
+  <!-- @TODO: CHECK IF THIS IS STILL NEEDED -->
   <!-- This wrapper can be either a router link or a `<li>` -->
   <nav-element class="list-item__wrapper"
                v-bind="navElement"
@@ -77,11 +78,11 @@
 
               <!-- Counter -->
               <span v-if="showCounter" class="line-two__counter">
-                <CounterBubble v-if="counterNumber != 0"
-                               :type="counterType"
+                <NcCounterBubble v-if="counterNumber != 0"
+                                 :type="counterType"
                 >
                   {{ counterNumber }}
-                </CounterBubble>
+                </NcCounterBubble>
               </span>
             </div>
           </div>
@@ -91,14 +92,14 @@
                class="list-item-content__actions"
                @click.prevent.stop=""
           >
-            <Actions ref="actions"
-                     menu-align="right"
-                     :aria-label="actionsAriaLabel"
-                     @update:open="handleActionsUpdateOpen"
+            <NcActions ref="actions"
+                       menu-align="right"
+                       :aria-label="actionsAriaLabel"
+                       @update:open="handleActionsUpdateOpen"
             >
               <!-- @slot Provide the actions for the right side quick menu -->
               <slot name="actions" />
-            </Actions>
+            </NcActions>
           </div>
         </div>
         <!-- Actions -->
@@ -106,14 +107,14 @@
              class="list-item-content__actions"
              @click.prevent.stop=""
         >
-          <Actions ref="actions"
-                   menu-align="right"
-                   :aria-label="actionsAriaLabel"
-                   @update:open="handleActionsUpdateOpen"
+          <NcActions ref="actions"
+                     menu-align="right"
+                     :aria-label="actionsAriaLabel"
+                     @update:open="handleActionsUpdateOpen"
           >
             <!-- @slot Provide the actions for the right side quick menu -->
             <slot name="actions" />
-          </Actions>
+          </NcActions>
         </div>
       </div>
 
@@ -124,17 +125,18 @@
     </a>
   </nav-element>
 </template>
-
 <script>
-import Actions from '@nextcloud/vue/dist/Components/NcActions'
-import CounterBubble from '@nextcloud/vue/dist/Components/NcCounterBubble'
+import {
+  NcActions,
+  NcCounterBubble,
+} from '@nextcloud/vue'
 
 export default {
   name: 'ListItem',
 
   components: {
-    Actions,
-    CounterBubble,
+    NcActions,
+    NcCounterBubble,
   },
 
   props: {
