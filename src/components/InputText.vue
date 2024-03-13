@@ -1,9 +1,7 @@
-<script>
-/**
- * From: https://swina.github.io/2019/02/how-to-create-a-simple-reusable-vue-input-text-component/
- * and modified quite a bit ..
- */
-</script>
+<!--
+ - From: https://swina.github.io/2019/02/how-to-create-a-simple-reusable-vue-input-text-component/
+ - and modified quite a bit ..
+ -->
 <template>
   <div :class="['input__container', 'input-type-' + type, { readonly, collapse }, has_hint, has_icon, ...cloudVersionClasses ]">
     <div :class="['input-effect', filled, { readonly, collapse }, has_hint, has_icon ]">
