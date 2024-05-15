@@ -64,7 +64,7 @@ class ProjectRegistrationController extends Controller
     string $appName,
     IRequest $request,
     private IUserSession $userSession,
-    private IL10N $l,
+    protected IL10N $l,
     protected LoggerInterface $logger,
     private IConfig $cloudConfig,
     private ICalendarMananger $calendarManager,
