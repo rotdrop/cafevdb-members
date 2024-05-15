@@ -3,7 +3,7 @@
  * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine>
+ * @copyright Copyright (c) 2022, 2023, 2024 Claus-Justus Heine>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -54,7 +54,7 @@ class GroupFoldersService extends ToolkitService
       rootFolder: $rootFolder,
       folderManager: $folderManager,
       mountProvider: $mountProvider,
-      l10n: $l10n,
+      l: $l10n,
     );
   }
   // phpcs:enable Squiz.Commenting.FunctionComment.Missing
