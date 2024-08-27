@@ -143,13 +143,13 @@ export default {
 .page-container {
   padding-left:50px;
   padding-top:12px;
+  min-height:100%;
   &.loading {
     width:100%;
     * {
       display:none;
     }
   }
-  min-height:100%;
 }
 
 .sepa-bank-accounts-list {
