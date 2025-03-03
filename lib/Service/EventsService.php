@@ -3,7 +3,7 @@
  * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022-2024 Claus-Justus Heine
+ * @copyright Copyright (c) 2022-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -69,6 +69,8 @@ class EventsService
   private const VCARD = VCalendarType::VCARD;
   private const VJOURNAL = VCalendarType::VJOURNAL;
 
+  private DateTimeZone $dateTimeZone;
+
   /**
    * @var array Cache the siblings of recurring events by calendar-id,
    * event-uid, sequence, recurrence-id. This cache contains calendar VEvent
@@ -82,13 +84,14 @@ class EventsService
     protected LoggerInterface $logger,
     protected IL10N $l,
     private IL10NFactory $l10nFactory,
-    private IDateTimeZone $dateTimeZone,
+    IDateTimeZone $dateTimeZone,
     private IDateTimeFormatter $dateTimeFormatter,
     private ICloudConfig $cloudConfig,
     private ICalendarManager $calendarManager,
     private EntityManager $entityManager,
     private CalDavService $calDavService,
   ) {
+    $this->dateTimeZone = $dateTimeZone->getTimeZone();
   }
   // phpcs:enable
 
