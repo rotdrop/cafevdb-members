@@ -1,44 +1,246 @@
-const path = require('path')
-const webpack = require('webpack')
-const webpackConfig = require('@nextcloud/webpack-vue-config')
-const DeadCodePlugin = require('webpack-deadcode-plugin')
-const fs = require('fs')
-const xml2js = require('xml2js')
+const BabelLoaderExcludeNodeModulesExcept = require('babel-loader-exclude-node-modules-except');
+const CssoWebpackPlugin = require('csso-webpack-plugin').default;
+const DeadCodePlugin = require('webpack-deadcode-plugin');
+const ESLintPlugin = require('eslint-webpack-plugin');
+const fs = require('fs');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const path = require('path');
+const webpack = require('webpack');
+const webpackConfig = require('@nextcloud/webpack-vue-config');
+const xml2js = require('xml2js');
 
-const infoFile = path.join(__dirname, 'appinfo/info.xml')
-let appInfo
+const infoFile = path.join(__dirname, 'appinfo/info.xml');
+let appInfo;
 xml2js.parseString(fs.readFileSync(infoFile), function(err, result) {
   if (err) {
-    throw err
+    throw err;
   }
-  appInfo = result
-})
-const appName = appInfo.info.id[0]
+  appInfo = result;
+});
+const appName = appInfo.info.id[0];
+const productionMode = process.env.NODE_ENV === 'production';
 
 webpackConfig.entry = {
   'admin-settings': path.join(__dirname, 'src', 'admin-settings.js'),
   'personal-settings': path.join(__dirname, 'src', 'personal-settings.js'),
   'project-registration': path.join(__dirname, 'src', 'project-registration.js'),
   main: path.join(__dirname, 'src', 'main.js'),
-}
+};
 
-webpackConfig.plugins.push(new webpack.DefinePlugin({
-  APP_NAME: JSON.stringify(appName),
-}))
+webpackConfig.output = {
+  // path: path.resolve(__dirname, 'js'),
+  path: path.resolve(__dirname, '.'),
+  publicPath: '',
+  filename: 'js/[name]-[contenthash].js',
+  assetModuleFilename: 'js/assets/[name]-[hash][ext][query]',
+  chunkFilename: 'js/chunks/[name]-[contenthash].js',
+  clean: false,
+  compareBeforeEmit: true, // true would break the Makefile
+};
 
-webpackConfig.plugins.push(new DeadCodePlugin({
-  patterns: [
-    'src/**/*.(js|jsx|css)',
-    'style/**/*.scss',
-  ],
-  exclude: [
-    'src/toolkit/**/(settings-sync|ajax|dialogs|jquery|on-document-loaded|pangram|print-r|file-download|generate-url).js',
-  ],
-}))
+webpackConfig.plugins = webpackConfig.plugins.concat([
+  new webpack.DefinePlugin({
+    APP_NAME: JSON.stringify(appName),
+  }),
+  new ESLintPlugin({
+    extensions: ['js', 'vue'],
+    exclude: [
+      'node_modules',
+    ],
+  }),
+  new HtmlWebpackPlugin({
+    inject: false,
+    filename: 'js/asset-meta.json',
+    minify: false,
+    templateContent(arg) {
+      return JSON.stringify(arg.htmlWebpackPlugin.files, null, 2);
+    },
+  }),
+  new webpack.ProvidePlugin({
+    $: 'jquery',
+    jQuery: 'jquery',
+    jquery: 'jquery',
+    'window.$': 'jquery',
+    'window.jQuery': 'jquery',
+  }),
+  new MiniCssExtractPlugin({
+    filename: 'css/[name]-[contenthash].css',
+  }),
+  new CssoWebpackPlugin(
+    {
+      pluginOutputPostfix: productionMode ? null : 'min',
+    },
+    productionMode ? /\.css$/ : /^$/
+  ),
+  new DeadCodePlugin({
+    patterns: [
+      'src/**/*.(js|jsx|css|vue)',
+      'style/**/*.scss',
+    ],
+    exclude: [
+      // 'src/toolkit/**',
+      'src/toolkit/util/on-document-loaded.js',
+    ],
+  }),
+]);
 
-webpackConfig.module.rules.push({
-  test: /\.xml$/i,
-  use: 'xml-loader',
-})
+// webpackConfig.module.rules = webpackConfig.module.rules.concat([
+webpackConfig.module.rules = [
+  {
+    test: /\.xml$/i,
+    use: 'xml-loader',
+  },
+  {
+    test: /\.css$/,
+    use: [
+      // 'style-loader',
+      MiniCssExtractPlugin.loader,
+      'css-loader',
+    ],
+  },
+  {
+    test: /\.s(a|c)ss$/,
+    use: [
+      // 'style-loader',
+      MiniCssExtractPlugin.loader,
+      'css-loader',
+      {
+        loader: 'sass-loader',
+        options: {
+          // Prefer `dart-sass`
+          implementation: require('sass'),
+          additionalData: '$appName: ' + appName + '; $cssPrefix: ' + appName + '-;',
+        },
+      },
+    ],
+  },
+  {
+    test: /\.(jpe?g|png|gif)$/i,
+    type: 'asset', // 'asset/resource',
+    generator: {
+      filename: './css/img/[name]-[hash][ext]',
+      publicPath: '../',
+    },
+  },
+  {
+    test: /\.svg$/i,
+    loader: 'svgo-loader',
+    type: 'asset', // 'asset/resource',
+    generator: {
+      filename: './css/img/[name]-[hash][ext]',
+      publicPath: '../',
+    },
+    options: {
+      multipass: true,
+      js2svg: {
+        indent: 2,
+        pretty: true,
+      },
+      plugins: [
+        {
+          name: 'preset-default',
+          params: {
+            overrides: {
+              // viewBox is required to resize SVGs with CSS.
+              // @see https://github.com/svg/svgo/issues/1128
+              removeViewBox: false,
+            },
+          },
+        },
+      ],
+    },
+  },
+  {
+    test: /\.vue$/,
+    loader: 'vue-loader',
+    exclude: BabelLoaderExcludeNodeModulesExcept([
+      'vue-material-design-icons',
+      'emoji-mart-vue-fast',
+      '@rotdrop/nextcloud-vue-components',
+      '@nextcloud/vue',
+    ]),
+  },
+  {
+    test: /\.tsx?$/,
+    use: [
+      'babel-loader',
+      {
+        // Fix TypeScript syntax errors in Vue
+        loader: 'ts-loader',
+        options: {
+          transpileOnly: true,
+        },
+      },
+    ],
+    exclude: BabelLoaderExcludeNodeModulesExcept([
+      '@rotdrop/nextcloud-vue-components',
+    ]),
+  },
+  {
+    test: /\.js$/,
+    loader: 'babel-loader',
+    // automatically detect necessary packages to
+    // transpile in the node_modules folder
+    exclude: BabelLoaderExcludeNodeModulesExcept([
+      '@nextcloud/dialogs',
+      '@nextcloud/event-bus',
+      'davclient.js',
+      'nextcloud-vue-collections',
+      'p-finally',
+      'p-limit',
+      'p-locate',
+      'p-queue',
+      'p-timeout',
+      'p-try',
+      'semver',
+      'striptags',
+      'toastify-js',
+      'v-tooltip',
+      'yocto-queue',
+    ]),
+  },
+  {
+    resourceQuery: /raw/,
+    type: 'asset/source',
+  },
+  {
+    test: /\.svg$/i,
+    resourceQuery: /raw/,
+    loader: 'svgo-loader',
+    type: 'asset/source',
+    options: {
+      multipass: true,
+      js2svg: {
+        indent: 2,
+        pretty: true,
+      },
+      plugins: [
+        {
+          name: 'preset-default',
+          params: {
+            overrides: {
+              // viewBox is required to resize SVGs with CSS.
+              // @see https://github.com/svg/svgo/issues/1128
+              removeViewBox: false,
+            },
+          },
+        },
+      ],
+    },
+  },
+];
 
-module.exports = webpackConfig
+webpackConfig.resolve.modules = [
+  path.resolve(__dirname, 'style'),
+  path.resolve(__dirname, 'src'),
+  path.resolve(__dirname, 'img'),
+  path.resolve(__dirname, '.'),
+  'node_modules',
+];
+
+webpackConfig.stats = {
+  errorDetails: true,
+};
+
+module.exports = webpackConfig;

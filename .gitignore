@@ -12,6 +12,7 @@ stamp*
 composer.lock
 package-lock.json
 js/**
+css/**
 lib/Database/ORM/Proxies/**
 *-build-hash
 lib/Toolkit/[A-Z]*

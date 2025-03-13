@@ -1,5 +1,5 @@
 <!--
- - @copyright Copyright (c) 2022-2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ - @copyright Copyright (c) 2022-2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  -
  - @author Claus-Justus Heine <himself@claus-justus-heine.de>
  -
@@ -115,7 +115,7 @@ export default {
     await this.memberData.initialize()
 
     if (this.memberData.initialized.loaded && !this.memberData.initialized[viewName]) {
-      this.memberData.sepaBankAccounts.forEach((account, index) => {
+      this.memberData.sepaBankAccounts.forEach((account, _index) => {
         // this.memberData.sepaBankAccounts[index].numDeletedDebitMandates = account.sepaDebitMandates.filter(mandate => !!account.deleted).length
         account.numDeletedDebitMandates = account.sepaDebitMandates.filter(mandate => !!mandate.deleted).length
         account.numActiveDebitMandates = account.sepaDebitMandates.length - account.numDeletedDebitMandates
@@ -128,9 +128,8 @@ export default {
       this.numDeletedBankAccounts = this.memberData.sepaBankAccounts.filter(account => !!account.deleted).length
       this.haveDeleted = this.numDeletedBankAccounts > 0
       this.numActiveBankAccounts = this.memberData.sepaBankAccounts.length - this.numDeletedBankAccounts
-      const self = this
-      this.memberData.sepaBankAccounts.forEach((account, index) => {
-        self.haveDeleted = self.haveDeleted || (account.numDeletedDebitMandates > 0)
+      this.memberData.sepaBankAccounts.forEach((account, _index) => {
+        this.haveDeleted = this.haveDeleted || (account.numDeletedDebitMandates > 0)
       })
     }
 

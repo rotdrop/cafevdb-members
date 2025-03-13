@@ -1,7 +1,7 @@
 module.exports = {
-  extends: [
-    '@nextcloud',
-  ],
+  // extends: [
+  //   '@nextcloud',
+  // ],
   rules: {
     'no-tabs': ['error', { allowIndentationTabs: false }],
     indent: ['error', 2],
@@ -17,6 +17,12 @@ module.exports = {
       files: ['src/toolkit/**'],
       rules: {
         semi: ['error', 'always'],
+      },
+    },
+    {
+      files: ['*.ts', '*.cts', '*.mts', '*.tsx', '*.vue'],
+      rules: {
+        '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
       },
     },
   ],

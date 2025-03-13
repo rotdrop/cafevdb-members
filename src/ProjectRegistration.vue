@@ -1,5 +1,5 @@
 <!--
- - @copyright Copyright (c) 2023, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ - @copyright Copyright (c) 2023, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  -
  - @author Claus-Justus Heine <himself@claus-justus-heine.de>
  -
@@ -180,7 +180,7 @@ export default {
     },
   },
   watch: {
-    activeProject(newValue, oldValue) {
+    activeProject(_newValue, _oldValue) {
       this.setPageTitle()
     },
   },
