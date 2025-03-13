@@ -1,5 +1,5 @@
 /**
- * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright Copyright (c) 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
  *
@@ -17,20 +17,23 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
 
-import { appName } from './config.js'
+import { appName } from './config.ts'
 import { generateFilePath } from '@nextcloud/router'
 import { getRequestToken } from '@nextcloud/auth'
-// import { sync } from 'vuex-router-sync'
-// import { translate, translatePlural } from '@nextcloud/l10n'
+
 import Vue from 'vue'
-import App from './App.vue'
+import ProjectRegistation from './ProjectRegistration.vue'
 import router from './router/app-router.js'
 import { createPinia, PiniaVuePlugin } from 'pinia'
+import { Tooltip } from '@nextcloud/vue'
 
 Vue.use(PiniaVuePlugin)
 const pinia = createPinia()
+
+Vue.directive('tooltip', Tooltip)
 
 // CSP config for webpack dynamic chunk loading
 // eslint-disable-next-line
@@ -46,5 +49,5 @@ export default new Vue({
   name: appName,
   router,
   pinia,
-  render: h => h(App),
+  render: h => h(ProjectRegistation),
 })

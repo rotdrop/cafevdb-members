@@ -22,7 +22,7 @@
 
 import { defineStore } from 'pinia'
 
-import { appName as appId } from '../config.js'
+import { appName as appId } from '../config.ts'
 import { set as vueSet } from 'vue'
 import { generateUrl, generateOcsUrl } from '@nextcloud/router'
 import { getCurrentUser } from '@nextcloud/auth'

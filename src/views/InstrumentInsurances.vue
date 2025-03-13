@@ -147,7 +147,7 @@
 </template>
 <script>
 
-import { appName as appId } from '../config.js'
+import { appName as appId } from '../config.ts'
 import { set as vueSet } from 'vue'
 import ListItem from '../components/ListItem.vue'
 import DebugInfo from '../components/DebugInfo.vue'

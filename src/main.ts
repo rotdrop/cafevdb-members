@@ -17,21 +17,34 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
-import { appName } from './config.js'
+import { appName } from './config.ts'
 import { generateFilePath } from '@nextcloud/router'
-
+import { getRequestToken } from '@nextcloud/auth'
+// import { sync } from 'vuex-router-sync'
+// import { translate, translatePlural } from '@nextcloud/l10n'
 import Vue from 'vue'
-import PersonalSettings from './PersonalSettings.vue'
+import App from './App.vue'
+import router from './router/app-router.js'
+import { createPinia, PiniaVuePlugin } from 'pinia'
+
+Vue.use(PiniaVuePlugin)
+const pinia = createPinia()
+
+// CSP config for webpack dynamic chunk loading
+// eslint-disable-next-line
+__webpack_nonce__ = btoa(getRequestToken())
 
 // eslint-disable-next-line
 __webpack_public_path__ = generateFilePath(appName, '', 'js/')
 
-Vue.mixin({ data() { return { appName } }, methods: { t, n } })
+Vue.mixin({ data() { return { appId: appName } }, methods: { t, n } })
 
 export default new Vue({
-  el: '#personal-settings',
-  render: h => h(PersonalSettings),
+  el: '#content',
+  name: appName,
+  router,
+  pinia,
+  render: h => h(App),
 })

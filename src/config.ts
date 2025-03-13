@@ -1,5 +1,5 @@
 /**
- * @copyright Copyright (c) 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright Copyright (c) 2022, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
  *
@@ -20,9 +20,13 @@
  *
  */
 
-const appInfo = require('../appinfo/info.xml')
-const appName = appInfo.info.id[0]
+import type { AppName } from '../build/ts-types/app-config.ts';
+import { appName } from '../build/ts-types/app-config.ts';
+
+export type {
+  AppName,
+};
 
 export {
   appName,
-}
+};

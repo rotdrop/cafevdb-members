@@ -114,7 +114,7 @@
 </template>
 
 <script>
-import { appName as appId } from './config.js'
+import { appName as appId } from './config.ts'
 import { getCurrentUser } from '@nextcloud/auth'
 import {
   NcContent,

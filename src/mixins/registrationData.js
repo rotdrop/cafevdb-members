@@ -20,7 +20,7 @@
  *
  */
 
-import { appName } from '../config.js'
+import { appName } from '../config.ts'
 import { set as vueSet } from 'vue'
 import { getCurrentUser } from '@nextcloud/auth'
 import { generateUrl as nextcloudGenerateUrl } from '@nextcloud/router'

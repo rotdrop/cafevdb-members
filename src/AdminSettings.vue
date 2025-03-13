@@ -70,7 +70,7 @@
 </template>
 
 <script>
-import { appName } from './config.js'
+import { appName } from './config.ts'
 import {
   NcProgressBar,
   NcSettingsSection,

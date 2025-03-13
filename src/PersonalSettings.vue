@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { appName } from './config.js'
+import { appName } from './config.ts'
 import {
   NcSettingsSection,
 } from '@nextcloud/vue'

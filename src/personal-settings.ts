@@ -17,12 +17,14 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
-import { appName } from './config.js'
+
+import { appName } from './config.ts'
 import { generateFilePath } from '@nextcloud/router'
 
 import Vue from 'vue'
-import AdminSettings from './AdminSettings.vue'
+import PersonalSettings from './PersonalSettings.vue'
 
 // eslint-disable-next-line
 __webpack_public_path__ = generateFilePath(appName, '', 'js/')
@@ -30,6 +32,6 @@ __webpack_public_path__ = generateFilePath(appName, '', 'js/')
 Vue.mixin({ data() { return { appName } }, methods: { t, n } })
 
 export default new Vue({
-  el: '#admin-settings',
-  render: h => h(AdminSettings),
+  el: '#personal-settings',
+  render: h => h(PersonalSettings),
 })
