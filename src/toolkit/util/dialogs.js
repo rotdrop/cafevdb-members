@@ -1,5 +1,5 @@
 /**
- * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright Copyright (c) 2022, 2023, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
@@ -19,7 +19,7 @@
  */
 
 import $ from './jquery.js';
-import { appName } from '../../config.js';
+import { appName } from '../../config.ts';
 
 require('dialogs.scss');
 
@@ -31,7 +31,7 @@ const alert = function(text, title, callback, modal, allowHtml) {
     OC.dialogs.OK_BUTTON,
     callback,
     modal,
-    allowHtml
+    allowHtml,
   );
 };
 
@@ -43,7 +43,7 @@ const info = function(text, title, callback, modal, allowHtml) {
     OC.dialogs.OK_BUTTON,
     callback,
     modal,
-    allowHtml
+    allowHtml,
   );
 };
 
@@ -74,7 +74,7 @@ const confirm = function(text, title, options, modal, allowHtml) {
   } else {
     buttons = OC.dialogs.YES_NO_BUTTONS;
   }
-  options = $.extend({}, defaultOptions, options);
+  options = { ...defaultOptions, ...options };
   return OC.dialogs.message(
     text,
     title,
@@ -82,7 +82,7 @@ const confirm = function(text, title, options, modal, allowHtml) {
     buttons,
     options.callback,
     options.modal,
-    options.allowHtml
+    options.allowHtml,
   );
 };
 

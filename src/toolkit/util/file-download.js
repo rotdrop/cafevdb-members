@@ -1,5 +1,5 @@
 /**
- * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright Copyright (c) 2022, 2023, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
  *
@@ -21,8 +21,8 @@
  */
 
 import $ from './jquery.js';
-import { appName } from '../../config.js';
-import generateUrl from './generate-url.js';
+import { appName } from '../../config.ts';
+import { generateUrl } from './generate-url.js';
 import * as Ajax from './ajax.js';
 import * as ncRouter from '@nextcloud/router';
 import { showError, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs';
@@ -34,7 +34,7 @@ import { parse as parseContentDisposition } from 'content-disposition';
  * @param {string} url Relative download url, will be first fed in to
  * generateUrl().
  *
- * @param {Array} post Optional. Additional post-data.
+ * @param {Array|boolean} post Optional. Additional post-data.
  *
  * @param {object} options Optional. Success and error callbacks
  * .done(), .fail(), .errorMessage().
@@ -62,7 +62,7 @@ const download = function(url, post, options) {
       },
     };
   }
-  options = $.extend({}, defaultOptions, options);
+  options = { ...defaultOptions, ...options };
   const fail = options.fail;
   options.fail = function(data) {
 
@@ -149,8 +149,3 @@ const download = function(url, post, options) {
 };
 
 export default download;
-
-// Local Variables: ***
-// js-indent-level: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***
