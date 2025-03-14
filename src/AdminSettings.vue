@@ -85,7 +85,6 @@ import {
 } from 'vue'
 import {
   fetchSettings,
-  fetchSetting,
   saveConfirmedSetting,
 } from './toolkit/util/settings-sync.ts'
 import { isAxiosErrorResponse } from './toolkit/types/axios-type-guards.ts'
