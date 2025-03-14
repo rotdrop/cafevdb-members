@@ -44,19 +44,19 @@
              :readonly="readonly"
              :required="required"
              v-bind="$attrs"
-             @focus="show = !show;"
-             @blur="show = !show;"
-             @input="$emit('input', $event.target.value);"
+             v-on="$listeners"
+             @focus="show = !show"
+             @blur="show = !show"
+             @input="(event) => handleInput(event)"
       >
       <label :style="{ color: color }"><span>{{ label }}</span><span class="readonly-indicator"><LockIcon /></span></label>
-      <span class="focus-border" :style="focus_border" />
+      <span class="focus-border" :style="focusBorder" />
     </div>
     <span v-if="show" class="input__hint">{{ hint }}</span>
     <i class="material-icons input__icon">{{ icon }}</i>
   </div>
 </template>
-
-<script>
+<script setup lang="ts">
 import { getLanguage } from '@nextcloud/l10n'
 import {
   NcDateTimePicker,
@@ -66,7 +66,11 @@ import LockIcon from 'vue-material-design-icons/Lock.vue'
 // The following would interfere with the rest of NC:
 // import 'vue-material-design-icons/styles.css'
 import 'material-icons/iconfont/material-icons.css'
-import cloudVersionClasses from '../toolkit/util/cloud-version-classes.js'
+import cloudVersionClassesImport from '../toolkit/util/cloud-version-classes.js'
+import {
+  computed,
+  ref,
+} from 'vue'
 
 const formatMapDE = {
   date: 'DD.MM.YYYY',
@@ -77,91 +81,127 @@ const formatMapDE = {
   week: 'w',
 }
 
-export default {
-  components: {
-    LockIcon,
-    NcDateTimePicker,
-    NcSelect,
-  },
-  props: {
-    type: { type: String, required: false, default: 'text' },
-    disabled: { type: Boolean, required: false, default: false },
-    readonly: { type: Boolean, required: false, default: false },
-    required: { type: Boolean, required: false, default: false },
-    value: { type: [String, Date, Array, Object], required: false, default: '' },
-    label: { type: String, required: false, default: '' },
-    hint: { type: String, required: false, default: '' },
-    icon: { type: String, required: false, default: '' },
-    placeholder: { type: String, required: false, default: '' },
-    color: { type: String, required: false, default: 'indigo' },
-    optionLabel: { type: String, required: false, default: '' },
-    collapse: { type: Boolean, requried: false, default: true },
-    format: { type: String, default: null },
-  },
-  data: () => ({
-    cloudVersionClasses,
-    show: false,
+const emit = defineEmits(['input', 'update:value'])
+
+const cloudVersionClasses = computed(() => cloudVersionClassesImport)
+const show = ref(false)
+
+const props = withDefaults(defineProps<{
+  type?: string,
+  disabled?: boolean,
+  readonly?: boolean,
+  required?: boolean,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  value?: string|Date|any[]|object,
+  label?: string,
+  hint?: string,
+  icon?: string,
+  placeholder?: string,
+  color?: string,
+  optionLabel?: string,
+  collapse?: boolean,
+  format?: string,
+}>(), {
+  type: 'text',
+  disabled: false,
+  readonly: false,
+  required: false,
+  value: '',
+  label: '',
+  hint: '',
+  icon: '',
+  placeholder: '',
+  color: 'indigo',
+  optionLabel: '',
+  collapse: true,
+  format: undefined,
+})
+
+// @todo change in vue 3.5+ to props destructuring in order to remove this boiler plate code
+const type = computed(() => props.type)
+const readonly = computed(() => props.readonly)
+const disabled = computed(() => props.disabled)
+const value = computed(() => props.value)
+const placeholder = computed(() => props.placeholder)
+const collapse = computed(() => props.collapse)
+const format = computed(() => props.format)
+const required = computed(() => props.required)
+const optionLabel = computed(() => props.optionLabel)
+const color = computed(() => props.color)
+const label = computed(() => props.label)
+const hint = computed(() => props.hint)
+const icon = computed(() => props.icon)
+
+const filled = computed(() => {
+  if (!show.value && props.value) {
+    return 'has-content'
+  }
+  return ''
+})
+
+// eslint-disable-next-line camelcase
+const has_icon = computed(() => {
+  if (props.icon) {
+    return 'input__has_icon'
+  }
+  return ''
+})
+
+// eslint-disable-next-line camelcase
+const has_hint = computed(() => {
+  if (props.hint) {
+    return 'input__has_hint'
+  }
+  return 'input__no_hint'
+})
+
+const focusBorder = computed(
+  () => ({
+    'background-color': props.color,
   }),
-  computed: {
-    filled() {
-      if (!this.show && this.value) {
-        return 'has-content'
-      }
-      return ''
-    },
-    has_icon() {
-      if (this.icon) {
-        return 'input__has_icon'
-      }
-      return ''
-    },
-    has_hint() {
-      if (this.hint) {
-        return 'input__has_hint'
-      }
-      return 'input__no_hint'
-    },
-    focus_border() {
-      return {
-        'background-color': this.color,
-      }
-    },
-    isMultiselectType() {
-      return this.type === 'multiselect'
-    },
-    isDatePickerType() {
-      switch (this.type) {
-      case 'time':
-      case 'month':
-      case 'year':
-      case 'week':
-      case 'date':
-      case 'datetime':
-        return this.type
-      }
-      return false
-    },
-    formatTypeMap() {
-      if (this.isDatePickerType === false) {
-        return null
-      }
-      if (getLanguage().startsWith('de')) {
-        return formatMapDE[this.type] ?? formatMapDE.date
-      } else {
-        return null
-      }
-    },
-    /**
-     * determines if the action is focusable
-     *
-     * @return {boolean} is the action focusable ?
-     */
-    isFocusable() {
-      return !this.disabled
-    },
-  },
-  created() {
-  },
+)
+
+const isMultiselectType = computed(() => props.type === 'multiselect')
+
+const isDatePickerType = computed(() => {
+  switch (props.type) {
+  case 'time':
+  case 'month':
+  case 'year':
+  case 'week':
+  case 'date':
+  case 'datetime':
+    return props.type
+  }
+  return false
+})
+
+const formatTypeMap = computed(() => {
+  if (isDatePickerType.value === false) {
+    return null
+  }
+  if (getLanguage().startsWith('de')) {
+    return formatMapDE[props.type] ?? formatMapDE.date
+  } else {
+    return null
+  }
+})
+
+/**
+ * determines if the action is focusable
+ *
+ * @return {boolean} is the action focusable ?
+ */
+const isFocusable = computed(() => !props.disabled)
+
+interface TargetedMouseEvent extends MouseEvent {
+  target: HTMLInputElement,
+}
+
+const handleInput = (vueEvent: Event) => {
+  const event = vueEvent as TargetedMouseEvent
+  emit('input', event.target.value)
+  emit('update:value', event.target.value)
 }
 </script>
 <style lang="scss" scoped>
