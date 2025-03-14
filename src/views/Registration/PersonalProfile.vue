@@ -21,22 +21,22 @@
 <template>
   <div :class="{ 'icon-loading': loading, 'page-container': true, loading, 'personal-profile-view': true, }">
     <h2 v-if="!!registrationData.personalPublicName">
-      {{ t(appId, 'Personal Profile of {publicName}', { publicName: registrationData.personalPublicName || '' }) }}
+      {{ t(appName, 'Personal Profile of {publicName}', { publicName: registrationData.personalPublicName || '' }) }}
     </h2>
     <h2 v-else>
-      {{ t(appId, 'Personal Profile') }}
+      {{ t(appName, 'Personal Profile') }}
     </h2>
     <div class="input-row">
       <InputText v-model="registrationData.firstName"
-                 :label="t(appId, 'First Name')"
-                 :placeholder="t(appId, 'e.g. Jonathan')"
+                 :label="t(appName, 'First Name')"
+                 :placeholder="t(appName, 'e.g. Jonathan')"
                  :readonly="readonly"
                  :required="true"
                  @input="updatePublicName"
       />
       <InputText v-model="registrationData.surName"
-                 :label="t(appId, 'Sur Name')"
-                 :placeholder="t(appId, 'e.g. Smith')"
+                 :label="t(appName, 'Sur Name')"
+                 :placeholder="t(appName, 'e.g. Smith')"
                  :readonly="readonly"
                  :required="true"
                  @input="updatePublicName"
@@ -44,42 +44,42 @@
     </div>
     <div class="input-row">
       <InputText v-model="registrationData.nickName"
-                 :label="t(appId, 'Nick Name (optional)')"
-                 :placeholder="t(appId, 'e.g. Jonny')"
+                 :label="t(appName, 'Nick Name (optional)')"
+                 :placeholder="t(appName, 'e.g. Jonny')"
                  :readonly="readonly"
                  @input="updatePublicName"
       />
     </div>
     <div v-show="registrationData.addressSupplement" class="input-row">
       <InputText v-model="registrationData.addressSupplement"
-                 :label="t(appId, 'Address Supplement')"
-                 :placeholder="t(appId, 'e.g. c/o Doe')"
+                 :label="t(appName, 'Address Supplement')"
+                 :placeholder="t(appName, 'e.g. c/o Doe')"
                  :readonly="readonly"
       />
     </div>
     <div class="input-row">
       <InputText v-model="registrationData.street"
-                 :label="t(appId, 'Street')"
-                 :placeholder="t(appId, 'e.g. Underhill')"
+                 :label="t(appName, 'Street')"
+                 :placeholder="t(appName, 'e.g. Underhill')"
                  :readonly="readonly"
       />
       <InputText v-model="registrationData.streetNumber"
                  type="number"
-                 :label="t(appId, 'Number')"
-                 :placeholder="t(appId, 'e.g. 13')"
+                 :label="t(appName, 'Number')"
+                 :placeholder="t(appName, 'e.g. 13')"
                  :readonly="readonly"
       />
     </div>
     <div class="input-row">
       <InputText v-model="registrationData.postalCode"
                  type="text"
-                 :label="t(appId, 'Postal Code')"
-                 :placeholder="t(appId, 'e.g. 4711')"
+                 :label="t(appName, 'Postal Code')"
+                 :placeholder="t(appName, 'e.g. 4711')"
                  :readonly="readonly"
       />
       <InputText v-model="registrationData.city"
-                 :label="t(appId, 'City')"
-                 :placeholder="t(appId, 'e.g. Bagend')"
+                 :label="t(appName, 'City')"
+                 :placeholder="t(appName, 'e.g. Bagend')"
                  :readonly="readonly"
       />
     </div>
@@ -87,28 +87,27 @@
       <InputText v-model="registrationCountry"
                  type="multiselect"
                  class="country"
-                 :label="t(appId, 'Country')"
-                 :placeholder="t(appId, 'e.g. The Shire')"
+                 :label="t(appName, 'Country')"
+                 :placeholder="t(appName, 'e.g. The Shire')"
                  :readonly="readonly"
                  :options="countries"
                  track-by="code"
                  option-label="name"
                  :multiple="false"
-                 @change="info(...arguments)"
       />
       <InputText v-model="registrationData.birthday"
                  type="date"
                  class="birthday"
-                 :label="t(appId, 'Birthday')"
-                 :placeholder="t(appId, 'e.g. 01.01.1970')"
+                 :label="t(appName, 'Birthday')"
+                 :placeholder="t(appName, 'e.g. 01.01.1970')"
                  :readonly="readonly"
                  :required="true"
       />
     </div>
     <div class="input-row">
       <InputText v-model="registrationData.email"
-                 :label="t(appId, 'Email')"
-                 :placeholder="t(appId, 'e.g. me@you.tld')"
+                 :label="t(appName, 'Email')"
+                 :placeholder="t(appName, 'e.g. me@you.tld')"
                  :readonly="readonly"
                  :required="true"
                  icon="email"
@@ -119,7 +118,7 @@
     >
       <InputText v-model="registrationData.emailAddresses"
                  type="multiselect"
-                 :label="t(appId, 'All Email Addresses')"
+                 :label="t(appName, 'All Email Addresses')"
                  :options="registrationData.emailAddresses"
                  track-by="address"
                  option-label="address"
@@ -129,20 +128,20 @@
     </div>
     <div class="input-row">
       <InputText v-model="registrationData.mobilePhone"
-                 :label="t(appId, 'Mobile Phone')"
-                 :placeholder="t(appId, 'e.g. +12 34 5678 901234')"
+                 :label="t(appName, 'Mobile Phone')"
+                 :placeholder="t(appName, 'e.g. +12 34 5678 901234')"
                  :readonly="readonly"
       />
       <InputText v-model="registrationData.fixedLinePhone"
-                 :label="t(appId, 'Fixed Line Phone')"
-                 :placeholder="t(appId, 'e.g. +12 34 5678 901234')"
+                 :label="t(appName, 'Fixed Line Phone')"
+                 :placeholder="t(appName, 'e.g. +12 34 5678 901234')"
                  :readonly="readonly"
       />
     </div>
     <div class="input-row">
       <InputText v-model="registrationData.selectedInstruments"
                  type="multiselect"
-                 :label="t(appId, 'All my Instruments or Roles')"
+                 :label="t(appName, 'All my Instruments or Roles')"
                  :options="instruments"
                  group-values="instruments"
                  group-label="family"
@@ -152,7 +151,7 @@
                  :tag-width="100"
                  :readonly="readonly"
                  :multiple="true"
-                 :placeholder="t(appId, 'e.g. double bass')"
+                 :placeholder="t(appName, 'e.g. double bass')"
                  :required="true"
       />
     </div>
@@ -162,20 +161,20 @@
                              value="first-time"
                              :required="true"
       >
-        {{ t(appId, 'First time application') }}
+        {{ t(appName, 'First time application') }}
       </NcCheckboxRadioSwitch>
       <NcCheckboxRadioSwitch :checked.sync="registrationData.firstTimeApplication"
                              type="radio"
                              value="you-know-me"
                              :required="true"
       >
-        {{ t(appId, 'You know me') }}
+        {{ t(appName, 'You know me') }}
       </NcCheckboxRadioSwitch>
       <NcRichContenteditable v-if="registrationData.firstTimeApplication === 'first-time'"
                              :value.sync="registrationData.whoAmI"
                              :maxlength="1024"
                              :auto-complete="autoComplete"
-                             :placeholder="t(appId, 'Please introduce yourself!')"
+                             :placeholder="t(appName, 'Please introduce yourself!')"
                              :multiline="true"
                              :required="registrationData.firstTimeApplication === 'first-time'"
       />
@@ -186,80 +185,82 @@
                     icon="icon-home"
                     icon-position="left"
       >
-        {{ t(appId, 'Registration Start-Page') }}
+        {{ t(appName, 'Registration Start-Page') }}
       </RouterButton>
       <RouterButton :to="{ name: 'registrationParticipation', params: { projectName } }"
                     exact
                     icon="icon-confirm"
                     icon-position="right"
       >
-        {{ t(appId, 'next') }}
+        {{ t(appName, 'next') }}
       </RouterButton>
     </div>
     <DebugInfo :debug-data="registrationData" />
   </div>
 </template>
-
-<script>
-import { set as vueSet } from 'vue'
+<script setup lang="ts">
+import { appName } from '../../config.ts'
+import { translate as t } from '@nextcloud/l10n'
 import InputText from '../../components/InputText.vue'
 import DebugInfo from '../../components/DebugInfo.vue'
 import RouterButton from '../../components/RouterButton.vue'
-
 import {
   NcCheckboxRadioSwitch,
   NcRichContenteditable,
 } from '@nextcloud/vue'
+import { useMemberDataStore } from '../../stores/memberData.ts'
+import { useAppDataStore } from '../../stores/appData'
+import {
+  ref,
+  onBeforeMount,
+  watch,
+} from 'vue'
+import { storeToRefs } from 'pinia'
+import type { Country } from '../../stores/appData.ts'
 
-import mixinRegistrationData from '../../mixins/registrationData.js'
-import { useMemberDataStore } from '../../stores/memberData.js'
+const registrationData = useMemberDataStore()
+const appData = useAppDataStore()
 
-export default {
-  name: 'PersonalProfile',
-  components: {
-    DebugInfo,
-    InputText,
-    NcCheckboxRadioSwitch,
-    NcRichContenteditable,
-    RouterButton,
-  },
-  mixins: [
-    mixinRegistrationData,
-  ],
-  setup() {
-    const registrationData = useMemberDataStore()
-    return { registrationData }
-  },
-  data() {
-    return {
-      loading: true,
-      readonly: true,
-      registrationCountry: null,
-    }
-  },
-  watch: {
-    registrationCountry(newValue, _oldValue) {
-      vueSet(this.registrationData, 'country', newValue.code)
-    },
-  },
-  async created() {
-    if (!this.activeProject) {
-      this.routerGoHome()
-      return
-    }
-    await this.initializeRegistrationData()
-    this.registrationCountry = this.countries.find(country => country.code === this.registrationData.country)
-    this.readonly = false
-    this.loading = false
-  },
-  methods: {
-    updatePublicName() {
-      this.registrationData.personalPublicName = (this.registrationData.nickName || this.registrationData.firstName || '') + ' ' + (this.registrationData.surName || '')
-    },
-    autoComplete(search, callback) {
-      callback(null)
-    },
-  },
+const {
+  activeProject,
+  countries,
+  instruments,
+  projectName,
+} = storeToRefs(appData)
+const {
+  country,
+  firstName,
+  nickName,
+  personalPublicName,
+  surName,
+} = storeToRefs(registrationData)
+
+const loading = ref(true)
+const readonly = ref(true)
+const registrationCountry = ref<undefined|Country>(undefined)
+
+onBeforeMount(async () => {
+  if (!activeProject.value) {
+    appData.gotoRegistratzionHome()
+    return
+  }
+  await registrationData.initializeRegistrationData()
+  registrationCountry.value = countries.value.find(country => country.code === registrationData.country)
+  readonly.value = false
+  loading.value = false
+})
+
+watch(registrationCountry, (newValue, _oldValue) => {
+  country.value = newValue?.code
+})
+
+const updatePublicName = () => {
+  personalPublicName.value = (nickName.value || firstName.value || '') + ' ' + (surName.value || '')
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const autoComplete = (_search: any, callback: (arg: any) => void) => {
+  callback(null)
 }
 </script>
 <style lang="scss" scoped>

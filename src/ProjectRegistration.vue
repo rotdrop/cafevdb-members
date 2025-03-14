@@ -19,34 +19,34 @@
  - along with this program. If not, see <http://www.gnu.org/licenses/>.
  -->
 <template>
-  <NcContent :class="{ 'icon-loading': loading, 'root-view': true }" :app-name="appId">
+  <NcContent :class="{ 'icon-loading': loading, 'root-view': true }" :app-name="appName">
     <NcAppNavigation>
       <template #list>
         <NcAppNavigationItem :to="routerDestination('registrationHome')"
-                             :title="isPublicPage ? t(appId, 'Home') : t(appId, 'Start Registration')"
+                             :title="isPublicPage ? t(appName, 'Home') : t(appName, 'Start Registration')"
                              icon="icon-home"
                              exact
         />
         <NcAppNavigationItem :to="routerDestination('registrationPersonalProfile')"
-                             :title="t(appId, 'Personal Profile')"
+                             :title="t(appName, 'Personal Profile')"
                              icon="icon-user"
                              :class="{ disabled: !activeProject }"
                              exact
         />
         <NcAppNavigationItem :to="routerDestination('registrationParticipation')"
-                             :title="t(appId, 'Instrumentation and Events')"
+                             :title="t(appName, 'Instrumentation and Events')"
                              icon="icon-music"
                              :class="{ disabled: !activeProject }"
                              exact
         />
         <NcAppNavigationItem :to="routerDestination('registrationProjectOptions')"
-                             :title="t(appId, 'Options')"
+                             :title="t(appName, 'Options')"
                              icon="icon-details"
                              :class="{ disabled: !activeProject }"
                              exact
         />
         <NcAppNavigationItem :to="routerDestination('registrationSubmission')"
-                             :title="t(appId, 'Summary and Submission')"
+                             :title="t(appName, 'Summary and Submission')"
                              icon="icon-checkmark"
                              :class="{ disabled: !activeProject }"
                              exact
@@ -55,7 +55,7 @@
       <template #footer>
         <NcAppNavigationSettings>
           <NcCheckboxRadioSwitch :checked.sync="debug">
-            {{ t(appId, 'Enable Debug') }}
+            {{ t(appName, 'Enable Debug') }}
           </NcCheckboxRadioSwitch>
         </NcAppNavigationSettings>
       </template>
@@ -64,14 +64,14 @@
       <router-view v-show="!loading" :loading.sync="loading" />
       <NcEmptyContent v-if="isRoot" class="emp-content">
         <template #icon>
-          <img :src="icon">
+          <img :src="Icon">
         </template>
         <template #title>
           <div v-if="activeProject">
-            {{ t(appId, '{orchestraName} project registration for {projectName}', { orchestraName, projectName }) }}
+            {{ t(appName, '{orchestraName} project registration for {projectName}', { orchestraName, projectName }) }}
           </div>
           <div v-else>
-            {{ t(appId, '{orchestraName} project registration', { orchestraName }) }}
+            {{ t(appName, '{orchestraName} project registration', { orchestraName }) }}
           </div>
         </template>
         <template #description>
@@ -79,7 +79,7 @@
                class="flex-container flex-center"
           >
             <NcActions v-if="projects.length > 1"
-                       :menu-title="t(appId, 'choose another one')"
+                       :menu-title="t(appName, 'choose another one')"
             >
               <NcActionRouter v-for="project in projects"
                               :key="project.id"
@@ -87,36 +87,35 @@
                               :to="{ name: 'registrationHome', params: { projectName: project.name } }"
               />
             </NcActions>
-            <span v-if="projects.length > 1" class="start-button-junctor">{{ t(appId, 'or') }}</span>
+            <span v-if="projects.length > 1" class="start-button-junctor">{{ t(appName, 'or') }}</span>
             <RouterButton :to="{ name: 'registrationPersonalProfile', params: projectName ? { projectName } : {} }"
                           exact
                           icon="icon-confirm"
                           icon-position="right"
             >
-              {{ t(appId, 'register') }}
+              {{ t(appName, 'register') }}
             </RouterButton>
-            <span v-if="isPublicPage" class="start-button-junctor">{{ t(appId, 'or') }}</span>
+            <span v-if="isPublicPage" class="start-button-junctor">{{ t(appName, 'or') }}</span>
             <RouterButton v-if="isPublicPage"
                           :to="loginRedirection('registrationHome')"
                           :external="true"
                           icon="icon-confirm"
                           icon-position="right"
             >
-              {{ t(appId, 'login and register') }}
+              {{ t(appName, 'login and register') }}
             </RouterButton>
           </div>
           <h2 v-else>
-            {{ t(appId, 'The project registration for all projects is closed.') }}
+            {{ t(appName, 'The project registration for all projects is closed.') }}
           </h2>
         </template>
       </NcEmptyContent>
     </NcAppContent>
   </NcContent>
 </template>
-
-<script>
+<script setup lang="ts">
 import { appName } from './config.ts'
-
+import { translate as t } from '@nextcloud/l10n'
 import {
   NcActions,
   NcActionRouter,
@@ -130,79 +129,65 @@ import {
 } from '@nextcloud/vue'
 import { getCurrentUser } from '@nextcloud/auth'
 import RouterButton from './components/RouterButton.vue'
-
-import { useMemberDataStore } from './stores/memberData.js'
-
+import { useMemberDataStore } from './stores/memberData.ts'
+import { useAppDataStore } from './stores/appData.ts'
+import { storeToRefs } from 'pinia'
 import Icon from '../img/cafevdbmembers.svg'
-
-import mixinRegistrationData from './mixins/registrationData.js'
-
 import { prefix as registrationPrefix } from './router/registration-routes.js'
+import {
+  computed,
+  onBeforeMount,
+  ref,
+  watch,
+} from 'vue'
+import { useRoute } from 'vue-router/composables'
 
-export default {
-  name: 'ProjectRegistration',
-  components: {
-    NcActionRouter,
-    NcActions,
-    NcAppContent,
-    NcAppNavigation,
-    NcAppNavigationItem,
-    NcAppNavigationSettings,
-    NcCheckboxRadioSwitch,
-    NcContent,
-    NcEmptyContent,
-    RouterButton,
-  },
-  mixins: [
-    mixinRegistrationData,
-  ],
-  setup() {
-    const registrationData = useMemberDataStore()
-    return { registrationData }
-  },
-  data() {
-    return {
-      icon: Icon,
-      loading: true,
-      readonly: true,
-    }
-  },
-  computed: {
-    isRoot() {
-      const result = this.$route.path === registrationPrefix
-          || this.$route.path === registrationPrefix + '/'
-          || this.$route.path === registrationPrefix + '/' + this.projectName
-      console.info('ROUTE PATH', this.$route.path, registrationPrefix, this.projectName, result)
-      return result
-    },
-    isPublicPage() {
-      return !getCurrentUser()
-    },
-  },
-  watch: {
-    activeProject(_newValue, _oldValue) {
-      this.setPageTitle()
-    },
-  },
-  async created() {
-    await this.initializeRegistrationData()
-    this.setPageTitle()
-    this.readonly = false
-    this.loading = false
-  },
-  methods: {
-    setPageTitle() {
-      if (getCurrentUser()) {
-        return
-      }
-      const pageTitleElement = document.getElementById('nextcloud')
-      const pageTitle = this.activeProject
-        ? t(appName, 'Project Application for {projectName}', this)
-        : t(appName, 'Project Application')
-      pageTitleElement.innerHTML = pageTitle
-    },
-  },
+const registrationData = useMemberDataStore()
+const appData = useAppDataStore()
+const {
+  activeProject,
+  debug,
+  orchestraName,
+  projectName,
+  projects,
+} = storeToRefs(appData)
+const routerDestination = appData.registrationRouteRecord
+const loginRedirection = appData.loginRedirection
+
+const loading = ref(true)
+const readonly = ref(true)
+
+const currentRoute = useRoute()
+
+const isRoot = computed(() => {
+  const result = currentRoute.path === registrationPrefix
+    || currentRoute.path === registrationPrefix + '/'
+    || currentRoute.path === registrationPrefix + '/' + projectName.value
+  console.info('ROUTE PATH', currentRoute.path, registrationPrefix, projectName.value, result)
+  return result
+})
+
+const isPublicPage = computed(() => !getCurrentUser())
+
+const setPageTitle = () => {
+  if (getCurrentUser()) {
+    return
+  }
+  const pageTitleElement = document.getElementById('nextcloud')!
+  const pageTitle = activeProject.value
+    ? t(appName, 'Project Application for {projectName}', { projectName: projectName.value })
+    : t(appName, 'Project Application')
+  pageTitleElement.innerHTML = pageTitle
 }
+
+watch(activeProject, () => setPageTitle())
+
+onBeforeMount(async () => {
+  await registrationData.initializeRegistrationData()
+  setPageTitle()
+  readonly.value = false
+  loading.value = false
+})
 </script>
 <style lang="scss" scoped>
 span {

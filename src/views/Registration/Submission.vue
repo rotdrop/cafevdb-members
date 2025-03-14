@@ -1,5 +1,5 @@
 <!--
- - @copyright Copyright (c) 2023, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ - @copyright Copyright (c) 2023, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  -
  - @author Claus-Justus Heine <himself@claus-justus-heine.de>
  -
@@ -21,7 +21,7 @@
 <template>
   <div :class="{ 'icon-loading': loading, 'page-container': true, loading, 'submission-view': true, }">
     <h2>
-      {{ t(appId, 'Summary and Submission') }}
+      {{ t(appName, 'Summary and Submission') }}
     </h2>
     <div class="navigation flex flex-row flex-justify-full flex-center">
       <RouterButton :to="{ name: 'registrationProjectOptions', params: { projectName } }"
@@ -29,10 +29,10 @@
                     icon="icon-history"
                     icon-position="left"
       >
-        {{ t(appId, 'back') }}
+        {{ t(appName, 'back') }}
       </RouterButton>
       <NcButton>
-        {{ t(appId, 'Submit') }}
+        {{ t(appName, 'Submit') }}
         <template #icon>
           <span class="icon-checkmark" />
         </template>
@@ -40,47 +40,38 @@
     </div>
   </div>
 </template>
-
-<script>
+<script setup lang="ts">
+import { appName } from '../../config.ts'
+import { translate as t } from '@nextcloud/l10n'
 import RouterButton from '../../components/RouterButton.vue'
-
 import { NcButton } from '@nextcloud/vue'
+import { useMemberDataStore } from '../../stores/memberData.ts'
+import { useAppDataStore } from '../../stores/appData.ts'
+import {
+  ref,
+  onBeforeMount,
+} from 'vue'
+import { storeToRefs } from 'pinia'
 
-import mixinRegistrationData from '../../mixins/registrationData.js'
-import { useMemberDataStore } from '../../stores/memberData.js'
+const loading = ref(true)
+const readonly = ref(true)
 
-export default {
-  name: 'Submission',
-  components: {
-    NcButton,
-    RouterButton,
-  },
-  mixins: [
-    mixinRegistrationData,
-  ],
-  setup() {
-    const registrationData = useMemberDataStore()
-    return { registrationData }
-  },
-  data() {
-    return {
-      loading: true,
-      readonly: true,
-    }
-  },
-  computed: {},
-  watch: {},
-  async created() {
-    if (!this.activeProject) {
-      this.routerGoHome()
-      return
-    }
-    await this.initializeRegistrationData()
-    this.readonly = false
-    this.loading = false
-  },
-  methods: {},
-}
+const registrationData = useMemberDataStore()
+const appData = useAppDataStore()
+const {
+  activeProject,
+  projectName,
+} = storeToRefs(appData)
+
+onBeforeMount(async () => {
+  if (!activeProject.value) {
+    appData.gotoRegistratzionHome()
+    return
+  }
+  await registrationData.initializeRegistrationData()
+  readonly.value = false
+  loading.value = false
+})
 </script>
 <style lang="scss" scoped>
 .page-container {

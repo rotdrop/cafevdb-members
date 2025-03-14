@@ -44,14 +44,21 @@ export interface Instrument {
   families: InstrumentFamily[],
 }
 
+export interface CalendarObject {
+  start: string,
+  startDateTime: Date,
+  end: string,
+  endDateTime: Date,
+  summary: string,
+  location: string,
+  description: string,
+  allday: boolean,
+}
+
 export interface ProjectEvent {
   id: number,
-  calendarObject: {
-    start: string,
-    startDateTime: Date,
-    end: string,
-    endDateTime: Date,
-  }
+  calendarObject: CalendarObject,
+  absenceField: number,
 }
 
 export interface InstrumentationNumber {
@@ -83,10 +90,14 @@ export interface Locale {
   language: string,
 }
 
+export interface Country {
+  code: string,
+}
+
 const projectsArray = getInitialState('projects', []) as Project[]
 let activeProjectIndex = getInitialState('activeProject', null)
 const flatInstruments = getInitialState('instruments', []) as Instrument[]
-const countries = getInitialState('countries', null)
+const countries = getInitialState('countries', null) as Country[]
 const displayLocale = getInitialState('displayLocale', null) as Locale
 
 interface InitialState {
