@@ -1,5 +1,5 @@
 <!--
- - @copyright Copyright (c) 2022-2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ - @copyright Copyright (c) 2022-2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  -
  - @author Claus-Justus Heine <himself@claus-justus-heine.de>
  -
@@ -135,41 +135,30 @@
     <DebugInfo :debug-data="memberData" />
   </div>
 </template>
-<script>
+<script setup lang="ts">
+import { appName as appId } from '../config.ts'
+import { translate as t } from '@nextcloud/l10n'
 import InputText from '../components/InputText.vue'
 import DebugInfo from '../components/DebugInfo.vue'
-
-import { useMemberDataStore } from '../stores/memberData.js'
+import { useMemberDataStore } from '../stores/memberData.ts'
+import {
+  computed,
+  onBeforeMount,
+  ref,
+} from 'vue'
 
 const viewName = 'PersonalProfile'
 
-export default {
-  name: viewName,
-  components: {
-    DebugInfo,
-    InputText,
-  },
-  setup() {
-    const memberData = useMemberDataStore()
-    return { memberData }
-  },
-  data() {
-    return {
-      loading: true,
-      readonly: true,
-    }
-  },
-  /**
-   *
-   */
-  async created() {
-    await this.memberData.initialize()
-    this.memberData.initialized[viewName] = true
-    this.loading = false
-  },
-  methods: {
-  },
-}
+const loading = ref(true)
+const readonly = computed(() => true) // change to ref if changing personal data has been implemented
+
+const memberData = useMemberDataStore()
+
+onBeforeMount(async () => {
+  await memberData.initialize()
+  memberData.initialized[viewName] = true
+  loading.value = false
+})
 </script>
 <style lang="scss" scoped>
 .page-container {
