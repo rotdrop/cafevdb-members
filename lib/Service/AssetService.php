@@ -1,7 +1,9 @@
 <?php
 /**
+ * Member's data base connector for CAFEVDB orchetra management app.
+ *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022, 2023, 2025 Claus-Justus Heine
+ * @copyright Copyright (c) 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,8 +20,34 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-script($appName, $assets['js']['asset']);
-style($appName, $assets['css']['asset']);
+namespace OCA\CAFeVDBMembers\Service;
 
-?>
-<div id="personal-settings"></div>
+use OCP\IL10N;
+use Psr\Log\LoggerInterface;
+
+use OCA\CAFeVDBMemebers\Constants;
+
+/**
+ * Return JavaScript- and CSS-assets names dealing with the attached content
+ * hashes
+ */
+class AssetService
+{
+  use \OCA\CAFeVDBMembers\Toolkit\Traits\AssetTrait {
+    getAsset as public;
+    getJSAsset as public;
+    getCSSAsset as public;
+  }
+
+  const JS = Constants::JS;
+  const CSS = Constants::CSS;
+
+  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
+  public function __construct(
+    protected IL10N $l,
+    protected LoggerInterface $logger,
+  ) {
+    $this->initializeAssets(__DIR__);
+  }
+  // phpcs:enable
+}

@@ -3,7 +3,7 @@
  * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022 Claus-Justus Heine
+ * @copyright Copyright (c) 2022, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,11 +22,13 @@
 
 namespace OCA\CAFeVDBMembers\Controller;
 
-use OCA\CAFeVDBMembers\AppInfo\Application;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IRequest;
 use OCP\Util;
+
+use OCA\CAFeVDBMembers\AppInfo\Application;
+use OCA\CAFeVDBMembers\Service\AssetService;
 
 /** AJAX endpoint for generating the main page of the app. */
 class PageController extends Controller
@@ -35,6 +37,7 @@ class PageController extends Controller
   public function __construct(
     string $appName,
     IRequest $request,
+    private AssetService $assetService,
   ) {
     parent::__construct($appName, $request);
   }
@@ -50,7 +53,8 @@ class PageController extends Controller
    */
   public function index():TemplateResponse
   {
-    Util::addScript($this->appName, 'cafevdbmembers-main');
+    Util::addScript($this->appName, $this->assetService->getJSAsset('main')['asset']);
+    Util::addStyle($this->appName, $this->assetService->getCSSAsset('main')['asset']);
 
     return new TemplateResponse($this->appName, 'main');
   }

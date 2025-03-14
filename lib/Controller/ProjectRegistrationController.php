@@ -3,7 +3,7 @@
  * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2023, 2024 Claus-Justus Heine
+ * @copyright Copyright (c) 2023-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -29,27 +29,29 @@ use DateTime;
 use Psr\Log\LoggerInterface;
 
 use OCP\AppFramework\Controller;
-use OCP\IRequest;
-use OCP\IL10N;
-use OCP\IDateTimeZone;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Http\Template\PublicTemplateResponse;
 use OCP\AppFramework\Http\Template\SimpleMenuAction;
 use OCP\AppFramework\Services\IInitialState;
 use OCP\Calendar\ICalendar;
-use OCP\Calendar\IManager as ICalendarMananger;
 use OCP\Calendar\ICalendarQuery;
+use OCP\Calendar\IManager as ICalendarMananger;
 use OCP\IConfig;
+use OCP\IDateTimeZone;
+use OCP\IL10N;
+use OCP\IRequest;
 use OCP\IURLGenerator;
 use OCP\IUserSession;
+use OCP\Util;
 
 use OCA\CAFEVDB\Service\ConfigService;
 
 use OCA\CAFeVDBMembers\Constants;
 use OCA\CAFeVDBMembers\Database\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
 use OCA\CAFeVDBMembers\Database\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
-use OCA\CAFeVDBMembers\Database\ORM\EntityManager;
 use OCA\CAFeVDBMembers\Database\ORM\Entities;
+use OCA\CAFeVDBMembers\Database\ORM\EntityManager;
+use OCA\CAFeVDBMembers\Service\AssetService;
 use OCA\CAFeVDBMembers\Service\EventsService;
 
 /** AJAX endpoints for a project registration form. */
@@ -63,16 +65,17 @@ class ProjectRegistrationController extends Controller
   public function __construct(
     string $appName,
     IRequest $request,
+    private AssetService $assetService,
+    private EntityManager $entityManager,
+    private EventsService $eventsService,
+    private ICalendarMananger $calendarManager,
+    private IConfig $cloudConfig,
+    private IDateTimeZone $dateTimeZone,
+    private IInitialState $initialState,
+    private IURLGenerator $urlGenerator,
     private IUserSession $userSession,
     protected IL10N $l,
     protected LoggerInterface $logger,
-    private IConfig $cloudConfig,
-    private ICalendarMananger $calendarManager,
-    private IDateTimeZone $dateTimeZone,
-    private IURLGenerator $urlGenerator,
-    private IInitialState $initialState,
-    private EntityManager $entityManager,
-    private EventsService $eventsService,
   ) {
     parent::__construct($appName, $request);
   }
@@ -312,6 +315,9 @@ class ProjectRegistrationController extends Controller
       'region' => $displayRegion,
       'language' => locale_get_primary_language($displayLocale),
     ]);
+
+    Util::addScript($this->appName, $this->assetService->getJSAsset('project-registration')['asset']);
+    Util::addStyle($this->appName, $this->assetService->getCSSAsset('project-registration')['asset']);
 
     return $response;
   }

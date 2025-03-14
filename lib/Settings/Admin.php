@@ -1,7 +1,7 @@
 <?php
 /**
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022-2024 Claus-Justus Heine
+ * @copyright Copyright (c) 2022-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,14 +23,19 @@ namespace OCA\CAFeVDBMembers\Settings;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\Settings\IDelegatedSettings;
 
+use OCA\CAFeVDBMembers\Service\AssetService;
+
 /** Admin settings implementation. */
 class Admin implements IDelegatedSettings
 {
   const TEMPLATE = "admin-settings";
+  const ASSET_NAME = self::TEMPLATE;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
-  public function __construct(private string $appName)
-  {
+  public function __construct(
+    private string $appName,
+    private AssetService $assetService,
+  ) {
   }
   // phpcs:enable
 
@@ -41,6 +46,10 @@ class Admin implements IDelegatedSettings
       $this->appName,
       self::TEMPLATE, [
         'appName' => $this->appName,
+        'assets' => [
+          Constants::JS => $this->assetService->getJSAsset(self::ASSET_NAME),
+          Constants::CSS => $this->assetService->getCSSAsset(self::ASSET_NAME),
+        ],
       ],
       'blank');
   }
