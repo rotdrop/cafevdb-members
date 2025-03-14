@@ -1,5 +1,5 @@
 <!--
- - @copyright Copyright (c) 2022, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ - @copyright Copyright (c) 2022, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  -
  - @author Claus-Justus Heine <himself@claus-justus-heine.de>
  -
@@ -19,64 +19,53 @@
  - along with this program. If not, see <http://www.gnu.org/licenses/>.
  -->
 <template>
-  <ul v-if="insurance !== false" class="insurance-details">
-    <ListItem :title="t(appId, 'manufacturer')" :details="insurance.manufacturer" />
-    <ListItem :title="t(appId, 'manufacturered')" :details="insurance.yearOfConstruction" />
-    <ListItem :title="t(appId, 'insurance broker')" :details="insurance.insuranceRate.broker.shortName" />
-    <ListItem :title="t(appId, 'insurance start')" :details="formatDate(insurance.startOfInsurance)" />
-    <ListItem :title="t(appId, 'geographical scope')" :details="t(appId, insurance.insuranceRate.geographicalScope)" />
-    <ListItem :title="t(appId, 'insurance rate')" :details="insurance.insuranceRate.rate*100.0 + '%'" />
-    <ListItem :title="t(appId, 'value')" :details="insurance.insuranceAmount + ' ' + currencySymbol" />
-    <ListItem :title="t(appId, 'insurance fee')" :details="(insurance.insuranceAmount * insurance.insuranceRate.rate * (1. + taxRate)).toFixed(2) + ' ' + currencySymbol" />
-    <ListItem :title="t(appId, 'due date')" :details="formatDate(insurance.insuranceRate.dueDate, 'omit-year')" />
-    <ListItem v-if="includeRole" :title="t(appId, 'my role')" :details="roles" />
+  <ul class="insurance-details">
+    <NcListItem :name="t(appId, 'manufacturer')" :details="insurance.manufacturer" />
+    <NcListItem :name="t(appId, 'manufacturered')" :details="insurance.yearOfConstruction" />
+    <NcListItem :name="t(appId, 'insurance broker')" :details="insurance.insuranceRate.broker.shortName" />
+    <NcListItem :name="t(appId, 'insurance start')" :details="formatDate(insurance.startOfInsurance)" />
+    <NcListItem :name="t(appId, 'geographical scope')" :details="t(appId, insurance.insuranceRate.geographicalScope)" />
+    <NcListItem :name="t(appId, 'insurance rate')" :details="insurance.insuranceRate.rate*100.0 + '%'" />
+    <NcListItem :name="t(appId, 'value')" :details="insurance.insuranceAmount + ' ' + currencySymbol" />
+    <NcListItem :name="t(appId, 'insurance fee')" :details="(insurance.insuranceAmount * insurance.insuranceRate.rate * (1. + taxRate)).toFixed(2) + ' ' + currencySymbol" />
+    <NcListItem :name="t(appId, 'due date')" :details="formatDate(insurance.insuranceRate.dueDate, 'omit-year')" />
+    <NcListItem v-if="includeRole" :name="t(appId, 'my role')" :details="roles" />
   </ul>
 </template>
-<script>
+<script setup lang="ts">
 import { appName as appId } from '../../config.ts'
-import ListItem from '../../components/ListItem.vue'
-import formatDate from '../../mixins/formatDate.js'
+import { translate as t } from '@nextcloud/l10n'
+import { NcListItem } from '@nextcloud/vue'
+import formatDate from '../../util/formatDate.ts'
+import type { InstrumentInsurance } from '../../stores/memberData.ts'
+import {
+  computed,
+} from 'vue'
 
-export default {
-  components: {
-    ListItem,
-  },
-  mixins: [
-    formatDate,
-  ],
-  props: {
-    insurance: {
-      type: [Object, Boolean],
-      required: true,
-      default: false,
-    },
-    taxRate: {
-      type: Number,
-      required: true,
-      default: 0.0,
-    },
-    currencySymbol: {
-      type: String,
-      required: true,
-      default: '',
-    },
-    includeRole: {
-      type: Boolean,
-      default: true,
-    },
-  },
-  computed: {
-    roles() {
-      const roles = []
-      this.insurance.isDebitor && roles.push(t(appId, 'debitor'))
-      if (this.insurance.isHolder !== this.insurance.isOwner) {
-        this.insurance.isOwner && roles.push(t(appId, 'owner'))
-        this.insurance.isHolder && roles.push(t(appId, 'holder'))
-      } else {
-        this.insurance.isOwner && roles.push(t(appId, 'owner'))
-      }
-      return roles.join('; ')
-    },
-  },
-}
+const props = withDefaults(defineProps < {
+  insurance: InstrumentInsurance,
+  taxRate: number,
+  currencySymbol: string,
+  includeRole?: boolean,
+}>(), {
+  includeRole: true,
+})
+
+// @todo remove boiler-plate when upgrading to vue3.5+
+const insurance = computed(() => props.insurance)
+const taxRate = computed(() => props.taxRate)
+const currencySymbol = computed(() => props.currencySymbol)
+const includeRole = computed(() => props.includeRole)
+
+const roles = computed(() => {
+  const roles: string[] = []
+  props.insurance.isDebitor && roles.push(t(appId, 'debitor'))
+  if (props.insurance.isHolder !== props.insurance.isOwner) {
+    props.insurance.isOwner && roles.push(t(appId, 'owner'))
+    props.insurance.isHolder && roles.push(t(appId, 'holder'))
+  } else {
+    props.insurance.isOwner && roles.push(t(appId, 'owner'))
+  }
+  return roles.join('; ')
+})
 </script>

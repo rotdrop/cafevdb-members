@@ -67,9 +67,17 @@ export interface ProjectParticipantField {
   fieldData: Record<string, ProjectParticipantFieldData>,
 }
 
+export interface ProjectInstrument {
+  id: number,
+  name: string,
+  voice: number,
+  sectionLeader: boolean,
+}
+
 export interface ProjectParticipant {
   project: Project,
   participantFields: Record<number, ProjectParticipantField>,
+  projectInstruments: ProjectInstrument[],
 }
 
 export interface InstrumentInsurance {
@@ -77,11 +85,20 @@ export interface InstrumentInsurance {
   deleted?: string,
   isHolder: boolean,
   isDebitor: boolean,
+  isOwner: boolean,
   object: string,
   insuranceAmount: number,
   insuranceRate: {
     rate: number,
+    broker: {
+      shortName: string,
+    },
+    geographicalScope: string,
+    dueDate: string,
   }
+  manufacturer: string,
+  yearOfConstruction: string,
+  startOfInsurance: string,
 }
 
 export interface Receivable extends ProjectParticipantFieldData {

@@ -46,7 +46,10 @@ export interface ProjectEvent {
 export interface Project {
   id: number,
   name: string,
+  year: number,
+  type: 'temporary'|'template'|'permanent',
   projectEvents: ProjectEvent[],
+  clubMembers?: boolean,
 }
 
 export interface InstrumentGroup {
