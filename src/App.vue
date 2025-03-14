@@ -1,5 +1,5 @@
 <!--
- * @copyright Copyright (c) 2022-2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright Copyright (c) 2022-2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  -
  - @author Claus-Justus Heine <himself@claus-justus-heine.de>
  -
@@ -72,7 +72,7 @@
       <NcEmptyContent v-if="isRoot || memberDataError" class="emp-content">
         {{ t(appId, '{orchestraName} Orchestra Member Portal', { orchestraName, }) }}
         <template #icon>
-          <img :src="icon">
+          <img :src="Icon">
         </template>
         <template #description>
           <div v-if="memberDataError" class="error-section">
@@ -112,9 +112,9 @@
     </NcAppSidebar>
   </NcContent>
 </template>
-
-<script>
+<script setup lang="ts">
 import { appName as appId } from './config.ts'
+import { translate as t } from '@nextcloud/l10n'
 import { getCurrentUser } from '@nextcloud/auth'
 import {
   NcContent,
@@ -127,122 +127,103 @@ import {
   NcAppSidebarTab,
   NcEmptyContent,
 } from '@nextcloud/vue'
-
 import { generateOcsUrl } from '@nextcloud/router'
 import { showError, showInfo, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
 import axios from '@nextcloud/axios'
-
 import InsuranceDetails from './views/InstrumentInsurances/InsuranceDetails.vue'
 import ProjectDetails from './views/Projects/ProjectDetails.vue'
-
 import Icon from '../img/cafevdbmembers.svg'
-
 import { getInitialState } from './toolkit/services/InitialStateService.js'
-import { useMemberDataStore } from './stores/memberData.js'
-import { useAppDataStore } from './stores/appData.js'
-import { mapWritableState } from 'pinia'
+import { useMemberDataStore } from './stores/memberData.ts'
+import { useAppDataStore } from './stores/appData.ts'
+import { storeToRefs } from 'pinia'
+import {
+  computed,
+  ref,
+  watch,
+} from 'vue'
+import {
+  useRoute,
+} from 'vue-router/composables'
+import { isAxiosErrorResponse } from './toolkit/types/axios-type-guards'
+import type { OCSResponse } from '@nextcloud/typings/ocs'
 
 const initialState = getInitialState()
+const memberData = useMemberDataStore()
+const appData = useAppDataStore()
+const { debug } = storeToRefs(appData)
 
-export default {
-  name: 'App',
-  components: {
-    NcAppContent,
-    NcAppNavigation,
-    NcAppNavigationItem,
-    NcAppNavigationSettings,
-    NcCheckboxRadioSwitch,
-    NcContent,
-    NcEmptyContent,
-    NcAppSidebar,
-    NcAppSidebarTab,
-    InsuranceDetails,
-    ProjectDetails,
-  },
-  setup() {
-    const memberData = useMemberDataStore()
-    return { memberData }
-  },
-  data() {
-    return {
-      orchestraName: initialState?.orchestraName || t(appId, '[UNKNOWN]'),
-      icon: Icon,
-      loading: true,
-      showSidebar: false,
-      sidebarTitle: '',
-      sidebarView: '',
-      sidebarProps: {},
-      memberDataPollTimer: null,
-      memberDataPollTimeout: 60 * 1000,
+const orchestraName = computed(() => initialState?.orchestraName || t(appId, '[UNKNOWN]'))
+const loading = ref(true)
+const showSidebar = ref(false)
+const sidebarTitle = ref('')
+const sidebarView = ref('')
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const sidebarProps = ref<Record<string, any> >({})
+let memberDataPollTimer = null as null|ReturnType<typeof setTimeout>
+const memberDataPollTimeout = 60 * 1000
+
+const currentRoute = useRoute()
+const isRoot = computed(() => currentRoute.path === '/')
+const memberDataError = computed(() => memberData.initialized.error)
+
+watch(memberDataError, (newVal, oldVal) => {
+  if (oldVal && memberDataPollTimer) {
+    clearTimeout(memberDataPollTimer)
+    memberDataPollTimer = null
+  } else if (newVal && !memberDataPollTimer) {
+    memberDataPollTimer = setTimeout(() => pollMemberData(), memberDataPollTimeout)
+  }
+})
+
+memberData.initialized.error = null
+memberData.initialize(true, true).finally(() => { loading.value = false })
+
+const closeSidebar = () => { showSidebar.value = false }
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const handleDetailsRequest = (data: { title: string, viewName: string, props: Record<string, any> }) => {
+  showSidebar.value = true
+  sidebarTitle.value = data.title
+  sidebarView.value = data.viewName
+  sidebarProps.value = data.props
+}
+
+const pollMemberData = async () => {
+  await memberData.initialize(true, false) // silent, do not reset
+  if (memberDataError.value) {
+    memberDataPollTimer = setTimeout(() => pollMemberData(), memberDataPollTimeout)
+  } else {
+    memberDataPollTimer = null
+    loading.value = false
+  }
+}
+
+const putRecryptionRequest = async () => {
+  const cloudUser = getCurrentUser()
+  if (!cloudUser) {
+    showError(t(appId, 'Unable to determine the identity of the current user.'))
+    return
+  }
+  const userId = cloudUser.uid
+  try {
+    const url = generateOcsUrl('apps/cafevdb/api/v1/maintenance/encryption/recrypt/{userId}', { userId })
+    await axios.put(url + '?format=json')
+    showInfo(t(appId, 'The authorization request for {userId} has been submitted successfully', { userId }))
+  } catch (e) {
+    console.info('ERROR', e)
+    let message = t(appId, 'reason unknown')
+    if (isAxiosErrorResponse(e) && e.response.data) {
+      const data = e.response.data as OCSResponse
+      if (data.ocs && data.ocs.meta && data.ocs.meta.message) {
+        message = data.ocs.meta.message
+      }
     }
-  },
-  computed: {
-    isRoot() {
-      return this.$route.path === '/'
-    },
-    memberDataError() {
-      return this.memberData.initialized.error
-    },
-    ...mapWritableState(useAppDataStore, ['debug']),
-    // ...mapWritableState(useMemberDataStore, ['memberData']),
-  },
-  watch: {
-    memberDataError(newVal, oldVal) {
-      if (oldVal && this.memberDataPollTimer) {
-        clearTimeout(this.memberDataPollTimer)
-        this.memberDataPollTimer = null
-      } else if (newVal && !this.memberDataPollTimer) {
-        this.memberDataPollTimer = setTimeout(() => this.pollMemberData(), this.memberDataPollTimeout)
-      }
-    },
-  },
-  async created() {
-    this.memberData.initialized.error = false
-    await this.memberData.initialize(true, true) // silent and reset
-    this.loading = false
-  },
-  methods: {
-    closeSidebar() {
-      this.showSidebar = false
-    },
-    handleDetailsRequest(data) {
-      this.showSidebar = true
-      this.sidebarTitle = data.title
-      this.sidebarView = data.viewName
-      this.sidebarProps = data.props
-    },
-    async pollMemberData() {
-      await this.memberData.initialize(true, false) // silent, do not reset
-      if (this.memberDataError) {
-        this.memberDataPollTimer = setTimeout(() => this.pollMemberData(), this.memberDataPollTimeout)
-      } else {
-        this.memberDataPollTimer = null
-        this.loading = false
-      }
-    },
-    async putRecryptionRequest() {
-      const cloudUser = getCurrentUser() || {}
-      if (!cloudUser.uid) {
-        showError(t(appId, 'Unable to determine the identity of the current user.'))
-      }
-      const userId = cloudUser.uid
-      try {
-        const url = generateOcsUrl('apps/cafevdb/api/v1/maintenance/encryption/recrypt/{userId}', { userId })
-        await axios.put(url + '?format=json')
-        showInfo(t(appId, 'The authorization request for {userId} has been submitted successfully', { userId }))
-      } catch (e) {
-        console.info('ERROR', e)
-        let message = t(appId, 'reason unknown')
-        if (e.response && e.response.data) {
-          const data = e.response.data
-          if (data.ocs && data.ocs.meta && data.ocs.meta.message) {
-            message = data.ocs.meta.message
-          }
-        }
-        showError(t(appId, 'Unable to handle access action: {message}', { message }), { timeout: TOAST_PERMANENT_TIMEOUT })
-      }
-    },
-  },
+    showError(
+      t(appId, 'Unable to handle access action: {message}', { message }),
+      { timeout: TOAST_PERMANENT_TIMEOUT },
+    )
+  }
 }
 </script>
 <style lang="scss" scoped>

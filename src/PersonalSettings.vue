@@ -1,5 +1,5 @@
 <!--
- - @copyright Copyright (c) 2022-2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ - @copyright Copyright (c) 2022-2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  -
  - @author Claus-Justus Heine <himself@claus-justus-heine.de>
  -
@@ -21,50 +21,41 @@
 <template>
   <NcSettingsSection :name="t(appName, 'CAFeVDB Database Connector, Personal Settings')">
     <TextField :id="'test-input'"
-               :value.sync="inputTest"
+               :value.sync="settings.inputTest"
                :label="t(appName, 'Test Input')"
                :hint="t(appName, 'Test Hint')"
-               @submit="saveInputTest"
+               @submit="saveTextInput('inputTest')"
     />
   </NcSettingsSection>
 </template>
-
-<script>
+<script setup lang="ts">
 import { appName } from './config.ts'
 import {
   NcSettingsSection,
 } from '@nextcloud/vue'
 import TextField from '@rotdrop/nextcloud-vue-components/lib/components/TextFieldWithSubmitButton.vue'
-import { generateUrl } from '@nextcloud/router'
-import axios from '@nextcloud/axios'
+import {
+  reactive,
+} from 'vue'
+import {
+  fetchSettings,
+  saveConfirmedSetting,
+} from './toolkit/util/settings-sync.ts'
 
-export default {
-  name: 'PersonalSettings',
-  components: {
-    NcSettingsSection,
-    TextField,
-  },
-  data() {
-    return {
-      inputTest: '',
-    }
-  },
-  created() {
-    this.getData()
-  },
-  methods: {
-    async getData() {
-      const response = await axios.get(generateUrl('apps/' + appName + '/settings/personal/inputTest'), {})
-      console.info('RESPONSE', response)
-      this.inputTest = response.data.value
-      console.info('VALUE', this.inputTest)
-    },
-    async saveInputTest() {
-      console.info('SAVE INPUTTEST', this.inputTest)
-      const response = await axios.post(generateUrl('apps/' + appName + '/settings/personal/inputTest'), { value: this.inputTest })
-      console.info('RESPONSE', response)
-    },
-  },
+const settings = reactive({
+  inputTest: '',
+})
+
+const getData = async () => {
+  return fetchSettings({ section: 'personal', settings })
+}
+getData()
+
+const saveTextInput = async (settingsKey: string, value?: string, force?: boolean) => {
+  if (value === undefined) {
+    value = settings[settingsKey] || ''
+  }
+  return saveConfirmedSetting({ value, section: 'personal', settingsKey, force, settings })
 }
 </script>
 <style lang="scss" scoped>

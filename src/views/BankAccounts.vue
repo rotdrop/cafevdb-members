@@ -30,113 +30,99 @@
       {{ t(appId, 'We have no information about your bank-accounts.') }}
     </div>
     <ul v-for="account in memberData.sepaBankAccounts"
-        v-else
         :key="account.sequence"
         class="sepa-bank-accounts-list"
     >
-      <ListItem v-if="showDeleted || !account.deleted"
-                :title="t(appId, 'IBAN')"
-                :details="account.iban"
-                :bold="true"
+      <NcListItem v-if="showDeleted || !account.deleted"
+                  :name="t(appId, 'IBAN')"
+                  :details="account.iban"
+                  :bold="true"
       >
         <template #subtitle>
           <ul class="sepa-bank-account-details">
-            <!-- <ListItem :title="t(appId, 'BIC')" :details="account.bic" /> -->
-            <ListItem :title="t(appId, 'account holder')" :details="account.bankAccountOwner" />
-            <ListItem :title="t(appId, 'registered')" :details="formatDate(account.created)" />
-            <ListItem v-if="account.modified" :title="t(appId, 'modified')" :details="formatDate(account.modified)" />
-            <ListItem v-if="account.deleted" :title="t(appId, 'revoked')" :details="formatDate(account.deleted)" />
-            <ListItem v-if="(showDeleted && account.sepaDebitMandates) || (!showDeleted && account.numActiveDebitMandates > 0)"
-                      :title="t(appId, 'Debit Mandates ({count})', { count: showDeleted ? account.sepaDebitMandates.length : account.numActiveDebitMandates, })"
+            <!-- <NcListItem :name="t(appId, 'BIC')" :details="account.bic" /> -->
+            <NcListItem :name="t(appId, 'account holder')" :details="account.bankAccountOwner" />
+            <NcListItem :name="t(appId, 'registered')" :details="formatDate(account.created)" />
+            <NcListItem v-if="account.modified" :name="t(appId, 'modified')" :details="formatDate(account.modified)" />
+            <NcListItem v-if="account.deleted" :name="t(appId, 'revoked')" :details="formatDate(account.deleted)" />
+            <NcListItem v-if="(showDeleted && account.sepaDebitMandates) || (!showDeleted && account.numActiveDebitMandates > 0)"
+                        :name="t(appId, 'Debit Mandates ({count})', { count: showDeleted ? account.sepaDebitMandates.length : account.numActiveDebitMandates, })"
             >
               <template #subtitle>
                 <ul v-for="mandate in account.sepaDebitMandates"
                     :key="mandate.sequence"
                     class="sepa-debit-mandates-list"
                 >
-                  <ListItem v-if="showDeleted || !mandate.deleted"
-                            :title="t(appId, 'reference')"
-                            :details="mandate.mandateReference"
+                  <NcListItem v-if="showDeleted || !mandate.deleted"
+                              :name="t(appId, 'reference')"
+                              :details="mandate.mandateReference"
                   >
                     <template v-if="true || showDeleted || !mandate.deleted" #subtitle>
                       <ul class="sepa-debit-mandate-details">
-                        <ListItem :title="t(appId, 'granted')" :details="formatDate(mandate.mandateDate.date)" />
-                        <ListItem v-if="mandate.lastUsedDate" :title="t(appId, 'last used')" :details="formatDate(mandate.lastUsedDate.date)" />
-                        <ListItem v-if="mandate.modified" :title="t(appId, 'modified')" :details="formatDate(mandate.modified)" />
-                        <ListItem v-if="mandate.deleted" :title="t(appId, 'revoked')" :details="formatDate(mandate.deleted)" />
+                        <NcListItem :name="t(appId, 'granted')" :details="formatDate(mandate.mandateDate.date)" />
+                        <NcListItem v-if="mandate.lastUsedDate" :name="t(appId, 'last used')" :details="formatDate(mandate.lastUsedDate.date)" />
+                        <NcListItem v-if="mandate.modified" :name="t(appId, 'modified')" :details="formatDate(mandate.modified)" />
+                        <NcListItem v-if="mandate.deleted" :name="t(appId, 'revoked')" :details="formatDate(mandate.deleted)" />
                       </ul>
                     </template>
-                  </ListItem>
+                  </NcListItem>
                 </ul>
               </template>
-            </ListItem>
+            </NcListItem>
           </ul>
         </template>
-      </ListItem>
+      </NcListItem>
     </ul>
     <DebugInfo :debug-data="memberData" />
   </div>
 </template>
-<script>
-
-import ListItem from '../components/ListItem.vue'
+<script setup lang="ts">
+import { appName as appId } from '../config.ts'
+import { translate as t } from '@nextcloud/l10n'
 import DebugInfo from '../components/DebugInfo.vue'
-import { NcCheckboxRadioSwitch } from '@nextcloud/vue'
-import formatDate from '../mixins/formatDate.js'
-
-import { useMemberDataStore } from '../stores/memberData.js'
+import {
+  NcCheckboxRadioSwitch,
+  NcListItem,
+} from '@nextcloud/vue'
+import formatDate from '../util/formatDate.ts'
+import { useMemberDataStore } from '../stores/memberData.ts'
+import {
+  ref,
+  onBeforeMount,
+} from 'vue'
 
 const viewName = 'BankAccounts'
 
-export default {
-  name: viewName,
-  components: {
-    DebugInfo,
-    ListItem,
-    NcCheckboxRadioSwitch,
-  },
-  mixins: [
-    formatDate,
-  ],
-  setup() {
-    const memberData = useMemberDataStore()
-    return { memberData }
-  },
-  data() {
-    return {
-      loading: true,
-      showDeleted: false,
-      haveDeleted: false,
-      numActiveBankAccounts: 0,
-      numDeletedBankAccounts: 0,
-    }
-  },
-  async created() {
-    await this.memberData.initialize()
+const memberData = useMemberDataStore()
+const loading = ref(true)
+const showDeleted = ref(false)
+const haveDeleted = ref(false)
+const numActiveBankAccounts = ref(0)
+const numDeletedBankAccounts = ref(0)
 
-    if (this.memberData.initialized.loaded && !this.memberData.initialized[viewName]) {
-      this.memberData.sepaBankAccounts.forEach((account, _index) => {
-        // this.memberData.sepaBankAccounts[index].numDeletedDebitMandates = account.sepaDebitMandates.filter(mandate => !!account.deleted).length
-        account.numDeletedDebitMandates = account.sepaDebitMandates.filter(mandate => !!mandate.deleted).length
-        account.numActiveDebitMandates = account.sepaDebitMandates.length - account.numDeletedDebitMandates
-      })
-      this.memberData.initialized[viewName] = true
-    }
+onBeforeMount(async () => {
+  await memberData.initialize()
 
-    if (this.memberData.initialized[viewName]) {
+  if (memberData.initialized.loaded && !memberData.initialized[viewName]) {
+    memberData.sepaBankAccounts.forEach((account, _index) => {
+      // memberData.sepaBankAccounts[index].numDeletedDebitMandates = account.sepaDebitMandates.filter(mandate => !!account.deleted).length
+      account.numDeletedDebitMandates = account.sepaDebitMandates.filter(mandate => !!mandate.deleted).length
+      account.numActiveDebitMandates = account.sepaDebitMandates.length - account.numDeletedDebitMandates
+    })
+    memberData.initialized[viewName] = true
+  }
 
-      this.numDeletedBankAccounts = this.memberData.sepaBankAccounts.filter(account => !!account.deleted).length
-      this.haveDeleted = this.numDeletedBankAccounts > 0
-      this.numActiveBankAccounts = this.memberData.sepaBankAccounts.length - this.numDeletedBankAccounts
-      this.memberData.sepaBankAccounts.forEach((account, _index) => {
-        this.haveDeleted = this.haveDeleted || (account.numDeletedDebitMandates > 0)
-      })
-    }
-
-    this.loading = false
-  },
-  methods: {},
-}
+  if (memberData.initialized[viewName]) {
+    // @todo: why are the following things not just "computed"
+    numDeletedBankAccounts.value = memberData.sepaBankAccounts.filter(account => !!account.deleted).length
+    haveDeleted.value = numDeletedBankAccounts.value > 0
+    numActiveBankAccounts.value = memberData.sepaBankAccounts.length - numDeletedBankAccounts.value
+    memberData.sepaBankAccounts.forEach((account, _index) => {
+      haveDeleted.value = haveDeleted.value || (account.numDeletedDebitMandates > 0)
+    })
+  }
+  loading.value = false
+})
 </script>
 <style lang="scss" scoped>
 .page-container {

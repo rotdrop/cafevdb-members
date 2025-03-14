@@ -19,12 +19,12 @@
  - along with this program. If not, see <http://www.gnu.org/licenses/>.
  -->
 <template>
-  <div :class="templateroot">
+  <div class="templateroot">
     <h1 class="title">
       {{ t(appName, 'CAFeVDB Database Connector, Admin Settings') }}
     </h1>
-    <NcSettingsSection :name="t(appname, 'Settings for Registered Members')">
-      <TextField :value.sync="memberRootFolder"
+    <NcSettingsSection :name="t(appName, 'Settings for Registered Members')">
+      <TextField :value.sync="settings.memberRootFolder"
                  :label="t(appName, 'Member-Data Root-Folder')"
                  :hint="t(appName, 'Specify the root folder below which all member-data will be mounted.')"
                  @submit="saveTextInput('memberRootFolder')"
@@ -50,12 +50,12 @@
       <button v-else
               type="button"
               class="button primary"
-              :title="t(appName, 'Synchronize the hierarchy of shared folders below {root} with the projects of the {managementApp}-orchestra-management app.', { root: memberRootFolder + '/', managementApp: 'cafevdb' })"
+              :title="t(appName, 'Synchronize the hierarchy of shared folders below {root} with the projects of the {managementApp}-orchestra-management app.', { root: settings.memberRootFolder + '/', managementApp: 'cafevdb' })"
               @click="synchronizeFolders()"
       >
         {{ t(appName, 'Synchronize Folder-Structure') }}
       </button>
-      <TextField :value.sync="cloudUserViewsDatabase"
+      <TextField :value.sync="settings.cloudUserViewsDatabase"
                  :label="t(appName, 'Personalized Views Database')"
                  :hint="t(appName, 'The name of the data-base which holds the personalized single-row views which contain the data for the currently logged-on user.')"
                  @submit="saveTextInput('cloudUserViewsDatabase')"
@@ -68,8 +68,7 @@
     </NcSettingsSection>
   </div>
 </template>
-
-<script>
+<script setup lang="ts">
 import { appName } from './config.ts'
 import {
   NcProgressBar,
@@ -77,147 +76,97 @@ import {
 } from '@nextcloud/vue'
 import TextField from '@rotdrop/nextcloud-vue-components/lib/components/TextFieldWithSubmitButton.vue'
 import { generateUrl } from '@nextcloud/router'
-import { showError, showSuccess, showInfo, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
+import { showError, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
 import axios from '@nextcloud/axios'
+import {
+  computed,
+  reactive,
+  ref,
+} from 'vue'
+import {
+  fetchSettings,
+  fetchSetting,
+  saveConfirmedSetting,
+} from './toolkit/util/settings-sync.ts'
+import { isAxiosErrorResponse } from './toolkit/types/axios-type-guards.ts'
 
-export default {
-  name: 'AdminSettings',
-  components: {
-    NcSettingsSection,
-    NcProgressBar,
-    TextField,
-  },
-  data() {
-    return {
-      memberRootFolder: '',
-      memberFolderGroups: [],
-      syncFailure: false,
-      syncTotals: 0,
-      syncDone: 0,
-      synchronizing: false,
-      syncLabel: '',
-      syncCounter: '',
-      cloudUserViewsDatabase: '',
-    }
-  },
-  computed: {
-    showSyncProgress() {
-      return this.synchronizing
-    },
-    syncPercentage() {
-      return this.syncTotals > 0 ? this.syncDone * 100 / this.syncTotals : 0
-    },
-    syncError() {
-      return this.syncFailure
-    },
-    syncText() {
-      return this.syncLabel
-    },
-    syncFinished() {
-      return (this.syncDone > 0 && this.syncDone === this.syncTotals) || this.syncFailure
-    },
-  },
-  created() {
-    this.getData()
-  },
-  methods: {
-    async getData() {
-      let response = await axios.get(generateUrl('apps/' + appName + '/settings/admin/memberRootFolder'), {})
-      this.memberRootFolder = response.data.value
-      console.info('ROOT FOLDER', this.memberRootFolder)
-
-      response = await axios.get(generateUrl('apps/' + appName + '/settings/admin/cloudUserViewsDatabase'), {})
-      this.cloudUserViewsDatabase = response.data.value
-      console.info('USER VIEWS DATABASE', this.cloudUserViewsDatabase)
-
-      response = await axios.get(generateUrl('apps/' + appName + '/settings/admin/memberFolderGroups'), {})
-      this.memberFolderGroups = response.data.value
-      console.info('FOLDER GROUPS', this.memberFolderGroups)
-    },
-    async saveTextInput(settingsKey, value, force) {
-      if (value === undefined) {
-        value = this[settingsKey] || ''
-      }
-      // eslint-disable-next-line @typescript-eslint/no-this-alias
-      const self = this
-      // eslint-disable-next-line prefer-rest-params
-      console.info('ARGS', arguments)
-      console.info('SAVE INPUTTEST', this.memberRootFolder)
-      console.info('THIS', this)
-      try {
-        const response = await axios.post(generateUrl('apps/' + appName + '/settings/admin/' + settingsKey), { value, force })
-        const responseData = response.data
-        if (responseData.status === 'unconfirmed') {
-          OC.dialogs.confirm(
-            responseData.feedback,
-            t(appName, 'Confirmation Required'),
-            function(answer) {
-              if (answer) {
-                self.saveTextInput(value, settingsKey, true)
-              } else {
-                showInfo(t(appName, 'Unconfirmed, reverting to old value.'))
-                self.getData()
-              }
-            },
-            true)
-        } else {
-          showSuccess(t(appName, 'Successfully set value for "{settingsKey}" to "{value}"', { settingsKey, value }))
-        }
-        console.info('RESPONSE', response)
-      } catch (e) {
-        let message = t(appName, 'reason unknown')
-        if (e.response && e.response.data && e.response.data.messages) {
-          message = e.response.data.messages
-          if (Array.isArray(message)) {
-            message = message.join(' ')
-          }
-          console.info('RESPONSE', e.response)
-        }
-        showError(t(appName, 'Could not set value for "{settingsKey}" to "{value}": {message}', { settingsKey, value, message }), { timeout: TOAST_PERMANENT_TIMEOUT })
-        self.getData()
-      }
-    },
-    async synchronizeFolders() {
-      this.synchronizing = true
-      this.syncTotals = this.memberFolderGroups.length
-      this.syncDone = 0
-      this.syncFailure = false
-      let group = null
-      for (group of this.memberFolderGroups) {
-        console.info('GROUP', group)
-        this.syncLabel = t(appName, 'Synchronizing for group {group}', { group: group.displayName })
-        this.syncCounter = t(appName, '{current} of {totals}', { current: this.syncDone + 1, totals: this.syncTotals })
-        try {
-          await axios.post(generateUrl('apps/' + appName + '/settings/admin/synchronize'), { value: group.gid })
-        } catch (e) {
-          let message = t(appName, 'reason unknown')
-          if (e.response && e.response.data && e.response.data.messages) {
-            message = e.response.data.messages
-            if (Array.isArray(message)) {
-              message = message.join(' ')
-            }
-            console.info('RESPONSE', e.response)
-          }
-          showError(t(appName, 'Folder for "{group}" could not be created: {message}', { group: group.displayName, message }), { timeout: TOAST_PERMANENT_TIMEOUT })
-          this.syncFailure = true
-          break
-        }
-        ++this.syncDone
-      }
-      this.syncLabel = this.syncFailure
-        ? t(appName, 'Failed at group "{group}" after {numFolders} have been processed successfully, {remainingFolders} are remaining.', {
-          group: group.displayName,
-          numFolders: this.syncDone,
-          remainingFolders: this.syncTotals - this.syncDone,
-        })
-        : t(appName, 'All done, folder structure for all {numFolders} folders is up to date.', { numFolders: this.syncTotals })
-    },
-    hideProgressFeedback() {
-      this.synchronizing = false
-      this.syncFailure = false
-    },
-  },
+interface CloudUserGroup {
+  displayName: string,
+  gid: string,
 }
+
+const settings = reactive({
+  memberRootFolder: '',
+  cloudUserViewsDatabase: '',
+  memberFolderGroups: [] as CloudUserGroup[],
+})
+
+const syncFailure = ref(false)
+const syncTotals = ref(0)
+const syncDone = ref(0)
+const synchronizing = ref(false)
+const syncLabel = ref('')
+const syncCounter = ref('')
+
+const showSyncProgress = computed(() => synchronizing.value)
+const syncPercentage = computed(() => syncTotals.value > 0 ? syncDone.value * 100 / syncTotals.value : 0)
+const syncError = computed(() => syncFailure.value)
+const syncText = computed(() => syncLabel.value)
+const syncFinished = computed(() => (syncDone.value > 0 && syncDone.value === syncTotals.value) || syncFailure.value)
+
+const getData = async () => {
+  return fetchSettings({ section: 'admin', settings })
+}
+getData()
+
+const synchronizeFolders = async () => {
+  synchronizing.value = true
+  syncTotals.value = settings.memberFolderGroups.length
+  syncDone.value = 0
+  syncFailure.value = false
+  let group: undefined|CloudUserGroup
+  for (group of settings.memberFolderGroups) {
+    console.info('GROUP', group)
+    syncLabel.value = t(appName, 'Synchronizing for group {group}', { group: group.displayName })
+    syncCounter.value = t(appName, '{current} of {totals}', { current: syncDone.value + 1, totals: syncTotals.value })
+    try {
+      await axios.post(generateUrl('apps/' + appName + '/settings/admin/synchronize'), { value: group.gid })
+    } catch (e) {
+      let message = t(appName, 'reason unknown')
+      if (isAxiosErrorResponse(e) && e.response.data) {
+        const responseData = e.response.data as { messages?: string[] }
+        if (Array.isArray(responseData.messages)) {
+          message = responseData.messages.join(' ')
+        }
+        console.info('RESPONSE', e.response)
+      }
+      showError(t(appName, 'Folder for "{group}" could not be created: {message}', { group: group.displayName, message }), { timeout: TOAST_PERMANENT_TIMEOUT })
+      syncFailure.value = true
+      break
+    }
+    ++syncDone.value
+  }
+  syncLabel.value = syncFailure.value
+    ? t(appName, 'Failed at group "{group}" after {numFolders} have been processed successfully, {remainingFolders} are remaining.', {
+      group: group?.displayName,
+      numFolders: syncDone.value,
+      remainingFolders: syncTotals.value - syncDone.value,
+    })
+    : t(appName, 'All done, folder structure for all {numFolders} folders is up to date.', { numFolders: syncTotals.value })
+}
+
+const hideProgressFeedback = () => {
+  synchronizing.value = false
+  syncFailure.value = false
+}
+
+const saveTextInput = async (settingsKey: string, value?: string, force?: boolean) => {
+  if (value === undefined) {
+    value = settings[settingsKey] || ''
+  }
+  return saveConfirmedSetting({ value, section: 'admin', settingsKey, force, settings })
+}
+
 </script>
 <style lang="scss" scoped>
 .templateroot {
