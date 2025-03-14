@@ -45,6 +45,7 @@ export interface ProjectEvent {
 
 export interface Project {
   id: number,
+  name: string,
   projectEvents: ProjectEvent[],
 }
 

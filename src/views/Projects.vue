@@ -1,5 +1,5 @@
 <!--
- - @copyright Copyright (c) 2022-2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ - @copyright Copyright (c) 2022-2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  -
  - @author Claus-Justus Heine <himself@claus-justus-heine.de>
  -
@@ -25,10 +25,10 @@
       {{ t(appId, 'Project-Participation of {publicName}', { publicName: memberData.personalPublicName }) }}
     </h2>
     <ul class="project-list">
-      <ListItem v-for="participant in memberData.projectParticipation"
-                :key="participant.project.id"
-                :title="participant.project.name"
-                :bold="true"
+      <NcListItem v-for="participant in memberData.projectParticipation"
+                  :key="participant.project.id"
+                  :name="participant.project.name"
+                  :bold="true"
       >
         <template #details>
           <NcActions class="project-details">
@@ -39,88 +39,77 @@
             </NcActionButton>
           </NcActions>
         </template>
-      </ListItem>
+      </NcListItem>
     </ul>
     <DebugInfo :debug-data="memberData" />
   </div>
 </template>
-<script>
-
+<script setup lang="ts">
 import { appName as appId } from '../config.ts'
-import ListItem from '../components/ListItem.vue'
+import { translate as t } from '@nextcloud/l10n'
 import DebugInfo from '../components/DebugInfo.vue'
 import {
   NcActions,
   NcActionButton,
+  NcListItem,
 } from '@nextcloud/vue'
-import { generateUrl } from '@nextcloud/router'
+import generateAppUrl from '../toolkit/util/generate-url.js'
 import { showError, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
 import axios from '@nextcloud/axios'
+import {
+  onBeforeMount,
+  ref,
+} from 'vue'
+import { useAppDataStore } from '../stores/appData.ts'
+import { useMemberDataStore } from '../stores/memberData.ts'
+import { storeToRefs } from 'pinia'
+import { isAxiosErrorResponse } from '../toolkit/types/axios-type-guards'
+import type { ProjectParticipant } from '../stores/memberData.ts'
 
-import { useAppDataStore } from '../stores/appData.js'
-import { useMemberDataStore } from '../stores/memberData.js'
-import { mapWritableState } from 'pinia'
+const emit = defineEmits(['view-details'])
+
+const loading = ref(false)
+const { memberRootFolder } = storeToRefs(useAppDataStore())
+
+const memberData = useMemberDataStore()
 
 const viewName = 'Projects'
 
-export default {
-  name: viewName,
-  components: {
-    DebugInfo,
-    ListItem,
-    NcActionButton,
-    NcActions,
-  },
-  setup() {
-    const memberData = useMemberDataStore()
-    return { memberData }
-  },
-  data() {
-    return {
-      loading: true,
-    }
-  },
-  computed: {
-    ...mapWritableState(useAppDataStore, ['memberRootFolder']),
-  },
-  async created() {
-    await this.memberData.initialize()
+const requestProjectDetails = (participant: ProjectParticipant) => {
+  emit('view-details', {
+    viewName,
+    title: participant.project.name,
+    props: {
+      participant,
+      memberRootFolder: memberRootFolder.value,
+    },
+  })
+}
 
-    if (this.memberRootFolder === '') {
-      try {
-        const response = await axios.get(generateUrl('apps/' + appId + '/settings/app/memberRootFolder'), {})
-        this.memberRootFolder = response.data.value
-      } catch (e) {
-        console.error('ERROR', e)
-        let message = t(appId, 'reason unknown')
-        if (e.response && e.response.data && e.response.data.messages) {
-          message = e.response.data.messages
-          if (Array.isArray(message)) {
-            message = message.join(' ')
-          }
-        }
-        // Ignore for the time being
-        if (this === false) {
-          showError(t(appId, 'Could not fetch root-folder of member file space: {message}', { message }), { timeout: TOAST_PERMANENT_TIMEOUT })
+onBeforeMount(async () => {
+  await memberData.initialize()
+
+  if (memberRootFolder.value === '') {
+    try {
+      const response = await axios.get(generateAppUrl('settings/app/memberRootFolder'), {})
+      memberRootFolder.value = response.data.value
+    } catch (e) {
+      console.error('ERROR', e)
+      let message = t(appId, 'reason unknown')
+      if (isAxiosErrorResponse(e) && e.response.data) {
+        const data = e.response.data as { messages?: string[] }
+        if (Array.isArray(data.messages)) {
+          message = data.messages.join(' ')
         }
       }
+      // Ignore for the time being
+      if (this === false) {
+        showError(t(appId, 'Could not fetch root-folder of member file space: {message}', { message }), { timeout: TOAST_PERMANENT_TIMEOUT })
+      }
     }
-
-    this.loading = false
-  },
-  methods: {
-    requestProjectDetails(participant) {
-      this.$emit('view-details', {
-        viewName,
-        title: participant.project.name,
-        props: {
-          participant,
-          memberRootFolder: this.memberRootFolder,
-        },
-      })
-    },
-  },
-}
+  }
+  loading.value = false
+})
 </script>
 <style lang="scss" scoped>
 .page-container {
@@ -134,8 +123,7 @@ export default {
     }
   }
 }
-
-.project-list {
-  // min-width:32rem;
-}
+// .project-list {
+//   min-width:32rem;
+// }
 </style>

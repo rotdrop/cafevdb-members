@@ -67,7 +67,7 @@ export interface ProjectParticipantField {
   fieldData: Record<string, ProjectParticipantFieldData>,
 }
 
-export interface ProjectgParticipant {
+export interface ProjectParticipant {
   project: Project,
   participantFields: Record<number, ProjectParticipantField>,
 }
@@ -122,7 +122,7 @@ export const useMemberDataStore = defineStore('member-data', {
         byOthers: [],
         receivables: [],
       } as InsuranceDetails,
-      projectParticipation: [] as ProjectgParticipant[],
+      projectParticipation: [] as ProjectParticipant[],
       initialized: {
         loaded: false,
         promise: null as null|Promise<any>,

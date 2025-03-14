@@ -1,5 +1,5 @@
 <!--
- - @copyright Copyright (c) 2022, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ - @copyright Copyright (c) 2022, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  -
  - @author Claus-Justus Heine <himself@claus-justus-heine.de>
  -
@@ -29,57 +29,47 @@
     </div>
   </div>
 </template>
-<script>
-
+<script setup lang="ts">
+import { appName as appId } from '../config.ts'
+import { translate as t } from '@nextcloud/l10n'
 import { NcCheckboxRadioSwitch } from '@nextcloud/vue'
+import { useAppDataStore } from '../stores/appData.ts'
+import { storeToRefs } from 'pinia'
 
-import { useAppDataStore } from '../stores/appData.js'
-import { mapWritableState } from 'pinia'
+const props = withDefaults(defineProps<{
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  debugData?: Record<string, any>
+}>(), {
+  debugData: () => ({}),
+})
 
-export default {
-  name: 'DebugInfo',
-  components: {
-    NcCheckboxRadioSwitch,
-  },
-  props: {
-    debugData: {
-      type: Object,
-      required: true,
-      default: () => {},
-    },
-  },
-  computed: {
-    ...mapWritableState(useAppDataStore, ['debug']),
-  },
-  methods: {
-    stringify(data) {
-      console.info('DATA', data)
-      try {
-        const getCircularReplacer = () => {
-          const seen = new WeakSet()
-          return (key, value) => {
-            if (key.startsWith('$') || key.startsWith('_')) {
-              return
-            }
-            if (typeof value === 'object' && value !== null) {
-              if (seen.has(value)) {
-                return
-              }
-              seen.add(value)
-            }
-            return value
-          }
+const { debug } = storeToRefs(useAppDataStore())
+
+const stringify = (data: typeof props.debugData) => {
+  console.info('DATA', data)
+  try {
+    const getCircularReplacer = () => {
+      const seen = new WeakSet()
+      return (key: string, value: null|object|number|string) => {
+        if (key.startsWith('$') || key.startsWith('_')) {
+          return
         }
-        return JSON.stringify(data, getCircularReplacer(), 2)
-      } catch (e) {
-        console.error('ERROR', e)
-        return ''
+        if (typeof value === 'object' && value !== null) {
+          if (seen.has(value)) {
+            return
+          }
+          seen.add(value)
+        }
+        return value
       }
-    },
-  },
+    }
+    return JSON.stringify(data, getCircularReplacer(), 2)
+  } catch (e) {
+    console.error('ERROR', e)
+    return ''
+  }
 }
 </script>
-
 <style lang="scss" scoped>
 .debug-container {
   width:100%;
