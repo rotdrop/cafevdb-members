@@ -1,5 +1,5 @@
 /**
- * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright Copyright (c) 2022, 2023, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
  *
@@ -25,7 +25,7 @@ import { set as vueSet } from 'vue'
 import { getCurrentUser } from '@nextcloud/auth'
 import { generateUrl as nextcloudGenerateUrl } from '@nextcloud/router'
 import { loadState } from '@nextcloud/initial-state'
-import { useAppDataStore } from '../stores/appData.js'
+import { useAppDataStore } from '../stores/appData.ts'
 import { mapWritableState } from 'pinia'
 
 const displayLocale = loadState(appName, 'displayLocale')

@@ -1,5 +1,5 @@
 /**
- * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright Copyright (c) 2022, 2023, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
  *
@@ -20,13 +20,43 @@
  *
  */
 
+import { appName } from '../config.ts'
 import { defineStore } from 'pinia'
-
+import { translate as t } from '@nextcloud/l10n'
 import { getInitialState } from '../toolkit/services/InitialStateService.js'
 
-const projects = getInitialState('projects', [])
+export interface InstrumentFamily {
+  family: string,
+}
+
+export interface Instrument {
+  sortOrder: number,
+  families: InstrumentFamily[],
+}
+
+export interface ProjectEvent {
+  calendarObject: {
+    start: string,
+    startDateTime: Date,
+    end: string,
+    endDateTime: Date,
+  }
+}
+
+export interface Project {
+  id: number,
+  projectEvents: ProjectEvent[],
+}
+
+export interface InstrumentGroup {
+  family: string,
+  sortOrder: number,
+  instruments: Instrument[],
+}
+
+const projects = getInitialState('projects', []) as Project[]
 let activeProject = getInitialState('activeProject', null)
-const instruments = getInitialState('instruments', [])
+const instruments = getInitialState('instruments', []) as Instrument[]
 const countries = getInitialState('countries', null)
 const displayLocale = getInitialState('displayLocale', null)
 
@@ -36,7 +66,7 @@ const initialState = getInitialState()
 export const useAppDataStore = defineStore('app-data', {
   state: () => {
     // convert the flat array of instruments to grouped options for Vue Multiselect
-    const groupedInstruments = {}
+    const groupedInstruments: Record<string, InstrumentGroup> = {}
     for (const instrument of instruments) {
       const familyTag = instrument.families.map(family => family.family).join(', ')
       const optionGroup = groupedInstruments[familyTag] || { family: familyTag, sortOrder: 0, instruments: [] }
@@ -51,16 +81,16 @@ export const useAppDataStore = defineStore('app-data', {
 
     for (const project of projects) {
       for (const event of project.projectEvents) {
-        event.calendarObject.start = new Date(event.calendarObject.start)
-        event.calendarObject.end = new Date(event.calendarObject.end)
+        event.calendarObject.startDateTime = new Date(event.calendarObject.start)
+        event.calendarObject.endDateTime = new Date(event.calendarObject.end)
       }
-      project.projectEvents.sort((a, b) => a.calendarObject.start.getTime() - b.calendarObject.start.getTime())
+      project.projectEvents.sort((a, b) => a.calendarObject.startDateTime.getTime() - b.calendarObject.startDateTime.getTime())
     }
 
     console.info('PROJECTS', projects)
 
     return {
-      orchestraName: initialState?.orchestraName || t(this.appId, '[UNKNOWN]'),
+      orchestraName: initialState?.orchestraName || t(appName, '[UNKNOWN]'),
       projects,
       activeProject: projects && activeProject >= 0 ? projects[activeProject] : null,
       instruments: Object.values(groupedInstruments).sort((a, b) => a.sortOrder - b.sortOrder),

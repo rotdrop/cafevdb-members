@@ -1,5 +1,5 @@
 /**
- * @copyright Copyright (c) 2022, 2023, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright Copyright (c) 2022, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
  *
@@ -17,20 +17,25 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
-import { appName } from './config.ts'
-import { generateFilePath } from '@nextcloud/router'
-import { translate as t, translatePlural as n } from '@nextcloud/l10n'
 
-import Vue from 'vue'
-import AdminSettings from './AdminSettings.vue'
+import moment from '@nextcloud/moment'
+import { getCanonicalLocale } from '@nextcloud/l10n'
 
-// eslint-disable-next-line
-__webpack_public_path__ = generateFilePath(appName, '', 'js/')
+const formatDate = (date: number|string|Date, flavour: string|'short'|'medium'|'long'|'omit-year' = 'medium') => {
+  flavour = flavour || 'medium'
+  switch (flavour) {
+    case 'short':
+    case 'medium':
+    case 'long':
+      return moment(date).format('L')
+    case 'omit-year': {
+      const event = new Date(date)
+      return event.toLocaleString(getCanonicalLocale(), { month: 'short', day: 'numeric' })
+    }
+  }
+  return moment(date).format(flavour)
+}
 
-Vue.mixin({ data() { return { appName } }, methods: { t, n } })
-
-export default new Vue({
-  el: '#admin-settings',
-  render: h => h(AdminSettings),
-})
+export default formatDate

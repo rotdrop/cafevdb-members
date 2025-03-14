@@ -1,5 +1,5 @@
 /**
- * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright Copyright (c) 2022, 2023, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
  *
@@ -22,6 +22,7 @@
 
 import { appName } from './config.ts'
 import { generateFilePath } from '@nextcloud/router'
+import { translate as t, translatePlural as n } from '@nextcloud/l10n'
 
 import Vue from 'vue'
 import PersonalSettings from './PersonalSettings.vue'
