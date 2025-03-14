@@ -22,10 +22,10 @@ const appName = appInfo.info.id[0];
 const productionMode = process.env.NODE_ENV === 'production';
 
 webpackConfig.entry = {
-  'admin-settings': path.join(__dirname, 'src', 'admin-settings.js'),
-  'personal-settings': path.join(__dirname, 'src', 'personal-settings.js'),
-  'project-registration': path.join(__dirname, 'src', 'project-registration.js'),
-  main: path.join(__dirname, 'src', 'main.js'),
+  'admin-settings': path.join(__dirname, 'src', 'admin-settings.ts'),
+  'personal-settings': path.join(__dirname, 'src', 'personal-settings.ts'),
+  'project-registration': path.join(__dirname, 'src', 'project-registration.ts'),
+  main: path.join(__dirname, 'src', 'main.ts'),
 };
 
 webpackConfig.output = {
