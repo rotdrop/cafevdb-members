@@ -25,12 +25,23 @@ import { defineStore } from 'pinia'
 import { appName as appId } from '../config.ts'
 import { translate as t } from '@nextcloud/l10n'
 import { set as vueSet } from 'vue'
-import { generateUrl, generateOcsUrl } from '@nextcloud/router'
+import {
+  generateUrl as generateAppUrl,
+  generateOcsUrl as generateAppOcsUrl,
+} from '../toolkit/util/generate-url.js'
 import { getCurrentUser } from '@nextcloud/auth'
 import { showError, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
 import axios from '@nextcloud/axios'
 import { isAxiosErrorResponse } from '../toolkit/types/axios-type-guards.ts'
-import type { Project } from './appData.ts'
+import type { Project, Instrument } from './appData.ts'
+import {
+  computed,
+  reactive,
+  ref,
+  watch,
+} from 'vue'
+import { deepCopy } from 'walkjs'
+import { useAppDataStore } from './appData.ts'
 
 export interface SepaDebitMandate {
   sequence: number,
@@ -112,108 +123,208 @@ export interface InsuranceDetails {
   receivables: Receivable[],
 }
 
-export const useMemberDataStore = defineStore('member-data', {
-  state: () => {
-    return {
-      firstName: undefined as string|undefined,
-      surName: undefined as string|undefined,
-      nickName: undefined as string|undefined,
-      personalPublicName: undefined as string|undefined,
-      addressSupplement: undefined as string|undefined,
-      street: undefined as string|undefined,
-      streetNumber: undefined as string|undefined,
-      postalCode: undefined as string|undefined,
-      city: undefined as string|undefined,
-      country: undefined as string|undefined,
-      birthday: undefined as string|undefined,
-      email: undefined as string|undefined,
-      emailAddresses: [],
-      mobilePhone: undefined as string|undefined,
-      fixedLinePhone: undefined as string|undefined,
-      selectedInstruments: [],
-      instruments: [],
-      sepaBankAccounts: [] as SepaBankAccount[],
-      instrumentInsurances: [] as InstrumentInsurance[],
-      insuranceDetails: {
-        self: [],
-        forOthers: [],
-        byOthers: [],
-        receivables: [],
-      } as InsuranceDetails,
-      projectParticipation: [] as ProjectParticipant[],
-      initialized: {
-        loaded: false,
-        promise: null as null|Promise<any>,
-        error: null as null|string,
-        recryptRequest: null,
-      },
-      projectApplication: [],
+export interface RegistrationProject {
+  instruments: Instrument[],
+  absence: Record<number, boolean>,
+  absenceReasons: Record<number, string>,
+}
+
+export const useMemberDataStore = defineStore('member-data', () => {
+  const simpleState = {
+    addressSupplement: ref(undefined as string|undefined),
+    birthday: ref(undefined as Date|undefined),
+    city: ref(undefined as string|undefined),
+    country: ref(undefined as string|undefined),
+    email: ref(undefined as string|undefined),
+    emailAddresses: ref([]),
+    firstName: ref(undefined as string|undefined),
+    fixedLinePhone: ref(undefined as string|undefined),
+    initialized: ref({
+      loaded: false,
+      promise: null as null|Promise<any>,
+      error: null as null|string,
+      recryptRequest: null,
+      registration: undefined as undefined|boolean,
+    }),
+    instrumentInsurances: ref([] as InstrumentInsurance[]),
+    instruments: ref([] as Instrument[]),
+    insuranceDetails: ref({
+      self: [],
+      forOthers: [],
+      byOthers: [],
+      receivables: [],
+    } as InsuranceDetails),
+    mobilePhone: ref(undefined as string|undefined),
+    nickName: ref(undefined as string|undefined),
+    personalPublicName: ref(undefined as string|undefined),
+    postalCode: ref(undefined as string|undefined),
+    projectApplication: ref([]),
+    projectParticipation: ref([] as ProjectParticipant[]),
+    sepaBankAccounts: ref([] as SepaBankAccount[]),
+    street: ref(undefined as string|undefined),
+    streetNumber: ref(undefined as string|undefined),
+    surName: ref(undefined as string|undefined),
+    //
+    // perhaps there should be another store for just the registration
+    //
+    whoAmI: ref(undefined as string|undefined),
+    projects: ref({} as Record<number, RegistrationProject>),
+    selectedInstruments: ref([] as Instrument[]),
+    firstTimeApplication: ref(undefined as undefined|'you-know-me'|'first-time'),
+  }
+  const initialState = Object.fromEntries(Object.entries(simpleState).map(([key, value]) => {
+    return [key, typeof value.value === 'object' && value.value !== null ? deepCopy(value.value) : value.value]
+  }))
+
+  const resetState = () => {
+    for (const [key, value] of Object.entries(initialState)) {
+      simpleState[key].value = value
     }
-  },
-  actions: {
-    async initialize(silent?: boolean, reset?: boolean) {
-      console.info('INIT')
-      if (this.initialized.loaded && !reset) {
-        return
+  }
+
+  const initialize = async (silent?: boolean, reset?: boolean) => {
+    console.info('INIT')
+    const initialized = simpleState.initialized.value
+    if (initialized.loaded && !reset) {
+      return
+    }
+    if (initialized.promise !== null) {
+      await initialized.promise
+      return
+    }
+    if (reset) {
+      resetState()
+    }
+    try {
+      initialized.promise = axios.get(generateAppUrl('member'))
+      const response = await initialized.promise
+      for (const [key, value] of Object.entries(response.data)) {
+        if (key === 'birthday') {
+          simpleState[key].value = new Date(value as string)
+        } else {
+          simpleState[key].value = value
+        }
       }
-      if (this.initialized.promise !== null) {
-        await this.initialized.promise
-        return
+      // do some basic initializations ...
+      vueSet(simpleState, 'selectedInstruments', [])
+        for (const instrument of simpleState.instruments.value) {
+          simpleState.selectedInstruments.value.push(instrument)
+        }
+      initialized.promise = null
+      initialized.error = null
+      initialized.loaded = true
+    } catch (e) {
+      console.error('ERROR', e)
+      let message = t(appId, 'general failure')
+      if (isAxiosErrorResponse(e) && e.response.data) {
+        const messages = (e.response.data as { messages?: string[] }).messages
+        if (Array.isArray(messages)) {
+          message = messages.join(' ')
+        }
       }
-      if (reset) {
-        this.$reset()
+      initialized.error = message
+      if (!silent) {
+        showError(t(appId, 'Could not fetch musician(s): {message}', { message }), { timeout: TOAST_PERMANENT_TIMEOUT })
       }
-      try {
-        this.initialized.promise = axios.get(generateUrl('/apps/' + appId + '/member'))
-        const response = await this.initialized.promise
-        for (const [key, value] of Object.entries(response.data)) {
-          if (key === 'birthday') {
-            vueSet(this, key, new Date(value as string))
-          } else {
-            vueSet(this, key, value)
-          }
+      const cloudUser = getCurrentUser()
+      initialized.recryptRequest = null
+      if (cloudUser?.uid) {
+        try {
+          const url = generateAppOcsUrl('api/v1/maintenance/encryption/recrypt/{userId}', {
+            userId: cloudUser.uid,
+          })
+          const response = await axios.get(url + '?format=json')
+          initialized.recryptRequest = response.data.ocs.data.request
+        } catch (e) {
+          console.error('Error retrieving recryption request', e)
         }
-        // do some basic initializations ...
-        vueSet(this, 'selectedInstruments', [])
-        for (const instrument of this.instruments) {
-          this.selectedInstruments.push(instrument)
-        }
-        this.initialized.promise = null
-        this.initialized.error = null
-        this.initialized.loaded = true
-      } catch (e) {
-        console.error('ERROR', e)
-        let message = t(appId, 'general failure')
-        if (isAxiosErrorResponse(e) && e.response.data) {
-          const messages = (e.response.data as { messages?: string[] }).messages
-          if (Array.isArray(messages)) {
-            message = messages.join(' ')
-          }
-        }
-        this.initialized.error = message
-        if (!silent) {
-          showError(t(appId, 'Could not fetch musician(s): {message}', { message }), { timeout: TOAST_PERMANENT_TIMEOUT })
-        }
-        const cloudUser = getCurrentUser()
-        this.initialized.recryptRequest = null
-        if (cloudUser?.uid) {
-          try {
-            const url = generateOcsUrl('apps/cafevdb/api/v1/maintenance/encryption/recrypt/{userId}', {
-              userId: cloudUser.uid,
-            })
-            const response = await axios.get(url + '?format=json')
-            this.initialized.recryptRequest = response.data.ocs.data.request
-          } catch (e) {
-            console.error('Error retrieving recryption request', e)
-          }
-        }
-        this.initialized.promise = null
       }
-    },
-    async load() {
-      console.info('LOAD')
-      this.$reset()
-      await this.initialize()
-    },
-  },
+      initialized.promise = null
+    }
+  }
+
+  const load = async () => {
+    console.info('LOAD')
+    resetState()
+    await initialize()
+  }
+
+  const appData = useAppDataStore()
+
+  // computed data
+  const registrationProject = computed(() =>
+    appData.activeProject ? simpleState.projects.value[appData.activeProject.id] : null
+  )
+
+  const noAbsence = computed(() =>
+    registrationProject.value
+      ? !Object.values(registrationProject.value.absence).reduce((result, current) => result || !!current, false)
+      : true
+  )
+
+  const personalProjectInstrumentOptions = computed(() => {
+    if (!appData.activeProject) {
+      return []
+    }
+    const possibleInstruments = appData.activeProject.instrumentation.filter(
+      instrumentationNumber => instrumentationNumber.voice === 0 && simpleState.selectedInstruments.value.find(instrument => instrument.id === instrumentationNumber.instrument.id),
+      )
+      return possibleInstruments.map(instrumentationNumber => instrumentationNumber.instrument)
+  })
+
+  // if just one element is selected as "I can play this" then inject
+  // it as chosen instrument for the project.
+  watch(simpleState.selectedInstruments, (newValue, _oldValue) => {
+    if (!appData.activeProject || newValue.length !== 1) {
+      return
+    }
+    if (personalProjectInstrumentOptions.value.length === 1
+      && personalProjectInstrumentOptions.value[0].id === newValue[0].id) {
+      const projectId = appData.activeProject.id
+      vueSet(simpleState.projects.value[projectId], 'instruments', newValue)
+    }
+  })
+
+  const initializeRegistrationData = async () => {
+    const initialized = simpleState.initialized.value
+    if (!initialized.registration) {
+      if (getCurrentUser()) {
+        console.info('CURRENT USER', getCurrentUser())
+        await initialize()
+        simpleState.firstTimeApplication.value = 'you-know-me'
+      } else {
+        console.info('NOT LOGGED IN')
+        simpleState.firstTimeApplication.value = 'first-time'
+      }
+      if (!simpleState.country.value) {
+        simpleState.country.value = appData.displayLocale.region
+      }
+      initialized.registration = true
+    }
+    if (appData.activeProject) {
+      if (!registrationProject.value) {
+        const newRegistrationProject: RegistrationProject = reactive({
+          instruments: [],
+          absence: {},
+          absenceReasons: {},
+        })
+        vueSet(simpleState.projects.value, appData.activeProject.id, newRegistrationProject)
+        console.info('REGISTRATION PROJECT', { registrationProject: { ...newRegistrationProject } })
+        for (const event of appData.activeProject.projectEvents) {
+          newRegistrationProject.absence[event.id] = false
+          newRegistrationProject.absenceReasons[event.id] = ''
+        }
+      }
+    }
+  }
+
+  return {
+    initialize,
+    initializeRegistrationData,
+    load,
+    ...simpleState,
+    registrationProject,
+    noAbsence,
+    personalProjectInstrumentOptions,
+  }
 })
