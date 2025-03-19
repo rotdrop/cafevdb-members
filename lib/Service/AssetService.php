@@ -25,7 +25,7 @@ namespace OCA\CAFeVDBMembers\Service;
 use OCP\IL10N;
 use Psr\Log\LoggerInterface;
 
-use OCA\CAFeVDBMemebers\Constants;
+use OCA\CAFeVDBMembers\Constants;
 
 /**
  * Return JavaScript- and CSS-assets names dealing with the attached content
