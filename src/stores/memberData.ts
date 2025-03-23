@@ -28,7 +28,7 @@ import { set as vueSet } from 'vue'
 import {
   generateUrl as generateAppUrl,
   generateOcsUrl as generateAppOcsUrl,
-} from '../toolkit/util/generate-url.js'
+} from '../toolkit/util/generate-url.ts'
 import { getCurrentUser } from '@nextcloud/auth'
 import { showError, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
 import axios from '@nextcloud/axios'

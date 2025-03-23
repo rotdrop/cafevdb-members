@@ -53,7 +53,7 @@ import {
   NcActionButton,
   NcListItem,
 } from '@nextcloud/vue'
-import generateAppUrl from '../toolkit/util/generate-url.js'
+import generateAppUrl from '../toolkit/util/generate-url.ts'
 import { showError, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
 import axios from '@nextcloud/axios'
 import {

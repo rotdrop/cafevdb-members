@@ -162,7 +162,7 @@ import {
   NcCheckboxRadioSwitch,
   NcListItem,
 } from '@nextcloud/vue'
-import generateAppUrl from '../toolkit/util/generate-url.js'
+import generateAppUrl from '../toolkit/util/generate-url.ts'
 import { getInitialState } from '../toolkit/services/InitialStateService.js'
 import { getRequestToken } from '@nextcloud/auth'
 import { useMemberDataStore } from '../stores/memberData.ts'
