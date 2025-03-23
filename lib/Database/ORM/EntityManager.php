@@ -1,7 +1,7 @@
 <?php
 /**
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022, 2023, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright Copyright (c) 2022, 2023, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,34 +26,34 @@ use OCP\AppFramework\IAppContainer;
 use OCP\IConfig;
 use OCP\IL10N;
 
+use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Annotations\PsrCachedReader;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\Psr6\CacheAdapter;
 use Doctrine\Common\Cache\Psr6\DoctrineProvider;
-use Doctrine\Common\Annotations\AnnotationReader;
-use Doctrine\Common\Annotations\PsrCachedReader;
 use Doctrine\Common\EventManager as DoctrineEventManager;
+use Doctrine\DBAL\Connection as DatabaseConnection;
+use Doctrine\DBAL\Event\ConnectionEventArgs;
+use Doctrine\DBAL\Types\Type;
+use Doctrine\ORM;
+use Doctrine\ORM\Configuration as OrmConfiguration;
+use Doctrine\ORM\Decorator\EntityManagerDecorator;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Mapping\UnderscoreNamingStrategy;
+use Doctrine\ORM\Query\Filter\SQLFilter;
+use Doctrine\ORM\Tools\Setup;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Doctrine\Persistence\Mapping\Driver\MappingDriverChain;
-use Doctrine\DBAL\Connection as DatabaseConnection;
-use Doctrine\DBAL\Types\Type;
-use Doctrine\DBAL\Event\ConnectionEventArgs;
-use Doctrine\ORM;
-use Doctrine\ORM\Tools\Setup;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Decorator\EntityManagerDecorator;
-use Doctrine\ORM\Mapping\UnderscoreNamingStrategy;
-use Doctrine\ORM\Configuration as OrmConfiguration;
-use Doctrine\ORM\Query\Filter\SQLFilter;
-use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Gedmo\SoftDeleteable\SoftDeleteableListener;
+use Symfony\Component\Cache\Adapter\ArrayAdapter;
 
-use MyCLabs\Enum\Enum as EnumType;
 use MediaMonks\Doctrine\Transformable;
+use MyCLabs\Enum\Enum as EnumType;
 
-use OCA\CAFeVDBMembers\Exceptions;
-use OCA\CAFeVDBMembers\Database\ORM\Mapping\ReservedWordQuoteStrategy;
-use OCA\CAFeVDBMembers\Database\DBAL\Types;
 use OCA\CAFeVDBMembers\Database\DBAL\Logging\CloudLogger;
+use OCA\CAFeVDBMembers\Database\DBAL\Types;
+use OCA\CAFeVDBMembers\Database\ORM\Mapping\ReservedWordQuoteStrategy;
+use OCA\CAFeVDBMembers\Exceptions;
 use OCA\CAFeVDBMembers\Service\AuthenticationService;
 
 /**
@@ -89,14 +89,14 @@ class EntityManager extends EntityManagerDecorator
 
   // phpcs:ignore Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    private string $appName,
     private ?string $userId,
     private AuthenticationService $authenticationService,
-    private IAppContainer $appContainer,
+    private CloudLogger $sqlLogger,
     private IConfig $cloudConfig,
+    private string $appName,
+    protected IAppContainer $appContainer,
     protected IL10N $l,
     protected LoggerInterface $logger,
-    private CloudLogger $sqlLogger,
   ) {
     try {
       parent::__construct($this->getEntityManager());
