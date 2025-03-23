@@ -163,7 +163,7 @@ import {
   NcListItem,
 } from '@nextcloud/vue'
 import generateAppUrl from '../toolkit/util/generate-url.ts'
-import { getInitialState } from '../toolkit/services/InitialStateService.js'
+import getInitialState from '../toolkit/util/initial-state.ts'
 import { getRequestToken } from '@nextcloud/auth'
 import { useMemberDataStore } from '../stores/memberData.ts'
 import type {

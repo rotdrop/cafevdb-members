@@ -23,7 +23,7 @@
 import { appName } from '../config.ts'
 import { defineStore } from 'pinia'
 import { translate as t } from '@nextcloud/l10n'
-import { getInitialState } from '../toolkit/services/InitialStateService.js'
+import getInitialState from '../toolkit/util/initial-state.ts'
 import { generateUrl } from '@nextcloud/router'
 import {
   computed,
@@ -94,11 +94,11 @@ export interface Country {
   code: string,
 }
 
-const projectsArray = getInitialState('projects', []) as Project[]
-let activeProjectIndex = getInitialState('activeProject', null)
-const flatInstruments = getInitialState('instruments', []) as Instrument[]
-const countries = getInitialState('countries', null) as Country[]
-const displayLocale = getInitialState('displayLocale', null) as Locale
+const projectsArray = getInitialState<Project[]>({ section: 'projects', defaults: [] })!
+let activeProjectIndex = getInitialState<number>({ section: 'activeProject' }) || -1
+const flatInstruments = getInitialState<Instrument[]>({ section: 'instruments', defaults: [] })!
+const countries = getInitialState<Country[]>({ section: 'countries' })
+const displayLocale = getInitialState<Locale>({ section: 'displayLocale' })
 
 interface InitialState {
   orchestraName?: string,
