@@ -29,18 +29,18 @@
            class="file-picker button icon-folder"
            @click.prevent.stop="() => !disabled && openFilePicker()"
         >
-          {{ pathInfo.dirName + (pathInfo.dirName !== '/' ? '/' : '') }}
+          {{ displayDirName }}
         </a>
       </div>
-      <SettingsInputText v-if="!onlyDirName"
-                         v-model="pathInfo.baseName"
-                         v-tooltip="unclippedPopup(pathInfo.baseName)"
-                         label=""
-                         class="flex-grow"
-                         :placeholder="placeholder"
-                         :readonly="readonly === 'basename'"
-                         :disabled="disabled"
-                         @update="emit('update', pathInfo)"
+      <TextFieldWithSubmitButton v-if="!onlyDirName"
+                                 v-model="pathInfo.baseName"
+                                 v-tooltip="unclippedPopup(pathInfo.baseName)"
+                                 label=""
+                                 class="flex-grow"
+                                 :placeholder="placeholder"
+                                 :readonly="readonly === 'basename'"
+                                 :disabled="disabled"
+                                 @submit="emit('submit', pathInfo)"
       />
     </div>
   </div>
@@ -61,7 +61,7 @@ import {
   TOAST_PERMANENT_TIMEOUT,
   FilePickerType,
 } from '@nextcloud/dialogs'
-import SettingsInputText from '../components/SettingsInputText.vue'
+import TextFieldWithSubmitButton from './TextFieldWithSubmitButton.vue'
 import { translate as t } from '@nextcloud/l10n'
 import '@nextcloud/dialogs/style.css'
 
@@ -91,7 +91,7 @@ const props = withDefaults(
 
 const emit = defineEmits([
     'input',
-    'update',
+    'submit',
     'error:invalid-dir-name',
     'update:dirName',
 ])
@@ -100,6 +100,12 @@ const pathInfo = ref({ dirName: '', baseName: '' })
 
 const pathName = computed(() =>
   (pathInfo.value.dirName ? pathInfo.value.dirName + '/' : '') + (props.onlyDirName ? '' : pathInfo.value.baseName)
+)
+
+const displayDirName = computed(() =>
+  !pathInfo.value.dirName
+  ? './'
+  : pathInfo.value.dirName + (pathInfo.value.dirName !== '/' ? '/' : '')
 )
 
 const filePickerTitle = computed(() =>
@@ -143,10 +149,10 @@ const openFilePicker = async () => {
       dir = ''
     }
     showInfo(t(appName, 'Selected path: "{dir}/{base}/".', { dir, base: pathInfo.value.baseName }))
-        emit('update:dirName', dir, pathInfo.value.baseName)
+    emit('update:dirName', dir, pathInfo.value.baseName)
     vueSet(pathInfo.value, 'dirName', dir)
     if (props.onlyDirName) {
-      emit('update', pathInfo.value)
+      emit('submit', pathInfo.value)
     }
   }
 }
