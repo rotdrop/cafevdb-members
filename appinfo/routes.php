@@ -62,6 +62,9 @@ return [
       'name' => 'settings#get_admin',
       'url' => '/settings/admin/{setting}',
       'verb' => 'GET',
+      'defaults' => [
+        'setting' => null,
+       ],
     ],
     [
       'name' => 'settings#get_app',

@@ -3,7 +3,7 @@
  * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022-2024 Claus-Justus Heine
+ * @copyright Copyright (c) 2022-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -43,6 +43,13 @@ class SettingsController extends Controller
   const FOLDER_GROUPS_KEY = 'memberFolderGroups';
   const SYNCHRONIZE_KEY = 'synchronize';
   const USER_VIEWS_DATABASE_KEY = 'cloudUserViewsDatabase';
+
+  const SETTINGS_KEYS = [
+    self::FOLDER_GROUPS_KEY,
+    self::MEMBER_ROOT_FOLDER_KEY,
+    // self::SYNCHRONIZE_KEY, not a setting, rather an action
+    self::USER_VIEWS_DATABASE_KEY,
+  ];
 
   // phpcs:ignore Squiz.Commenting.FunctionComment.Missing
   public function __construct(
@@ -138,39 +145,55 @@ class SettingsController extends Controller
     }
     $this->config->setAppValue($this->appName, $setting, $newValue);
     return new DataResponse([
+      'newValue' => $newValue,
       'oldValue' => $oldValue,
     ]);
   }
 
   /**
-   * @param string $setting
+   * @param null|string $setting
    *
    * @return DataResponse
    *
    * @AuthorizedAdminSetting(settings=OCA\CAFeVDBMembers\Settings\Admin)
    */
-  public function getAdmin(string $setting):DataResponse
+  public function getAdmin(?string $setting):DataResponse
   {
-    switch ($setting) {
-      case self::USER_VIEWS_DATABASE_KEY:
-      case self::MEMBER_ROOT_FOLDER_KEY:
-        return new DataResponse([
-          'value' => $this->config->getAppValue($this->appName, $setting),
-        ]);
-      case self::FOLDER_GROUPS_KEY:
-        $groups = [];
-        /** @var \OCP\IGroup $group */
-        foreach ($this->projectGroupService->getProjectGroups() as $group) {
-          $groups[] = [
-            'gid' => $group->getGID(),
-            'displayName' => $group->getDisplayName(),
-          ];
-        }
-        return new DataResponse([
-          'value' => $groups,
-        ]);
+    if ($setting === null) {
+      $allSettings = self::SETTINGS_KEYS;
+    } else {
+      $allSettings = [ $setting ];
     }
-    return self::grumble($this->l->t('Unknown admin setting: "%1$s"', $setting));
+    $results = [];
+    foreach ($allSettings as $oneSetting) {
+      switch ($oneSetting) {
+        case self::USER_VIEWS_DATABASE_KEY:
+          // fall through
+        case self::MEMBER_ROOT_FOLDER_KEY:
+          $value = $this->config->getAppValue($this->appName, $oneSetting);
+          break;
+        case self::FOLDER_GROUPS_KEY:
+          $groups = [];
+          /** @var \OCP\IGroup $group */
+          foreach ($this->projectGroupService->getProjectGroups() as $group) {
+            $groups[] = [
+              'gid' => $group->getGID(),
+              'displayName' => $group->getDisplayName(),
+            ];
+          }
+          $value = $groups;
+          break;
+        default:
+          return self::grumble($this->l->t('Unknown admin setting: "%1$s"', $setting));
+          break;
+      }
+      $results[$oneSetting] = $value;
+    }
+    if ($setting === null) {
+      return new DataResponse($results);
+    } else {
+      return new DataResponse([ 'value' => $results[$setting] ]);
+    }
   }
 
 
