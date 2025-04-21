@@ -21,26 +21,28 @@
 <template>
   <ul class="project-details">
     <NcListItem v-if="participant.projectInstruments.length > 1"
-                :title="t(appId, 'Instruments')"
+                class="instruments-container"
+                :name="t(appId, 'Instruments')"
     >
-      <template #subtitle>
+      <template #subname>
         <ul class="project-instruments">
           <NcListItem v-for="instrument in participant.projectInstruments"
                       :key="instrument.id"
-                      :title="instrument.name"
+                      :name="instrument.name"
                       :details="[instrument.voice > 0 ? t(appId, 'voice {voice}', { voice: instrument.voice }) : '', instrument.sectionLeader ? t(appId, 'section leader') : ''].filter(x => x.length > 0).join(', ')"
           />
         </ul>
       </template>
     </NcListItem>
     <NcListItem v-else-if="participant.projectInstruments.length == 1"
-                :title="participant.projectInstruments[0].name"
+                :name="participant.projectInstruments[0].name"
                 :details="[participant.projectInstruments[0].voice > 0 ? t(appId, 'voice {voice}', { voice: participant.projectInstruments[0].voice }) : '', participant.projectInstruments[0].sectionLeader ? t(appId, 'section leader') : ''].filter(x => x.length > 0).join(', ')"
     />
-    <NcListItem :title="t(appId, 'Photos')"
+    <NcListItem :name="t(appId, 'Photos')"
                 class="photos-item"
+                :bold="true"
     >
-      <template #details>
+      <template #subname>
         <a :target="md5(projectPathUrl(participant.project))" :href="projectPathUrl(participant.project)">
           {{ projectPath(participant.project) }}
         </a>
@@ -54,6 +56,7 @@ import { translate as t } from '@nextcloud/l10n'
 import { generateUrl } from '@nextcloud/router'
 import { NcListItem } from '@nextcloud/vue'
 import { md5 } from 'js-md5'
+import logger from '../../logger.ts'
 import type {
   ProjectParticipant,
 } from '../../stores/memberData.ts'
@@ -61,14 +64,16 @@ import type {
   Project,
 } from '../../stores/appData.ts'
 
-const propse = defineProps<{
+const props = defineProps<{
   participant: ProjectParticipant,
   memberRootFolder: string,
 }>()
 
+logger.info('PROPS', { props })
+
 const projectPath = (project: Project) => {
   const components = [
-    propse.memberRootFolder,
+    props.memberRootFolder,
   ]
   if (project.type === 'temporary') {
     components.push(t(appId, 'projects'))
@@ -93,31 +98,20 @@ const projectPathUrl = (project: Project) => {
         padding-bottom:2px;
       }
     }
-
-    .line-two__subtitle {
-      padding-right:0;
+    .instruments-container > .list-item > a {
+      height: fit-content;
     }
-
-    .line-one--bold {
-      &.line-one {
-        .line-one__details {
-          font-weight:inherit;
-        }
-      }
-      &.line-two {
-        font-weight: normal;
-      }
-    }
-
     .list-item__wrapper.photos-item {
-      .line-one__title {
+      .list-item-content__main {
         flex-shrink: 0;
       }
-      .line-one__details {
-        a {
-          color: CornFlowerBlue;
-          text-decoration: underline;
-          font-weight:normal;
+      .list-item-content {
+        &__details, &__subname {
+          a {
+            color: CornFlowerBlue;
+            text-decoration: underline;
+            font-weight:normal;
+          }
         }
       }
     }

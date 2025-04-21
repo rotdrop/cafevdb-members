@@ -35,10 +35,13 @@
     >
       <NcListItem v-if="showDeleted || !account.deleted"
                   :name="t(appId, 'IBAN')"
-                  :details="account.iban"
                   :bold="true"
+                  class="bank-account"
       >
-        <template #subtitle>
+        <template #details>
+          <span class="bank-account-iban">{{ account.iban }}</span>
+        </template>
+        <template #subname>
           <ul class="sepa-bank-account-details">
             <!-- <NcListItem :name="t(appId, 'BIC')" :details="account.bic" /> -->
             <NcListItem :name="t(appId, 'account holder')" :details="account.bankAccountOwner" />
@@ -48,7 +51,7 @@
             <NcListItem v-if="(showDeleted && account.sepaDebitMandates) || (!showDeleted && account.numActiveDebitMandates > 0)"
                         :name="t(appId, 'Debit Mandates ({count})', { count: showDeleted ? account.sepaDebitMandates.length : account.numActiveDebitMandates, })"
             >
-              <template #subtitle>
+              <template #subname>
                 <ul v-for="mandate in account.sepaDebitMandates"
                     :key="mandate.sequence"
                     class="sepa-debit-mandates-list"
@@ -57,10 +60,10 @@
                               :name="t(appId, 'reference')"
                               :details="mandate.mandateReference"
                   >
-                    <template v-if="true || showDeleted || !mandate.deleted" #subtitle>
+                    <template #subname>
                       <ul class="sepa-debit-mandate-details">
-                        <NcListItem :name="t(appId, 'granted')" :details="formatDate(mandate.mandateDate.date)" />
-                        <NcListItem v-if="mandate.lastUsedDate" :name="t(appId, 'last used')" :details="formatDate(mandate.lastUsedDate.date)" />
+                        <NcListItem :name="t(appId, 'granted')" :details="formatDate(mandate.mandateDate)" />
+                        <NcListItem v-if="mandate.lastUsedDate" :name="t(appId, 'last used')" :details="formatDate(mandate.lastUsedDate)" />
                         <NcListItem v-if="mandate.modified" :name="t(appId, 'modified')" :details="formatDate(mandate.modified)" />
                         <NcListItem v-if="mandate.deleted" :name="t(appId, 'revoked')" :details="formatDate(mandate.deleted)" />
                       </ul>
@@ -135,33 +138,42 @@ onBeforeMount(async () => {
       display:none;
     }
   }
-}
 
-.sepa-bank-accounts-list {
-  min-width:32rem;
-}
+  .sepa-bank-accounts-list {
+    min-width:32rem;
+    margin-right: 9px;
+    padding-right: 4px;
+  }
 
-::v-deep {
-  .list-item {
+  :deep(.list-item__wrapper) {
     padding-right: 0;
-    ul .list-item {
+    .list-item__anchor {
+      height: fit-content;
+    }
+    .list-item {
       padding-top:2px;
       padding-bottom:2px;
+      padding-right: 0;
     }
-  }
-
-  .line-two__subtitle {
-    padding-right:0;
-  }
-
-  .line-one--bold {
-    &.line-one {
-      .line-one__details {
-        font-weight:inherit;
+    .list-item-content {
+      &__details {
+        align-self: start;
+        position: absolute;
+        right: 0;
+        .list-item-details__details {
+          margin-right: 0 !important;
+          padding-right: 0 !important;
+        }
       }
     }
-    &.line-two {
-      font-weight: normal;
+    &.bank-account {
+      .bank-account-iban {
+        font-weight: bold;
+      }
+      > .list-item > .list-item__anchor > .list-item-content {
+        position: relative;
+        margin-right: 9px;
+      }
     }
   }
 }

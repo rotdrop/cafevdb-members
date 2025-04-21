@@ -32,7 +32,7 @@
                   :bold="true"
                   class="summary"
       >
-        <template #subtitle>
+        <template #subname>
           <ul class="insurance-summary">
             <NcListItem :name="t(appId, 'Total Insured Value')"
                         :details="totalInsuredValue + ' ' + currencySymbol"
@@ -47,17 +47,19 @@
             <NcListItem :name="t(appId, 'Yearly Insurance fees with {taxes}% taxes', { taxes: taxRate*100.0 })"
                         :details="(totalPayableFees * (1.0 + taxRate)).toFixed(2) + ' ' + currencySymbol"
             />
-            <NcListItem :name="t(appId, 'Yearly Insurance Bills')">
-              <template #details>
-                <NcActions class="insurance-bill-list">
-                  <NcActionLink v-for="receivable in insuranceBills"
-                                :key="receivable.optionKey"
-                                icon="icon-download"
-                                :href="optionDownloadUrl(receivable.optionKey)"
-                  >
-                    {{ receivable.dataOption.label }}
-                  </NcActionLink>
-                </NcActions>
+            <NcListItem :name="t(appId, 'Yearly Insurance Bills')"
+                        :force-display-actions="true"
+            >
+              <template #actions>
+                <NcActionLink v-for="receivable in insuranceBills"
+                              :key="receivable.optionKey"
+                              :href="optionDownloadUrl(receivable.optionKey)"
+                >
+                  <template #icon>
+                    <IconDownload />
+                  </template>
+                  {{ receivable.dataOption.label }}
+                </NcActionLink>
               </template>
             </NcListItem>
           </ul>
@@ -68,7 +70,7 @@
                   :details="t(appId, 'instrument used by someone else')"
                   :bold="true"
       >
-        <template #subtitle>
+        <template #subname>
           <ul class="insurance-list for-others">
             <NcListItem v-for="insurance in memberData.insuranceDetails.forOthers"
                         :key="insurance.id"
@@ -78,9 +80,10 @@
               <template #details>
                 <span class="insurance-amount">{{ insurance.insuranceAmount + ' ' + currencySymbol }}</span>
                 <NcActions class="insurance-details">
-                  <NcActionButton icon="icon-info"
-                                  @click="requestInsuranceDetails(insurance)"
-                  >
+                  <NcActionButton @click="requestInsuranceDetails(insurance)">
+                    <template #icon>
+                      <IconInfo />
+                    </template>
                     {{ t(appId, 'details') }}
                   </NcActionButton>
                 </NcActions>
@@ -94,7 +97,7 @@
                   :details="t(appId, 'instrument owned or used by me')"
                   :bold="true"
       >
-        <template #subtitle>
+        <template #subname>
           <ul class="insurance-list by-others">
             <NcListItem v-for="insurance in memberData.insuranceDetails.byOthers"
                         :key="insurance.id"
@@ -104,9 +107,10 @@
               <template #details>
                 <span class="insurance-amount">{{ insurance.insuranceAmount + ' ' + currencySymbol }}</span>
                 <NcActions class="insurance-details">
-                  <NcActionButton icon="icon-info"
-                                  @click="requestInsuranceDetails(insurance)"
-                  >
+                  <NcActionButton @click="requestInsuranceDetails(insurance)">
+                    <template #icon>
+                      <IconInfo />
+                    </template>
                     {{ t(appId, 'details') }}
                   </NcActionButton>
                 </NcActions>
@@ -120,7 +124,7 @@
                   :details="haveOthers ? t(appId, 'instrument owned or used by me') : ''"
                   :bold="true"
       >
-        <template #subtitle>
+        <template #subname>
           <ul class="insurance-list self">
             <NcListItem v-for="insurance in memberData.insuranceDetails.self"
                         :key="insurance.id"
@@ -166,6 +170,9 @@ import generateAppUrl from '../toolkit/util/generate-url.ts'
 import getInitialState from '../toolkit/util/initial-state.ts'
 import { getRequestToken } from '@nextcloud/auth'
 import { useMemberDataStore } from '../stores/memberData.ts'
+import IconInfo from 'vue-material-design-icons/InformationVariant.vue'
+import IconDownload from 'vue-material-design-icons/Download.vue'
+import logger from '../logger.ts'
 import type {
   InstrumentInsurance,
   Receivable,
@@ -241,17 +248,17 @@ onBeforeMount(async () => {
 
     const insuranceReceivables: Receivable[] = []
     for (const participant of memberData.projectParticipation) {
-      console.info('PROJECT', participant)
+      // logger.info('PROJECT', participant)
       if (participant.project.clubMembers) {
         // extract insurance receivables and supporting documents
         for (const [id, field] of Object.entries(participant.participantFields)) {
-          console.info('FIELD', id, field)
+          logger.info('FIELD', id, field)
           if (field.name === 'Instrument Insurance'
             || field.untranslatedName === 'Instrument Insurance'
             || field.name === t(appId, 'Instrument Insurance')
             || field.untranslatedName === t(appId, 'Instrument Insurance')) {
             for (const [key, receivable] of Object.entries(field.fieldData)) {
-              console.info('RECEIVABLE', key, receivable)
+              logger.info('RECEIVABLE', key, receivable)
               insuranceReceivables.push(receivable)
             }
           }
@@ -289,6 +296,8 @@ onBeforeMount(async () => {
   }
 
   loading.value = false
+
+  logger.info('INSURANCE MEMBER DATA', { memberData })
 })
 </script>
 <style lang="scss" scoped>
@@ -320,24 +329,26 @@ onBeforeMount(async () => {
         padding-bottom:2px;
       }
     }
-
-    .line-two__subtitle {
-      padding-right:0;
+    .list-item__anchor {
+      height: auto;
     }
 
-    .line-one--bold {
-      &.line-one {
-        .line-one__details {
-          font-weight:inherit;
+    .list-item-content__subname {
+      padding-right:0;
+      &--bold {
+        .list-item-content {
+          &__details {
+            font-weight:inherit;
+          }
+          &__subname {
+            font-weight: normal;
+          }
         }
-      }
-      &.line-two {
-        font-weight: normal;
       }
     }
 
     .list-item__wrapper.insurance-item {
-      .line-one__details {
+      .list-item-content__details {
         color:inherit;
         display:flex;
         align-items:center;

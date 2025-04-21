@@ -86,7 +86,7 @@
                       :force-display-actions="true"
                       class="calendar-event"
           >
-            <template v-if="event.calendarObject.location" #subtitle>
+            <template v-if="event.calendarObject.location" #subname>
               {{ event.calendarObject.location }}
             </template>
             <template v-if="registrationProject?.absence[event.id]" #indicator>

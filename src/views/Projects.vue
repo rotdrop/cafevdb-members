@@ -29,15 +29,15 @@
                   :key="participant.project.id"
                   :name="participant.project.name"
                   :bold="true"
+                  :force-display-actions="true"
       >
-        <template #details>
-          <NcActions class="project-details">
-            <NcActionButton icon="icon-info"
-                            @click="requestProjectDetails(participant)"
-            >
-              {{ t(appId, 'details') }}
-            </NcActionButton>
-          </NcActions>
+        <template #actions>
+          <NcActionButton @click="requestProjectDetails(participant)">
+            <template #icon>
+              <InfoIcon />
+            </template>
+            {{ t(appId, 'details') }}
+          </NcActionButton>
         </template>
       </NcListItem>
     </ul>
@@ -49,10 +49,10 @@ import { appName as appId } from '../config.ts'
 import { translate as t } from '@nextcloud/l10n'
 import DebugInfo from '../components/DebugInfo.vue'
 import {
-  NcActions,
   NcActionButton,
   NcListItem,
 } from '@nextcloud/vue'
+import InfoIcon from 'vue-material-design-icons/InformationVariant.vue'
 import generateAppUrl from '../toolkit/util/generate-url.ts'
 import { showError, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
 import axios from '@nextcloud/axios'
