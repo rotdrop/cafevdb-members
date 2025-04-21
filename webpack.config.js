@@ -119,8 +119,16 @@ webpackConfig.module.rules = [
     test: /\.(jpe?g|png|gif)$/i,
     type: 'asset', // 'asset/resource',
     generator: {
-      filename: './css/img/[name]-[hash][ext]',
-      publicPath: '../',
+      filename: 'css/img/[name]-[hash][ext]',
+      publicPath: '',
+    },
+  },
+  {
+    test: /\.woff2?$/i,
+    type: 'asset', // 'asset/resource',
+    generator: {
+      filename: 'css/fonts/[name]-[hash][ext]',
+      publicPath: '',
     },
   },
   {
@@ -128,8 +136,8 @@ webpackConfig.module.rules = [
     loader: 'svgo-loader',
     type: 'asset', // 'asset/resource',
     generator: {
-      filename: './css/img/[name]-[hash][ext]',
-      publicPath: '../',
+      filename: 'css/img/[name]-[hash][ext]',
+      publicPath: '',
     },
     options: {
       multipass: true,
