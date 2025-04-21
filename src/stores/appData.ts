@@ -95,10 +95,10 @@ export interface Country {
 }
 
 const projectsArray = getInitialState<Project[]>({ section: 'projects', defaults: [] })!
-let activeProjectIndex = getInitialState<number>({ section: 'activeProject' }) || -1
+let activeProjectIndex = getInitialState<number>({ section: 'activeProject', defaults: -1 })
 const flatInstruments = getInitialState<Instrument[]>({ section: 'instruments', defaults: [] })!
-const countries = getInitialState<Country[]>({ section: 'countries' })
-const displayLocale = getInitialState<Locale>({ section: 'displayLocale' })
+const countries = getInitialState<Country[]>({ section: 'countries', defaults: [] })
+const displayLocale = getInitialState<Locale>({ section: 'displayLocale', defaults: null })
 
 interface InitialState {
   orchestraName?: string,
