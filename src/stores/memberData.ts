@@ -25,10 +25,8 @@ import { defineStore } from 'pinia'
 import { appName as appId } from '../config.ts'
 import { translate as t } from '@nextcloud/l10n'
 import { set as vueSet } from 'vue'
-import {
-  generateUrl as generateAppUrl,
-  generateOcsUrl as generateAppOcsUrl,
-} from '../toolkit/util/generate-url.ts'
+import { generateUrl as generateAppUrl } from '../toolkit/util/generate-url.ts'
+import { generateOcsUrl } from '@nextcloud/router'
 import { getCurrentUser } from '@nextcloud/auth'
 import { showError, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
 import axios from '@nextcloud/axios'
@@ -42,14 +40,15 @@ import {
 } from 'vue'
 import { deepCopy } from 'walkjs'
 import { useAppDataStore } from './appData.ts'
+import logger from '../logger.ts'
 
 export interface SepaDebitMandate {
   sequence: number,
   mandateReference: string,
   modified?: string,
   deleted?: string,
-  lastUsedDate?: { date: string },
-  mandateDate: { date: string },
+  lastUsedDate?: string,
+  mandateDate: string,
 }
 
 export interface SepaBankAccount {
@@ -183,8 +182,7 @@ export const useMemberDataStore = defineStore('member-data', () => {
   }
 
   const initialize = async (silent?: boolean, reset?: boolean) => {
-    console.info('INIT')
-    const initialized = simpleState.initialized.value
+    let initialized = simpleState.initialized.value
     if (initialized.loaded && !reset) {
       return
     }
@@ -194,6 +192,7 @@ export const useMemberDataStore = defineStore('member-data', () => {
     }
     if (reset) {
       resetState()
+      initialized = simpleState.initialized.value
     }
     try {
       initialized.promise = axios.get(generateAppUrl('member'))
@@ -201,20 +200,19 @@ export const useMemberDataStore = defineStore('member-data', () => {
       for (const [key, value] of Object.entries(response.data)) {
         if (key === 'birthday') {
           simpleState[key].value = new Date(value as string)
-        } else {
+        } else if (simpleState[key] !== undefined) {
           simpleState[key].value = value
         }
       }
       // do some basic initializations ...
-      vueSet(simpleState, 'selectedInstruments', [])
-        for (const instrument of simpleState.instruments.value) {
-          simpleState.selectedInstruments.value.push(instrument)
-        }
+      for (const instrument of simpleState.instruments.value) {
+        simpleState.selectedInstruments.value.push(instrument)
+      }
       initialized.promise = null
       initialized.error = null
       initialized.loaded = true
     } catch (e) {
-      console.error('ERROR', e)
+      logger.error('ERROR', e)
       let message = t(appId, 'general failure')
       if (isAxiosErrorResponse(e) && e.response.data) {
         const messages = (e.response.data as { messages?: string[] }).messages
@@ -230,13 +228,13 @@ export const useMemberDataStore = defineStore('member-data', () => {
       initialized.recryptRequest = null
       if (cloudUser?.uid) {
         try {
-          const url = generateAppOcsUrl('api/v1/maintenance/encryption/recrypt/{userId}', {
+          const url = generateOcsUrl('apps/cafevdb/api/v1/maintenance/encryption/recrypt/{userId}', {
             userId: cloudUser.uid,
           })
           const response = await axios.get(url + '?format=json')
           initialized.recryptRequest = response.data.ocs.data.request
         } catch (e) {
-          console.error('Error retrieving recryption request', e)
+          logger.error('Error retrieving recryption request', e)
         }
       }
       initialized.promise = null
@@ -244,7 +242,7 @@ export const useMemberDataStore = defineStore('member-data', () => {
   }
 
   const load = async () => {
-    console.info('LOAD')
+    logger.info('LOAD')
     resetState()
     await initialize()
   }
@@ -289,11 +287,11 @@ export const useMemberDataStore = defineStore('member-data', () => {
     const initialized = simpleState.initialized.value
     if (!initialized.registration) {
       if (getCurrentUser()) {
-        console.info('CURRENT USER', getCurrentUser())
+        logger.info('CURRENT USER', getCurrentUser())
         await initialize()
         simpleState.firstTimeApplication.value = 'you-know-me'
       } else {
-        console.info('NOT LOGGED IN')
+        logger.info('NOT LOGGED IN')
         simpleState.firstTimeApplication.value = 'first-time'
       }
       if (!simpleState.country.value) {
@@ -309,7 +307,7 @@ export const useMemberDataStore = defineStore('member-data', () => {
           absenceReasons: {},
         })
         vueSet(simpleState.projects.value, appData.activeProject.id, newRegistrationProject)
-        console.info('REGISTRATION PROJECT', { registrationProject: { ...newRegistrationProject } })
+        logger.info('REGISTRATION PROJECT', { registrationProject: { ...newRegistrationProject } })
         for (const event of appData.activeProject.projectEvents) {
           newRegistrationProject.absence[event.id] = false
           newRegistrationProject.absenceReasons[event.id] = ''
