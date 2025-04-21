@@ -30,8 +30,9 @@ import {
   ref,
   watch,
 } from 'vue'
-import type { ProjectParticipantField } from './memberData.ts'
 import { useRoute, useRouter } from 'vue-router/composables'
+import type { ProjectParticipantField } from './memberData.ts'
+import type { RawLocation as RouterRawLocation } from 'vue-router'
 
 export interface InstrumentFamily {
   family: string,
@@ -124,7 +125,7 @@ export const useAppDataStore = defineStore('app-data', () => {
   if (activeProjectIndex === null && projectsArray) {
     activeProjectIndex = 0
   }
-  const activeProject = ref<null|Project>(projectsArray && activeProjectIndex >= 0 ? projectsArray[activeProjectIndex] : null)
+  const activeProject = ref<null|Project>((projectsArray && activeProjectIndex! >= 0) ? projectsArray[activeProjectIndex!] : null)
 
   for (const project of projectsArray) {
     for (const event of project.projectEvents) {
@@ -169,9 +170,9 @@ export const useAppDataStore = defineStore('app-data', () => {
 
   const router = useRouter()
 
-  const registrationRouteRecord = (routeName: string):Record<string, string>|{} => {
+  const registrationRouteRecord = (routeName: string):RouterRawLocation => {
     // The Vue-Rouer can handle optional parameters, but seemingly not missing parameters
-    const params = projectName.value ? { projectName: projectName.value } : {}
+    const params = projectName.value ? { projectName: projectName.value } : {} as Record<string, string>
     return { name: routeName, params }
   }
 

@@ -24,7 +24,6 @@ import { defineStore } from 'pinia'
 
 import { appName as appId } from '../config.ts'
 import { translate as t } from '@nextcloud/l10n'
-import { set as vueSet } from 'vue'
 import { generateUrl as generateAppUrl } from '../toolkit/util/generate-url.ts'
 import { generateOcsUrl } from '@nextcloud/router'
 import { getCurrentUser } from '@nextcloud/auth'
@@ -36,6 +35,7 @@ import {
   computed,
   reactive,
   ref,
+  set as vueSet,
   watch,
 } from 'vue'
 import { deepCopy } from 'walkjs'
@@ -140,6 +140,7 @@ export const useMemberDataStore = defineStore('member-data', () => {
     fixedLinePhone: ref(undefined as string|undefined),
     initialized: ref({
       loaded: false,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       promise: null as null|Promise<any>,
       error: null as null|string,
       recryptRequest: null,
@@ -251,13 +252,13 @@ export const useMemberDataStore = defineStore('member-data', () => {
 
   // computed data
   const registrationProject = computed(() =>
-    appData.activeProject ? simpleState.projects.value[appData.activeProject.id] : null
+    appData.activeProject ? simpleState.projects.value[appData.activeProject.id] : null,
   )
 
   const noAbsence = computed(() =>
     registrationProject.value
       ? !Object.values(registrationProject.value.absence).reduce((result, current) => result || !!current, false)
-      : true
+      : true,
   )
 
   const personalProjectInstrumentOptions = computed(() => {
@@ -266,8 +267,8 @@ export const useMemberDataStore = defineStore('member-data', () => {
     }
     const possibleInstruments = appData.activeProject.instrumentation.filter(
       instrumentationNumber => instrumentationNumber.voice === 0 && simpleState.selectedInstruments.value.find(instrument => instrument.id === instrumentationNumber.instrument.id),
-      )
-      return possibleInstruments.map(instrumentationNumber => instrumentationNumber.instrument)
+    )
+    return possibleInstruments.map(instrumentationNumber => instrumentationNumber.instrument)
   })
 
   // if just one element is selected as "I can play this" then inject

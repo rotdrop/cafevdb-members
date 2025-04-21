@@ -44,7 +44,11 @@ webpackConfig.plugins = webpackConfig.plugins.concat([
     APP_NAME: JSON.stringify(appName),
   }),
   new ESLintPlugin({
-    extensions: ['js', 'vue'],
+    extensions: [
+      'js',
+      'ts',
+      'vue',
+    ],
     exclude: [
       'node_modules',
     ],

@@ -16,8 +16,8 @@
   "scripts": {
     "build": "webpack --node-env production --progress",
     "dev": "webpack --node-env development --progress",
-    "lint": "eslint --ext .js,.vue src",
-    "lint:fix": "eslint --ext .js,.vue src --fix",
+    "lint": "eslint --ext .js,.ts,.vue src",
+    "lint:fix": "eslint --ext .js,.ts,.vue src --fix",
     "serve": "webpack --node-env development serve --progress",
     "stylelint": "stylelint css/*.css css/*.scss src/**/*.scss src/**/*.vue",
     "stylelint:fix": "stylelint css/*.css css/*.scss src/**/*.scss src/**/*.vue --fix",
@@ -50,6 +50,7 @@
     "@rotdrop/nextcloud-vue-components": "file:3rdparty/rotdrop-nextcloud-vue-components",
     "@types/deep-equal": "^1.0.4",
     "@vue/tsconfig": "^0.5.1",
+    "axios": "^1.8.4",
     "babel-loader-exclude-node-modules-except": "^1.2.1",
     "csso-webpack-plugin": "^2.0.0-beta.3",
     "deep-equal": "^2.2.3",

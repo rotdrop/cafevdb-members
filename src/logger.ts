@@ -19,13 +19,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Console from  './toolkit/util/console.ts';
+import Console from './toolkit/util/console.ts'
 
 const logger = new Console(
   'CAFeVDBMembers',
   {
     smaps: { debug: false, info: false, error: false, trace: false },
   },
-);
+)
 
-export default logger;
+export default logger

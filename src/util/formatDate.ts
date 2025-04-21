@@ -26,14 +26,14 @@ import { getCanonicalLocale } from '@nextcloud/l10n'
 const formatDate = (date: number|string|Date, flavour: string|'short'|'medium'|'long'|'omit-year' = 'medium') => {
   flavour = flavour || 'medium'
   switch (flavour) {
-    case 'short':
-    case 'medium':
-    case 'long':
-      return moment(date).format('L')
-    case 'omit-year': {
-      const event = new Date(date)
-      return event.toLocaleString(getCanonicalLocale(), { month: 'short', day: 'numeric' })
-    }
+  case 'short':
+  case 'medium':
+  case 'long':
+    return moment(date).format('L')
+  case 'omit-year': {
+    const event = new Date(date)
+    return event.toLocaleString(getCanonicalLocale(), { month: 'short', day: 'numeric' })
+  }
   }
   return moment(date).format(flavour)
 }

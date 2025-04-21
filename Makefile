@@ -91,6 +91,8 @@ APP_TOOLKIT_NS = CAFeVDBMembers
 include $(APP_TOOLKIT_DIR)/tools/scopeme.mk
 include $(DEV_LIB_DIR)/makefile/ts-app-config.mk
 
+TS_APP_CONFIG_IN = $(ABSSRCDIR)/app-config.ts.in
+
 JS_FILES = $(shell find $(ABSSRCDIR)/src -name "*.js" -o -name "*.vue" -o -name "*.ts")\
   $(shell find $(ABSSRCDIR)/3rdparty/rotdrop-nextcloud-vue-components -name "*.js" -o -name "*.vue" -o -name "*.ts")
 

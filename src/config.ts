@@ -20,13 +20,13 @@
  *
  */
 
-import type { AppName } from '../build/ts-types/app-config.ts';
-import { appName } from '../build/ts-types/app-config.ts';
+import type { AppName } from '../build/ts-types/app-config.ts'
+import { appName } from '../build/ts-types/app-config.ts'
 
 export type {
   AppName,
-};
+}
 
 export {
   appName,
-};
+}
