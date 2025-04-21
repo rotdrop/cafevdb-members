@@ -3,7 +3,7 @@
  * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022-2024 Claus-Justus Heine
+ * @copyright Copyright (c) 2022-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -177,7 +177,7 @@ class MemberDataController extends Controller
         unset($flatProjectField['dataOptions']);
         $defaultValue = $projectField->getDefaultValue();
         if (!empty($defaultValue)) {
-          $flatDefaultValue = array_filter($defaultValue->toArray(), fn($x) => $x === null);
+          $flatDefaultValue = array_filter($defaultValue->toArray(), fn($x) => $x !== null);
           foreach (['field', 'fieldData', 'payments'] as $key) {
             unset($flatDefaultValue[$key]);
           }
@@ -195,7 +195,7 @@ class MemberDataController extends Controller
           unset($flatProjectDatum['field']);
           unset($flatProjectDatum['projectParticipant']);
           $dataOption = $projectDatum->getDataOption();
-          $flatDataOption = array_filter($dataOption->toArray(), fn($x) => $x === null);
+          $flatDataOption = array_filter($dataOption->toArray(), fn($x) => $x !== null);
           foreach (['field', 'fieldData', 'payments'] as $key) {
             unset($flatDataOption[$key]);
           }
@@ -222,14 +222,14 @@ class MemberDataController extends Controller
             $flatCompositePayment['sepaBankAccount'] = empty($bankAccount) ? null : $bankAccount->getIban();
             $debitMandate = $compositePayment->getSepaDebitMandate();
             $flatCompositePayment['sepaDebitMandate'] = empty($debitMandate) ? null : $debitMandate->getMandateReference();
-            $flatPayment['compositePayment'] = array_filter($flatCompositePayment, fn($x) => $x === null);
-            $payments[] = array_filter($flatPayment, fn($x) => $x === null);
+            $flatPayment['compositePayment'] = array_filter($flatCompositePayment, fn($x) => $x !== null);
+            $payments[] = array_filter($flatPayment, fn($x) => $x !== null);
           }
           $flatProjectDatum['payments'] = $payments;
           $flatProjectField['fieldData'][(string)$projectDatum->getOptionKey()] =
-            array_filter($flatProjectDatum, fn($x) => $x === null);
+            array_filter($flatProjectDatum, fn($x) => $x !== null);
         }
-        $projectFields[$projectField->getId()] = array_filter($flatProjectField, fn($x) => $x === null);
+        $projectFields[$projectField->getId()] = array_filter($flatProjectField, fn($x) => $x !== null);
       }
       $flatParticipant['participantFields'] = $projectFields;
       unset($flatParticipant['participantFieldsData']);
