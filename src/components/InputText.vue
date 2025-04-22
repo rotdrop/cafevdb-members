@@ -30,6 +30,7 @@
                 :readonly="readonly"
                 :label="optionLabel"
                 :required="required"
+                :label-outside="true"
                 v-bind="$attrs"
                 v-on="$listeners"
                 @focus="show = !show;"

@@ -1,5 +1,5 @@
 /**
- * @copyright Copyright (c) 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright Copyright (c) 2023, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
  *
@@ -40,7 +40,7 @@ Vue.directive('tooltip', Tooltip)
 __webpack_nonce__ = btoa(getRequestToken())
 
 // eslint-disable-next-line
-__webpack_public_path__ = generateFilePath(appName, '', 'js/')
+__webpack_public_path__ = generateFilePath(appName, '', '')
 
 Vue.mixin({ data() { return { appId: appName } }, methods: { t, n } })
 

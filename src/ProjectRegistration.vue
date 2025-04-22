@@ -23,30 +23,30 @@
     <NcAppNavigation>
       <template #list>
         <NcAppNavigationItem :to="routerDestination('registrationHome')"
-                             :title="isPublicPage ? t(appName, 'Home') : t(appName, 'Start Registration')"
+                             :name="isPublicPage ? t(appName, 'Home') : t(appName, 'Start Registration')"
                              icon="icon-home"
                              exact
         />
         <NcAppNavigationItem :to="routerDestination('registrationPersonalProfile')"
-                             :title="t(appName, 'Personal Profile')"
+                             :name="t(appName, 'Personal Profile')"
                              icon="icon-user"
                              :class="{ disabled: !activeProject }"
                              exact
         />
         <NcAppNavigationItem :to="routerDestination('registrationParticipation')"
-                             :title="t(appName, 'Instrumentation and Events')"
+                             :name="t(appName, 'Instrumentation and Events')"
                              icon="icon-music"
                              :class="{ disabled: !activeProject }"
                              exact
         />
         <NcAppNavigationItem :to="routerDestination('registrationProjectOptions')"
-                             :title="t(appName, 'Options')"
+                             :name="t(appName, 'Options')"
                              icon="icon-details"
                              :class="{ disabled: !activeProject }"
                              exact
         />
         <NcAppNavigationItem :to="routerDestination('registrationSubmission')"
-                             :title="t(appName, 'Summary and Submission')"
+                             :name="t(appName, 'Summary and Submission')"
                              icon="icon-checkmark"
                              :class="{ disabled: !activeProject }"
                              exact
@@ -83,7 +83,7 @@
             >
               <NcActionRouter v-for="project in projects"
                               :key="project.id"
-                              :title="project.name"
+                              :name="project.name"
                               :to="{ name: 'registrationHome', params: { projectName: project.name } }"
               />
             </NcActions>
