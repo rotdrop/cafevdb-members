@@ -195,11 +195,11 @@ class Musician implements \ArrayAccess, \JsonSerializable
   private $emailAddresses;
 
   /**
-   * @var Types\EnumMemberStatus|null
+   * @var Types\EnumParticipationStatus|null
    *
-   * @ORM\Column(type="EnumMemberStatus", nullable=false)
+   * @ORM\Column(type="EnumParticipationStatus", nullable=false)
    */
-  private $memberStatus;
+  private $defaultParticipationStatus;
 
   /**
    * @var string|null
@@ -292,7 +292,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
   public function __construct()
   {
     $this->__wakeup();
-    $this->memberStatus = Types\EnumMemberStatus::REGULAR();
+    $this->defaultParticipationStatus = Types\EnumParticipationStatus::REGULAR();
     $this->instruments = new ArrayCollection;
     $this->projectInstruments = new ArrayCollection();
     $this->projectParticipation = new ArrayCollection();
@@ -461,13 +461,13 @@ class Musician implements \ArrayAccess, \JsonSerializable
   }
 
   /**
-   * Get memberStatus.
+   * Get defaultParticipationStatus.
    *
-   * @return EnumMemberStatus
+   * @return EnumParticipationStatus
    */
-  public function getMemberStatus():Types\EnumMemberStatus
+  public function getDefaultParticipationStatus():Types\EnumParticipationStatus
   {
-    return $this->memberStatus;
+    return $this->defaultParticipationStatus;
   }
 
   /**
