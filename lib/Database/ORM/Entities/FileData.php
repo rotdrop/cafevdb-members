@@ -3,7 +3,7 @@
  * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine
+ * @copyright Copyright (c) 2022, 2023, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -47,12 +47,11 @@ class FileData implements \ArrayAccess
    * @var File
    *
    * As ORM still does not support lazy one-to-one associations from the
-   * inverse side we just use one-directional from both sides here. This
-   * works, as the join column is just the key of both sides. So we have no
-   * "mappedBy" and "inversedBy".
+   * inverse side we use a OneToMany - ManyToOne trick which inserts a lazy
+   * association in between.
    */
   #[ORM\Id]
-  #[ORM\OneToOne(targetEntity: File::class)]
+  #[ORM\ManyToOne(targetEntity: File::class)]
   protected $file;
 
   /**

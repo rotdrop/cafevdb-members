@@ -3,7 +3,7 @@
  * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,33 +22,40 @@
 
 namespace OCA\CAFeVDBMembers\Database\ORM\Traits;
 
-use ReflectionProperty;
+use ReflectionAttribute;
 use ReflectionClass;
+use ReflectionProperty;
 use Exception;
 
-use Doctrine\ORM\Mapping as ORM;
+use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
 
-/** General \ArrayAccess implementation for ORM entities. */
+/** Generic \ArrayAccess implementation for entities. */
 trait ArrayTrait
 {
   private $keys;
 
   /**
    * Use reflection inspection to export all of the private keys;
-   * automatically called on post-load.
+   * automatically called on post-load if the entity used lifecycle-callbacks.
    *
    * @return void
-   *
-   * @ORM\PostLoad
    */
+  #[ORM\PostLoad]
   protected function arrayCTOR():void
   {
     $this->keys = (new ReflectionClass(__CLASS__))
-                ->getProperties(ReflectionProperty::IS_PRIVATE|ReflectionProperty::IS_PROTECTED);
+      ->getProperties(ReflectionProperty::IS_PRIVATE|ReflectionProperty::IS_PROTECTED);
 
-    $this->keys = array_map(function($property) {
-      $doc = $property->getDocComment();
+    $this->keys = array_map(function(ReflectionProperty $property) {
       $name = $property->getName();
+      $attributes = implode('', array_map(
+        fn(ReflectionAttribute $attribute)  => $attribute->getName(),
+        $property->getAttributes()
+      ));
+      if (preg_match('/ORM\\\\Mapping\\\\(Column|(Many|One)To(Many|One))/i', $attributes)) {
+        return $name;
+      }
+      $doc = $property->getDocComment();
       if (preg_match('/@ORM\\\\(Column|(Many|One)To(Many|One))/i', $doc)) {
         return $name;
       }
@@ -72,6 +79,9 @@ trait ArrayTrait
   /** @return array */
   public function toArray():array
   {
+    if (empty($this->keys)) {
+      $this->arrayCTOR();
+    }
     $result = [];
     foreach ($this->keys as $key) {
       $result[$key] = $this->offsetGet($key);

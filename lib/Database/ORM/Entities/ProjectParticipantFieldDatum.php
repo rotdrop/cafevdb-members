@@ -3,7 +3,7 @@
  * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine
+ * @copyright Copyright (c) 2022, 2023, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -90,12 +90,16 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
    * @var ProjectParticipantFieldDataOption
    */
   #[ORM\ManyToOne(targetEntity: ProjectParticipantFieldDataOption::class, inversedBy: 'fieldData', fetch: 'EXTRA_LAZY')]
+  #[ORM\JoinColumn(name: 'field_id', referencedColumnName: 'field_id')]
+  #[ORM\JoinColumn(name: 'option_key', referencedColumnName: 'key')]
   private $dataOption;
 
   /**
    * @var ProjectParticipant
    */
   #[ORM\ManyToOne(targetEntity: ProjectParticipant::class, inversedBy: 'participantFieldsData', fetch: 'EXTRA_LAZY')]
+  #[ORM\JoinColumn(name: 'project_id', referencedColumnName: 'project_id')]
+  #[ORM\JoinColumn(name: 'musician_id', referencedColumnName: 'musician_id')]
   private $projectParticipant;
 
   /**

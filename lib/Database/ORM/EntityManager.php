@@ -33,23 +33,25 @@ use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\Psr6\CacheAdapter;
 use Doctrine\Common\Cache\Psr6\DoctrineProvider;
 use Doctrine\Common\EventManager as DoctrineEventManager;
+use Doctrine\DBAL;
 use Doctrine\DBAL\Connection as DatabaseConnection;
 use Doctrine\DBAL\Event\ConnectionEventArgs;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM;
 use Doctrine\ORM\Configuration as OrmConfiguration;
 use Doctrine\ORM\Decorator\EntityManagerDecorator;
+use Doctrine\ORM\EntityManager as ORMEntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\UnderscoreNamingStrategy;
-use Doctrine\ORM\Query\Filter\SQLFilter;
 use Doctrine\ORM\ORMSetup;
+use Doctrine\ORM\Query\Filter\SQLFilter;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Doctrine\Persistence\Mapping\Driver\MappingDriverChain;
+use Gedmo;
 use Gedmo\SoftDeleteable\SoftDeleteableListener;
-use Symfony\Component\Cache\Adapter\ArrayAdapter;
-
 use MediaMonks\Doctrine\Transformable;
 use MyCLabs\Enum\Enum as EnumType;
+use Symfony\Component\Cache\Adapter\ArrayAdapter;
 
 use OCA\CAFeVDBMembers\Database\DBAL\Logging\CloudLogger;
 use OCA\CAFeVDBMembers\Database\DBAL\Types;
@@ -130,7 +132,7 @@ class EntityManager extends EntityManagerDecorator
       // phpcs:enable
 
       /** {@inheritdoc} */
-      public function resolve($className)
+      public function resolve(string $className): object
       {
         try {
           return parent::resolve($className);
@@ -391,7 +393,9 @@ class EntityManager extends EntityManagerDecorator
     $config->setSQLLogger($this->sqlLogger);
 
     // obtaining the entity manager
-    $entityManager = \Doctrine\ORM\EntityManager::create($this->connectionParameters($params), $config, $eventManager);
+    $conParams = $this->connectionParameters($params);
+    $connection = DBAL\DriverManager::getConnection($conParams, $config, $eventManager);
+    $entityManager = new ORMEntityManager($connection, $config, $eventManager);
 
     return $entityManager;
   }

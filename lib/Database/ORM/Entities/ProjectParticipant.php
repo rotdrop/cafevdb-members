@@ -3,7 +3,7 @@
  * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022, 2023, 2023 Claus-Justus Heine
+ * @copyright Copyright (c) 2022, 2023, 2023, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -66,15 +66,6 @@ class ProjectParticipant implements \ArrayAccess
   #[ORM\OneToMany(targetEntity: ProjectParticipantFieldDatum::class, indexBy: 'option_key', mappedBy: 'projectParticipant', fetch: 'EXTRA_LAZY')]
   private $participantFieldsData;
 
-  // /**
-  //  * @var \DateTimeImmutable
-  //  *
-  //  * Tracks changes in the fields data, in particular to catch deleted files
-  //  * for the database file-space.
-  //  *
-  //  * @ORM\Column(type="datetime_immutable", nullable=true)
-  //  */
-  // private $participantFieldsDataChanged;
   /**
    * Link in the project instruments, may be more than one per participant.
    */

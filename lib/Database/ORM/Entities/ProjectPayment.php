@@ -3,7 +3,7 @@
  * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine
+ * @copyright Copyright (c) 2022, 2023, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -58,9 +58,15 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
   private $subject;
 
   #[ORM\ManyToOne(targetEntity: ProjectParticipantFieldDatum::class, inversedBy: 'payments')]
+  #[ORM\JoinColumn(name: 'field_id', referencedColumnName: 'field_id', nullable: false)]
+  #[ORM\JoinColumn(name: 'project_id', referencedColumnName: 'project_id', nullable: false)]
+  #[ORM\JoinColumn(name: 'musician_id', referencedColumnName: 'musician_id', nullable: false)]
+  #[ORM\JoinColumn(name: 'receivable_key', referencedColumnName: 'option_key', nullable: false)]
   private $receivable;
 
   #[ORM\ManyToOne(targetEntity: ProjectParticipantFieldDataOption::class, inversedBy: 'payments')]
+  #[ORM\JoinColumn(name: 'field_id', referencedColumnName: 'field_id', nullable: false)]
+  #[ORM\JoinColumn(name: 'receivable_key', referencedColumnName: 'key', nullable: false)]
   private $receivableOption;
 
   #[ORM\ManyToOne(targetEntity: CompositePayment::class, inversedBy: 'projectPayments', fetch: 'EXTRA_LAZY')]
@@ -73,6 +79,8 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
   private $musician;
 
   #[ORM\ManyToOne(targetEntity: ProjectParticipant::class, inversedBy: 'payments', fetch: 'EXTRA_LAZY')]
+  #[ORM\JoinColumn(name: 'project_id', referencedColumnName: 'project_id', nullable: false)]
+  #[ORM\JoinColumn(name: 'musician_id', referencedColumnName: 'musician_id', nullable: false)]
   private $projectParticipant;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing

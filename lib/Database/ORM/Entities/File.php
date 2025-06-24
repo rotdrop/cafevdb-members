@@ -3,7 +3,7 @@
  * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022, 2023, 2023 Claus-Justus Heine
+ * @copyright Copyright (c) 2022, 2023, 2023, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -73,11 +73,7 @@ class File implements \ArrayAccess
   private $size = -1;
 
   /**
-   * @var FileData
-   *
-   * As ORM still does not support lazy one-to-one associations from the
-   * inverse side we use a OneToMany - ManyToOne trick which inserts a lazy
-   * association in between.
+   * @var Collection
    */
   #[ORM\OneToMany(targetEntity: FileData::class, mappedBy: 'file', fetch: 'EXTRA_LAZY')]
   protected $fileData;
@@ -97,6 +93,7 @@ class File implements \ArrayAccess
   // phpcs:ignore Squiz.Commenting.FunctionComment.Missing
   public function __construct()
   {
+    $this->fileData = new ArrayCollection;
     $this->arrayCTOR();
   }
   // phpcs:enable

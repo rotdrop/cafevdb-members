@@ -29,23 +29,10 @@ use Doctrine\Common\Collections\Collection;
 use OCA\CAFeVDBMembers\Database\ORM as CAFEVDB;
 use OCA\CAFeVDBMembers\Database\DBAL\Types;
 
+/** Model for a file with encrypted data. */
 #[ORM\Entity]
 class EncryptedFile extends File
 {
-  /**
-   * @var Collection
-   *
-   * As ORM still does not support lazy one-to-one associations from the
-   * inverse side we just use one-directional from both sides here. This
-   * works, as the join column is just the key of both sides. So we have no
-   * "mappedBy" and "inversedBy".
-   *
-   * Not that it is not possible to override the targetEntity annotation from
-   * the base-class, so it must go here to the leaf-class.
-   */
-  #[ORM\OneToOne(targetEntity: EncryptedFileData::class, fetch: 'EXTRA_LAZY')]
-  protected $fileData;
-
   /**
    * @var Collection
    */

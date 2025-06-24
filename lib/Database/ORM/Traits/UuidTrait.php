@@ -3,7 +3,7 @@
  * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022 Claus-Justus Heine
+ * @copyright Copyright (c) 2022, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -31,18 +31,17 @@ trait UuidTrait
 {
   /**
    * @var \Ramsey\Uuid\UuidInterface
-   *
-   * @ORM\Column(type="uuid_binary", unique=true)
    */
+  #[ORM\Column(type: 'uuid_binary', unique: true)]
   private $uuid;
 
   /**
    * Get uuid.
    *
-   * @return \Ramsey\Uuid\UuidInterface
+   * @return null|\Ramsey\Uuid\UuidInterface
    */
-  public function getUuid():UuidInterface
+  public function getUuid():?UuidInterface
   {
-    return $this->uuid;
+    return $this->uuid ?? null;
   }
 }

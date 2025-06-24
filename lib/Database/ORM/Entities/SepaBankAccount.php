@@ -66,34 +66,30 @@ class SepaBankAccount implements \ArrayAccess
    * 256 bytes for each multi-user seal. Using 2k of data should be plenty
    * given that we probably only need two users: the management board with a
    * shared encryption key and the respective orchestra member with its own key.
-   *
-   * @MediaMonks\Transformable(name="encrypt", context="encryptionContext[]")
    */
   #[ORM\Column(type: 'string', length: 2048, nullable: false, options: ['collation' => 'ascii_bin'])]
+  #[MediaMonks\Transformable(name: 'encrypt', context: 'encryptionContext')]
   private $iban;
 
   /**
    * @var string
-   *
-   * @MediaMonks\Transformable(name="encrypt", context="encryptionContext[]")
    */
   #[ORM\Column(type: 'string', length: 2048, nullable: false, options: ['collation' => 'ascii_bin'])]
+  #[MediaMonks\Transformable(name: 'encrypt', context: 'encryptionContext')]
   private $bic;
 
   /**
    * @var string
-   *
-   * @MediaMonks\Transformable(name="encrypt", context="encryptionContext[]")
    */
   #[ORM\Column(type: 'string', length: 2048, nullable: false, options: ['collation' => 'ascii_bin'])]
+  #[MediaMonks\Transformable(name: 'encrypt', context: 'encryptionContext')]
   private $blz;
 
   /**
    * @var string
-   *
-   * @MediaMonks\Transformable(name="encrypt", context="encryptionContext[]")
    */
   #[ORM\Column(type: 'string', length: 2048, nullable: false, options: ['collation' => 'ascii_bin'])]
+  #[MediaMonks\Transformable(name: 'encrypt', context: 'encryptionContext')]
   private $bankAccountOwner;
 
   /**

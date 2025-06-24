@@ -3,7 +3,7 @@
  * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine
+ * @copyright Copyright (c) 2022, 2023, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -75,8 +75,15 @@ class Instrument implements \ArrayAccess
   #[ORM\ManyToMany(targetEntity: InstrumentFamily::class, inversedBy: 'instruments')]
   private $families;
 
-  #[ORM\OneToMany(targetEntity: MusicianInstrument::class, mappedBy: 'instrument')]
+  #[ORM\OneToMany(targetEntity: MusicianInstrument::class, mappedBy: 'instrument', fetch: 'EXTRA_LAZY')]
   private $musicianInstruments;
+
+  #[ORM\OneToMany(targetEntity: ProjectInstrument::class, mappedBy: 'instrument', fetch: 'EXTRA_LAZY')]
+  private $projectInstruments;
+
+  #[ORM\OneToMany(targetEntity: ProjectInstrumentationNumber::class, mappedBy: 'instrument', fetch: 'EXTRA_LAZY')]
+  private $projectInstrumentationNumbers;
+
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct()
@@ -84,6 +91,8 @@ class Instrument implements \ArrayAccess
     $this->arrayCTOR();
     $this->families = new ArrayCollection();
     $this->musicianInstruments = new ArrayCollection();
+    $this->projectInstruments = new ArrayCollection();
+    $this->projectInstrumentationNumbers = new ArrayCollection();
   }
   // phpcs:enable
 
@@ -145,6 +154,26 @@ class Instrument implements \ArrayAccess
   public function getMusicianInstruments():Collection
   {
     return $this->musicianInstruments;
+  }
+
+  /**
+   * Get projectInstruments.
+   *
+   * @return Collection
+   */
+  public function getProjectInstruments():Collection
+  {
+    return $this->projectInstruments;
+  }
+
+  /**
+   * Get projectInstrumentationNumbers.
+   *
+   * @return Collection
+   */
+  public function getProjectInstrumentationNumbers():Collection
+  {
+    return $this->projectInstrumentationNumbers;
   }
 
   /**

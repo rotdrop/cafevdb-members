@@ -3,7 +3,7 @@
  * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine
+ * @copyright Copyright (c) 2022, 2023, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -57,9 +57,7 @@ class ProjectInstrument implements \ArrayAccess
   #[ORM\Id]
   private $musician;
 
-  /**
-   * @ORM\ManytoOne(targetEntity="Instrument", inversedBy="projectInstruments", fetch="EXTRA_LAZY")
-   */
+  #[ORM\ManyToOne(targetEntity: Instrument::class, inversedBy: 'projectInstruments', fetch: 'EXTRA_LAZY')]
   #[ORM\Id]
   private $instrument;
 
@@ -77,12 +75,19 @@ class ProjectInstrument implements \ArrayAccess
   private $sectionLeader = false;
 
   #[ORM\ManyToOne(targetEntity: ProjectParticipant::class, inversedBy: 'projectInstruments', fetch: 'EXTRA_LAZY')]
+  #[ORM\JoinColumn(name: 'project_id', referencedColumnName: 'project_id', onDelete: 'cascade')]
+  #[ORM\JoinColumn(name: 'musician_id', referencedColumnName: 'musician_id', onDelete: 'cascade')]
   private $projectParticipant;
 
   #[ORM\ManyToOne(targetEntity: MusicianInstrument::class, inversedBy: 'projectInstruments', fetch: 'EXTRA_LAZY')]
+  #[ORM\JoinColumn(name: 'musician_id', referencedColumnName: 'musician_id')]
+  #[ORM\JoinColumn(name: 'instrument_id', referencedColumnName: 'instrument_id')]
   private $musicianInstrument;
 
   #[ORM\ManyToOne(targetEntity: ProjectInstrumentationNumber::class, inversedBy: 'instruments', fetch: 'EXTRA_LAZY')]
+  #[ORM\JoinColumn(name: 'project_id', referencedColumnName: 'project_id')]
+  #[ORM\JoinColumn(name: 'instrument_id', referencedColumnName: 'instrument_id')]
+  #[ORM\JoinColumn(name: 'voice', referencedColumnName: 'voice')]
   private $instrumentationNumber;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing

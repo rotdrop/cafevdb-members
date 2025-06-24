@@ -3,7 +3,7 @@
  * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine
+ * @copyright Copyright (c) 2022, 2023, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -77,6 +77,8 @@ class InstrumentInsurance implements \ArrayAccess
    * @var InsuranceRate
    */
   #[ORM\ManyToOne(targetEntity: InsuranceRate::class, inversedBy: 'instrumentInsurances', fetch: 'EXTRA_LAZY')]
+  #[ORM\JoinColumn(name: 'broker_id', referencedColumnName: 'broker_id', nullable: false)]
+  #[ORM\JoinColumn(name: 'geographical_scope', referencedColumnName: 'geographical_scope', nullable: false)]
   private $insuranceRate;
 
   /**

@@ -3,7 +3,7 @@
  * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022 Claus-Justus Heine
+ * @copyright Copyright (c) 2022, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -39,18 +39,14 @@ class EncryptedFileData extends FileData
   /**
    * @var EncryptedFile
    *
-   * As ORM still does not support lazy one-to-one associations from the
-   * inverse side we just use one-directional from both sides here. This
-   * works, as the join column is just the key of both sides. So we have no
-   * "mappedBy" and "inversedBy".
+   * {@inheritdoc}
    */
-  #[ORM\Id]
-  #[ORM\OneToOne(targetEntity: EncryptedFile::class)]
   protected $file;
 
   /**
-   * @MediaMonks\Transformable(name="encrypt", override=true, context="encryptionContext")
-   */
+   * @var string
+   *
+  #[MediaMonks\Transformable(name: 'encrypt', override: true, context: 'encryptionContext')]
   protected $data;
 
   /**
