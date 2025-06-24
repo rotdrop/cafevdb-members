@@ -29,9 +29,7 @@ use Doctrine\Common\Collections\Collection;
 use OCA\CAFeVDBMembers\Database\ORM as CAFEVDB;
 use OCA\CAFeVDBMembers\Database\DBAL\Types;
 
-/**
- * @ORM\Entity
- */
+#[ORM\Entity]
 class EncryptedFile extends File
 {
   /**
@@ -44,24 +42,14 @@ class EncryptedFile extends File
    *
    * Not that it is not possible to override the targetEntity annotation from
    * the base-class, so it must go here to the leaf-class.
-   *
-   * @ORM\OneToOne(targetEntity="EncryptedFileData", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumns(
-   *   @ORM\JoinColumn(name="id", referencedColumnName="file_id", nullable=false),
-   * )
    */
+  #[ORM\OneToOne(targetEntity: \EncryptedFileData::class, fetch: 'EXTRA_LAZY')]
   protected $fileData;
 
   /**
    * @var Collection
-   *
-   * @ORM\ManyToMany(targetEntity="Musician", mappedBy="encryptedFiles", indexBy="id", fetch="EXTRA_LAZY")
-   *
-   * The list of owners which in addition to the members of the management
-   * group may have access to this file. This is in particular important for
-   * encrypted files where the list of owners determines the encryption keys
-   * which are used to seal the data.
    */
+  #[ORM\ManyToMany(targetEntity: \Musician::class, mappedBy: 'encryptedFiles', indexBy: 'id', fetch: 'EXTRA_LAZY')] // The list of owners which in addition to the members of the management
   private $owners;
 
   // phpcs:ignore Squiz.Commenting.FunctionComment.Missing

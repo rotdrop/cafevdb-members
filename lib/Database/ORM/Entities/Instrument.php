@@ -32,11 +32,10 @@ use OCA\CAFeVDBMembers\Database\DBAL\Types;
 
 /**
  * Instruments
- *
- * @ORM\Table(name="PersonalizedInstrumentsView")
- * @ORM\Entity
- * @Gedmo\TranslationEntity(class="TableFieldTranslation")
  */
+#[ORM\Table(name: 'PersonalizedInstrumentsView')]
+#[ORM\Entity]
+#[Gedmo\TranslationEntity(class: 'TableFieldTranslation')]
 class Instrument implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
@@ -46,19 +45,17 @@ class Instrument implements \ArrayAccess
 
   /**
    * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false)
-   * @ORM\Id
-   * @ORM\GeneratedValue(strategy="IDENTITY")
    */
+  #[ORM\Column(type: 'integer', nullable: false)]
+  #[ORM\Id]
+  #[ORM\GeneratedValue(strategy: 'IDENTITY')]
   private ?int $id = null;
 
   /**
    * @var string
-   *
-   * @Gedmo\Translatable(untranslated="untranslatedName")
-   * @ORM\Column(type="string", length=128, nullable=false)
    */
+  #[Gedmo\Translatable(untranslated: 'untranslatedName')]
+  #[ORM\Column(type: 'string', length: 128, nullable: false)]
   private string $name;
 
   /**
@@ -68,24 +65,17 @@ class Instrument implements \ArrayAccess
 
   /**
    * @var int
-   *
-   * @ORM\Column(type="smallint", nullable=false)
    */
+  #[ORM\Column(type: 'smallint', nullable: false)]
   private int $sortOrder;
 
-  /**
-   * @ORM\ManyToMany(targetEntity="InstrumentFamily", inversedBy="instruments")
-   * @ORM\JoinTable(
-   *   name="PersonalizedInstrumentInstrumentFamilyView",
-   *   joinColumns={@ORM\JoinColumn(referencedColumnName="id")},
-   *   inverseJoinColumns={@ORM\JoinColumn(referencedColumnName="id")}
-   * )
-   */
+  #[ORM\JoinTable(name: 'PersonalizedInstrumentInstrumentFamilyView')]
+  #[ORM\JoinColumn(referencedColumnName: 'id')]
+  #[ORM\InverseJoinColumn(referencedColumnName: 'id')]
+  #[ORM\ManyToMany(targetEntity: \InstrumentFamily::class, inversedBy: 'instruments')]
   private $families;
 
-  /**
-   * @ORM\OneToMany(targetEntity="MusicianInstrument", mappedBy="instrument")
-   */
+  #[ORM\OneToMany(targetEntity: \MusicianInstrument::class, mappedBy: 'instrument')]
   private $musicianInstruments;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing

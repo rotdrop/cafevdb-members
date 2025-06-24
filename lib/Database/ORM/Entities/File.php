@@ -33,13 +33,12 @@ use OCA\CAFeVDBMembers\Database\DBAL\Types;
  * An entity which modesl a file-system file. While it is not always
  * advisable to store file-system data in a data-base, we do so
  * nevertheless for selected small files.
- *
- * @ORM\Table(name="PersonalizedFilesView")
- * @ORM\InheritanceType("SINGLE_TABLE")
- * @ORM\DiscriminatorColumn(name="type", type="EnumFileType")
- * @ORM\DiscriminatorMap({"generic"="File","encrypted"="EncryptedFile","image"="Image"})
- * @ORM\Entity
  */
+#[ORM\Table(name: 'PersonalizedFilesView')]
+#[ORM\InheritanceType('SINGLE_TABLE')]
+#[ORM\DiscriminatorColumn(name: 'type', type: 'EnumFileType')]
+#[ORM\DiscriminatorMap(['generic' => 'File', 'encrypted' => 'EncryptedFile', 'image' => 'Image'])]
+#[ORM\Entity]
 class File implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
@@ -49,32 +48,28 @@ class File implements \ArrayAccess
 
   /**
    * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false)
-   * @ORM\Id
-   * @ORM\GeneratedValue(strategy="IDENTITY")
    */
+  #[ORM\Column(type: 'integer', nullable: false)]
+  #[ORM\Id]
+  #[ORM\GeneratedValue(strategy: 'IDENTITY')]
   private $id;
 
   /**
    * @var string|null
-   *
-   * @ORM\Column(type="string", length=512, nullable=true)
    */
+  #[ORM\Column(type: 'string', length: 512, nullable: true)]
   private $fileName;
 
   /**
    * @var string|null
-   *
-   * @ORM\Column(type="string", length=128, nullable=false)
    */
+  #[ORM\Column(type: 'string', length: 128, nullable: false)]
   private $mimeType;
 
   /**
    * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false, options={"default"=-1})
    */
+  #[ORM\Column(type: 'integer', nullable: false, options: ['default' => -1])]
   private $size = -1;
 
   /**
@@ -83,22 +78,20 @@ class File implements \ArrayAccess
    * As ORM still does not support lazy one-to-one associations from the
    * inverse side we use a OneToMany - ManyToOne trick which inserts a lazy
    * association in between.
-   *
-   * @ORM\OneToMany(targetEntity="FileData", mappedBy="file", fetch="EXTRA_LAZY")
    */
+  #[ORM\OneToMany(targetEntity: \FileData::class, mappedBy: 'file', fetch: 'EXTRA_LAZY')]
   protected $fileData;
 
   /**
    * @var string|null
-   *
-   * @ORM\Column(type="string", length=32, nullable=true, options={"fixed"=true})
    */
+  #[ORM\Column(type: 'string', length: 32, nullable: true, options: ['fixed' => true])]
   protected $dataHash;
 
   /**
    * @var \DateTimeImmutable
-   * @ORM\Column(type="datetime_immutable", nullable=true)
    */
+  #[ORM\Column(type: 'datetime_immutable', nullable: true)]
   protected $updated;
 
   // phpcs:ignore Squiz.Commenting.FunctionComment.Missing

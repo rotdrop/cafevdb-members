@@ -31,56 +31,48 @@ use OCA\CAFeVDBMembers\Database\DBAL\Types;
 
 /**
  * InsuranceRate
- *
- * @ORM\Table(name="PersonalizedInsuranceRatesView")
- * @ORM\Entity
  */
+#[ORM\Table(name: 'PersonalizedInsuranceRatesView')]
+#[ORM\Entity]
 class InsuranceRate implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
   use \OCA\CAFeVDBMembers\Toolkit\Traits\DateTimeTrait;
 
-  /**
-   * @ORM\ManyToOne(targetEntity="InsuranceBroker", inversedBy="insuranceRates", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumn(referencedColumnName="short_name")
-   * @ORM\Id
-   */
+  #[ORM\JoinColumn(referencedColumnName: 'short_name')]
+  #[ORM\ManyToOne(targetEntity: \InsuranceBroker::class, inversedBy: 'insuranceRates', fetch: 'EXTRA_LAZY')]
+  #[ORM\Id]
   private $broker;
 
   /**
    * @var Types\EnumGeographicalScope
-   *
-   * @ORM\Column(type="EnumGeographicalScope", nullable=false, options={"default"="Germany"})
-   * @ORM\Id
    */
+  #[ORM\Column(type: 'EnumGeographicalScope', nullable: false, options: ['default' => 'Germany'])]
+  #[ORM\Id]
   private $geographicalScope;
 
   /**
    * @var float
-   *
-   * @ORM\Column(type="float", precision=10, scale=0, nullable=false, options={"comment"="fraction, not percentage, excluding taxes"})
    */
+  #[ORM\Column(type: 'float', precision: 10, scale: 0, nullable: false, options: ['comment' => 'fraction, not percentage, excluding taxes'])]
   private $rate;
 
   /**
    * @var \DateTimeImmutable
-   *
-   * @ORM\Column(type="date_immutable", nullable=false, options={"comment"="start of the yearly insurance period"})
    */
+  #[ORM\Column(type: 'date_immutable', nullable: false, options: ['comment' => 'start of the yearly insurance period'])]
   private $dueDate;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=255, nullable=true)
    */
+  #[ORM\Column(type: 'string', length: 255, nullable: true)]
   private $policyNumber;
 
   /**
    * @var Collection
-   *
-   * @ORM\OneToMany(targetEntity="InstrumentInsurance", mappedBy="insuranceRate", fetch="EXTRA_LAZY")
    */
+  #[ORM\OneToMany(targetEntity: \InstrumentInsurance::class, mappedBy: 'insuranceRate', fetch: 'EXTRA_LAZY')]
   private $instrumentInsurances;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing

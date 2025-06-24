@@ -34,11 +34,10 @@ use OCA\CAFeVDBMembers\Utils\Uuid;
 
 /**
  * ProjectParticipantFieldsDataOptions
- *
- * @ORM\Table(name="PersonalizedProjectParticipantFieldsDataOptionsView")
- * @ORM\Entity
- * @Gedmo\TranslationEntity(class="TableFieldTranslation")
  */
+#[ORM\Table(name: 'PersonalizedProjectParticipantFieldsDataOptionsView')]
+#[ORM\Entity]
+#[Gedmo\TranslationEntity(class: 'TableFieldTranslation')]
 class ProjectParticipantFieldDataOption implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
@@ -51,26 +50,23 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
    * @var ProjectParticipantField
    *
    * Link back to ProjectParticipantField
-   *
-   * @ORM\ManyToOne(targetEntity="ProjectParticipantField", inversedBy="dataOptions")
-   * @ORM\Id
    */
+  #[ORM\ManyToOne(targetEntity: \ProjectParticipantField::class, inversedBy: 'dataOptions')]
+  #[ORM\Id]
   private $field;
 
   /**
    * @var \Ramsey\Uuid\UuidInterface
-   *
-   * @ORM\Column(type="uuid_binary")
-   * @ORM\Id
    */
+  #[ORM\Column(type: 'uuid_binary')]
+  #[ORM\Id]
   private $key;
 
   /**
    * @var string
-   *
-   * @Gedmo\Translatable(untranslated="untranslatedLabel")
-   * @ORM\Column(type="string", length=128, nullable=true)
    */
+  #[Gedmo\Translatable(untranslated: 'untranslatedLabel')]
+  #[ORM\Column(type: 'string', length: 128, nullable: true)]
   private $label;
 
   /**
@@ -86,17 +82,15 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
    * name of the generator class.
    *
    * @var string
-   *
-   * @ORM\Column(type="string", length=1024, nullable=true)
    */
+  #[ORM\Column(type: 'string', length: 1024, nullable: true)]
   private $data;
 
   /**
    * @var float
    * Optional value of a deposit for monetary options.
-   *
-   * @ORM\Column(type="float", nullable=true)
    */
+  #[ORM\Column(type: 'float', nullable: true)]
   private $deposit;
 
   /**
@@ -104,29 +98,24 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
    * Multiplicity::GROUPSOFPEOPLE, Multiplicity::GROUPOFPEOPLE
    * fields. Misused as starting date for recurring receivables
    * generators.
-   *
-   * @ORM\Column(type="bigint", nullable=true)
    */
+  #[ORM\Column(type: 'bigint', nullable: true)]
   private $limit;
 
   /**
    * @var string
-   *
-   * @Gedmo\Translatable
-   * @ORM\Column(type="string", length=4096, nullable=true)
    */
+  #[Gedmo\Translatable]
+  #[ORM\Column(type: 'string', length: 4096, nullable: true)]
   private $tooltip;
 
-  /**
-   * @ORM\OneToMany(targetEntity="ProjectParticipantFieldDatum", mappedBy="dataOption", indexBy="musician_id", fetch="EXTRA_LAZY")
-   */
+  #[ORM\OneToMany(targetEntity: \ProjectParticipantFieldDatum::class, mappedBy: 'dataOption', indexBy: 'musician_id', fetch: 'EXTRA_LAZY')]
   private $fieldData;
 
   /**
    * @var ProjectPayment
-   *
-   * @ORM\OneToMany(targetEntity="ProjectPayment", mappedBy="receivableOption")
    */
+  #[ORM\OneToMany(targetEntity: \ProjectPayment::class, mappedBy: 'receivableOption')]
   private $payments;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing

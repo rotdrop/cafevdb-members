@@ -33,9 +33,8 @@ use OCA\CAFeVDBMembers\Database\DBAL\Types;
  * Image -- Meta data for images stored in the data-base.
  *
  * The actual image data is stored in FileData for performance reasons.
- *
- * @ORM\Entity
  */
+#[ORM\Entity]
 class Image extends File
 {
   /**
@@ -51,26 +50,20 @@ class Image extends File
    * leave-class. Further: in "single table inheritance" only leave-classes
    * can be loaded lazily. So we need this artificial ImageFileData class
    * which is just there to provide a lazy-loadable leaf-class.
-   *
-   * @ORM\OneToOne(targetEntity="ImageFileData", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumns(
-   *   @ORM\JoinColumn(name="id", referencedColumnName="file_id", nullable=false),
-   * )
    */
+  #[ORM\OneToOne(targetEntity: \ImageFileData::class, fetch: 'EXTRA_LAZY')]
   protected $fileData;
 
   /**
    * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false, options={"default"=-1})
    */
+  #[ORM\Column(type: 'integer', nullable: false, options: ['default' => -1])]
   private $width;
 
   /**
    * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false, options={"default"=-1})
    */
+  #[ORM\Column(type: 'integer', nullable: false, options: ['default' => -1])]
   private $height;
 
   /**

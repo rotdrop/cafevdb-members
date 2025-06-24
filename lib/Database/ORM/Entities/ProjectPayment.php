@@ -30,82 +30,49 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * ProjectPayments
- *
- * @ORM\Table(name="PersonalizedProjectPaymentsView")
- * @ORM\Entity
  */
+#[ORM\Table(name: 'PersonalizedProjectPaymentsView')]
+#[ORM\Entity]
 class ProjectPayment implements \ArrayAccess, \JsonSerializable
 {
   use CAFEVDB\Traits\ArrayTrait;
 
   /**
    * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false)
-   * @ORM\Id
-   * @ORM\GeneratedValue(strategy="IDENTITY")
    */
+  #[ORM\Column(type: 'integer', nullable: false)]
+  #[ORM\Id]
+  #[ORM\GeneratedValue(strategy: 'IDENTITY')]
   private $id;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="decimal", precision=7, scale=2, nullable=false, options={"default"="0.00"})
    */
+  #[ORM\Column(type: 'decimal', precision: 7, scale: 2, nullable: false, options: ['default' => '0.00'])]
   private $amount = '0.00';
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=1024, nullable=false)
    */
+  #[ORM\Column(type: 'string', length: 1024, nullable: false)]
   private $subject;
 
-  /**
-   * @ORM\ManyToOne(targetEntity="ProjectParticipantFieldDatum", inversedBy="payments")
-   * @ORM\JoinColumns(
-   *   @ORM\JoinColumn(name="field_id", referencedColumnName="field_id", nullable=false),
-   *   @ORM\JoinColumn(name="project_id", referencedColumnName="project_id", nullable=false),
-   *   @ORM\JoinColumn(name="musician_id", referencedColumnName="musician_id", nullable=false),
-   *   @ORM\JoinColumn(name="receivable_key", referencedColumnName="option_key", nullable=false)
-   * )
-   */
+  #[ORM\ManyToOne(targetEntity: \ProjectParticipantFieldDatum::class, inversedBy: 'payments')]
   private $receivable;
 
-  /**
-   * @ORM\ManyToOne(targetEntity="ProjectParticipantFieldDataOption", inversedBy="payments")
-   * @ORM\JoinColumns(
-   *   @ORM\JoinColumn(name="field_id", referencedColumnName="field_id", nullable=false),
-   *   @ORM\JoinColumn(name="receivable_key", referencedColumnName="key", nullable=false)
-   * )
-   */
+  #[ORM\ManyToOne(targetEntity: \ProjectParticipantFieldDataOption::class, inversedBy: 'payments')]
   private $receivableOption;
 
-  /**
-   * @ORM\ManyToOne(targetEntity="CompositePayment", inversedBy="projectPayments", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumns(
-   *   @ORM\JoinColumn(nullable=false)
-   * )
-   */
+  #[ORM\ManyToOne(targetEntity: \CompositePayment::class, inversedBy: 'projectPayments', fetch: 'EXTRA_LAZY')]
   private $compositePayment;
 
-  /**
-   * @ORM\ManyToOne(targetEntity="Project", inversedBy="payments", fetch="EXTRA_LAZY")
-   */
+  #[ORM\ManyToOne(targetEntity: \Project::class, inversedBy: 'payments', fetch: 'EXTRA_LAZY')]
   private $project;
 
-  /**
-   * @ORM\ManyToOne(targetEntity="Musician", inversedBy="payments", fetch="EXTRA_LAZY")
-   */
+  #[ORM\ManyToOne(targetEntity: \Musician::class, inversedBy: 'payments', fetch: 'EXTRA_LAZY')]
   private $musician;
 
-  /**
-   * @ORM\ManyToOne(targetEntity="ProjectParticipant", inversedBy="payments", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumns(
-   *   @ORM\JoinColumn(name="project_id", referencedColumnName="project_id", nullable=false),
-   *   @ORM\JoinColumn(name="musician_id",referencedColumnName="musician_id", nullable=false)
-   * )
-   */
+  #[ORM\ManyToOne(targetEntity: \ProjectParticipant::class, inversedBy: 'payments', fetch: 'EXTRA_LAZY')]
   private $projectParticipant;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing

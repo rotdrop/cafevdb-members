@@ -33,13 +33,12 @@ use OCA\CAFeVDBMembers\Database\DBAL\Types;
  * FileData
  *
  * Simple data table for image blobs.
- *
- * @ORM\Table(name="PersonalizedFileDataView")
- * @ORM\InheritanceType("SINGLE_TABLE")
- * @ORM\DiscriminatorColumn(name="type", type="EnumFileType")
- * @ORM\DiscriminatorMap({"generic"="FileData", "image"="ImageFileData", "encrypted"="EncryptedFileData"})
- * @ORM\Entity
  */
+#[ORM\Table(name: 'PersonalizedFileDataView')]
+#[ORM\InheritanceType('SINGLE_TABLE')]
+#[ORM\DiscriminatorColumn(name: 'type', type: 'EnumFileType')]
+#[ORM\DiscriminatorMap(['generic' => 'FileData', 'image' => 'ImageFileData', 'encrypted' => 'EncryptedFileData'])]
+#[ORM\Entity]
 class FileData implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
@@ -51,24 +50,21 @@ class FileData implements \ArrayAccess
    * inverse side we just use one-directional from both sides here. This
    * works, as the join column is just the key of both sides. So we have no
    * "mappedBy" and "inversedBy".
-   *
-   * @ORM\Id
-   * @ORM\OneToOne(targetEntity="File")
    */
+  #[ORM\Id]
+  #[ORM\OneToOne(targetEntity: \File::class)]
   protected $file;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=32, nullable=false, options={"fixed"=true})
    */
+  #[ORM\Column(type: 'string', length: 32, nullable: false, options: ['fixed' => true])]
   protected $dataHash;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="blob", nullable=false)
    */
+  #[ORM\Column(type: 'blob', nullable: false)]
   protected $data;
 
   // phpcs:ignore Squiz.Commenting.FunctionComment.Missing

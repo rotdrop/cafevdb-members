@@ -31,10 +31,9 @@ use OCA\CAFeVDBMembers\Database\DBAL\Types;
 
 /**
  * Musician
- *
- * @ORM\Table(name="PersonalizedMusiciansView")
- * @ORM\Entity
  */
+#[ORM\Table(name: 'PersonalizedMusiciansView')]
+#[ORM\Entity]
 class Musician implements \ArrayAccess, \JsonSerializable
 {
   use CAFEVDB\Traits\ArrayTrait;
@@ -45,41 +44,36 @@ class Musician implements \ArrayAccess, \JsonSerializable
 
   /**
    * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false)
-   * @ORM\Id
-   * @ORM\GeneratedValue(strategy="IDENTITY")
    */
+  #[ORM\Column(type: 'integer', nullable: false)]
+  #[ORM\Id]
+  #[ORM\GeneratedValue(strategy: 'IDENTITY')]
   private $id;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=128, nullable=false)
    */
+  #[ORM\Column(type: 'string', length: 128, nullable: false)]
   private $surName;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=128, nullable=false)
    */
+  #[ORM\Column(type: 'string', length: 128, nullable: false)]
   private $firstName;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=128, nullable=true)
    */
+  #[ORM\Column(type: 'string', length: 128, nullable: true)]
   private $nickName;
 
   /**
    * @var string
    *
    * Display name, replaces default "$surName, $firstName"
-   *
-   * @ORM\Column(type="string", length=256, nullable=true)
    */
+  #[ORM\Column(type: 'string', length: 256, nullable: true)]
   private $displayName;
 
   /**
@@ -91,9 +85,8 @@ class Musician implements \ArrayAccess, \JsonSerializable
    * "personal":  firstName or firstname-FIRSTLETER_OF_SURNAME, e.g kathap, kathid
    *
    * We use the semi-official nickName.surName, e.g. katha.puff.
-   *
-   * @ORM\Column(type="string", length=256, unique=true, nullable=true)
    */
+  #[ORM\Column(type: 'string', length: 256, unique: true, nullable: true)]
   private $userIdSlug;
 
   /**
@@ -101,111 +94,96 @@ class Musician implements \ArrayAccess, \JsonSerializable
    *
    * Meant for per-user authentication which might be used for future
    * extensions.
-   *
-   * @ORM\Column(type="string", length=256, unique=false, nullable=true)
    */
+  #[ORM\Column(type: 'string', length: 256, unique: false, nullable: true)]
   private $userPassphrase;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=128, nullable=true)
    */
+  #[ORM\Column(type: 'string', length: 128, nullable: true)]
   private $city;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=128, nullable=true)
    */
+  #[ORM\Column(type: 'string', length: 128, nullable: true)]
   private $street;
 
   /**
    * @var string
    *
    * The street-number. I may actually be alpha-numeric like "2a" or something, so it is a string.
-   *
-   * @ORM\Column(type="string", length=32, nullable=true)
    */
+  #[ORM\Column(type: 'string', length: 32, nullable: true)]
   private $streetNumber;
 
   /**
    * @var string
    *
    * Additional address information, like "Appartment 200" or c/o.
-   *
-   * @ORM\Column(type="string", length=128, nullable=true)
    */
+  #[ORM\Column(type: 'string', length: 128, nullable: true)]
   private $addressSupplement;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=2, nullable=true)
    */
+  #[ORM\Column(type: 'string', length: 2, nullable: true)]
   private $country;
 
   /**
    * @var int|null
-   *
-   * @ORM\Column(type="string", length=32, nullable=true)
    */
+  #[ORM\Column(type: 'string', length: 32, nullable: true)]
   private $postalCode;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=2, nullable=true)
    */
+  #[ORM\Column(type: 'string', length: 2, nullable: true)]
   private $language;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=128, nullable=true)
    */
+  #[ORM\Column(type: 'string', length: 128, nullable: true)]
   private $mobilePhone;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=128, nullable=true)
    */
+  #[ORM\Column(type: 'string', length: 128, nullable: true)]
   private $fixedLinePhone;
 
   /**
    * @var \DateTime|null
-   *
-   * @ORM\Column(type="date_immutable", nullable=true)
    */
+  #[ORM\Column(type: 'date_immutable', nullable: true)]
   private $birthday;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=256, nullable=false)
    */
+  #[ORM\Column(type: 'string', length: 256, nullable: false)]
   private $email;
 
   /**
    * @var Collection All email addresses.
-   *
-   * @ORM\OneToMany(targetEntity="MusicianEmailAddress", mappedBy="musician", indexBy="address")
    */
+  #[ORM\OneToMany(targetEntity: \MusicianEmailAddress::class, mappedBy: 'musician', indexBy: 'address')]
   private $emailAddresses;
 
   /**
    * @var Types\EnumParticipationStatus|null
-   *
-   * @ORM\Column(type="EnumParticipationStatus", nullable=false)
    */
+  #[ORM\Column(type: 'EnumParticipationStatus', nullable: false)]
   private $defaultParticipationStatus;
 
   /**
    * @var string|null
-   *
-   * @ORM\Column(type="string", length=1024, nullable=true)
    */
+  #[ORM\Column(type: 'string', length: 1024, nullable: true)]
   private $remarks;
 
   /**
@@ -217,9 +195,8 @@ class Musician implements \ArrayAccess, \JsonSerializable
    *
    * This only affects the cloud-account of DB-musicians. It can be set by
    * admins and group-admins through the cloud admin UI.
-   *
-   * @ORM\Column(type="boolean", nullable=true)
    */
+  #[ORM\Column(type: 'boolean', nullable: true)]
   private $cloudAccountDeactivated;
 
   /**
@@ -231,61 +208,39 @@ class Musician implements \ArrayAccess, \JsonSerializable
    * the "...Deactivated" flag can be changed by the cloud administrator.
    *
    * Not that deleted users are also not exported to the cloud.
-   *
-   * @ORM\Column(type="boolean", nullable=true)
    */
+  #[ORM\Column(type: 'boolean', nullable: true)]
   private $cloudAccountDisabled;
 
-  /**
-   * @ORM\OneToMany(targetEntity="MusicianInstrument", mappedBy="musician", fetch="EXTRA_LAZY")
-   */
+  #[ORM\OneToMany(targetEntity: \MusicianInstrument::class, mappedBy: 'musician', fetch: 'EXTRA_LAZY')]
   private $instruments;
 
-  /**
-   * @ORM\OneToMany(targetEntity="ProjectParticipant", mappedBy="musician", indexBy="project_id", fetch="EXTRA_LAZY")
-   */
+  #[ORM\OneToMany(targetEntity: \ProjectParticipant::class, mappedBy: 'musician', indexBy: 'project_id', fetch: 'EXTRA_LAZY')]
   private $projectParticipation;
 
-  /**
-   * @ORM\OneToMany(targetEntity="ProjectInstrument", mappedBy="musician", fetch="EXTRA_LAZY")
-   */
+  #[ORM\OneToMany(targetEntity: \ProjectInstrument::class, mappedBy: 'musician', fetch: 'EXTRA_LAZY')]
   private $projectInstruments;
 
-  /**
-   * @ORM\OneToMany(targetEntity="ProjectParticipantFieldDatum", mappedBy="musician", indexBy="option_key", fetch="EXTRA_LAZY")
-   */
+  #[ORM\OneToMany(targetEntity: \ProjectParticipantFieldDatum::class, mappedBy: 'musician', indexBy: 'option_key', fetch: 'EXTRA_LAZY')]
   private $projectParticipantFieldsData;
 
-  /**
-   * @ORM\OneToMany(targetEntity="SepaBankAccount", mappedBy="musician", fetch="EXTRA_LAZY")
-   */
+  #[ORM\OneToMany(targetEntity: \SepaBankAccount::class, mappedBy: 'musician', fetch: 'EXTRA_LAZY')]
   private $sepaBankAccounts;
 
-  /**
-   * @ORM\OneToMany(targetEntity="SepaDebitMandate", mappedBy="musician", fetch="EXTRA_LAZY")
-   */
+  #[ORM\OneToMany(targetEntity: \SepaDebitMandate::class, mappedBy: 'musician', fetch: 'EXTRA_LAZY')]
   private $sepaDebitMandates;
 
-  /**
-   * @ORM\OneToMany(targetEntity="CompositePayment", mappedBy="musician", fetch="EXTRA_LAZY")
-   */
+  #[ORM\OneToMany(targetEntity: \CompositePayment::class, mappedBy: 'musician', fetch: 'EXTRA_LAZY')]
   private $payments;
 
-  /**
-   * @ORM\OneToMany(targetEntity="InstrumentInsurance", mappedBy="musician", fetch="EXTRA_LAZY")
-   */
+  #[ORM\OneToMany(targetEntity: \InstrumentInsurance::class, mappedBy: 'musician', fetch: 'EXTRA_LAZY')]
   private $instrumentInsurances;
 
   /**
    * @var Collection
-   *
-   * @ORM\ManyToMany(targetEntity="EncryptedFile", inversedBy="owners", indexBy="id", fetch="EXTRA_LAZY")
-   * @ORM\JoinTable(name="EncryptedFileOwners")
-   *
-   * The list of files owned by this musician. This is in particular important for
-   * encrypted files where the list of owners determines the encryption keys
-   * which are used to seal the data.
    */
+  #[ORM\JoinTable(name: 'EncryptedFileOwners')]
+  #[ORM\ManyToMany(targetEntity: \EncryptedFile::class, inversedBy: 'owners', indexBy: 'id', fetch: 'EXTRA_LAZY')]
   private $encryptedFiles;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing

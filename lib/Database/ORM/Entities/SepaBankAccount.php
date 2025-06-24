@@ -31,10 +31,9 @@ use MediaMonks\Doctrine\Mapping as MediaMonks;
 
 /**
  * SepaBankAccount.
- *
- * @ORM\Table(name="PersonalizedSepaBankAccountsView")
- * @ORM\Entity
  */
+#[ORM\Table(name: 'PersonalizedSepaBankAccountsView')]
+#[ORM\Entity]
 class SepaBankAccount implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
@@ -42,10 +41,8 @@ class SepaBankAccount implements \ArrayAccess
   use \OCA\CAFeVDBMembers\Toolkit\Traits\DateTimeTrait;
   use CAFEVDB\Traits\SoftDeleteableEntity;
 
-  /**
-   * @ORM\ManyToOne(targetEntity="Musician", inversedBy="sepaBankAccounts", fetch="EXTRA_LAZY")
-   * @ORM\Id
-   */
+  #[ORM\ManyToOne(targetEntity: \Musician::class, inversedBy: 'sepaBankAccounts', fetch: 'EXTRA_LAZY')]
+  #[ORM\Id]
   private $musician;
 
   /**
@@ -54,13 +51,10 @@ class SepaBankAccount implements \ArrayAccess
    * This is a POSITIVE per-musician sequence count. It currently is
    * incremented using
    * \OCA\CAFEVDB\Database\Doctrine\ORM\Traits\PerMusicianSequenceTrait
-   *
-   * @ORM\Column(type="integer")
-   * @ORM\Id
-   * @ORM\GeneratedValue(strategy="NONE")
-   * _AT_ORM\GeneratedValue(strategy="CUSTOM")
-   * _AT_ORM\CustomIdGenerator(class="OCA\CAFEVDB\Database\Doctrine\ORM\Mapping\PerMusicianSequenceGenerator")
    */
+  #[ORM\Column(type: 'integer')]
+  #[ORM\Id]
+  #[ORM\GeneratedValue(strategy: 'NONE')] // _AT_ORM\GeneratedValue(strategy="CUSTOM")
   private $sequence;
 
   /**
@@ -73,33 +67,33 @@ class SepaBankAccount implements \ArrayAccess
    * given that we probably only need two users: the management board with a
    * shared encryption key and the respective orchestra member with its own key.
    *
-   * @ORM\Column(type="string", length=2048, nullable=false, options={"collation"="ascii_bin"})
    * @MediaMonks\Transformable(name="encrypt", context="encryptionContext[]")
    */
+  #[ORM\Column(type: 'string', length: 2048, nullable: false, options: ['collation' => 'ascii_bin'])]
   private $iban;
 
   /**
    * @var string
    *
-   * @ORM\Column(type="string", length=2048, nullable=false, options={"collation"="ascii_bin"})
    * @MediaMonks\Transformable(name="encrypt", context="encryptionContext[]")
    */
+  #[ORM\Column(type: 'string', length: 2048, nullable: false, options: ['collation' => 'ascii_bin'])]
   private $bic;
 
   /**
    * @var string
    *
-   * @ORM\Column(type="string", length=2048, nullable=false, options={"collation"="ascii_bin"})
    * @MediaMonks\Transformable(name="encrypt", context="encryptionContext[]")
    */
+  #[ORM\Column(type: 'string', length: 2048, nullable: false, options: ['collation' => 'ascii_bin'])]
   private $blz;
 
   /**
    * @var string
    *
-   * @ORM\Column(type="string", length=2048, nullable=false, options={"collation"="ascii_bin"})
    * @MediaMonks\Transformable(name="encrypt", context="encryptionContext[]")
    */
+  #[ORM\Column(type: 'string', length: 2048, nullable: false, options: ['collation' => 'ascii_bin'])]
   private $bankAccountOwner;
 
   /**
@@ -114,20 +108,14 @@ class SepaBankAccount implements \ArrayAccess
    *
    * Link to the attached debit mandates. Can be more than one at a
    * given time, even more than one active.
-   *
-   * @ORM\OneToMany(targetEntity="SepaDebitMandate",
-   *                mappedBy="sepaBankAccount",
-   *                fetch="EXTRA_LAZY")
    */
+  #[ORM\OneToMany(targetEntity: \SepaDebitMandate::class, mappedBy: 'sepaBankAccount', fetch: 'EXTRA_LAZY')]
   private $sepaDebitMandates;
 
   /**
    * @var Collection
-   *
-   * @ORM\OneToMany(targetEntity="CompositePayment",
-   *                mappedBy="sepaBankAccount",
-   *                fetch="EXTRA_LAZY")
    */
+  #[ORM\OneToMany(targetEntity: \CompositePayment::class, mappedBy: 'sepaBankAccount', fetch: 'EXTRA_LAZY')]
   private $payments;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing

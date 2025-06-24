@@ -32,9 +32,8 @@ use OCA\CAFeVDBMembers\Database\DBAL\Types\EnumDirEntryType as DirEntryType;
 
 /**
  * File-name entry for a database-backed file.
- *
- * @ORM\Entity
  */
+#[ORM\Entity]
 class DatabaseStorageFile extends DatabaseStorageDirEntry
 {
   /** @var string */
@@ -42,9 +41,8 @@ class DatabaseStorageFile extends DatabaseStorageDirEntry
 
   /**
    * @var EncryptedFile
-   *
-   * @ORM\ManyToOne(targetEntity="EncryptedFile", inversedBy="databaseStorageDirEntries")
    */
+  #[ORM\ManyToOne(targetEntity: \EncryptedFile::class, inversedBy: 'databaseStorageDirEntries')]
   protected $file;
 
   /** {@inheritdoc} */

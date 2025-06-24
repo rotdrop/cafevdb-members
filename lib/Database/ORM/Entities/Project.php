@@ -34,10 +34,9 @@ use OCA\CAFeVDBMembers\Database\DBAL\Types;
 
 /**
  * Projects
- *
- * @ORM\Table(name="PersonalizedProjectsView")
- * @ORM\Entity(repositoryClass="OCA\CAFeVDBMembers\Database\ORM\Repositories\ProjectsRepository")
  */
+#[ORM\Table(name: 'PersonalizedProjectsView')]
+#[ORM\Entity(repositoryClass: \OCA\CAFeVDBMembers\Database\ORM\Repositories\ProjectsRepository::class)]
 class Project implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
@@ -46,32 +45,28 @@ class Project implements \ArrayAccess
 
   /**
    * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false)
-   * @ORM\Id
-   * @ORM\GeneratedValue(strategy="IDENTITY")
    */
+  #[ORM\Column(type: 'integer', nullable: false)]
+  #[ORM\Id]
+  #[ORM\GeneratedValue(strategy: 'IDENTITY')]
   private $id;
 
   /**
    * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false, options={"unsigned"=true})
    */
+  #[ORM\Column(type: 'integer', nullable: false, options: ['unsigned' => true])]
   private $year;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=64, nullable=false)
    */
+  #[ORM\Column(type: 'string', length: 64, nullable: false)]
   private $name;
 
   /**
    * @var Types\EnumProjectTemporalType
-   *
-   * @ORM\Column(type="EnumProjectTemporalType", nullable=false)
    */
+  #[ORM\Column(type: 'EnumProjectTemporalType', nullable: false)]
   private $type = Types\EnumProjectTemporalType::TEMPORARY;
 
   /**
@@ -79,9 +74,8 @@ class Project implements \ArrayAccess
    *
    * Optional registration start date. If not set then the online registration
    * is NOT available.
-   *
-   * @ORM\Column(type="date_immutable", nullable=true)
    */
+  #[ORM\Column(type: 'date_immutable', nullable: true)]
   private $registrationStartDate;
 
   /**
@@ -90,61 +84,45 @@ class Project implements \ArrayAccess
    * Optional registration deadline. If null then the date one day before the
    * first rehearsal is used, if set. Otherwise no registration dead-line is
    * imposed.
-   *
-   * @ORM\Column(type="date_immutable", nullable=true)
    */
+  #[ORM\Column(type: 'date_immutable', nullable: true)]
   private $registrationDeadline;
 
-  /**
-   * @ORM\OneToMany(targetEntity="ProjectInstrumentationNumber", mappedBy="project", fetch="EXTRA_LAZY")
-   */
+  #[ORM\OneToMany(targetEntity: \ProjectInstrumentationNumber::class, mappedBy: 'project', fetch: 'EXTRA_LAZY')]
   private $instrumentationNumbers;
 
   /**
    * @var bool
-   *
-   * @ORM\Column(type="boolean")
    */
+  #[ORM\Column(type: 'boolean')]
   private $clubMembers;
 
   /**
    * @var bool
-   *
-   * @ORM\Column(type="boolean")
    */
+  #[ORM\Column(type: 'boolean')]
   private $executiveBoard;
 
   /**
    * @var Collection
-   *
-   * @ORM\OneToMany(targetEntity="ProjectEvent", mappedBy="project")
    */
+  #[ORM\OneToMany(targetEntity: \ProjectEvent::class, mappedBy: 'project')]
   private $calendarEvents;
 
-  /**
-   * @ORM\OneToMany(targetEntity="ProjectParticipant", mappedBy="project")
-   */
+  #[ORM\OneToMany(targetEntity: \ProjectParticipant::class, mappedBy: 'project')]
   private $participants;
 
-  /**
-   * @ORM\OneToMany(targetEntity="ProjectParticipantField", mappedBy="project", indexBy="id", fetch="EXTRA_LAZY")
-   * @ORM\OrderBy({"displayOrder" = "DESC"})
-   */
+  #[ORM\OneToMany(targetEntity: \ProjectParticipantField::class, mappedBy: 'project', indexBy: 'id', fetch: 'EXTRA_LAZY')]
+  #[ORM\OrderBy(['displayOrder' => 'DESC'])]
   private $participantFields;
 
-  /**
-   * @ORM\OneToMany(targetEntity="ProjectParticipantFieldDatum", mappedBy="project", fetch="EXTRA_LAZY")
-   */
+  #[ORM\OneToMany(targetEntity: \ProjectParticipantFieldDatum::class, mappedBy: 'project', fetch: 'EXTRA_LAZY')]
   private $participantFieldsData;
 
-  /**
-   * @ORM\OneToMany(targetEntity="SepaDebitMandate", mappedBy="project")
-   */
+  #[ORM\OneToMany(targetEntity: \SepaDebitMandate::class, mappedBy: 'project')]
   private $sepaDebitMandates;
 
-  /**
-   * @ORM\OneToMany(targetEntity="ProjectPayment", mappedBy="project")
-   */
+  #[ORM\OneToMany(targetEntity: \ProjectPayment::class, mappedBy: 'project')]
   private $payments;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing

@@ -31,9 +31,8 @@ use OCA\CAFeVDBMembers\Database\DBAL\Types;
 
 /**
  * ImageFileData
- *
- * @ORM\Entity
  */
+#[ORM\Entity]
 class ImageFileData extends FileData
 {
   /**
@@ -43,9 +42,8 @@ class ImageFileData extends FileData
    * inverse side we just use one-directional from both sides here. This
    * works, as the join column is just the key of both sides. So we have no
    * "mappedBy" and "inversedBy".
-   *
-   * @ORM\Id
-   * @ORM\OneToOne(targetEntity="Image")
    */
+  #[ORM\Id]
+  #[ORM\OneToOne(targetEntity: \Image::class)]
   protected $file;
 }

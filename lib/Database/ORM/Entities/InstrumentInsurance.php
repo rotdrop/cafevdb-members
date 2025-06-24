@@ -30,10 +30,9 @@ use OCA\CAFeVDBMembers\Database\ORM as CAFEVDB;
 
 /**
  * InstrumentInsurance
- *
- * @ORM\Table(name="PersonalizedInstrumentInsurancesView")
- * @ORM\Entity
  */
+#[ORM\Table(name: 'PersonalizedInstrumentInsurancesView')]
+#[ORM\Entity]
 class InstrumentInsurance implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
@@ -43,93 +42,77 @@ class InstrumentInsurance implements \ArrayAccess
 
   /**
    * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false)
-   * @ORM\Id
-   * @ORM\GeneratedValue(strategy="IDENTITY")
    */
+  #[ORM\Column(type: 'integer', nullable: false)]
+  #[ORM\Id]
+  #[ORM\GeneratedValue(strategy: 'IDENTITY')]
   private $id;
 
   /**
    * @var Musician
-   *
-   * @ORM\ManyToOne(targetEntity="Musician", inversedBy="instrumentInsurances", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumn(nullable=false)
    */
+  #[ORM\JoinColumn(nullable: false)]
+  #[ORM\ManyToOne(targetEntity: \Musician::class, inversedBy: 'instrumentInsurances', fetch: 'EXTRA_LAZY')]
   private $musician;
 
   /**
    * @var bool
-   *
-   * @ORM\Column(type="boolean", nullable=false)
    */
+  #[ORM\Column(type: 'boolean', nullable: false)]
   private $isDebitor;
 
   /**
    * @var bool
-   *
-   * @ORM\Column(type="boolean", nullable=false)
    */
+  #[ORM\Column(type: 'boolean', nullable: false)]
   private $isHolder;
 
   /**
    * @var bool
-   *
-   * @ORM\Column(type="boolean", nullable=false)
    */
+  #[ORM\Column(type: 'boolean', nullable: false)]
   private $isOwner;
 
   /**
    * @var InsuranceRate
-   *
-   * @ORM\ManyToOne(targetEntity="InsuranceRate", inversedBy="instrumentInsurances", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumns(
-   *   @ORM\JoinColumn(name="broker_id", referencedColumnName="broker_id", nullable=false),
-   *   @ORM\JoinColumn(name="geographical_scope", referencedColumnName="geographical_scope", nullable=false)
-   * )
    */
+  #[ORM\ManyToOne(targetEntity: \InsuranceRate::class, inversedBy: 'instrumentInsurances', fetch: 'EXTRA_LAZY')]
   private $insuranceRate;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=128, nullable=false)
    */
+  #[ORM\Column(type: 'string', length: 128, nullable: false)]
   private $object;
 
   /**
    * @var array
-   *
-   * @ORM\Column(type="boolean", nullable=true, options={"default"=false})
    */
+  #[ORM\Column(type: 'boolean', nullable: true, options: ['default' => false])]
   private $accessory = false;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=128, nullable=false)
    */
+  #[ORM\Column(type: 'string', length: 128, nullable: false)]
   private $manufacturer;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=64, nullable=false)
    */
+  #[ORM\Column(type: 'string', length: 64, nullable: false)]
   private $yearOfConstruction;
 
   /**
    * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false)
    */
+  #[ORM\Column(type: 'integer', nullable: false)]
   private $insuranceAmount;
 
   /**
    * @var \DateTime
-   *
-   * @ORM\Column(type="date_immutable", nullable=false)
    */
+  #[ORM\Column(type: 'date_immutable', nullable: false)]
   private $startOfInsurance;
 
   // phpcs:ignore Squiz.Commenting.FunctionComment.Missing

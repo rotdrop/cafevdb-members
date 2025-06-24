@@ -30,41 +30,36 @@ use OCA\CAFeVDBMembers\Database\ORM as CAFEVDB;
 
 /**
  * InsuranceBroker
- *
- * @ORM\Table(name="PersonalizedInsuranceBrokersView")
- * @ORM\Entity
  */
+#[ORM\Table(name: 'PersonalizedInsuranceBrokersView')]
+#[ORM\Entity]
 class InsuranceBroker implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=40, nullable=false)
-   * @ORM\Id
    */
+  #[ORM\Column(type: 'string', length: 40, nullable: false)]
+  #[ORM\Id]
   private $shortName;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=512, nullable=false)
    */
+  #[ORM\Column(type: 'string', length: 512, nullable: false)]
   private $longName;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=512, nullable=false)
    */
+  #[ORM\Column(type: 'string', length: 512, nullable: false)]
   private $address;
 
   /**
    * @var Collection
-   *
-   * @ORM\OneToMany(targetEntity="InsuranceRate", mappedBy="broker", fetch="EXTRA_LAZY")
    */
+  #[ORM\OneToMany(targetEntity: \InsuranceRate::class, mappedBy: 'broker', fetch: 'EXTRA_LAZY')]
   private $insuranceRates;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing

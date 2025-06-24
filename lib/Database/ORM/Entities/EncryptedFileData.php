@@ -32,9 +32,8 @@ use OCA\CAFeVDBMembers\Database\DBAL\Types;
 
 /**
  * EncryptedFileData
- *
- * @ORM\Entity
  */
+#[ORM\Entity]
 class EncryptedFileData extends FileData
 {
   /**
@@ -44,10 +43,9 @@ class EncryptedFileData extends FileData
    * inverse side we just use one-directional from both sides here. This
    * works, as the join column is just the key of both sides. So we have no
    * "mappedBy" and "inversedBy".
-   *
-   * @ORM\Id
-   * @ORM\OneToOne(targetEntity="EncryptedFile")
    */
+  #[ORM\Id]
+  #[ORM\OneToOne(targetEntity: \EncryptedFile::class)]
   protected $file;
 
   /**

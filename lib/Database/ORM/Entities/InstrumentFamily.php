@@ -32,11 +32,10 @@ use OCA\CAFeVDBMembers\Database\DBAL\Types;
 
 /**
  * Instruments
- *
- * @ORM\Table(name="PersonalizedInstrumentFamiliesView")
- * @ORM\Entity
- * @Gedmo\TranslationEntity(class="TableFieldTranslation")
  */
+#[ORM\Table(name: 'PersonalizedInstrumentFamiliesView')]
+#[ORM\Entity]
+#[Gedmo\TranslationEntity(class: 'TableFieldTranslation')]
 class InstrumentFamily implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
@@ -45,19 +44,17 @@ class InstrumentFamily implements \ArrayAccess
 
   /**
    * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false)
-   * @ORM\Id
-   * @ORM\GeneratedValue(strategy="IDENTITY")
    */
+  #[ORM\Column(type: 'integer', nullable: false)]
+  #[ORM\Id]
+  #[ORM\GeneratedValue(strategy: 'IDENTITY')]
   private ?int $id = null;
 
   /**
    * @var string
-   *
-   * @Gedmo\Translatable(untranslated="untranslatedFamily")
-   * @ORM\Column(type="string", length=255, nullable=false, unique=true)
    */
+  #[Gedmo\Translatable(untranslated: 'untranslatedFamily')]
+  #[ORM\Column(type: 'string', length: 255, nullable: false, unique: true)]
   private string $family;
 
   /**
@@ -65,9 +62,7 @@ class InstrumentFamily implements \ArrayAccess
    */
   private string $untranslatedFamily;
 
-  /**
-   * @ORM\ManyToMany(targetEntity="Instrument", mappedBy="families")
-   */
+  #[ORM\ManyToMany(targetEntity: \Instrument::class, mappedBy: 'families')]
   private $instruments;
 
   // phpcs:ignore Squiz.Commenting.FunctionComment.Missing
