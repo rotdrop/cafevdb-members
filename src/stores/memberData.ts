@@ -45,8 +45,9 @@ import logger from '../logger.ts'
 export interface SepaDebitMandate {
   sequence: number,
   mandateReference: string,
-  modified?: string,
-  deleted?: string,
+  deleted: null|string,
+  created: null|string,
+  updated: null|string,
   lastUsedDate?: string,
   mandateDate: string,
 }
@@ -55,8 +56,8 @@ export interface SepaBankAccount {
   sequence: number,
   iban: string,
   deleted: null|string,
-  created: string,
-  modified: string,
+  created: null|string,
+  updated: null|string,
   bankAccountOwner: string,
   sepaDebitMandates: SepaDebitMandate[],
   numActiveDebitMandates: number,
