@@ -294,10 +294,21 @@ class MemberDataController extends Controller
    */
   private function flattenProject(Entities\Project $project):array
   {
+    // if any of these are needed flatten needs to be refined.
+    $keysDoDelete = [
+      'participants',
+      'participantFields',
+      'participantFieldsData',
+      'sepaDebitMandates',
+      'payments',
+      'instrumentationNumbers',
+      'calendarEvents',
+    ];
     $flatProject = $project->toArray();
-    foreach (['participants', 'participantFields', 'participantFieldsData', 'sepaDebitMandates', 'payments'] as $key) {
+    foreach ($keysDoDelete as $key) {
       unset($flatProject[$key]);
     }
+
     return $flatProject;
   }
 
