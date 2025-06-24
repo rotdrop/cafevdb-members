@@ -72,10 +72,10 @@ class Instrument implements \ArrayAccess
   #[ORM\JoinTable(name: 'PersonalizedInstrumentInstrumentFamilyView')]
   #[ORM\JoinColumn(referencedColumnName: 'id')]
   #[ORM\InverseJoinColumn(referencedColumnName: 'id')]
-  #[ORM\ManyToMany(targetEntity: \InstrumentFamily::class, inversedBy: 'instruments')]
+  #[ORM\ManyToMany(targetEntity: InstrumentFamily::class, inversedBy: 'instruments')]
   private $families;
 
-  #[ORM\OneToMany(targetEntity: \MusicianInstrument::class, mappedBy: 'instrument')]
+  #[ORM\OneToMany(targetEntity: MusicianInstrument::class, mappedBy: 'instrument')]
   private $musicianInstruments;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing

@@ -51,7 +51,7 @@ class Image extends File
    * can be loaded lazily. So we need this artificial ImageFileData class
    * which is just there to provide a lazy-loadable leaf-class.
    */
-  #[ORM\OneToOne(targetEntity: \ImageFileData::class, fetch: 'EXTRA_LAZY')]
+  #[ORM\OneToOne(targetEntity: ImageFileData::class, fetch: 'EXTRA_LAZY')]
   protected $fileData;
 
   /**

@@ -72,7 +72,7 @@ class CompositePayment implements \ArrayAccess
   /**
    * @var Collection
    */
-  #[ORM\OneToMany(targetEntity: \ProjectPayment::class, mappedBy: 'compositePayment', fetch: 'EXTRA_LAZY')]
+  #[ORM\OneToMany(targetEntity: ProjectPayment::class, mappedBy: 'compositePayment', fetch: 'EXTRA_LAZY')]
   private $projectPayments;
 
   // /**
@@ -82,13 +82,13 @@ class CompositePayment implements \ArrayAccess
   //  * @Gedmo\Timestampable(on={"update","create","delete"}, timestampField="sepaTransactionDataChanged")
   //  */
   // private $sepaTransaction = null;
-  #[ORM\ManyToOne(targetEntity: \SepaBankAccount::class, inversedBy: 'payments', fetch: 'EXTRA_LAZY')]
+  #[ORM\ManyToOne(targetEntity: SepaBankAccount::class, inversedBy: 'payments', fetch: 'EXTRA_LAZY')]
   private $sepaBankAccount;
 
   /**
    * @var SepaDebitMandate
    */
-  #[ORM\ManyToOne(targetEntity: \SepaDebitMandate::class, inversedBy: 'payments', fetch: 'EXTRA_LAZY')]
+  #[ORM\ManyToOne(targetEntity: SepaDebitMandate::class, inversedBy: 'payments', fetch: 'EXTRA_LAZY')]
   private $sepaDebitMandate;
 
   /**
@@ -102,7 +102,7 @@ class CompositePayment implements \ArrayAccess
   /**
    * @var Musician
    */
-  #[ORM\ManyToOne(targetEntity: \Musician::class, inversedBy: 'payments', fetch: 'EXTRA_LAZY')]
+  #[ORM\ManyToOne(targetEntity: Musician::class, inversedBy: 'payments', fetch: 'EXTRA_LAZY')]
   private $musician;
 
   /**
@@ -113,7 +113,7 @@ class CompositePayment implements \ArrayAccess
    *
    * @todo Support more than one supporting document.
    */
-  #[ORM\OneToOne(targetEntity: \DatabaseStorageFile::class, fetch: 'EXTRA_LAZY')]
+  #[ORM\OneToOne(targetEntity: DatabaseStorageFile::class, fetch: 'EXTRA_LAZY')]
   private $supportingDocument;
 
   // phpcs:ignore Squiz.Commenting.FunctionComment.Missing

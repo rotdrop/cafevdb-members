@@ -49,11 +49,11 @@ class ProjectInstrument implements \ArrayAccess
 
   const UNVOICED = 0;
 
-  #[ORM\ManyToOne(targetEntity: \Project::class, inversedBy: 'participantInstruments', fetch: 'EXTRA_LAZY')]
+  #[ORM\ManyToOne(targetEntity: Project::class, inversedBy: 'participantInstruments', fetch: 'EXTRA_LAZY')]
   #[ORM\Id]
   private $project;
 
-  #[ORM\ManyToOne(targetEntity: \Musician::class, inversedBy: 'projectInstruments', fetch: 'EXTRA_LAZY')]
+  #[ORM\ManyToOne(targetEntity: Musician::class, inversedBy: 'projectInstruments', fetch: 'EXTRA_LAZY')]
   #[ORM\Id]
   private $musician;
 
@@ -76,13 +76,13 @@ class ProjectInstrument implements \ArrayAccess
   #[ORM\Column(type: 'boolean', nullable: false, options: ['default' => '0'])]
   private $sectionLeader = false;
 
-  #[ORM\ManyToOne(targetEntity: \ProjectParticipant::class, inversedBy: 'projectInstruments', fetch: 'EXTRA_LAZY')]
+  #[ORM\ManyToOne(targetEntity: ProjectParticipant::class, inversedBy: 'projectInstruments', fetch: 'EXTRA_LAZY')]
   private $projectParticipant;
 
-  #[ORM\ManyToOne(targetEntity: \MusicianInstrument::class, inversedBy: 'projectInstruments', fetch: 'EXTRA_LAZY')]
+  #[ORM\ManyToOne(targetEntity: MusicianInstrument::class, inversedBy: 'projectInstruments', fetch: 'EXTRA_LAZY')]
   private $musicianInstrument;
 
-  #[ORM\ManyToOne(targetEntity: \ProjectInstrumentationNumber::class, inversedBy: 'instruments', fetch: 'EXTRA_LAZY')]
+  #[ORM\ManyToOne(targetEntity: ProjectInstrumentationNumber::class, inversedBy: 'instruments', fetch: 'EXTRA_LAZY')]
   private $instrumentationNumber;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing

@@ -66,7 +66,7 @@ class ProjectEvent implements \ArrayAccess
    * @var Project
    */
   #[ORM\JoinColumn(nullable: false)]
-  #[ORM\ManyToOne(targetEntity: \Project::class, inversedBy: 'calendarEvents', fetch: 'EXTRA_LAZY')]
+  #[ORM\ManyToOne(targetEntity: Project::class, inversedBy: 'calendarEvents', fetch: 'EXTRA_LAZY')]
   private $project;
 
   /**
@@ -133,7 +133,7 @@ class ProjectEvent implements \ArrayAccess
    * possibly repeating or we need a list of linked fields in order to record
    * the participation for each event instance.
    */
-  #[ORM\OneToOne(targetEntity: \ProjectParticipantField::class, fetch: 'EXTRA_LAZY')]
+  #[ORM\OneToOne(targetEntity: ProjectParticipantField::class, fetch: 'EXTRA_LAZY')]
   private $absenceField;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing

@@ -41,7 +41,7 @@ class SepaBankAccount implements \ArrayAccess
   use \OCA\CAFeVDBMembers\Toolkit\Traits\DateTimeTrait;
   use CAFEVDB\Traits\SoftDeleteableEntity;
 
-  #[ORM\ManyToOne(targetEntity: \Musician::class, inversedBy: 'sepaBankAccounts', fetch: 'EXTRA_LAZY')]
+  #[ORM\ManyToOne(targetEntity: Musician::class, inversedBy: 'sepaBankAccounts', fetch: 'EXTRA_LAZY')]
   #[ORM\Id]
   private $musician;
 
@@ -109,13 +109,13 @@ class SepaBankAccount implements \ArrayAccess
    * Link to the attached debit mandates. Can be more than one at a
    * given time, even more than one active.
    */
-  #[ORM\OneToMany(targetEntity: \SepaDebitMandate::class, mappedBy: 'sepaBankAccount', fetch: 'EXTRA_LAZY')]
+  #[ORM\OneToMany(targetEntity: SepaDebitMandate::class, mappedBy: 'sepaBankAccount', fetch: 'EXTRA_LAZY')]
   private $sepaDebitMandates;
 
   /**
    * @var Collection
    */
-  #[ORM\OneToMany(targetEntity: \CompositePayment::class, mappedBy: 'sepaBankAccount', fetch: 'EXTRA_LAZY')]
+  #[ORM\OneToMany(targetEntity: CompositePayment::class, mappedBy: 'sepaBankAccount', fetch: 'EXTRA_LAZY')]
   private $payments;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing

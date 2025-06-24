@@ -57,7 +57,7 @@ class ProjectParticipantField implements \ArrayAccess
    * @var Project
    */
   #[ORM\JoinColumn(nullable: false)]
-  #[ORM\ManyToOne(targetEntity: \Project::class, inversedBy: 'participantFields', fetch: 'EXTRA_LAZY')]
+  #[ORM\ManyToOne(targetEntity: Project::class, inversedBy: 'participantFields', fetch: 'EXTRA_LAZY')]
   private $project;
 
   /**
@@ -90,7 +90,7 @@ class ProjectParticipantField implements \ArrayAccess
   /**
    * @var Collection
    */
-  #[ORM\OneToMany(targetEntity: \ProjectParticipantFieldDataOption::class, mappedBy: 'field', indexBy: 'key')]
+  #[ORM\OneToMany(targetEntity: ProjectParticipantFieldDataOption::class, mappedBy: 'field', indexBy: 'key')]
   #[ORM\OrderBy(['label' => 'ASC', 'key' => 'ASC'])]
   private $dataOptions;
 
@@ -109,7 +109,7 @@ class ProjectParticipantField implements \ArrayAccess
   /**
    * @var null|ProjectParticipantFieldDataOption
    */
-  #[ORM\OneToOne(targetEntity: \ProjectParticipantFieldDataOption::class)]
+  #[ORM\OneToOne(targetEntity: ProjectParticipantFieldDataOption::class)]
   private $defaultValue = null;
 
   /**
@@ -146,7 +146,7 @@ class ProjectParticipantField implements \ArrayAccess
   #[ORM\Column(type: 'boolean', nullable: true, options: ['default' => '0'])]
   private $encrypted = false;
 
-  #[ORM\OneToMany(targetEntity: \ProjectParticipantFieldDatum::class, mappedBy: 'field', fetch: 'EXTRA_LAZY')]
+  #[ORM\OneToMany(targetEntity: ProjectParticipantFieldDatum::class, mappedBy: 'field', fetch: 'EXTRA_LAZY')]
   private $fieldData;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing

@@ -41,11 +41,11 @@ class ProjectInstrumentationNumber implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
 
-  #[ORM\ManyToOne(targetEntity: \Project::class, inversedBy: 'instrumentationNumbers', fetch: 'EXTRA_LAZY')]
+  #[ORM\ManyToOne(targetEntity: Project::class, inversedBy: 'instrumentationNumbers', fetch: 'EXTRA_LAZY')]
   #[ORM\Id]
   private $project;
 
-  #[ORM\ManyToOne(targetEntity: \Instrument::class, inversedBy: 'projectInstrumentationNumbers', fetch: 'EXTRA_LAZY')]
+  #[ORM\ManyToOne(targetEntity: Instrument::class, inversedBy: 'projectInstrumentationNumbers', fetch: 'EXTRA_LAZY')]
   #[ORM\Id]
   private $instrument;
 
@@ -62,7 +62,7 @@ class ProjectInstrumentationNumber implements \ArrayAccess
   #[ORM\Column(type: 'integer', nullable: false, options: ['default' => '1', 'comment' => 'Number of required musicians for this instrument'])]
   private $quantity = '1';
 
-  #[ORM\OneToMany(targetEntity: \ProjectInstrument::class, mappedBy: 'instrumentationNumber', fetch: 'EXTRA_LAZY', indexBy: 'musician_id')]
+  #[ORM\OneToMany(targetEntity: ProjectInstrument::class, mappedBy: 'instrumentationNumber', fetch: 'EXTRA_LAZY', indexBy: 'musician_id')]
   private $instruments;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing

@@ -59,7 +59,7 @@ class InsuranceBroker implements \ArrayAccess
   /**
    * @var Collection
    */
-  #[ORM\OneToMany(targetEntity: \InsuranceRate::class, mappedBy: 'broker', fetch: 'EXTRA_LAZY')]
+  #[ORM\OneToMany(targetEntity: InsuranceRate::class, mappedBy: 'broker', fetch: 'EXTRA_LAZY')]
   private $insuranceRates;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing

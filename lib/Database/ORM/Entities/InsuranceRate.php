@@ -40,7 +40,7 @@ class InsuranceRate implements \ArrayAccess
   use \OCA\CAFeVDBMembers\Toolkit\Traits\DateTimeTrait;
 
   #[ORM\JoinColumn(referencedColumnName: 'short_name')]
-  #[ORM\ManyToOne(targetEntity: \InsuranceBroker::class, inversedBy: 'insuranceRates', fetch: 'EXTRA_LAZY')]
+  #[ORM\ManyToOne(targetEntity: InsuranceBroker::class, inversedBy: 'insuranceRates', fetch: 'EXTRA_LAZY')]
   #[ORM\Id]
   private $broker;
 
@@ -72,7 +72,7 @@ class InsuranceRate implements \ArrayAccess
   /**
    * @var Collection
    */
-  #[ORM\OneToMany(targetEntity: \InstrumentInsurance::class, mappedBy: 'insuranceRate', fetch: 'EXTRA_LAZY')]
+  #[ORM\OneToMany(targetEntity: InstrumentInsurance::class, mappedBy: 'insuranceRate', fetch: 'EXTRA_LAZY')]
   private $instrumentInsurances;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing

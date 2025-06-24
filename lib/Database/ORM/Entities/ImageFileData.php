@@ -44,6 +44,6 @@ class ImageFileData extends FileData
    * "mappedBy" and "inversedBy".
    */
   #[ORM\Id]
-  #[ORM\OneToOne(targetEntity: \Image::class)]
+  #[ORM\OneToOne(targetEntity: Image::class)]
   protected $file;
 }

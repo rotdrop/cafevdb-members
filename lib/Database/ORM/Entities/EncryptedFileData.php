@@ -45,7 +45,7 @@ class EncryptedFileData extends FileData
    * "mappedBy" and "inversedBy".
    */
   #[ORM\Id]
-  #[ORM\OneToOne(targetEntity: \EncryptedFile::class)]
+  #[ORM\OneToOne(targetEntity: EncryptedFile::class)]
   protected $file;
 
   /**

@@ -40,7 +40,7 @@ class DatabaseStorageFolder extends DatabaseStorageDirEntry
   /**
    * @var Collection
    */
-  #[ORM\OneToMany(targetEntity: \DatabaseStorageDirEntry::class, mappedBy: 'parent')]
+  #[ORM\OneToMany(targetEntity: DatabaseStorageDirEntry::class, mappedBy: 'parent')]
   protected $directoryEntries;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing

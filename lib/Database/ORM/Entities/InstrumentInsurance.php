@@ -52,7 +52,7 @@ class InstrumentInsurance implements \ArrayAccess
    * @var Musician
    */
   #[ORM\JoinColumn(nullable: false)]
-  #[ORM\ManyToOne(targetEntity: \Musician::class, inversedBy: 'instrumentInsurances', fetch: 'EXTRA_LAZY')]
+  #[ORM\ManyToOne(targetEntity: Musician::class, inversedBy: 'instrumentInsurances', fetch: 'EXTRA_LAZY')]
   private $musician;
 
   /**
@@ -76,7 +76,7 @@ class InstrumentInsurance implements \ArrayAccess
   /**
    * @var InsuranceRate
    */
-  #[ORM\ManyToOne(targetEntity: \InsuranceRate::class, inversedBy: 'instrumentInsurances', fetch: 'EXTRA_LAZY')]
+  #[ORM\ManyToOne(targetEntity: InsuranceRate::class, inversedBy: 'instrumentInsurances', fetch: 'EXTRA_LAZY')]
   private $insuranceRate;
 
   /**

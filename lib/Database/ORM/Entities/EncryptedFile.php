@@ -43,13 +43,13 @@ class EncryptedFile extends File
    * Not that it is not possible to override the targetEntity annotation from
    * the base-class, so it must go here to the leaf-class.
    */
-  #[ORM\OneToOne(targetEntity: \EncryptedFileData::class, fetch: 'EXTRA_LAZY')]
+  #[ORM\OneToOne(targetEntity: EncryptedFileData::class, fetch: 'EXTRA_LAZY')]
   protected $fileData;
 
   /**
    * @var Collection
    */
-  #[ORM\ManyToMany(targetEntity: \Musician::class, mappedBy: 'encryptedFiles', indexBy: 'id', fetch: 'EXTRA_LAZY')] // The list of owners which in addition to the members of the management
+  #[ORM\ManyToMany(targetEntity: Musician::class, mappedBy: 'encryptedFiles', indexBy: 'id', fetch: 'EXTRA_LAZY')] // The list of owners which in addition to the members of the management
   private $owners;
 
   // phpcs:ignore Squiz.Commenting.FunctionComment.Missing

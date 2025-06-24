@@ -57,22 +57,22 @@ class ProjectPayment implements \ArrayAccess, \JsonSerializable
   #[ORM\Column(type: 'string', length: 1024, nullable: false)]
   private $subject;
 
-  #[ORM\ManyToOne(targetEntity: \ProjectParticipantFieldDatum::class, inversedBy: 'payments')]
+  #[ORM\ManyToOne(targetEntity: ProjectParticipantFieldDatum::class, inversedBy: 'payments')]
   private $receivable;
 
-  #[ORM\ManyToOne(targetEntity: \ProjectParticipantFieldDataOption::class, inversedBy: 'payments')]
+  #[ORM\ManyToOne(targetEntity: ProjectParticipantFieldDataOption::class, inversedBy: 'payments')]
   private $receivableOption;
 
-  #[ORM\ManyToOne(targetEntity: \CompositePayment::class, inversedBy: 'projectPayments', fetch: 'EXTRA_LAZY')]
+  #[ORM\ManyToOne(targetEntity: CompositePayment::class, inversedBy: 'projectPayments', fetch: 'EXTRA_LAZY')]
   private $compositePayment;
 
-  #[ORM\ManyToOne(targetEntity: \Project::class, inversedBy: 'payments', fetch: 'EXTRA_LAZY')]
+  #[ORM\ManyToOne(targetEntity: Project::class, inversedBy: 'payments', fetch: 'EXTRA_LAZY')]
   private $project;
 
-  #[ORM\ManyToOne(targetEntity: \Musician::class, inversedBy: 'payments', fetch: 'EXTRA_LAZY')]
+  #[ORM\ManyToOne(targetEntity: Musician::class, inversedBy: 'payments', fetch: 'EXTRA_LAZY')]
   private $musician;
 
-  #[ORM\ManyToOne(targetEntity: \ProjectParticipant::class, inversedBy: 'payments', fetch: 'EXTRA_LAZY')]
+  #[ORM\ManyToOne(targetEntity: ProjectParticipant::class, inversedBy: 'payments', fetch: 'EXTRA_LAZY')]
   private $projectParticipant;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing

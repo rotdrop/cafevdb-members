@@ -42,7 +42,7 @@ class DatabaseStorageFile extends DatabaseStorageDirEntry
   /**
    * @var EncryptedFile
    */
-  #[ORM\ManyToOne(targetEntity: \EncryptedFile::class, inversedBy: 'databaseStorageDirEntries')]
+  #[ORM\ManyToOne(targetEntity: EncryptedFile::class, inversedBy: 'databaseStorageDirEntries')]
   protected $file;
 
   /** {@inheritdoc} */

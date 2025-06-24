@@ -171,7 +171,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
   /**
    * @var Collection All email addresses.
    */
-  #[ORM\OneToMany(targetEntity: \MusicianEmailAddress::class, mappedBy: 'musician', indexBy: 'address')]
+  #[ORM\OneToMany(targetEntity: MusicianEmailAddress::class, mappedBy: 'musician', indexBy: 'address')]
   private $emailAddresses;
 
   /**
@@ -212,35 +212,35 @@ class Musician implements \ArrayAccess, \JsonSerializable
   #[ORM\Column(type: 'boolean', nullable: true)]
   private $cloudAccountDisabled;
 
-  #[ORM\OneToMany(targetEntity: \MusicianInstrument::class, mappedBy: 'musician', fetch: 'EXTRA_LAZY')]
+  #[ORM\OneToMany(targetEntity: MusicianInstrument::class, mappedBy: 'musician', fetch: 'EXTRA_LAZY')]
   private $instruments;
 
-  #[ORM\OneToMany(targetEntity: \ProjectParticipant::class, mappedBy: 'musician', indexBy: 'project_id', fetch: 'EXTRA_LAZY')]
+  #[ORM\OneToMany(targetEntity: ProjectParticipant::class, mappedBy: 'musician', indexBy: 'project_id', fetch: 'EXTRA_LAZY')]
   private $projectParticipation;
 
-  #[ORM\OneToMany(targetEntity: \ProjectInstrument::class, mappedBy: 'musician', fetch: 'EXTRA_LAZY')]
+  #[ORM\OneToMany(targetEntity: ProjectInstrument::class, mappedBy: 'musician', fetch: 'EXTRA_LAZY')]
   private $projectInstruments;
 
-  #[ORM\OneToMany(targetEntity: \ProjectParticipantFieldDatum::class, mappedBy: 'musician', indexBy: 'option_key', fetch: 'EXTRA_LAZY')]
+  #[ORM\OneToMany(targetEntity: ProjectParticipantFieldDatum::class, mappedBy: 'musician', indexBy: 'option_key', fetch: 'EXTRA_LAZY')]
   private $projectParticipantFieldsData;
 
-  #[ORM\OneToMany(targetEntity: \SepaBankAccount::class, mappedBy: 'musician', fetch: 'EXTRA_LAZY')]
+  #[ORM\OneToMany(targetEntity: SepaBankAccount::class, mappedBy: 'musician', fetch: 'EXTRA_LAZY')]
   private $sepaBankAccounts;
 
-  #[ORM\OneToMany(targetEntity: \SepaDebitMandate::class, mappedBy: 'musician', fetch: 'EXTRA_LAZY')]
+  #[ORM\OneToMany(targetEntity: SepaDebitMandate::class, mappedBy: 'musician', fetch: 'EXTRA_LAZY')]
   private $sepaDebitMandates;
 
-  #[ORM\OneToMany(targetEntity: \CompositePayment::class, mappedBy: 'musician', fetch: 'EXTRA_LAZY')]
+  #[ORM\OneToMany(targetEntity: CompositePayment::class, mappedBy: 'musician', fetch: 'EXTRA_LAZY')]
   private $payments;
 
-  #[ORM\OneToMany(targetEntity: \InstrumentInsurance::class, mappedBy: 'musician', fetch: 'EXTRA_LAZY')]
+  #[ORM\OneToMany(targetEntity: InstrumentInsurance::class, mappedBy: 'musician', fetch: 'EXTRA_LAZY')]
   private $instrumentInsurances;
 
   /**
    * @var Collection
    */
   #[ORM\JoinTable(name: 'EncryptedFileOwners')]
-  #[ORM\ManyToMany(targetEntity: \EncryptedFile::class, inversedBy: 'owners', indexBy: 'id', fetch: 'EXTRA_LAZY')]
+  #[ORM\ManyToMany(targetEntity: EncryptedFile::class, inversedBy: 'owners', indexBy: 'id', fetch: 'EXTRA_LAZY')]
   private $encryptedFiles;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing

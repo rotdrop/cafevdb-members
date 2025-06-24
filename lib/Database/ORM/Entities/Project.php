@@ -88,7 +88,7 @@ class Project implements \ArrayAccess
   #[ORM\Column(type: 'date_immutable', nullable: true)]
   private $registrationDeadline;
 
-  #[ORM\OneToMany(targetEntity: \ProjectInstrumentationNumber::class, mappedBy: 'project', fetch: 'EXTRA_LAZY')]
+  #[ORM\OneToMany(targetEntity: ProjectInstrumentationNumber::class, mappedBy: 'project', fetch: 'EXTRA_LAZY')]
   private $instrumentationNumbers;
 
   /**
@@ -106,23 +106,23 @@ class Project implements \ArrayAccess
   /**
    * @var Collection
    */
-  #[ORM\OneToMany(targetEntity: \ProjectEvent::class, mappedBy: 'project')]
+  #[ORM\OneToMany(targetEntity: ProjectEvent::class, mappedBy: 'project')]
   private $calendarEvents;
 
-  #[ORM\OneToMany(targetEntity: \ProjectParticipant::class, mappedBy: 'project')]
+  #[ORM\OneToMany(targetEntity: ProjectParticipant::class, mappedBy: 'project')]
   private $participants;
 
-  #[ORM\OneToMany(targetEntity: \ProjectParticipantField::class, mappedBy: 'project', indexBy: 'id', fetch: 'EXTRA_LAZY')]
+  #[ORM\OneToMany(targetEntity: ProjectParticipantField::class, mappedBy: 'project', indexBy: 'id', fetch: 'EXTRA_LAZY')]
   #[ORM\OrderBy(['displayOrder' => 'DESC'])]
   private $participantFields;
 
-  #[ORM\OneToMany(targetEntity: \ProjectParticipantFieldDatum::class, mappedBy: 'project', fetch: 'EXTRA_LAZY')]
+  #[ORM\OneToMany(targetEntity: ProjectParticipantFieldDatum::class, mappedBy: 'project', fetch: 'EXTRA_LAZY')]
   private $participantFieldsData;
 
-  #[ORM\OneToMany(targetEntity: \SepaDebitMandate::class, mappedBy: 'project')]
+  #[ORM\OneToMany(targetEntity: SepaDebitMandate::class, mappedBy: 'project')]
   private $sepaDebitMandates;
 
-  #[ORM\OneToMany(targetEntity: \ProjectPayment::class, mappedBy: 'project')]
+  #[ORM\OneToMany(targetEntity: ProjectPayment::class, mappedBy: 'project')]
   private $payments;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing

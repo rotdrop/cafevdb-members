@@ -40,11 +40,11 @@ class ProjectParticipant implements \ArrayAccess
   use \OCA\CAFeVDBMembers\Toolkit\Traits\DateTimeTrait;
   use CAFEVDB\Traits\SoftDeleteableEntity;
 
-  #[ORM\ManyToOne(targetEntity: \Project::class, inversedBy: 'participants', fetch: 'EXTRA_LAZY')]
+  #[ORM\ManyToOne(targetEntity: Project::class, inversedBy: 'participants', fetch: 'EXTRA_LAZY')]
   #[ORM\Id]
   private $project;
 
-  #[ORM\ManyToOne(targetEntity: \Musician::class, inversedBy: 'projectParticipation', fetch: 'EXTRA_LAZY')]
+  #[ORM\ManyToOne(targetEntity: Musician::class, inversedBy: 'projectParticipation', fetch: 'EXTRA_LAZY')]
   #[ORM\Id]
   private $musician;
 
@@ -57,13 +57,13 @@ class ProjectParticipant implements \ArrayAccess
   /**
    * Link to payments
    */
-  #[ORM\OneToMany(targetEntity: \ProjectPayment::class, mappedBy: 'projectParticipant')]
+  #[ORM\OneToMany(targetEntity: ProjectPayment::class, mappedBy: 'projectParticipant')]
   private $payments;
 
   /**
    * Link to extra fields data
    */
-  #[ORM\OneToMany(targetEntity: \ProjectParticipantFieldDatum::class, indexBy: 'option_key', mappedBy: 'projectParticipant', fetch: 'EXTRA_LAZY')]
+  #[ORM\OneToMany(targetEntity: ProjectParticipantFieldDatum::class, indexBy: 'option_key', mappedBy: 'projectParticipant', fetch: 'EXTRA_LAZY')]
   private $participantFieldsData;
 
   // /**
@@ -78,7 +78,7 @@ class ProjectParticipant implements \ArrayAccess
   /**
    * Link in the project instruments, may be more than one per participant.
    */
-  #[ORM\OneToMany(targetEntity: \ProjectInstrument::class, mappedBy: 'projectParticipant')]
+  #[ORM\OneToMany(targetEntity: ProjectInstrument::class, mappedBy: 'projectParticipant')]
   private $projectInstruments;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing

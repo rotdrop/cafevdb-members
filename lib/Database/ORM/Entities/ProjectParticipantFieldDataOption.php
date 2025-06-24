@@ -51,7 +51,7 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
    *
    * Link back to ProjectParticipantField
    */
-  #[ORM\ManyToOne(targetEntity: \ProjectParticipantField::class, inversedBy: 'dataOptions')]
+  #[ORM\ManyToOne(targetEntity: ProjectParticipantField::class, inversedBy: 'dataOptions')]
   #[ORM\Id]
   private $field;
 
@@ -109,13 +109,13 @@ class ProjectParticipantFieldDataOption implements \ArrayAccess
   #[ORM\Column(type: 'string', length: 4096, nullable: true)]
   private $tooltip;
 
-  #[ORM\OneToMany(targetEntity: \ProjectParticipantFieldDatum::class, mappedBy: 'dataOption', indexBy: 'musician_id', fetch: 'EXTRA_LAZY')]
+  #[ORM\OneToMany(targetEntity: ProjectParticipantFieldDatum::class, mappedBy: 'dataOption', indexBy: 'musician_id', fetch: 'EXTRA_LAZY')]
   private $fieldData;
 
   /**
    * @var ProjectPayment
    */
-  #[ORM\OneToMany(targetEntity: \ProjectPayment::class, mappedBy: 'receivableOption')]
+  #[ORM\OneToMany(targetEntity: ProjectPayment::class, mappedBy: 'receivableOption')]
   private $payments;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing

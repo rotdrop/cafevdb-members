@@ -47,21 +47,21 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   /**
    * @var ProjectParticipantField
    */
-  #[ORM\ManyToOne(targetEntity: \ProjectParticipantField::class, inversedBy: 'fieldData', fetch: 'EXTRA_LAZY')]
+  #[ORM\ManyToOne(targetEntity: ProjectParticipantField::class, inversedBy: 'fieldData', fetch: 'EXTRA_LAZY')]
   #[ORM\Id]
   private $field;
 
   /**
    * @var Project
    */
-  #[ORM\ManyToOne(targetEntity: \Project::class, inversedBy: 'participantFieldsData', fetch: 'EXTRA_LAZY')]
+  #[ORM\ManyToOne(targetEntity: Project::class, inversedBy: 'participantFieldsData', fetch: 'EXTRA_LAZY')]
   #[ORM\Id]
   private $project;
 
   /**
    * @var Musician
    */
-  #[ORM\ManyToOne(targetEntity: \Musician::class, inversedBy: 'projectParticipantFieldsData', fetch: 'EXTRA_LAZY')]
+  #[ORM\ManyToOne(targetEntity: Musician::class, inversedBy: 'projectParticipantFieldsData', fetch: 'EXTRA_LAZY')]
   #[ORM\Id]
   private $musician;
 
@@ -89,19 +89,19 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
   /**
    * @var ProjectParticipantFieldDataOption
    */
-  #[ORM\ManyToOne(targetEntity: \ProjectParticipantFieldDataOption::class, inversedBy: 'fieldData', fetch: 'EXTRA_LAZY')]
+  #[ORM\ManyToOne(targetEntity: ProjectParticipantFieldDataOption::class, inversedBy: 'fieldData', fetch: 'EXTRA_LAZY')]
   private $dataOption;
 
   /**
    * @var ProjectParticipant
    */
-  #[ORM\ManyToOne(targetEntity: \ProjectParticipant::class, inversedBy: 'participantFieldsData', fetch: 'EXTRA_LAZY')]
+  #[ORM\ManyToOne(targetEntity: ProjectParticipant::class, inversedBy: 'participantFieldsData', fetch: 'EXTRA_LAZY')]
   private $projectParticipant;
 
   /**
    * @var ProjectPayment
    */
-  #[ORM\OneToMany(targetEntity: \ProjectPayment::class, mappedBy: 'receivable')]
+  #[ORM\OneToMany(targetEntity: ProjectPayment::class, mappedBy: 'receivable')]
   private $payments;
 
   /**
@@ -109,7 +109,7 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
    *
    * Optional. ATM only used for particular auto-generated monetary fields.
    */
-  #[ORM\OneToOne(targetEntity: \DatabaseStorageFile::class, fetch: 'EXTRA_LAZY')]
+  #[ORM\OneToOne(targetEntity: DatabaseStorageFile::class, fetch: 'EXTRA_LAZY')]
   private $supportingDocument;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing

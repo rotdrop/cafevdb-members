@@ -34,7 +34,7 @@ class ProjectWebPage implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
 
-  #[ORM\ManyToOne(targetEntity: \Project::class, inversedBy: 'webPages', fetch: 'EXTRA_LAZY')]
+  #[ORM\ManyToOne(targetEntity: Project::class, inversedBy: 'webPages', fetch: 'EXTRA_LAZY')]
   #[ORM\Id]
   private $project;
 

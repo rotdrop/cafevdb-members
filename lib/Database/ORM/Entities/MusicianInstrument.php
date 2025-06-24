@@ -50,14 +50,14 @@ class MusicianInstrument implements \ArrayAccess
   /**
    * @var Musician
    */
-  #[ORM\ManyToOne(targetEntity: \Musician::class, inversedBy: 'instruments')]
+  #[ORM\ManyToOne(targetEntity: Musician::class, inversedBy: 'instruments')]
   #[ORM\Id]
   private $musician;
 
   /**
    * @var Instrument
    */
-  #[ORM\ManyToOne(targetEntity: \Instrument::class, inversedBy: 'musicianInstruments')]
+  #[ORM\ManyToOne(targetEntity: Instrument::class, inversedBy: 'musicianInstruments')]
   #[ORM\Id]
   private $instrument;
 

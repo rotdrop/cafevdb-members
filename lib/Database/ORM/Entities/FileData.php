@@ -52,7 +52,7 @@ class FileData implements \ArrayAccess
    * "mappedBy" and "inversedBy".
    */
   #[ORM\Id]
-  #[ORM\OneToOne(targetEntity: \File::class)]
+  #[ORM\OneToOne(targetEntity: File::class)]
   protected $file;
 
   /**

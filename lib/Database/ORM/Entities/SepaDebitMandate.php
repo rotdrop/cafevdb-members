@@ -43,7 +43,7 @@ class SepaDebitMandate implements \ArrayAccess
   /**
    * @var Musician
    */
-  #[ORM\ManyToOne(targetEntity: \Musician::class, inversedBy: 'sepaDebitMandates', fetch: 'EXTRA_LAZY')]
+  #[ORM\ManyToOne(targetEntity: Musician::class, inversedBy: 'sepaDebitMandates', fetch: 'EXTRA_LAZY')]
   #[ORM\Id]
   private $musician;
 
@@ -65,7 +65,7 @@ class SepaDebitMandate implements \ArrayAccess
    * Debit-mandates can expire, so many debit-mandates may refer the
    * same bank-account.
    */
-  #[ORM\ManyToOne(targetEntity: \SepaBankAccount::class, inversedBy: 'sepaDebitMandates')]
+  #[ORM\ManyToOne(targetEntity: SepaBankAccount::class, inversedBy: 'sepaDebitMandates')]
   private $sepaBankAccount;
 
   /**
@@ -79,7 +79,7 @@ class SepaDebitMandate implements \ArrayAccess
    * mandate for its own project or a mandate from the member's
    * project.
    */
-  #[ORM\ManyToOne(targetEntity: \Project::class, inversedBy: 'sepaDebitMandates', fetch: 'EXTRA_LAZY')]
+  #[ORM\ManyToOne(targetEntity: Project::class, inversedBy: 'sepaDebitMandates', fetch: 'EXTRA_LAZY')]
   private $project;
 
   /**
@@ -126,7 +126,7 @@ class SepaDebitMandate implements \ArrayAccess
   /**
    * @var DatabaseStorageFile
    */
-  #[ORM\OneToOne(targetEntity: \DatabaseStorageFile::class, cascade: ['all'], orphanRemoval: true)]
+  #[ORM\OneToOne(targetEntity: DatabaseStorageFile::class, cascade: ['all'], orphanRemoval: true)]
   private $writtenMandate;
 
   /**
@@ -134,7 +134,7 @@ class SepaDebitMandate implements \ArrayAccess
    *
    * Linke to the payments table.
    */
-  #[ORM\OneToMany(targetEntity: \CompositePayment::class, mappedBy: 'sepaDebitMandate', fetch: 'EXTRA_LAZY')]
+  #[ORM\OneToMany(targetEntity: CompositePayment::class, mappedBy: 'sepaDebitMandate', fetch: 'EXTRA_LAZY')]
   private $payments;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing

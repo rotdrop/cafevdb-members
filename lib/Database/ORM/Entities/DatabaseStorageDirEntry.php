@@ -63,7 +63,7 @@ class DatabaseStorageDirEntry implements \ArrayAccess
   /**
    * @var DatabaseStorageFolder
    */
-  #[ORM\ManyToOne(targetEntity: \DatabaseStorageFolder::class, inversedBy: 'directoryEntries')]
+  #[ORM\ManyToOne(targetEntity: DatabaseStorageFolder::class, inversedBy: 'directoryEntries')]
   protected $parent;
 
   /** {@inheritdoc} */

@@ -62,7 +62,7 @@ class InstrumentFamily implements \ArrayAccess
    */
   private string $untranslatedFamily;
 
-  #[ORM\ManyToMany(targetEntity: \Instrument::class, mappedBy: 'families')]
+  #[ORM\ManyToMany(targetEntity: Instrument::class, mappedBy: 'families')]
   private $instruments;
 
   // phpcs:ignore Squiz.Commenting.FunctionComment.Missing

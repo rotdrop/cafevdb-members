@@ -79,7 +79,7 @@ class File implements \ArrayAccess
    * inverse side we use a OneToMany - ManyToOne trick which inserts a lazy
    * association in between.
    */
-  #[ORM\OneToMany(targetEntity: \FileData::class, mappedBy: 'file', fetch: 'EXTRA_LAZY')]
+  #[ORM\OneToMany(targetEntity: FileData::class, mappedBy: 'file', fetch: 'EXTRA_LAZY')]
   protected $fileData;
 
   /**
