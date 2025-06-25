@@ -3,7 +3,7 @@
  * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine
+ * @copyright Copyright (c) 2022, 2023, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -30,10 +30,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * SepaDebitMandate
- *
- * @ORM\Table(name="PersonalizedSepaDebitMandatesView")
- * @ORM\Entity
  */
+#[ORM\Table(name: 'PersonalizedSepaDebitMandatesView')]
+#[ORM\Entity]
 class SepaDebitMandate implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
@@ -43,10 +42,9 @@ class SepaDebitMandate implements \ArrayAccess
 
   /**
    * @var Musician
-   *
-   * @ORM\ManyToOne(targetEntity="Musician", inversedBy="sepaDebitMandates", fetch="EXTRA_LAZY")
-   * @ORM\Id
    */
+  #[ORM\ManyToOne(targetEntity: Musician::class, inversedBy: 'sepaDebitMandates', fetch: 'EXTRA_LAZY')]
+  #[ORM\Id]
   private $musician;
 
   /**
@@ -55,13 +53,10 @@ class SepaDebitMandate implements \ArrayAccess
    * This is a POSITIVE per-musician sequence count. It currently is
    * incremented using
    * \OCA\CAFEVDB\Database\Doctrine\ORM\Traits\PerMusicianSequenceTrait
-   *
-   * @ORM\Column(type="integer")
-   * @ORM\Id
-   * @ORM\GeneratedValue(strategy="NONE")
-   * _AT_ORM\GeneratedValue(strategy="CUSTOM")
-   * _AT_ORM\CustomIdGenerator(class="OCA\CAFEVDB\Database\Doctrine\ORM\Mapping\PerMusicianSequenceGenerator")
    */
+  #[ORM\Column(type: 'integer')]
+  #[ORM\Id]
+  #[ORM\GeneratedValue(strategy: 'NONE')] // _AT_ORM\GeneratedValue(strategy="CUSTOM")
   private $sequence;
 
   /**
@@ -69,13 +64,10 @@ class SepaDebitMandate implements \ArrayAccess
    *
    * Debit-mandates can expire, so many debit-mandates may refer the
    * same bank-account.
-   *
-   * @ORM\ManyToOne(targetEntity="SepaBankAccount", inversedBy="sepaDebitMandates")
-   * @ORM\JoinColumns(
-   *   @ORM\JoinColumn(name="musician_id", referencedColumnName="musician_id", nullable=false),
-   *   @ORM\JoinColumn(name="bank_account_sequence", referencedColumnName="sequence", nullable=false)
-   * )
    */
+  #[ORM\JoinColumn(name: 'musician_id', referencedColumnName: 'musician_id', nullable: false)]
+  #[ORM\JoinColumn(name: 'bank_account_sequence', referencedColumnName: 'sequence', nullable: false)]
+  #[ORM\ManyToOne(targetEntity: SepaBankAccount::class, inversedBy: 'sepaDebitMandates')]
   private $sepaBankAccount;
 
   /**
@@ -88,33 +80,26 @@ class SepaDebitMandate implements \ArrayAccess
    * The ProjectPayment entity, e.g., has to reference either a
    * mandate for its own project or a mandate from the member's
    * project.
-   *
-   * @ORM\ManyToOne(targetEntity="Project", inversedBy="sepaDebitMandates", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumns(
-   *   @ORM\JoinColumn(name="project_id", referencedColumnName="id", nullable=false)
-   * )
    */
+  #[ORM\ManyToOne(targetEntity: Project::class, inversedBy: 'sepaDebitMandates', fetch: 'EXTRA_LAZY')]
   private $project;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=35, options={"collation"="ascii_general_ci"})
    */
+  #[ORM\Column(type: 'string', length: 35, options: ['collation' => 'ascii_general_ci'])]
   private $mandateReference;
 
   /**
    * @var bool
-   *
-   * @ORM\Column(type="boolean", nullable=false)
    */
+  #[ORM\Column(type: 'boolean', nullable: false)]
   private $nonRecurring;
 
   /**
    * @var \DateTimeImmutable
-   *
-   * @ORM\Column(type="date_immutable", nullable=true)
    */
+  #[ORM\Column(type: 'date_immutable', nullable: true)]
   private $mandateDate;
 
   /**
@@ -122,43 +107,36 @@ class SepaDebitMandate implements \ArrayAccess
    *
    * Pre-notification dead-line in calendar days. Normally 14, may be
    * shorter, e.g. 7 calendar days but at least 5 business days.
-   *
-   * @ORM\Column(type="integer")
    */
+  #[ORM\Column(type: 'integer')]
   private $preNotificationCalendarDays;
 
   /**
    * @var int
    *
    * Pre-notification dead-line in TARGET2 days. Normally unset.
-   *
-   * @ORM\Column(type="integer", nullable=true)
    */
+  #[ORM\Column(type: 'integer', nullable: true)]
   private $preNotificationBusinessDays = null;
 
   /**
    * @var \DateTimeImmutable|null
-   *
-   * @ORM\Column(type="date_immutable", nullable=true)
    */
+  #[ORM\Column(type: 'date_immutable', nullable: true)]
   private $lastUsedDate;
 
   /**
    * @var DatabaseStorageFile
-   *
-   * @ORM\OneToOne(targetEntity="DatabaseStorageFile", cascade={"all"}, orphanRemoval=true)
    */
+  #[ORM\OneToOne(targetEntity: DatabaseStorageFile::class, cascade: ['all'], orphanRemoval: true)]
   private $writtenMandate;
 
   /**
    * @var CompositePayment
    *
    * Linke to the payments table.
-   *
-   * @ORM\OneToMany(targetEntity="CompositePayment",
-   *                mappedBy="sepaDebitMandate",
-   *                fetch="EXTRA_LAZY")
    */
+  #[ORM\OneToMany(targetEntity: CompositePayment::class, mappedBy: 'sepaDebitMandate', fetch: 'EXTRA_LAZY')]
   private $payments;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing

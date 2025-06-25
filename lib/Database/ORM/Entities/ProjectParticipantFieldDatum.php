@@ -3,7 +3,7 @@
  * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine
+ * @copyright Copyright (c) 2022, 2023, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -33,10 +33,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * ProjectParticipantFieldsData
- *
- * @ORM\Table(name="PersonalizedProjectParticipantFieldsDataView")
- * @ORM\Entity
  */
+#[ORM\Table(name: 'PersonalizedProjectParticipantFieldsDataView')]
+#[ORM\Entity]
 class ProjectParticipantFieldDatum implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
@@ -47,88 +46,74 @@ class ProjectParticipantFieldDatum implements \ArrayAccess
 
   /**
    * @var ProjectParticipantField
-   *
-   * @ORM\ManyToOne(targetEntity="ProjectParticipantField", inversedBy="fieldData", fetch="EXTRA_LAZY")
-   * @ORM\Id
    */
+  #[ORM\ManyToOne(targetEntity: ProjectParticipantField::class, inversedBy: 'fieldData', fetch: 'EXTRA_LAZY')]
+  #[ORM\Id]
   private $field;
 
   /**
    * @var Project
-   *
-   * @ORM\ManyToOne(targetEntity="Project", inversedBy="participantFieldsData", fetch="EXTRA_LAZY")
-   * @ORM\Id
    */
+  #[ORM\ManyToOne(targetEntity: Project::class, inversedBy: 'participantFieldsData', fetch: 'EXTRA_LAZY')]
+  #[ORM\Id]
   private $project;
 
   /**
    * @var Musician
-   *
-   * @ORM\ManyToOne(targetEntity="Musician", inversedBy="projectParticipantFieldsData", fetch="EXTRA_LAZY")
-   * @ORM\Id
    */
+  #[ORM\ManyToOne(targetEntity: Musician::class, inversedBy: 'projectParticipantFieldsData', fetch: 'EXTRA_LAZY')]
+  #[ORM\Id]
   private $musician;
 
   /**
    * @var \Ramsey\Uuid\UuidInterface
-   *
-   * @ORM\Column(type="uuid_binary")
-   * @ORM\Id
    */
+  #[ORM\Column(type: 'uuid_binary')]
+  #[ORM\Id]
   private $optionKey;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="text", length=16777215, nullable=true, options={"default"=null})
    */
+  #[ORM\Column(type: 'text', length: 16777215, nullable: true, options: ['default' => null])]
   private $optionValue = null;
 
   /**
    * @var float
    * Optional value of a deposit for monetary options. This is unused if
    * the deposit is fixed by single- or multi-select options.
-   *
-   * @ORM\Column(type="float", nullable=true)
    */
+  #[ORM\Column(type: 'float', nullable: true)]
   private $deposit;
 
   /**
    * @var ProjectParticipantFieldDataOption
-   *
-   * @ORM\ManyToOne(targetEntity="ProjectParticipantFieldDataOption", inversedBy="fieldData", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumns(
-   *   @ORM\JoinColumn(name="field_id", referencedColumnName="field_id"),
-   *   @ORM\JoinColumn(name="option_key", referencedColumnName="key")
-   * )
    */
+  #[ORM\ManyToOne(targetEntity: ProjectParticipantFieldDataOption::class, inversedBy: 'fieldData', fetch: 'EXTRA_LAZY')]
+  #[ORM\JoinColumn(name: 'field_id', referencedColumnName: 'field_id')]
+  #[ORM\JoinColumn(name: 'option_key', referencedColumnName: 'key')]
   private $dataOption;
 
   /**
    * @var ProjectParticipant
-   *
-   * @ORM\ManyToOne(targetEntity="ProjectParticipant", inversedBy="participantFieldsData", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumns(
-   *   @ORM\JoinColumn(name="project_id", referencedColumnName="project_id"),
-   *   @ORM\JoinColumn(name="musician_id", referencedColumnName="musician_id")
-   * )
    */
+  #[ORM\ManyToOne(targetEntity: ProjectParticipant::class, inversedBy: 'participantFieldsData', fetch: 'EXTRA_LAZY')]
+  #[ORM\JoinColumn(name: 'project_id', referencedColumnName: 'project_id')]
+  #[ORM\JoinColumn(name: 'musician_id', referencedColumnName: 'musician_id')]
   private $projectParticipant;
 
   /**
    * @var ProjectPayment
-   *
-   * @ORM\OneToMany(targetEntity="ProjectPayment", mappedBy="receivable")
    */
+  #[ORM\OneToMany(targetEntity: ProjectPayment::class, mappedBy: 'receivable')]
   private $payments;
 
   /**
    * @var DatabaseStorageFile
    *
    * Optional. ATM only used for particular auto-generated monetary fields.
-   *
-   * @ORM\OneToOne(targetEntity="DatabaseStorageFile", fetch="EXTRA_LAZY")
    */
+  #[ORM\OneToOne(targetEntity: DatabaseStorageFile::class, fetch: 'EXTRA_LAZY')]
   private $supportingDocument;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing

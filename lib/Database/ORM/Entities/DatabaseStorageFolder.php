@@ -30,9 +30,8 @@ use OCA\CAFeVDBMembers\Database\DBAL\Types\EnumDirEntryType as DirEntryType;
 
 /**
  * Folder entry for a database-backed file.
- *
- * @ORM\Entity
  */
+#[ORM\Entity]
 class DatabaseStorageFolder extends DatabaseStorageDirEntry
 {
   /** @var string */
@@ -40,9 +39,8 @@ class DatabaseStorageFolder extends DatabaseStorageDirEntry
 
   /**
    * @var Collection
-   *
-   * @ORM\OneToMany(targetEntity="DatabaseStorageDirEntry", mappedBy="parent")
    */
+  #[ORM\OneToMany(targetEntity: DatabaseStorageDirEntry::class, mappedBy: 'parent')]
   protected $directoryEntries;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing

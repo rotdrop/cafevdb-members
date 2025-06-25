@@ -27,46 +27,40 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * ProjectWebPage
- *
- * @ORM\Table(name="PersonalizedProjectWebPagesView")
- * @ORM\Entity
  */
+#[ORM\Table(name: 'PersonalizedProjectWebPagesView')]
+#[ORM\Entity]
 class ProjectWebPage implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
 
-  /**
-   * @ORM\ManyToOne(targetEntity="Project", inversedBy="webPages", fetch="EXTRA_LAZY"))
-   * @ORM\Id
-   */
+  #[ORM\ManyToOne(targetEntity: Project::class, inversedBy: 'webPages', fetch: 'EXTRA_LAZY')]
+  #[ORM\Id]
   private $project;
 
   /**
    * @var int
-   * @ORM\Column(type="integer", nullable=false, options={"default"="-1"})
-   * @ORM\Id
    */
+  #[ORM\Column(type: 'integer', nullable: false, options: ['default' => '-1'])]
+  #[ORM\Id]
   private $articleId = '-1';
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=128, nullable=false, options={"default"=""})
    */
+  #[ORM\Column(type: 'string', length: 128, nullable: false, options: ['default' => ''])]
   private $articleName = '';
 
   /**
    * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false, options={"default"="-1"})
    */
+  #[ORM\Column(type: 'integer', nullable: false, options: ['default' => '-1'])]
   private $categoryId = '-1';
 
   /**
    * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false, options={"default"="-1"})
    */
+  #[ORM\Column(type: 'integer', nullable: false, options: ['default' => '-1'])]
   private $priority = '-1';
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing

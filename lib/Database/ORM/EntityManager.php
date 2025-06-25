@@ -21,6 +21,7 @@
 namespace OCA\CAFeVDBMembers\Database\ORM;
 
 use Psr\Log\LoggerInterface;
+use Throwable;
 
 use OCP\AppFramework\IAppContainer;
 use OCP\IConfig;
@@ -32,23 +33,25 @@ use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\Psr6\CacheAdapter;
 use Doctrine\Common\Cache\Psr6\DoctrineProvider;
 use Doctrine\Common\EventManager as DoctrineEventManager;
+use Doctrine\DBAL;
 use Doctrine\DBAL\Connection as DatabaseConnection;
 use Doctrine\DBAL\Event\ConnectionEventArgs;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM;
 use Doctrine\ORM\Configuration as OrmConfiguration;
 use Doctrine\ORM\Decorator\EntityManagerDecorator;
+use Doctrine\ORM\EntityManager as ORMEntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\UnderscoreNamingStrategy;
+use Doctrine\ORM\ORMSetup;
 use Doctrine\ORM\Query\Filter\SQLFilter;
-use Doctrine\ORM\Tools\Setup;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Doctrine\Persistence\Mapping\Driver\MappingDriverChain;
+use Gedmo;
 use Gedmo\SoftDeleteable\SoftDeleteableListener;
-use Symfony\Component\Cache\Adapter\ArrayAdapter;
-
 use MediaMonks\Doctrine\Transformable;
 use MyCLabs\Enum\Enum as EnumType;
+use Symfony\Component\Cache\Adapter\ArrayAdapter;
 
 use OCA\CAFeVDBMembers\Database\DBAL\Logging\CloudLogger;
 use OCA\CAFeVDBMembers\Database\DBAL\Types;
@@ -100,7 +103,7 @@ class EntityManager extends EntityManagerDecorator
   ) {
     try {
       parent::__construct($this->getEntityManager());
-    } catch (\Throwable $t) {
+    } catch (Throwable $t) {
       $this->logException($t);
       throw $t;
     }
@@ -117,25 +120,23 @@ class EntityManager extends EntityManagerDecorator
   private function createConfiguration():array
   {
     $cache = null;
-    $useSimpleAnnotationReader = false;
-    $config = Setup::createAnnotationMetadataConfiguration(self::ENTITY_PATHS, self::DEV_MODE, self::PROXY_DIR, $cache, $useSimpleAnnotationReader);
+    $config = ORMSetup::createAttributeMetadataConfiguration(self::ENTITY_PATHS, self::DEV_MODE, self::PROXY_DIR, $cache);
     $config->setEntityListenerResolver(new class($this->appContainer) extends \Doctrine\ORM\Mapping\DefaultEntityListenerResolver {
 
-      private $appContainer;
-
       // phpcs:ignore Squiz.Commenting.FunctionComment.Missing
-      public function __construct(IAppContainer $appContainer)
-      {
+      public function __construct(
+        private IAppContainer $appContainer,
+      ) {
         $this->appContainer = $appContainer;
       }
       // phpcs:enable
 
       /** {@inheritdoc} */
-      public function resolve($className)
+      public function resolve(string $className): object
       {
         try {
           return parent::resolve($className);
-        } catch (\Throwable $t) {
+        } catch (Throwable $t) {
           $this->register($object = $this->appContainer->get($className));
           return $object;
         }
@@ -165,11 +166,6 @@ class EntityManager extends EntityManagerDecorator
    */
   private function createGedmoConfiguration(OrmConfiguration $config, DoctrineEventManager $eventManager):array
   {
-    // standard annotation reader
-    $annotationReader = new AnnotationReader;
-    $cache = new ArrayAdapter();
-    $cachedAnnotationReader = new PsrCachedReader($annotationReader, $cache);
-
     // create a driver chain for metadata reading
     $driverChain = new MappingDriverChain();
 
@@ -177,7 +173,6 @@ class EntityManager extends EntityManagerDecorator
     // also registers Gedmo annotations.NOTE: you can personalize it
     \Gedmo\DoctrineExtensions::registerAbstractMappingIntoDriverChainORM(
       $driverChain, // our metadata driver chain, to hook into
-      $cachedAnnotationReader // our cached annotation reader
     );
     //<<< Further annotations can go here
     \MediaMonks\Doctrine\DoctrineExtensions::registerAnnotations();
@@ -186,14 +181,13 @@ class EntityManager extends EntityManagerDecorator
 
     // now we want to register our application entities,
     // for that we need another metadata driver used for Entity namespace
-    $annotationDriver = new ORM\Mapping\Driver\AnnotationDriver(
-      $cachedAnnotationReader, // our cached annotation reader
+    $attributeDriver = new ORM\Mapping\Driver\AttributeDriver(
       self::ENTITY_PATHS, // paths to look in
     );
 
     // NOTE: driver for application Entity can be different, Yaml, Xml or whatever
     // register annotation driver for our application Entity namespace
-    $driverChain->addDriver($annotationDriver, 'OCA\CAFeVDBMembers\Database\ORM\Entities');
+    $driverChain->addDriver($attributeDriver, 'OCA\CAFeVDBMembers\Database\ORM\Entities');
 
     // general ORM configuration
     //$config = new \OCA\CAFEVDB\Wrapped\Doctrine\ORM\Configuration;
@@ -205,14 +199,17 @@ class EntityManager extends EntityManagerDecorator
     $config->setMetadataDriverImpl($driverChain);
 
     // use our already initialized cache driver
-    $config->setMetadataCache($cache);
-    $config->setQueryCacheImpl(DoctrineProvider::wrap($cache));
+    // $config->setMetadataCache($cache);
+    // $config->setQueryCacheImpl(DoctrineProvider::wrap($cache));
 
     // gedmo extension listeners
 
+    // gedmo extension listeners
+    $attributeReader = new Gedmo\Mapping\Driver\AttributeReader();
+
     // soft deletable
     $softDeletableListener = new SoftDeleteableListener();
-    $softDeletableListener->setAnnotationReader($cachedAnnotationReader);
+    $softDeletableListener->setAnnotationReader($attributeReader);
     $eventManager->addEventSubscriber($softDeletableListener);
     $config->addFilter(self::SOFT_DELETEABLE_FILTER, \Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter::class);
 
@@ -223,7 +220,7 @@ class EntityManager extends EntityManagerDecorator
     );
     $this->transformerPool = $transformerPool;
     $transformableListener = new Transformable\TransformableSubscriber($transformerPool);
-    $transformableListener->setAnnotationReader($cachedAnnotationReader);
+    $transformableListener->setAnnotationReader($attributeReader);
     $eventManager->addEventSubscriber($transformableListener);
 
     // translatable
@@ -238,7 +235,7 @@ class EntityManager extends EntityManagerDecorator
     $translatableListener->setDefaultLocale($this->appContainer->get('DefaultLocale'));
     $translatableListener->setTranslationFallback(true);
     $translatableListener->setPersistDefaultLocaleTranslation(true);
-    $translatableListener->setAnnotationReader($cachedAnnotationReader);
+    $translatableListener->setAnnotationReader($attributeReader);
     $eventManager->addEventSubscriber($translatableListener);
 
     $config->setDefaultQueryHint(
@@ -254,7 +251,7 @@ class EntityManager extends EntityManagerDecorator
       1 // fallback to default values in case if record is not translated
     );
 
-    return [ $config, $eventManager, $annotationReader ];
+    return [ $config, $eventManager, $attributeReader ];
   }
 
   /**
@@ -310,7 +307,7 @@ class EntityManager extends EntityManagerDecorator
           return false;
         }
       }
-    } catch (\Throwable $t) {
+    } catch (Throwable $t) {
       $this->logException($t);
       return false;
     }
@@ -366,7 +363,7 @@ class EntityManager extends EntityManagerDecorator
       Type::overrideType('datetimetz', \Carbon\Doctrine\DateTimeType::class);
       Type::overrideType('datetimetz_immutable', \Carbon\Doctrine\DateTimeImmutableType::class);
       $this->typesBound = true;
-    } catch (\Throwable $t) {
+    } catch (Throwable $t) {
       $this->logException($t);
     }
   }
@@ -396,7 +393,9 @@ class EntityManager extends EntityManagerDecorator
     $config->setSQLLogger($this->sqlLogger);
 
     // obtaining the entity manager
-    $entityManager = \Doctrine\ORM\EntityManager::create($this->connectionParameters($params), $config, $eventManager);
+    $conParams = $this->connectionParameters($params);
+    $connection = DBAL\DriverManager::getConnection($conParams, $config, $eventManager);
+    $entityManager = new ORMEntityManager($connection, $config, $eventManager);
 
     return $entityManager;
   }

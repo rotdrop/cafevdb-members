@@ -29,39 +29,14 @@ use Doctrine\Common\Collections\Collection;
 use OCA\CAFeVDBMembers\Database\ORM as CAFEVDB;
 use OCA\CAFeVDBMembers\Database\DBAL\Types;
 
-/**
- * @ORM\Entity
- */
+/** Model for a file with encrypted data. */
+#[ORM\Entity]
 class EncryptedFile extends File
 {
   /**
    * @var Collection
-   *
-   * As ORM still does not support lazy one-to-one associations from the
-   * inverse side we just use one-directional from both sides here. This
-   * works, as the join column is just the key of both sides. So we have no
-   * "mappedBy" and "inversedBy".
-   *
-   * Not that it is not possible to override the targetEntity annotation from
-   * the base-class, so it must go here to the leaf-class.
-   *
-   * @ORM\OneToOne(targetEntity="EncryptedFileData", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumns(
-   *   @ORM\JoinColumn(name="id", referencedColumnName="file_id", nullable=false),
-   * )
    */
-  protected $fileData;
-
-  /**
-   * @var Collection
-   *
-   * @ORM\ManyToMany(targetEntity="Musician", mappedBy="encryptedFiles", indexBy="id", fetch="EXTRA_LAZY")
-   *
-   * The list of owners which in addition to the members of the management
-   * group may have access to this file. This is in particular important for
-   * encrypted files where the list of owners determines the encryption keys
-   * which are used to seal the data.
-   */
+  #[ORM\ManyToMany(targetEntity: Musician::class, mappedBy: 'encryptedFiles', indexBy: 'id', fetch: 'EXTRA_LAZY')] // The list of owners which in addition to the members of the management
   private $owners;
 
   // phpcs:ignore Squiz.Commenting.FunctionComment.Missing

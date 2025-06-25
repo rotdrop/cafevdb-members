@@ -37,10 +37,9 @@ use OCA\CAFeVDBMembers\Database\DBAL\Types;
  * instruments and musicians) but for the "ranking" column which codes
  * a loose ranking like "primary instrument", i.e. the preference of
  * instruments of the given musician.
- *
- * @ORM\Table(name="PersonalizedMusicianInstrumentsView")
- * @ORM\Entity
  */
+#[ORM\Table(name: 'PersonalizedMusicianInstrumentsView')]
+#[ORM\Entity]
 class MusicianInstrument implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
@@ -50,22 +49,22 @@ class MusicianInstrument implements \ArrayAccess
 
   /**
    * @var Musician
-   * @ORM\ManyToOne(targetEntity="Musician", inversedBy="instruments")
-   * @ORM\Id
    */
+  #[ORM\ManyToOne(targetEntity: Musician::class, inversedBy: 'instruments')]
+  #[ORM\Id]
   private $musician;
 
   /**
    * @var Instrument
-   * @ORM\ManyToOne(targetEntity="Instrument", inversedBy="musicianInstruments")
-   * @ORM\Id
    */
+  #[ORM\ManyToOne(targetEntity: Instrument::class, inversedBy: 'musicianInstruments')]
+  #[ORM\Id]
   private $instrument;
 
   /**
    * @var int
-   * @ORM\Column(type="integer", nullable=false)
    */
+  #[ORM\Column(type: 'integer', nullable: false)]
   private $ranking = 1;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing

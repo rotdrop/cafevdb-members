@@ -3,7 +3,7 @@
  * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine
+ * @copyright Copyright (c) 2022, 2023, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -32,11 +32,10 @@ use OCA\CAFeVDBMembers\Database\DBAL\Types;
 
 /**
  * Instruments
- *
- * @ORM\Table(name="PersonalizedInstrumentsView")
- * @ORM\Entity
- * @Gedmo\TranslationEntity(class="TableFieldTranslation")
  */
+#[ORM\Table(name: 'PersonalizedInstrumentsView')]
+#[ORM\Entity]
+#[Gedmo\TranslationEntity(class: 'TableFieldTranslation')]
 class Instrument implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
@@ -46,19 +45,17 @@ class Instrument implements \ArrayAccess
 
   /**
    * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false)
-   * @ORM\Id
-   * @ORM\GeneratedValue(strategy="IDENTITY")
    */
+  #[ORM\Column(type: 'integer', nullable: false)]
+  #[ORM\Id]
+  #[ORM\GeneratedValue(strategy: 'IDENTITY')]
   private ?int $id = null;
 
   /**
    * @var string
-   *
-   * @Gedmo\Translatable(untranslated="untranslatedName")
-   * @ORM\Column(type="string", length=128, nullable=false)
    */
+  #[Gedmo\Translatable(untranslated: 'untranslatedName')]
+  #[ORM\Column(type: 'string', length: 128, nullable: false)]
   private string $name;
 
   /**
@@ -68,25 +65,25 @@ class Instrument implements \ArrayAccess
 
   /**
    * @var int
-   *
-   * @ORM\Column(type="smallint", nullable=false)
    */
+  #[ORM\Column(type: 'smallint', nullable: false)]
   private int $sortOrder;
 
-  /**
-   * @ORM\ManyToMany(targetEntity="InstrumentFamily", inversedBy="instruments")
-   * @ORM\JoinTable(
-   *   name="PersonalizedInstrumentInstrumentFamilyView",
-   *   joinColumns={@ORM\JoinColumn(referencedColumnName="id")},
-   *   inverseJoinColumns={@ORM\JoinColumn(referencedColumnName="id")}
-   * )
-   */
+  #[ORM\JoinTable(name: 'PersonalizedInstrumentInstrumentFamilyView')]
+  #[ORM\JoinColumn(referencedColumnName: 'id')]
+  #[ORM\InverseJoinColumn(referencedColumnName: 'id')]
+  #[ORM\ManyToMany(targetEntity: InstrumentFamily::class, inversedBy: 'instruments')]
   private $families;
 
-  /**
-   * @ORM\OneToMany(targetEntity="MusicianInstrument", mappedBy="instrument")
-   */
+  #[ORM\OneToMany(targetEntity: MusicianInstrument::class, mappedBy: 'instrument', fetch: 'EXTRA_LAZY')]
   private $musicianInstruments;
+
+  #[ORM\OneToMany(targetEntity: ProjectInstrument::class, mappedBy: 'instrument', fetch: 'EXTRA_LAZY')]
+  private $projectInstruments;
+
+  #[ORM\OneToMany(targetEntity: ProjectInstrumentationNumber::class, mappedBy: 'instrument', fetch: 'EXTRA_LAZY')]
+  private $projectInstrumentationNumbers;
+
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct()
@@ -94,6 +91,8 @@ class Instrument implements \ArrayAccess
     $this->arrayCTOR();
     $this->families = new ArrayCollection();
     $this->musicianInstruments = new ArrayCollection();
+    $this->projectInstruments = new ArrayCollection();
+    $this->projectInstrumentationNumbers = new ArrayCollection();
   }
   // phpcs:enable
 
@@ -155,6 +154,26 @@ class Instrument implements \ArrayAccess
   public function getMusicianInstruments():Collection
   {
     return $this->musicianInstruments;
+  }
+
+  /**
+   * Get projectInstruments.
+   *
+   * @return Collection
+   */
+  public function getProjectInstruments():Collection
+  {
+    return $this->projectInstruments;
+  }
+
+  /**
+   * Get projectInstrumentationNumbers.
+   *
+   * @return Collection
+   */
+  public function getProjectInstrumentationNumbers():Collection
+  {
+    return $this->projectInstrumentationNumbers;
   }
 
   /**

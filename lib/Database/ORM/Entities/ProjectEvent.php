@@ -36,11 +36,10 @@ use OCA\CAFeVDBMembers\Utils\Uuid;
 
 /**
  * ProjectEvents
- *
- * @ORM\Table(name="PersonalizedProjectEventsView")
- * @ORM\Entity
- * @Gedmo\SoftDeleteable(fieldName="deleted")
  */
+#[ORM\Table(name: 'PersonalizedProjectEventsView')]
+#[ORM\Entity]
+#[Gedmo\SoftDeleteable(fieldName: 'deleted')]
 class ProjectEvent implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
@@ -57,40 +56,35 @@ class ProjectEvent implements \ArrayAccess
    * at that point one needs to match the recurrence ids in order to "find"
    * the correct new old event. The event will then be part of a new event
    * series with a new UID.
-   *
-   * @ORM\Column(type="integer", nullable=false)
-   * @ORM\Id
-   * @ORM\GeneratedValue(strategy="IDENTITY")
    */
+  #[ORM\Column(type: 'integer', nullable: false)]
+  #[ORM\Id]
+  #[ORM\GeneratedValue(strategy: 'IDENTITY')]
   private $id;
 
   /**
    * @var Project
-   *
-   * @ORM\ManyToOne(targetEntity="Project", inversedBy="calendarEvents", fetch="EXTRA_LAZY")
-   * @ORM\JoinColumn(nullable=false)
    */
+  #[ORM\JoinColumn(nullable: false)]
+  #[ORM\ManyToOne(targetEntity: Project::class, inversedBy: 'calendarEvents', fetch: 'EXTRA_LAZY')]
   private $project;
 
   /**
    * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false)
    */
+  #[ORM\Column(type: 'integer', nullable: false)]
   private $calendarId;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=764, nullable=false, options={"collation"="ascii_bin"})
    */
+  #[ORM\Column(type: 'string', length: 764, nullable: false, options: ['collation' => 'ascii_bin'])]
   private $calendarUri;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=255, nullable=false, options={"collation"="ascii_general_ci"})
    */
+  #[ORM\Column(type: 'string', length: 255, nullable: false, options: ['collation' => 'ascii_general_ci'])]
   private $eventUid;
 
   /**
@@ -99,16 +93,14 @@ class ProjectEvent implements \ArrayAccess
    * A unique identifier which links RELATED-TO events. This occurs if
    * recurring event series are split but applying changes to "this and
    * future" events.
-   *
-   * @ORM\Column(type="uuid_binary", nullable=true)
    */
+  #[ORM\Column(type: 'uuid_binary', nullable: true)]
   private $seriesUid;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=764, nullable=false, options={"collation"="ascii_bin"})
    */
+  #[ORM\Column(type: 'string', length: 764, nullable: false, options: ['collation' => 'ascii_bin'])]
   private $eventUri;
 
   /**
@@ -116,25 +108,22 @@ class ProjectEvent implements \ArrayAccess
    *
    * The recurrence-id of the event instance as Unix timestamp. Non-recurring
    * events have an id of 0.
-   *
-   * @ORM\Column(type="integer", nullable=false, options={"default"=0})
    */
+  #[ORM\Column(type: 'integer', nullable: false, options: ['default' => 0])]
   private $recurrenceId;
 
   /**
    * @var int
    * The SEQUENCE number tied to the event. We always use the highest
    * sequence, but technically this is part of the id.
-   *
-   * @ORM\Column(type="integer", nullable=false, options={"default"=0})
    */
+  #[ORM\Column(type: 'integer', nullable: false, options: ['default' => 0])]
   private $sequence;
 
   /**
    * @var null|Types\EnumVCalendarType
-   *
-   * @ORM\Column(type="EnumVCalendarType", nullable=false)
    */
+  #[ORM\Column(type: 'EnumVCalendarType', nullable: false)]
   private $type;
 
   /**
@@ -143,9 +132,8 @@ class ProjectEvent implements \ArrayAccess
    * asence from rehearsals or other calendar events. As calendar events are
    * possibly repeating or we need a list of linked fields in order to record
    * the participation for each event instance.
-   *
-   * @ORM\OneToOne(targetEntity="ProjectParticipantField", fetch="EXTRA_LAZY")
    */
+  #[ORM\OneToOne(targetEntity: ProjectParticipantField::class, fetch: 'EXTRA_LAZY')]
   private $absenceField;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing

@@ -31,13 +31,12 @@ use OCA\CAFeVDBMembers\Database\DBAL\Types\EnumDirEntryType as DirEntryType;
 
 /**
  * Generic directory entry for a database-backed file.
- *
- * @ORM\Table(name="PersonalizedDatabaseStorageDirEntriesView")
- * @ORM\InheritanceType("SINGLE_TABLE")
- * @ORM\DiscriminatorColumn(name="type", type="EnumDirEntryType")
- * @ORM\DiscriminatorMap({"generic"="DatabaseStorageDirEntry", "file"="DatabaseStorageFile", "folder"="DatabaseStorageFolder"})
- * @ORM\Entity
  */
+#[ORM\Table(name: 'PersonalizedDatabaseStorageDirEntriesView')]
+#[ORM\InheritanceType('SINGLE_TABLE')]
+#[ORM\DiscriminatorColumn(name: 'type', type: 'EnumDirEntryType')]
+#[ORM\DiscriminatorMap(['generic' => 'DatabaseStorageDirEntry', 'file' => 'DatabaseStorageFile', 'folder' => 'DatabaseStorageFolder'])]
+#[ORM\Entity]
 class DatabaseStorageDirEntry implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
@@ -49,25 +48,22 @@ class DatabaseStorageDirEntry implements \ArrayAccess
 
   /**
    * @var int
-   *
-   * @ORM\Column(type="integer", nullable=false)
-   * @ORM\Id
-   * @ORM\GeneratedValue(strategy="IDENTITY")
    */
+  #[ORM\Column(type: 'integer', nullable: false)]
+  #[ORM\Id]
+  #[ORM\GeneratedValue(strategy: 'IDENTITY')]
   protected $id;
 
   /**
    * @var string
-   *
-   * @ORM\Column(type="string", length=256)
    */
+  #[ORM\Column(type: 'string', length: 256)]
   protected $name;
 
   /**
    * @var DatabaseStorageFolder
-   *
-   * @ORM\ManyToOne(targetEntity="DatabaseStorageFolder", inversedBy="directoryEntries")
    */
+  #[ORM\ManyToOne(targetEntity: DatabaseStorageFolder::class, inversedBy: 'directoryEntries')]
   protected $parent;
 
   /** {@inheritdoc} */

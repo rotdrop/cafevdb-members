@@ -30,10 +30,9 @@ use OCA\CAFeVDBMembers\Database\DBAL\Types;
 
 /**
  * Instruments
- *
- * @ORM\Table(name="PersonalizedTableFieldTranslationsView")
- * @ORM\Entity
  */
+#[ORM\Table(name: 'PersonalizedTableFieldTranslationsView')]
+#[ORM\Entity]
 class TableFieldTranslation extends AbstractTranslation implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;

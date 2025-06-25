@@ -46,7 +46,7 @@
             <!-- <NcListItem :name="t(appId, 'BIC')" :details="account.bic" /> -->
             <NcListItem :name="t(appId, 'account holder')" :details="account.bankAccountOwner" />
             <NcListItem :name="t(appId, 'registered')" :details="formatDate(account.created)" />
-            <NcListItem v-if="account.modified" :name="t(appId, 'modified')" :details="formatDate(account.modified)" />
+            <NcListItem v-if="account.updated" :name="t(appId, 'modified')" :details="formatDate(account.updated)" />
             <NcListItem v-if="account.deleted" :name="t(appId, 'revoked')" :details="formatDate(account.deleted)" />
             <NcListItem v-if="(showDeleted && account.sepaDebitMandates) || (!showDeleted && account.numActiveDebitMandates > 0)"
                         :name="t(appId, 'Debit Mandates ({count})', { count: showDeleted ? account.sepaDebitMandates.length : account.numActiveDebitMandates, })"
@@ -64,7 +64,7 @@
                       <ul class="sepa-debit-mandate-details">
                         <NcListItem :name="t(appId, 'granted')" :details="formatDate(mandate.mandateDate)" />
                         <NcListItem v-if="mandate.lastUsedDate" :name="t(appId, 'last used')" :details="formatDate(mandate.lastUsedDate)" />
-                        <NcListItem v-if="mandate.modified" :name="t(appId, 'modified')" :details="formatDate(mandate.modified)" />
+                        <NcListItem v-if="mandate.updated" :name="t(appId, 'modified')" :details="formatDate(mandate.updated)" />
                         <NcListItem v-if="mandate.deleted" :name="t(appId, 'revoked')" :details="formatDate(mandate.deleted)" />
                       </ul>
                     </template>
