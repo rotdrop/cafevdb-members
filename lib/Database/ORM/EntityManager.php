@@ -56,6 +56,7 @@ use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use OCA\CAFeVDBMembers\Database\DBAL\Logging\CloudLogger;
 use OCA\CAFeVDBMembers\Database\DBAL\Types;
 use OCA\CAFeVDBMembers\Database\ORM\Mapping\ReservedWordQuoteStrategy;
+use OCA\CAFeVDBMembers\Database\ORM\Repositories;
 use OCA\CAFeVDBMembers\Exceptions;
 use OCA\CAFeVDBMembers\Service\AuthenticationService;
 
@@ -142,6 +143,7 @@ class EntityManager extends EntityManagerDecorator
         }
       }
     });
+    $config->setDefaultRepositoryClassName(Repositories\EntityRepository::class);
 
     $eventManager = new DoctrineEventManager();
 
