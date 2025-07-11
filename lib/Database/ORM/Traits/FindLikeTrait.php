@@ -3,7 +3,7 @@
  * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2020-2022, 2024, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -25,14 +25,12 @@ namespace OCA\CAFeVDBMembers\Database\ORM\Traits;
 use Doctrine\ORM;
 use Doctrine\ORM\Query\Expr;
 use Doctrine\Common\Collections;
-
 use OCA\CAFeVDBMembers\Exceptions\DatabaseException;
 
 /** Trait for entity repositories which adds kind of a symbolic query "language". */
 trait FindLikeTrait
 {
   use LogTrait;
-
   private static $modifiers = [
     '!' => 'not',
   ];
@@ -228,9 +226,9 @@ trait FindLikeTrait
   public function findBy(
     array $criteria,
     ?array $orderBy = null,
-    $limit = null,
-    $offset = null,
-  ) {
+    ?int $limit = null,
+    ?int $offset = null,
+  ):array {
     $queryParts = $this->prepareFindBy($criteria, $orderBy);
 
     // The stock findBy() / findOneBy() functions do not use query-hints, see
@@ -268,7 +266,7 @@ trait FindLikeTrait
    *
    * @return int The number of found entities.
    */
-  public function count(array $criteria):int
+  public function count(array $criteria = []):int
   {
     $queryParts = $this->prepareFindBy($criteria);
 
@@ -302,7 +300,7 @@ trait FindLikeTrait
    *
    * @see findBy()
    */
-  public function findOneBy(array $criteria, ?array $orderBy = null)
+  public function findOneBy(array $criteria, ?array $orderBy = null):?object
   {
     $result = $this->findBy($criteria, $orderBy, 1, 0);
     return $result[0] ?? null;
@@ -379,7 +377,12 @@ trait FindLikeTrait
 
         $criterion['field'] = $key;
 
+        $count = 0;
         while (!empty($operators)) {
+          ++$count;
+          if ($count > 100) {
+            throw new DatabaseException('INFINITE LOOP "' . $operators . '" ' . print_r($criterion, true) . ' ' . print_r($criteria, true));
+          }
           // reduce multiple ! signs
           while (strpos($operators, '!!') !== false) {
             $operators = str_replace('!!', '', $operators);
@@ -440,17 +443,42 @@ trait FindLikeTrait
     foreach (array_merge($whereCriteria, $havingCriteria) as $criterion) {
       $field = $criterion['field'];
       $dotPos = strpos($field, '.');
-      if ($dotPos !== false) {
-        $joinEntities[substr($field, 0, $dotPos)] = true;
+      $joinParent = 'mainTable';
+      $joinAlias = [];
+      while ($dotPos !== false) {
+        $joinTable = substr($field, 0, $dotPos);
+        $joinAlias[] = $joinTable;
+        $aliasKey = implode('_', $joinAlias);
+        $joinEntities[$aliasKey] = [
+          'parent' => $joinParent,
+          'association' => $joinTable,
+          'alias' => $aliasKey,
+        ];
+        $field = substr($field, $dotPos + 1);
+        $dotPos = strpos($field, '.');
+        $joinParent = $joinTable;
       }
     }
     $indexBy = [];
     foreach ($orderBy as $key => $ordering) {
       $dotPos = strpos($key, '.');
       if ($dotPos !== false) {
-        $tableAlias = substr($key, 0, $dotPos);
-        $field = $key;
-        $joinEntities[$tableAlias] = true;
+        $joinParent = 'mainTable';
+        $joinAlias = [];
+        while ($dotPos !== false) {
+          $joinTable = substr($field, 0, $dotPos);
+          $joinAlias[] = $joinTable;
+          $aliasKey = implode('_', $joinAlias);
+          $joinEntities[] = [
+            'parent' => $joinParent,
+            'association' => $joinTable,
+            'alias' => $aliasKey,
+          ];
+          $joinAlias[] = $joinTable;
+          $field = substr($field, $dotPos + 1);
+          $dotPos = strpos($field, '.');
+          $joinParent = $joinTable;
+        }
       } else {
         $tableAlias = 'mainTable';
         $field = $tableAlias.'.'.$key;
@@ -490,8 +518,10 @@ trait FindLikeTrait
   {
     $indexBy = $queryParts['indexBy']?:['mainTable' => null];
     $qb = $this->createQueryBuilder('mainTable', $indexBy['mainTable']);
-    foreach (array_keys($queryParts['joinEntities']) as $association) {
-      $qb->leftJoin('mainTable.'.$association, $association, null, null, $indexBy[$association] ?? null);
+    foreach ($queryParts['joinEntities'] as $joinInfo) {
+      $association = $joinInfo['association'];
+      $alias = $joinInfo['alias'];
+      $qb->leftJoin($joinInfo['parent'] . '.' . $association, $alias, null, null, $indexBy[$alias] ?? null);
     }
     if (!empty($select)) {
       $qb->select($select);
@@ -530,6 +560,12 @@ trait FindLikeTrait
     ?int $offset = null,
   ):ORM\QueryBuilder {
 
+    /** @var ORM\Mapping\ClassMetadata $class */
+    $class = $this->getClassMetadata();
+
+    /** @var ORM\ENtityManagerInterface $entityManager */
+    $entityManager = $this->getEntityManager();
+
     // unpack parameter array
     // foreach ($queryParts as $key => $part) {
     //   ${$key} = $part;
@@ -550,6 +586,12 @@ trait FindLikeTrait
         foreach ($criteria[$conditionType] as &$criterion) {
 
           $field = $criterion['field'];
+          $joinParts = explode('.', $field);
+          if (count($joinParts) > 1) {
+            $col = array_pop($joinParts);
+            $field = implode('_', $joinParts) . '.' . $col;
+          }
+
           $value = $criterion['value'];
 
           // $this->log('FIELD ' . $conditionType . ': ' . $field);
@@ -574,12 +616,21 @@ trait FindLikeTrait
             continue;
           }
           // $this->log('FIELD ' . $field);
+          $fieldIsCollection = false;
           $dotPos = strpos($field, '.');
           if ($dotPos !== false) {
             $tableAlias = substr($field, 0, $dotPos);
+            $column = substr($field, $dotPos + 1);
           } else {
             $tableAlias = 'mainTable';
+            $column = $field;
             $field = $tableAlias . '.' . $field;
+          }
+          if ($tableAlias == 'mainTable') {
+            $fieldIsCollection = $class->isCollectionValuedAssociation($column);
+          } elseif ($class->hasAssociation($tableAlias)) {
+            $targetClass = $entityManager->getClassMetadata($class->getAssociationTargetClass($tableAlias));
+            $fieldIsCollection = $targetClass->isCollectionValuedAssociation($column);
           }
           $param = str_replace('.', '_', $field) . '_' . $criterion['index'];
           if (!empty($criterion['groupFunction'])) {
@@ -618,8 +669,14 @@ trait FindLikeTrait
               $expr = $qb->expr()->like($field, ':' . $param);
               $criterion['value'] = $value;
             } else {
-              $expr = $qb->expr()->$comparator($field, ':' . $param);
+              if ($fieldIsCollection && $comparator == 'eq') {
+                $expr = $qb->expr()->isMemberOf(':' . $param, $field);
+              } else {
+                $expr = $qb->expr()->$comparator($field, ':' . $param);
+              }
             }
+          } elseif ($fieldIsCollection && $comparator == 'eq') {
+            $expr = $qb->expr()->isMemberOf(':' . $param, $field);
           } else {
             $expr = $qb->expr()->$comparator($field, ':' . $param);
           }
@@ -690,8 +747,3 @@ trait FindLikeTrait
     return $qb;
   }
 }
-
-// Local Variables: ***
-// c-basic-offset: 2 ***
-// indent-tabs-mode: nil ***
-// End: ***
