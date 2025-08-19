@@ -67,7 +67,7 @@ import LockIcon from 'vue-material-design-icons/Lock.vue'
 // The following would interfere with the rest of NC:
 // import 'vue-material-design-icons/styles.css'
 import 'material-icons/iconfont/material-icons.css'
-import cloudVersionClassesImport from '../toolkit/util/cloud-version-classes.js'
+import cloudVersionClassesImport from '../toolkit/util/cloud-version-classes.ts'
 import {
   computed,
   ref,
