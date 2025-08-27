@@ -297,7 +297,7 @@ export const useMemberDataStore = defineStore('member-data', () => {
         simpleState.firstTimeApplication.value = 'first-time'
       }
       if (!simpleState.country.value) {
-        simpleState.country.value = appData.displayLocale.region
+        simpleState.country.value = appData.displayLocale!.region
       }
       initialized.registration = true
     }
@@ -311,8 +311,8 @@ export const useMemberDataStore = defineStore('member-data', () => {
         vueSet(simpleState.projects.value, appData.activeProject.id, newRegistrationProject)
         logger.info('REGISTRATION PROJECT', { registrationProject: { ...newRegistrationProject } })
         for (const event of appData.activeProject.projectEvents) {
-          newRegistrationProject.absence[event.id] = false
-          newRegistrationProject.absenceReasons[event.id] = ''
+          vueSet(newRegistrationProject.absence, event.id, false)
+          vueSet(newRegistrationProject.absenceReasons, event.id, '')
         }
       }
     }
