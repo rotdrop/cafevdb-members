@@ -23,6 +23,12 @@
     <h2>
       {{ t(appName, 'Project Fees and Options') }}
     </h2>
+    <pre>
+       {{ JSON.stringify(activeProject, undefined, 2) }}
+    </pre>
+    <pre>
+       {{ JSON.stringify(registrationProject, undefined, 2) }}
+    </pre>
     <div class="navigation flex flex-row flex-justify-full">
       <RouterButton :to="{ name: 'registrationParticipation', params: { projectName } }"
                     exact
@@ -63,6 +69,9 @@ const {
   activeProject,
   projectName,
 } = storeToRefs(appData)
+const {
+  registrationProject,
+} = storeToRefs(registrationData)
 
 onMounted(async () => {
   if (!activeProject.value) {
