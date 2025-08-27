@@ -81,30 +81,27 @@
         <ul class="event-list">
           <NcListItem v-for="event in activeProject?.projectEvents"
                       :key="event.id"
-                      :title="calendarDateTime(event.calendarObject)"
-                      :details="event.calendarObject.summary"
+                      :ref="(el) => addEventItemRef(el, event.id)"
+                      :name="event.calendarObject.summary"
                       :force-display-actions="true"
                       class="calendar-event"
           >
-            <template v-if="event.calendarObject.location" #subname>
-              {{ event.calendarObject.location }}
+            <template #subname>
+              <span class="event-times-location">{{ calendarDateTime(event.calendarObject) }}</span>
+              <span v-if="event.calendarObject.location" class="event-location">{{ ', ' + t(appName, 'location: {location}', { location: event.calendarObject.location }) }}</span>
             </template>
             <template v-if="registrationProject?.absence[event.id]" #indicator>
               <AbsenceIndicator :size="24" fill-color="#ff0000" />
             </template>
             <template v-if="!noAbsenceCheck && event.absenceField > 0" #actions>
-              <NcActionCheckbox value="absent"
-                                :checked="registrationProject?.absence[event.id] || false"
-                                @check="registrationProject.absence[event.id] = true"
-                                @uncheck="registrationProject.absence[event.id] = false"
-              >
+              <NcActionCheckbox v-model="registrationProject.absence[event.id]">
                 {{ t(appName, 'I cannot participate') }}
               </NcActionCheckbox>
               <NcActionTextEditable v-if="registrationProject.absence[event.id]"
-                                    :value="registrationProject.absenceReasons[event.id]"
+                                    :model-value.sync="registrationProject.absenceReasons[event.id]"
                                     :name="t(appName, '... because ...')"
                                     required
-                                    @submit="registrationProject.absenceReasons[event.id] = $event.target.getElementsByTagName('textarea')[0].value"
+                                    @submit="submitAbsenceReason($event, event.id)"
               >
                 <template #icon>
                   <Pencil :size="20" />
@@ -114,6 +111,12 @@
             <template #extra>
               <div class="event-description">
                 {{ event.calendarObject.description }}
+              </div>
+              <div v-if="registrationProject.absence[event.id]" class="absence-reason">
+                <span class="absence-reason-intro">{{ t(appName, 'I cannot participate because ...') }}</span>
+                <NcTextArea v-model="registrationProject.absenceReasons[event.id]"
+                            class="absence-reason-text"
+                />
               </div>
             </template>
           </NcListItem>
@@ -149,19 +152,27 @@ import AbsenceIndicator from 'vue-material-design-icons/AlertOctagon.vue'
 import InputText from '../../components/InputText.vue'
 import RouterButton from '../../components/RouterButton.vue'
 import {
-  NcCheckboxRadioSwitch,
   NcActionCheckbox,
   NcActionTextEditable,
+  NcActions,
+  NcCheckboxRadioSwitch,
   NcListItem,
+  NcTextArea,
 } from '@nextcloud/vue'
 import { useMemberDataStore } from '../../stores/memberData.ts'
 import { useAppDataStore } from '../../stores/appData'
 import {
+  getCurrentInstance,
   onBeforeMount,
+  onMounted,
   ref,
 } from 'vue'
+import type Vue from 'vue'
 import { storeToRefs } from 'pinia'
 import type { CalendarObject } from '../../stores/appData.ts'
+import logger from '../../logger.ts'
+
+logger.info('Participation')
 
 const registrationData = useMemberDataStore()
 const appData = useAppDataStore()
@@ -169,7 +180,7 @@ const appData = useAppDataStore()
 const loading = ref(true)
 const readonly = ref(true)
 const noAbsenceCheck = ref(true)
-
+const projectEventItems: Record<number, Vue> = {}
 const locale = getCanonicalLocale()
 
 const {
@@ -194,6 +205,25 @@ onBeforeMount(async () => {
   loading.value = false
   noAbsenceCheck.value = noAbsence.value
 })
+
+const addEventItemRef = (el: Vue, eventId: number) => {
+  projectEventItems[eventId] = el
+}
+
+onMounted(() => {
+  logger.info('Event Item', {
+    refs: projectEventItems,
+    instance: getCurrentInstance()?.proxy,
+  })
+})
+
+const submitAbsenceReason = (vueEvent, eventId: number) => {
+  const actions: typeof NcActions = projectEventItems[eventId].$refs.actions as typeof NcActions
+  if (actions) {
+    actions.closeMenu()
+  }
+  registrationProject.value!.absenceReasons[eventId] = vueEvent.target.getElementsByTagName('textarea')[0].value
+}
 
 // const localeDateTime = (dateTime: Date) => {
 //   const options = {
@@ -292,7 +322,22 @@ const calendarDateTime = (calendarEvent: CalendarObject) => {
   font-weight:bold;
 }
 
-.event-description {
-  padding-left: 1ex;
+.event-list {
+  ::v-deep .list-item {
+    flex-wrap: wrap;
+    .list-item__extra {
+      width: 100%;
+    }
+  }
+  .absence-reason-intro {
+    font-weight: bold;
+    font-style: italic;
+    color: var(--color-text-maxcontrast);
+  }
+  .event-description {
+    padding-left: 1ex;
+    font-style: italic;
+    color: var(--color-text-maxcontrast);
+  }
 }
 </style>
