@@ -148,8 +148,17 @@ class ProjectParticipantField implements \ArrayAccess
   #[ORM\Column(type: 'boolean', nullable: true, options: ['default' => '0'])]
   private $encrypted = false;
 
+  /**
+   * @var Collection
+   */
   #[ORM\OneToMany(targetEntity: ProjectParticipantFieldDatum::class, mappedBy: 'field', fetch: 'EXTRA_LAZY')]
   private $fieldData;
+
+  /**
+   * @var null|ProjectEvent
+   */
+  #[ORM\OneToOne(targetEntity: ProjectEvent::class, mappedBy: 'absenceField')]
+  private $projectEvent;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct()
@@ -378,5 +387,15 @@ class ProjectParticipantField implements \ArrayAccess
   public function getEncrypted()
   {
     return $this->encrypted;
+  }
+
+  /**
+   * Get projectEvent.
+   *
+   * @return null|ProjectEvent
+   */
+  public function getProjectEvent():?ProjectEvent
+  {
+    return $this->projectEvent;
   }
 }

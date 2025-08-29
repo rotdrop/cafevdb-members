@@ -180,6 +180,8 @@ class ProjectRegistrationController extends Controller
         // - options
         // - default value
         // - absence field if there
+        $absenceEvent = $participantField->getProjectEvent();
+        $flatData['absenceEvent'] = $absenceEvent ? $absenceEvent->getId() : -1;
         $defaultValue = $participantField->getDefaultValue();
         if ($defaultValue) {
           $flatData['defaultValue'] = (string)$defaultValue->getKey();
@@ -192,7 +194,7 @@ class ProjectRegistrationController extends Controller
           $flatOption['fieldData'] = [];
           /** @var Entities\ProjectParticipantFieldDatum $fieldDatum */
           foreach ($option->getFieldData() as $fieldDatum) {
-            $flatDatum = $datum->toArray();
+            $flatDatum = $fieldDatum->toArray();
             $flatDatum['field'] = $participantField->getId();
             $flatDatum['project'] = $project->getId();
             $flatDatum['musician'] = $datum->getMusician()->getId();

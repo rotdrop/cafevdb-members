@@ -3,7 +3,7 @@
  * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine
+ * @copyright Copyright (c) 2022, 2023, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -133,7 +133,7 @@ class ProjectEvent implements \ArrayAccess
    * possibly repeating or we need a list of linked fields in order to record
    * the participation for each event instance.
    */
-  #[ORM\OneToOne(targetEntity: ProjectParticipantField::class, fetch: 'EXTRA_LAZY')]
+  #[ORM\OneToOne(targetEntity: ProjectParticipantField::class, inversedBy: 'projectEvent', fetch: 'EXTRA_LAZY')]
   private $absenceField;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
