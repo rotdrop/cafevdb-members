@@ -75,7 +75,7 @@ export interface Project {
   type: 'temporary'|'template'|'permanent',
   projectEvents: ProjectEvent[],
   clubMembers?: boolean,
-  absence: ProjectParticipantField[],
+  participantFields: Record<number, ProjectParticipantField>,
   instrumentation: InstrumentationNumber[],
 }
 

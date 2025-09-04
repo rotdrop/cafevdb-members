@@ -23,9 +23,32 @@
     <h2>
       {{ t(appName, 'Project Fees and Options') }}
     </h2>
-    <pre>
-       {{ JSON.stringify(activeProject, undefined, 2) }}
-    </pre>
+    <div v-if="!loading && registrationProject">
+      <ul class="project-options">
+        <NcListItem v-for="field of projectOptions"
+                    :key="field.id"
+                    :name="field.name"
+        >
+          <template #extra>
+            <!-- eslint-disable-next-line vue/no-v-html -->
+            <div class="option-helptext" v-html="field.tooltip" />
+            <NcTextArea v-if="field.dataType === 'html' && field.multiplicity === 'simple'"
+                        v-model="registrationProject.options[field.id]"
+            />
+            <NcSelect v-if="field.multiplicity === 'multiple' || field.multiplicity === 'parallel'"
+                      v-model="registrationProject.options[field.id]"
+                      label="label"
+                      :multiple="field.mutiplicity === 'parallel'"
+                      :options="field.dataOptions"
+                      :reduce="option => option.key"
+            />
+            <pre>
+              {{ JSON.stringify(field, undefined, 2) }}
+            </pre>
+          </template>
+        </NcListItem>
+      </ul>
+    </div>
     <pre>
        {{ JSON.stringify(registrationProject, undefined, 2) }}
     </pre>
@@ -50,10 +73,16 @@
 <script setup lang="ts">
 import { appName } from '../../config.ts'
 import { translate as t } from '@nextcloud/l10n'
+import {
+  NcListItem,
+  NcSelect,
+  NcTextArea,
+} from '@nextcloud/vue'
 import RouterButton from '../../components/RouterButton.vue'
 import { useMemberDataStore } from '../../stores/memberData.ts'
 import { useAppDataStore } from '../../stores/appData.ts'
 import {
+  computed,
   onMounted,
   ref,
 } from 'vue'
@@ -72,6 +101,10 @@ const {
 const {
   registrationProject,
 } = storeToRefs(registrationData)
+
+const projectOptions = computed(
+  () => Object.values(activeProject.value?.participantFields || []).filter((fieldData) => !fieldData.deleted && !(fieldData.absenceEvent > 0)),
+)
 
 onMounted(async () => {
   if (!activeProject.value) {
@@ -127,6 +160,20 @@ onMounted(async () => {
   }
   ::v-deep .input-effect {
     margin-bottom:0;
+  }
+}
+
+.project-options {
+  ::v-deep .list-item {
+    flex-wrap: wrap;
+    .list-item__extra {
+      width: 100%;
+    }
+  }
+  .option-helptext {
+    padding-left: 1ex;
+    font-style: italic;
+    color: var(--color-text-maxcontrast);
   }
 }
 </style>

@@ -64,7 +64,7 @@ export interface SepaBankAccount {
   numDeletedDebitMandates: number,
 }
 
-export interface ProjectParticipantFieldData {
+export interface ProjectParticipantFieldDatum {
   optionKey: string,
   dataOption: {
     label: string,
@@ -72,10 +72,26 @@ export interface ProjectParticipantFieldData {
   }
 }
 
+export interface ProjectParticipantFieldDataOption {
+  key: string,
+  field: number,
+  label: string,
+  data: string,
+  tooltip: null|string,
+}
+
 export interface ProjectParticipantField {
+  id: number,
   name: string,
   untranslatedName: string,
-  fieldData: Record<string, ProjectParticipantFieldData>,
+  tooltip: null|string,
+  dataType: 'html'|'text',
+  multiplicity: 'simple'|'multiple'|'parallel',
+  fieldData: Record<string, ProjectParticipantFieldDatum>,
+  dataOptions: Record<string, ProjectParticipantFieldDataOption>,
+  defaultValue: null|string,
+  absenceEvent: number,
+  deleted: null|string,
 }
 
 export interface ProjectInstrument {
@@ -127,6 +143,7 @@ export interface RegistrationProject {
   instruments: Instrument[],
   absence: Record<number, boolean>,
   absenceReasons: Record<number, string>,
+  options: Record<number, string>,
 }
 
 export const useMemberDataStore = defineStore('member-data', () => {
@@ -307,12 +324,21 @@ export const useMemberDataStore = defineStore('member-data', () => {
           instruments: [],
           absence: {},
           absenceReasons: {},
+          options: {},
         })
         vueSet(simpleState.projects.value, appData.activeProject.id, newRegistrationProject)
         logger.info('REGISTRATION PROJECT', { registrationProject: { ...newRegistrationProject } })
         for (const event of appData.activeProject.projectEvents) {
           vueSet(newRegistrationProject.absence, event.id, false)
           vueSet(newRegistrationProject.absenceReasons, event.id, '')
+        }
+        const relevantFields = Object.values(appData.activeProject.participantFields).filter((fieldData) => !fieldData.deleted && !(fieldData.absenceEvent > 0))
+        for (const field of relevantFields) {
+          let defaultValue = field.defaultValue
+          if (defaultValue && field.multiplicity === 'simple') {
+            defaultValue = field.dataOptions?.[defaultValue]?.data
+          }
+          vueSet(newRegistrationProject.options, field.id, defaultValue)
         }
       }
     }
