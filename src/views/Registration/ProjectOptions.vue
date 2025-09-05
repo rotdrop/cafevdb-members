@@ -35,12 +35,12 @@
             <NcTextArea v-if="field.dataType === 'html' && field.multiplicity === 'simple'"
                         v-model="registrationProject.options[field.id]"
             />
-            <NcSelect v-if="field.multiplicity === 'multiple' || field.multiplicity === 'parallel'"
+            <NcSelect v-else-if="field.multiplicity === 'multiple' || field.multiplicity === 'parallel'"
                       v-model="registrationProject.options[field.id]"
                       label="label"
-                      :multiple="field.mutiplicity === 'parallel'"
-                      :options="field.dataOptions"
-                      :reduce="option => option.key"
+                      :multiple="field.multiplicity === 'parallel'"
+                      :options="Object.values(field.dataOptions)"
+                      :reduce="reduceFieldOptions"
             />
             <pre>
               {{ JSON.stringify(field, undefined, 2) }}
@@ -79,7 +79,7 @@ import {
   NcTextArea,
 } from '@nextcloud/vue'
 import RouterButton from '../../components/RouterButton.vue'
-import { useMemberDataStore } from '../../stores/memberData.ts'
+import { useMemberDataStore, type ProjectParticipantFieldDataOption } from '../../stores/memberData.ts'
 import { useAppDataStore } from '../../stores/appData.ts'
 import {
   computed,
@@ -105,6 +105,8 @@ const {
 const projectOptions = computed(
   () => Object.values(activeProject.value?.participantFields || []).filter((fieldData) => !fieldData.deleted && !(fieldData.absenceEvent > 0)),
 )
+
+const reduceFieldOptions = (option: ProjectParticipantFieldDataOption) => option.key
 
 onMounted(async () => {
   if (!activeProject.value) {
