@@ -66,7 +66,7 @@
         <template #icon>
           <img :src="Icon">
         </template>
-        <template #title>
+        <template #name>
           <div v-if="activeProject">
             {{ t(appName, '{orchestraName} project registration for {projectName}', { orchestraName, projectName }) }}
           </div>
