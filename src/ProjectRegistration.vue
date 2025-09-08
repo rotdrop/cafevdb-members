@@ -67,12 +67,12 @@
           <img :src="Icon">
         </template>
         <template #name>
-          <div v-if="activeProject">
+          <h2 v-if="activeProject">
             {{ t(appName, '{orchestraName} project registration for {projectName}', { orchestraName, projectName }) }}
-          </div>
-          <div v-else>
+          </h2>
+          <h2 v-else>
             {{ t(appName, '{orchestraName} project registration', { orchestraName }) }}
-          </div>
+          </h2>
         </template>
         <template #description>
           <div v-if="activeProject"
