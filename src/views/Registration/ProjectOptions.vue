@@ -36,12 +36,24 @@
                         v-model="registrationProject.options[field.id]"
             />
             <NcSelect v-else-if="field.multiplicity === 'multiple' || field.multiplicity === 'parallel'"
+                      :ref="(el) => addOptionSelectRef(el, field.id)"
                       v-model="registrationProject.options[field.id]"
                       label="label"
                       :multiple="field.multiplicity === 'parallel'"
                       :options="Object.values(field.dataOptions)"
                       :reduce="reduceFieldOptions"
-            />
+            >
+              <template #option="option">
+                <NcEllipsisedOption :name="fieldOptionLabel(option, field)"
+                                    :search="optionSelects?.[field.id]?.search || ''"
+                />
+              </template>
+              <template #selected-option="option">
+                <NcEllipsisedOption :name="fieldOptionLabel(option, field)"
+                                    :search="optionSelects?.[field.id]?.search || ''"
+                />
+              </template>
+            </NcSelect>
             <pre>
               {{ JSON.stringify(field, undefined, 2) }}
             </pre>
@@ -72,14 +84,23 @@
 </template>
 <script setup lang="ts">
 import { appName } from '../../config.ts'
-import { translate as t } from '@nextcloud/l10n'
+import {
+  getCanonicalLocale,
+  translate as t,
+} from '@nextcloud/l10n'
 import {
   NcListItem,
   NcSelect,
   NcTextArea,
+  NcEllipsisedOption,
 } from '@nextcloud/vue'
 import RouterButton from '../../components/RouterButton.vue'
-import { useMemberDataStore, type ProjectParticipantFieldDataOption } from '../../stores/memberData.ts'
+import {
+  ProjectParticipantFieldDataType,
+  useMemberDataStore,
+  type ProjectParticipantFieldDataOption,
+  type ProjectParticipantField,
+} from '../../stores/memberData.ts'
 import { useAppDataStore } from '../../stores/appData.ts'
 import {
   computed,
@@ -94,6 +115,8 @@ const registrationData = useMemberDataStore()
 const loading = ref(true)
 const readonly = ref(true)
 
+const optionSelects: Record<number, typeof NcSelect> = {}
+
 const {
   activeProject,
   projectName,
@@ -107,6 +130,37 @@ const projectOptions = computed(
 )
 
 const reduceFieldOptions = (option: ProjectParticipantFieldDataOption) => option.key
+
+const addOptionSelectRef = (el: typeof NcSelect, fieldId: number) => {
+  optionSelects[fieldId] = el
+}
+
+const formatMoneyValue = (
+  value: number,
+  currencyCode: string = appData.initialState.currencyCode,
+  locale: string = getCanonicalLocale(),
+) => {
+  return new Intl.NumberFormat(
+    locale, {
+      style: 'currency',
+      currency: currencyCode,
+    })
+    .format(value)
+}
+
+// @todo
+// - due date
+// - mention deposit and due-date
+// - add debit-note info
+const fieldOptionLabel = (option: ProjectParticipantFieldDataOption, field: ProjectParticipantField) => {
+  switch (field.dataType) {
+  case ProjectParticipantFieldDataType.LIABILITIES:
+  case ProjectParticipantFieldDataType.RECEIVABLES:
+    return option.label + ' -- ' + formatMoneyValue(+option.data)
+  default:
+    return option.label
+  }
+}
 
 onMounted(async () => {
   if (!activeProject.value) {

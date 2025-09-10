@@ -103,6 +103,9 @@ const displayLocale = getInitialState<Locale>({ section: 'displayLocale', defaul
 
 interface InitialState {
   orchestraName?: string,
+  orchestraLocale: string,
+  currencySymbol: string,
+  currencyCode: string,
 }
 
 const initialState = getInitialState() as InitialState
@@ -189,6 +192,7 @@ export const useAppDataStore = defineStore('app-data', () => {
     countries: computed(() => countries),
     debug: ref(false),
     displayLocale: computed(() => displayLocale),
+    initialState,
     instruments,
     memberRootFolder: ref<string>(''),
     orchestraName,

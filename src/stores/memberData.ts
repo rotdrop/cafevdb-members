@@ -76,8 +76,26 @@ export interface ProjectParticipantFieldDataOption {
   key: string,
   field: number,
   label: string,
+  untranslatedLabel: string,
   data: string,
+  deposit: number,
+  limit: number,
   tooltip: null|string,
+}
+
+export enum ProjectParticipantFieldDataType {
+  BOOLEAN = 'boolean',
+  CLOUD_FILE = 'cloud-file',
+  CLOUD_FOLDER = 'cloud-folder',
+  DATE = 'date',
+  DATETIME = 'datetime',
+  DB_FILE = 'db-file',
+  FLOAT = 'float',
+  HTML = 'html',
+  INTEGER = 'integer',
+  LIABILITIES = 'liabilities',
+  RECEIVABLES = 'receivables',
+  TEXT = 'text',
 }
 
 export interface ProjectParticipantField {
@@ -85,7 +103,7 @@ export interface ProjectParticipantField {
   name: string,
   untranslatedName: string,
   tooltip: null|string,
-  dataType: 'html'|'text',
+  dataType: ProjectParticipantFieldDataType,
   multiplicity: 'simple'|'multiple'|'parallel',
   fieldData: Record<string, ProjectParticipantFieldDatum>,
   dataOptions: Record<string, ProjectParticipantFieldDataOption>,
