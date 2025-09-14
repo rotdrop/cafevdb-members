@@ -212,6 +212,9 @@ class Musician implements \ArrayAccess, \JsonSerializable
   #[ORM\Column(type: 'boolean', nullable: true)]
   private $cloudAccountDisabled;
 
+  #[ORM\OneToMany(targetEntity: ProjectApplication::class, mappedBy: 'musician', indexBy: 'project_id', orphanRemoval: true, fetch: 'EXTRA_LAZY')]
+  private $projectApplications;
+
   #[ORM\OneToMany(targetEntity: MusicianInstrument::class, mappedBy: 'musician', fetch: 'EXTRA_LAZY')]
   private $instruments;
 
@@ -250,6 +253,7 @@ class Musician implements \ArrayAccess, \JsonSerializable
     $this->defaultParticipationStatus = Types\EnumParticipationStatus::REGULAR();
     $this->instruments = new ArrayCollection;
     $this->payments = new ArrayCollection();
+    $this->projectApplications = new ArrayCollection();
     $this->projectInstruments = new ArrayCollection();
     $this->projectParticipantFieldsData = new ArrayCollection();
     $this->projectParticipation = new ArrayCollection();
@@ -544,6 +548,16 @@ class Musician implements \ArrayAccess, \JsonSerializable
   public function getProjectInstruments():Collection
   {
     return $this->projectInstruments;
+  }
+
+  /**
+   * Get projectApplications.
+   *
+   * @return Collection
+   */
+  public function getProjectApplications():Collection
+  {
+    return $this->projectApplications;
   }
 
   /**

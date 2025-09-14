@@ -112,6 +112,9 @@ class Project implements \ArrayAccess
   #[ORM\OneToMany(targetEntity: ProjectParticipant::class, mappedBy: 'project')]
   private Collection $participants;
 
+  #[ORM\OneToMany(targetEntity: ProjectApplication::class, mappedBy: 'project', indexBy: 'id')]
+  private Collection $applications;
+
   #[ORM\OneToMany(targetEntity: ProjectParticipantField::class, mappedBy: 'project', indexBy: 'id', fetch: 'EXTRA_LAZY')]
   #[ORM\OrderBy(['displayOrder' => 'DESC'])]
   private Collection $participantFields;
@@ -132,6 +135,7 @@ class Project implements \ArrayAccess
   public function __construct()
   {
     $this->arrayCTOR();
+    $this->applications = new ArrayCollection();
     $this->calendarEvents = new ArrayCollection();
     $this->instrumentationNumbers = new ArrayCollection();
     $this->participantFields = new ArrayCollection();
@@ -183,6 +187,16 @@ class Project implements \ArrayAccess
   public function getType():Types\EnumProjectTemporalType
   {
     return $this->type;
+  }
+
+  /**
+   * Get applications.
+   *
+   * @return Collection
+   */
+  public function getApplications():Collection
+  {
+    return $this->applications;
   }
 
   /**
