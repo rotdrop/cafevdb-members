@@ -3,7 +3,7 @@
  * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine
+ * @copyright Copyright (c) 2022, 2023, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -37,12 +37,20 @@ class EncryptedFile extends File
    * @var Collection
    */
   #[ORM\ManyToMany(targetEntity: Musician::class, mappedBy: 'encryptedFiles', indexBy: 'id', fetch: 'EXTRA_LAZY')] // The list of owners which in addition to the members of the management
-  private $owners;
+  private Collection $owners;
+
+  /**
+   * @var Collection
+   */
+  #[ORM\OneToMany(targetEntity: DatabaseStorageFile::class, mappedBy: 'file', cascade: ['persist'])]
+  private Collection $databaseStorageDirEntries;
 
   // phpcs:ignore Squiz.Commenting.FunctionComment.Missing
   public function __construct()
   {
     parent::__construct();
+    $this->owners = new ArrayCollection;
+    $this->databaseStorageDirEntries = new ArrayCollection;
   }
   // phpcs:enable
 
@@ -54,5 +62,15 @@ class EncryptedFile extends File
   public function getOwners():Collection
   {
     return $this->owners;
+  }
+
+  /**
+   * Get databaseStorageDirEntries.
+   *
+   * @return Collection
+   */
+  public function getDatabaseStorageDirEntries():Collection
+  {
+    return $this->databaseStorageDirEntries;
   }
 }

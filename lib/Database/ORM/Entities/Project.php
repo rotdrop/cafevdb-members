@@ -3,7 +3,7 @@
  * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine
+ * @copyright Copyright (c) 2022, 2023, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -103,40 +103,45 @@ class Project implements \ArrayAccess
   #[ORM\Column(type: 'boolean')]
   private $executiveBoard;
 
-  /**
-   * @var Collection
-   */
+  #[ORM\OneToMany(targetEntity: ProjectInstrument::class, mappedBy: 'project')]
+  private Collection $participantInstruments;
+
   #[ORM\OneToMany(targetEntity: ProjectEvent::class, mappedBy: 'project')]
-  private $calendarEvents;
+  private Collection $calendarEvents;
 
   #[ORM\OneToMany(targetEntity: ProjectParticipant::class, mappedBy: 'project')]
-  private $participants;
+  private Collection $participants;
 
   #[ORM\OneToMany(targetEntity: ProjectParticipantField::class, mappedBy: 'project', indexBy: 'id', fetch: 'EXTRA_LAZY')]
   #[ORM\OrderBy(['displayOrder' => 'DESC'])]
-  private $participantFields;
+  private Collection $participantFields;
 
   #[ORM\OneToMany(targetEntity: ProjectParticipantFieldDatum::class, mappedBy: 'project', fetch: 'EXTRA_LAZY')]
-  private $participantFieldsData;
+  private Collection $participantFieldsData;
 
   #[ORM\OneToMany(targetEntity: SepaDebitMandate::class, mappedBy: 'project')]
-  private $sepaDebitMandates;
+  private Collection $sepaDebitMandates;
 
   #[ORM\OneToMany(targetEntity: ProjectPayment::class, mappedBy: 'project')]
-  private $payments;
+  private Collection $payments;
+
+  #[ORM\OneToMany(targetEntity: ProjectWebPage::class, mappedBy: 'project', cascade: ['persist'], fetch: 'EXTRA_LAZY')]
+  private Collection $webPages;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct()
   {
     $this->arrayCTOR();
-    $this->participants = new ArrayCollection();
-    $this->participantFields = new ArrayCollection();
-    $this->participantFieldsData = new ArrayCollection();
-    $this->sepaDebitMandates = new ArrayCollection();
-    $this->payments = new ArrayCollection();
     $this->calendarEvents = new ArrayCollection();
     $this->instrumentationNumbers = new ArrayCollection();
+    $this->participantFields = new ArrayCollection();
+    $this->participantFieldsData = new ArrayCollection();
+    $this->participantInstruments = new ArrayCollection();
+    $this->participants = new ArrayCollection();
+    $this->payments = new ArrayCollection();
+    $this->sepaDebitMandates = new ArrayCollection();
     $this->type = Types\EnumProjectTemporalType::from($this->type);
+    $this->webPages = new ArrayCollection();
   }
   // phpcs:enable
 
@@ -273,6 +278,26 @@ class Project implements \ArrayAccess
   public function getInstrumentationNumbers()
   {
     return $this->instrumentationNumbers;
+  }
+
+  /**
+   * Get participantInstruments.
+   *
+   * @return Collection
+   */
+  public function getParticipantInstruments():Collection
+  {
+    return $this->participantInstruments;
+  }
+
+  /**
+   * Get webPages.
+   *
+   * @return Collection
+   */
+  public function getWebPages()
+  {
+    return $this->webPages;
   }
 
   /**

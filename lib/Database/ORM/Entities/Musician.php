@@ -3,7 +3,7 @@
  * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine
+ * @copyright Copyright (c) 2022, 2023, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -249,12 +249,12 @@ class Musician implements \ArrayAccess, \JsonSerializable
     $this->__wakeup();
     $this->defaultParticipationStatus = Types\EnumParticipationStatus::REGULAR();
     $this->instruments = new ArrayCollection;
+    $this->payments = new ArrayCollection();
     $this->projectInstruments = new ArrayCollection();
-    $this->projectParticipation = new ArrayCollection();
     $this->projectParticipantFieldsData = new ArrayCollection();
+    $this->projectParticipation = new ArrayCollection();
     $this->sepaBankAccounts = new ArrayCollection;
     $this->sepaDebitMandates = new ArrayCollection;
-    $this->payments = new ArrayCollection();
   }
   // phpcs:enable
 

@@ -3,7 +3,7 @@
  * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine
+ * @copyright Copyright (c) 2022, 2023, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -67,10 +67,15 @@ class MusicianInstrument implements \ArrayAccess
   #[ORM\Column(type: 'integer', nullable: false)]
   private $ranking = 1;
 
+  /** @var Collection */
+  #[ORM\OneToMany(targetEntity: ProjectInstrument::class, mappedBy: 'musicianInstrument')]
+  private Collection $projectInstruments;
+
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct()
   {
     $this->__wakeup();
+    $this->projectInstruments = new ArrayCollection();
   }
   // phpcs:enable
 
@@ -113,5 +118,15 @@ class MusicianInstrument implements \ArrayAccess
   public function usage():int
   {
     return 0; /* $this->projectInstruments->count(); */
+  }
+
+  /**
+   * Get projectInstruments.
+   *
+   * @return Collection
+   */
+  public function getProjectInstruments():Collection
+  {
+    return $this->projectInstruments;
   }
 }

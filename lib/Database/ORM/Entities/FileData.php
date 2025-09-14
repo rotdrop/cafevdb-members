@@ -51,7 +51,7 @@ class FileData implements \ArrayAccess
    * association in between.
    */
   #[ORM\Id]
-  #[ORM\ManyToOne(targetEntity: File::class)]
+  #[ORM\ManyToOne(targetEntity: File::class, inversedBy: 'fileData')]
   protected $file;
 
   /**

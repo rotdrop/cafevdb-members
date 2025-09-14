@@ -323,12 +323,13 @@ class EntityManager extends EntityManagerDecorator
       return;
     }
     $types = [
+      Types\EnumDirEntryType::class => 'enum',
       Types\EnumFileType::class => 'enum',
       Types\EnumGeographicalScope::class => 'enum',
-      Types\EnumParticipationStatus::class => 'enum',
       Types\EnumMemberStatus::class => 'enum',
       Types\EnumParticipantFieldDataType::class => 'enum',
       Types\EnumParticipantFieldMultiplicity::class => 'enum',
+      Types\EnumParticipationStatus::class => 'enum',
       Types\EnumProjectTemporalType::class => 'enum',
       Types\EnumVCalendarType::class => 'enum',
       Types\UuidType::class => 'binary',

@@ -28,6 +28,7 @@ NPM = $(shell which npm 2> /dev/null)
 WGET = $(shell which wget 2> /dev/null)
 OPENSSL = $(shell which openssl 2> /dev/null)
 PHPUNIT = ./vendor/bin/phpunit
+ORM_CLI=$(PHP) $(SRCDIR)/dev-scripts/orm-cmd.php
 
 COMPOSER_SYSTEM = $(shell which composer 2> /dev/null)
 ifeq (, $(COMPOSER_SYSTEM))
@@ -221,3 +222,7 @@ unit-tests:
 integration-tests:
 	$(PHPUNIT) -c phpunit.integration.xml
 .PHONY: integration-tests
+
+.PHONY: verifydb
+verifydb: $(ABSSRCDIR)/vendor
+	$(ORM_CLI) orm:validate-schema
