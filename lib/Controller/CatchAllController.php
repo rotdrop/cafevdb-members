@@ -3,7 +3,7 @@
  * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022-2024 Claus-Justus Heine
+ * @copyright Copyright (c) 2022-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,6 +24,7 @@ namespace OCA\CAFeVDBMembers\Controller;
 
 use OCA\CAFeVDBMembers\AppInfo\Application;
 use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http\Attribute;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\IRequest;
 use OCP\IL10N;
@@ -60,10 +61,9 @@ class CatchAllController extends Controller
    * @param mixed $g
    *
    * @return DataResponse
-   *
-   * @NoAdminRequired
-   * @NoCSRFRequired
    */
+  #[Attribute\NoAdminRequired]
+  #[Attribute\NoCSRFRequired]
   public function post(
     mixed $a,
     mixed $b,
@@ -100,10 +100,9 @@ class CatchAllController extends Controller
    * @param mixed $g
    *
    * @return DataResponse
-   *
-   * @NoAdminRequired
-   * @NoCSRFRequired
    */
+  #[Attribute\NoAdminRequired]
+  #[Attribute\NoCSRFRequired]
   public function get(
     mixed $a,
     mixed $b,

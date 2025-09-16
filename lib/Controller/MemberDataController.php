@@ -22,19 +22,19 @@
 
 namespace OCA\CAFeVDBMembers\Controller;
 
+use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http\Attribute;
+use OCP\AppFramework\Http\DataResponse;
+use OCP\AppFramework\Http\Response;
+use OCP\IL10N;
+use OCP\IRequest;
 use Psr\Log\LoggerInterface;
 
-use OCP\AppFramework\Controller;
-use OCP\AppFramework\Http\Response;
-use OCP\AppFramework\Http\DataResponse;
-use OCP\IRequest;
-use OCP\IL10N;
-
 use OCA\CAFeVDBMembers\AppInfo\Application;
-use OCA\CAFeVDBMembers\Database\ORM\EntityManager;
 use OCA\CAFeVDBMembers\Database\ORM\Entities;
-use OCA\CAFeVDBMembers\Service\MemberDataService;
+use OCA\CAFeVDBMembers\Database\ORM\EntityManager;
 use OCA\CAFeVDBMembers\Service\AuthenticationService;
+use OCA\CAFeVDBMembers\Service\MemberDataService;
 
 /**
  * AJAX endpoints for dealing with the personal data of the logged in user.
@@ -67,9 +67,8 @@ class MemberDataController extends Controller
    * single person.
    *
    * @return DataResponse
-   *
-   * @NoAdminRequired
    */
+  #[Attribute\NoAdminRequired]
   public function get():DataResponse
   {
     $authOk = $this->checkAccess();
@@ -319,9 +318,8 @@ class MemberDataController extends Controller
    * @param string $optionKey The UUID of the corresponding field-datum.
    *
    * @return Response
-   *
-   * @NoAdminRequired
    */
+  #[Attribute\NoAdminRequired]
   public function download(string $optionKey):Response
   {
     $authOk = $this->checkAccess();

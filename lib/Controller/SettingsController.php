@@ -24,6 +24,7 @@ namespace OCA\CAFeVDBMembers\Controller;
 
 use Psr\Log\LoggerInterface;
 use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http\Attribute;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\IRequest;
 use OCP\IConfig;
@@ -203,9 +204,8 @@ class SettingsController extends Controller
    * @param string $setting
    *
    * @return DataResponse
-   *
-   * @NoAdminRequired
    */
+  #[Attribute\NoAdminRequired]
   public function getApp(string $setting):DataResponse
   {
     switch ($setting) {
@@ -223,9 +223,8 @@ class SettingsController extends Controller
    * @param mixed $value
    *
    * @return DataResponse
-   *
-   * @NoAdminRequired
    */
+  #[Attribute\NoAdminRequired]
   public function setPersonal(string $setting, mixed $value):DataResponse
   {
     $oldValue = $this->config->getUserValue($this->userId, $this->appName, $setting);
@@ -239,9 +238,8 @@ class SettingsController extends Controller
    * @param string $setting
    *
    * @return DataResponse
-   *
-   * @NoAdminRequired
    */
+  #[Attribute\NoAdminRequired]
   public function getPersonal(string $setting):DataResponse
   {
     return new DataResponse([

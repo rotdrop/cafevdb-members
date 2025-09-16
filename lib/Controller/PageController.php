@@ -23,6 +23,7 @@
 namespace OCA\CAFeVDBMembers\Controller;
 
 use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http\Attribute;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IRequest;
 use OCP\Util;
@@ -48,9 +49,10 @@ class PageController extends Controller
    *
    * @return TemplateResponse
    *
-   * @NoAdminRequired
-   * @NoCSRFRequired
+   * @todo Why NoCSRF?
    */
+  #[Attribute\NoAdminRequired]
+  #[Attribute\NoCSRFRequired]
   public function index():TemplateResponse
   {
     Util::addScript($this->appName, $this->assetService->getJSAsset('main')['asset']);

@@ -3,7 +3,7 @@
  * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2023, 2024 Claus-Justus Heine
+ * @copyright Copyright (c) 2023-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,14 +24,14 @@ namespace OCA\CAFeVDBMembers\Controller;
 
 use DateTimeZone;
 
-use Psr\Log\LoggerInterface as ILogger;
-
-use OCP\AppFramework\Http;
 use OCP\AppFramework\ApiController;
-use OCP\IRequest;
+use OCP\AppFramework\Http;
+use OCP\AppFramework\Http\Attribute;
 use OCP\AppFramework\Http\DataResponse;
-use OCP\IL10N;
 use OCP\IDateTimeZone;
+use OCP\IL10N;
+use OCP\IRequest;
+use Psr\Log\LoggerInterface as ILogger;
 
 use OCA\CAFeVDBMembers\Database\ORM\EntityManager;
 use OCA\CAFeVDBMembers\Database\ORM\Entities;
@@ -77,12 +77,11 @@ class ProjectEventsApiController extends ApiController
    * @param string $locale
    *
    * @return DataResponse
-   *
-   * @CORS
-   * @NoCSRFRequired
-   * @NoAdminRequired
-   * @PublicPage
    */
+  #[Attribute\CORS]
+  #[Attribute\NoAdminRequired]
+  #[Attribute\NoCSRFRequired]
+  #[Attribute\PublicPage]
   public function serviceSwitch(
     string $indexObject,
     int|string $objectId,

@@ -26,9 +26,8 @@ use DateTimeImmutable;
 use DateTimeInterface;
 use DateTime;
 
-use Psr\Log\LoggerInterface;
-
 use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http\Attribute;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Http\Template\PublicTemplateResponse;
 use OCP\AppFramework\Http\Template\SimpleMenuAction;
@@ -43,6 +42,7 @@ use OCP\IRequest;
 use OCP\IURLGenerator;
 use OCP\IUserSession;
 use OCP\Util;
+use Psr\Log\LoggerInterface;
 
 use OCA\CAFEVDB\Service\ConfigService;
 
@@ -87,11 +87,10 @@ class ProjectRegistrationController extends Controller
    * @return TemplateResponse
    *
    * @todo Check whether we do want CSRF.
-   *
-   * @NoAdminRequired
-   * @NoCSRFRequired
-   * @PublicPage
    */
+  #[Attribute\NoAdminRequired]
+  #[Attribute\NoCSRFRequired]
+  #[Attribute\PublicPage]
   public function page(?string $projectName):TemplateResponse
   {
     $nowDate = self::convertToTimezoneDate(new DateTimeImmutable, $this->dateTimeZone->getTimeZone());
