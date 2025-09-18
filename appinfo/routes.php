@@ -91,6 +91,21 @@ return [
       'url' => '/download/member/{optionKey}',
       'verb' => 'GET',
     ],
+    [
+      'name' => 'TestAuthPublicShareController#showShare',
+      'url' => '/test/{token}',
+      'verb' => 'GET',
+    ],
+    [
+      'name' => 'TestAuthPublicShareController#showAuthenticate',
+      'url' => '/test/{token}/authenticate/{redirect}',
+      'verb' => 'GET',
+    ],
+    [
+      'name' => 'TestAuthPublicShareController#authenticate',
+      'url' => '/test/{token}/authenticate/{redirect}',
+      'verb' => 'POST',
+    ],
     /**
      * Attempt a catch all ...
      */
