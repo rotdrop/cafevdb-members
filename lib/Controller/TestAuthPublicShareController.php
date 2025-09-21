@@ -22,8 +22,9 @@
 
 namespace OCA\CAFeVDBMembers\Controller;
 
-use OCP\AppFramework\Http\Template\PublicTemplateResponse;
+use OCP\AppFramework\AuthPublicShareController;
 use OCP\AppFramework\Http\Attribute;
+use OCP\AppFramework\Http\Template\PublicTemplateResponse;
 use OCP\IRequest;
 use OCP\ISession;
 use OCP\IURLGenerator;
@@ -32,8 +33,22 @@ use OCP\Share\IShare;
 /**
  * Playground, test out the authenticated public share controller in order to
  * evaluate its usefulness.
+ *
+ * Ok, how this could be used for the registration process:
+ *
+ * - "Shares" are files in Nextcloud
+ * - We could store the registration data as a file. Why not.
+ * 1. User opens registration form
+ *    - is logged in: redirect to the non-public registration end-point
+ *      - fetch the registration data from the unique (per project and person) share
+ * 2. User enters name and email
+ *    - if we have data, then hint the user to not register twice
+ *        - problems, inconveniences: we require a second factor for real users
+ *      - if the person has no account, provide password recovery by email etc.
+ *
+ *
  */
-class PublicPageController extends AuthPublicShareController
+class TestAuthPublicShareController extends AuthPublicShareController
 {
   protected IShare $share;
 
@@ -43,16 +58,45 @@ class PublicPageController extends AuthPublicShareController
     IRequest $request,
     ISession $session,
     IURLGenerator $urlGenerator,
+    protected ProjectRegistrationController $registrationController,
   ) {
     parent::__construct($appName, $request, $session, $urlGenerator);
   }
   // phpcs:enable
 
   /** {@inheritdoc} */
+  #[Attribute\NoAdminRequired]
   #[Attribute\PublicPage]
   #[Attribute\NoCsRFRequired]
   public function showShare(): PublicTemplateResponse
   {
-    return new PublicTemplateResponse($this->appName, 'public-auth-test', []);
+    return $this->registrationController->page();
+  }
+
+  /** {@inheritdoc} */
+  #[PublicPage]
+  #[NoCSRFRequired]
+  public function showAuthenticate(): TemplateResponse
+  {
+    // $this->redirectIfOwned($this->share);
+
+    $templateParameters = ['share' => $this->share];
+
+    return new TemplateResponse('core', 'publicshareauth', $templateParameters, 'guest');
+  }
+
+  protected function getPasswordHash(): ?string
+  {
+    return null;
+  }
+
+  public function isValidToken(): bool
+  {
+    return true;
+  }
+
+  protected function isPasswordProtected(): bool
+  {
+    return true;
   }
 }

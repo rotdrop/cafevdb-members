@@ -30,6 +30,33 @@ return [
         'projectName' => null,
         'section' => null,
       ],
+      'requirements' => [
+        'projectName' => '^(|.*[0-9]{4})$',
+      ],
+    ],
+    [
+      'name' => 'TestAuthPublicShare#showShare',
+      'url' => '/registration/{token}/public-auth-test',
+      'verb' => 'GET',
+      'requirements' => [
+        'token' => '^.*(?<!\d{4})$'
+      ],
+    ],
+    [
+      'name' => 'TestAuthPublicShare#showAuthenticate',
+      'url' => '/registration/{token}/authenticate/{redirect}',
+      'verb' => 'GET',
+      'requirements' => [
+        'token' => '^.*(?<!\d{4})$'
+      ],
+    ],
+    [
+      'name' => 'TestAuthPublicShare#authenticate',
+      'url' => '/registration/{token}/authenticate/{redirect}',
+      'verb' => 'POST',
+      'requirements' => [
+        'token' => '^.*(?<!\d{4})$'
+      ],
     ],
     [
       'name' => 'project_events_api#preflighted_cors',
@@ -90,21 +117,6 @@ return [
       'name' => 'member_data#download',
       'url' => '/download/member/{optionKey}',
       'verb' => 'GET',
-    ],
-    [
-      'name' => 'TestAuthPublicShareController#showShare',
-      'url' => '/test/{token}',
-      'verb' => 'GET',
-    ],
-    [
-      'name' => 'TestAuthPublicShareController#showAuthenticate',
-      'url' => '/test/{token}/authenticate/{redirect}',
-      'verb' => 'GET',
-    ],
-    [
-      'name' => 'TestAuthPublicShareController#authenticate',
-      'url' => '/test/{token}/authenticate/{redirect}',
-      'verb' => 'POST',
     ],
     /**
      * Attempt a catch all ...
