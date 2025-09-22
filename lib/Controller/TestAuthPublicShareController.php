@@ -24,6 +24,7 @@ namespace OCA\CAFeVDBMembers\Controller;
 
 use OCP\AppFramework\AuthPublicShareController;
 use OCP\AppFramework\Http\Attribute;
+use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Http\Template\PublicTemplateResponse;
 use OCP\IRequest;
 use OCP\ISession;
@@ -85,16 +86,19 @@ class TestAuthPublicShareController extends AuthPublicShareController
     return new TemplateResponse('core', 'publicshareauth', $templateParameters, 'guest');
   }
 
+  /** {@inheritdoc} */
   protected function getPasswordHash(): ?string
   {
     return null;
   }
 
+  /** {@inheritdoc} */
   public function isValidToken(): bool
   {
     return true;
   }
 
+  /** {@inheritdoc} */
   protected function isPasswordProtected(): bool
   {
     return true;
