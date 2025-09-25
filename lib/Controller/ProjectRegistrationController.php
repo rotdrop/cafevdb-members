@@ -27,7 +27,9 @@ use DateTimeInterface;
 use DateTime;
 
 use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute;
+use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Http\Template\PublicTemplateResponse;
 use OCP\AppFramework\Http\Template\SimpleMenuAction;
@@ -369,5 +371,21 @@ class ProjectRegistrationController extends Controller
     $deadline = min($startDates)->modify('-1 day');
 
     return $deadline;
+  }
+
+  /**
+   * Receive the submit request, generate an email share and send all
+   * neccessary data back to the frontend.
+   *
+   * @param array $data User input, registration data.
+   *
+   * @return DataResponse
+   *
+   * @todo Mayhaps use a public template response. This causes a page reload
+   * but this might even be desirable for security considerations.
+   */
+  public function submit(array $data): DataResponse
+  {
+    return new DataResponse($data, Http::STATUS_OK);
   }
 }

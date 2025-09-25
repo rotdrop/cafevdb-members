@@ -31,7 +31,7 @@
       >
         {{ t(appName, 'back') }}
       </RouterButton>
-      <NcButton>
+      <NcButton @click="submit">
         {{ t(appName, 'Submit') }}
         <template #icon>
           <span class="icon-checkmark" />
@@ -52,6 +52,11 @@ import {
   onBeforeMount,
 } from 'vue'
 import { storeToRefs } from 'pinia'
+import axios from '@nextcloud/axios'
+import generateAppUrl from '../../toolkit/util/generate-url.ts'
+import { isAxiosErrorResponse } from '../../toolkit/types/axios-type-guards'
+import { showError, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
+import logger from '../../logger.ts'
 
 const loading = ref(true)
 const readonly = ref(true)
@@ -62,6 +67,35 @@ const {
   activeProject,
   projectName,
 } = storeToRefs(appData)
+const {
+  registrationProject,
+} = storeToRefs(registrationData)
+
+const submit = async () => {
+  try {
+    const response = await axios.post(
+      generateAppUrl(
+        'registration/{projectName}/submit',
+        { projectName: projectName.value },
+      ),
+      registrationProject.value,
+    )
+    logger.info('Submission Response', { response })
+  } catch (e) {
+    console.error('ERROR', e)
+    let message = t(appName, 'reason unknown')
+    if (isAxiosErrorResponse(e) && e.response.data) {
+      const data = e.response.data as { messages?: string[] }
+      if (Array.isArray(data.messages)) {
+        message = data.messages.join(' ')
+      }
+    }
+    // Ignore for the time being
+    if (this === false) {
+      showError(t(appName, 'Could not fetch root-folder of member file space: {message}', { message }), { timeout: TOAST_PERMANENT_TIMEOUT })
+    }
+  }
+}
 
 onBeforeMount(async () => {
   if (!activeProject.value) {

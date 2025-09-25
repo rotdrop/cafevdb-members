@@ -35,6 +35,14 @@ return [
       ],
     ],
     [
+      'name' => 'ProjectRegistration#submit',
+      'url' => '/registration/{projectName}/submit',
+      'verb' => 'POST',
+      'requirements' => [
+        'projectName' => '^(|.*[0-9]{4})$',
+      ],
+    ],
+    [
       'name' => 'TestAuthPublicShare#showShare',
       'url' => '/registration/{token}/public-auth-test',
       'verb' => 'GET',
