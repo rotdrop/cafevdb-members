@@ -34,6 +34,7 @@
             <div class="option-helptext" v-html="field.tooltip" />
             <NcTextArea v-if="field.dataType === 'html' && field.multiplicity === 'simple'"
                         v-model="registrationProject.options[field.id]"
+                        labelOutside
             />
             <NcSelect v-else-if="field.multiplicity === 'multiple' || field.multiplicity === 'parallel'"
                       :ref="(el) => addOptionSelectRef(el, field.id)"
@@ -42,6 +43,7 @@
                       :multiple="field.multiplicity === 'parallel'"
                       :options="Object.values(field.dataOptions)"
                       :reduce="reduceFieldOptions"
+                      labelOutside
             >
               <template #option="option">
                 <NcEllipsisedOption :name="fieldOptionLabel(option, field)"

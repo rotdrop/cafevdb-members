@@ -78,7 +78,9 @@ const submit = async () => {
         'registration/{projectName}/submit',
         { projectName: projectName.value },
       ),
-      registrationProject.value,
+      {
+        data: registrationProject.value,
+      },
     )
     logger.info('Submission Response', { response })
   } catch (e) {
@@ -90,10 +92,7 @@ const submit = async () => {
         message = data.messages.join(' ')
       }
     }
-    // Ignore for the time being
-    if (this === false) {
-      showError(t(appName, 'Could not fetch root-folder of member file space: {message}', { message }), { timeout: TOAST_PERMANENT_TIMEOUT })
-    }
+    showError(t(appName, 'Could submit the registration data: {message}', { message }), { timeout: TOAST_PERMANENT_TIMEOUT })
   }
 }
 

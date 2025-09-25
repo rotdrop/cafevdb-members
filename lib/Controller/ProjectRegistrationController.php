@@ -383,7 +383,11 @@ class ProjectRegistrationController extends Controller
    *
    * @todo Mayhaps use a public template response. This causes a page reload
    * but this might even be desirable for security considerations.
+   *
+   * #[Attribute\NoCSRFRequired]
    */
+  #[Attribute\NoAdminRequired]
+  #[Attribute\PublicPage]
   public function submit(array $data): DataResponse
   {
     return new DataResponse($data, Http::STATUS_OK);
