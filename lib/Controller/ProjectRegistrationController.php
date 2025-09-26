@@ -55,6 +55,7 @@ use OCA\CAFeVDBMembers\Database\ORM\Entities;
 use OCA\CAFeVDBMembers\Database\ORM\EntityManager;
 use OCA\CAFeVDBMembers\Service\AssetService;
 use OCA\CAFeVDBMembers\Service\EventsService;
+use OCA\CAFeVDBMembers\Service\ProjectRegistrationService;
 
 /** AJAX endpoints for a project registration form. */
 class ProjectRegistrationController extends Controller
@@ -76,6 +77,7 @@ class ProjectRegistrationController extends Controller
     private IInitialState $initialState,
     private IURLGenerator $urlGenerator,
     private IUserSession $userSession,
+    private ProjectRegistrationService $registationService,
     protected IL10N $l,
     protected LoggerInterface $logger,
   ) {
@@ -390,6 +392,7 @@ class ProjectRegistrationController extends Controller
   #[Attribute\PublicPage]
   public function submit(array $data): DataResponse
   {
+    $this->registationService->handleSubmission($data);
     return new DataResponse($data, Http::STATUS_OK);
   }
 }

@@ -18,6 +18,7 @@
       "/vendor/**/[Ee]xamples/**/*.php",
       "/vendor/composer/*.php",
       "/vendor/*.php",
+      "**/vendor-bin/**",
       "# not need php_codesniffer",
       "/vendor/squizlabs/php_codesniffer/**/*.php",
       "/build/**",

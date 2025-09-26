@@ -27,14 +27,14 @@
       {{ t(appName, 'Personal Profile') }}
     </h2>
     <div class="input-row">
-      <InputText v-model="registrationData.firstName"
+      <InputText :value.sync="registrationData.firstName"
                  :label="t(appName, 'First Name')"
                  :placeholder="t(appName, 'e.g. Jonathan')"
                  :readonly="readonly"
                  :required="true"
                  @input="updatePublicName"
       />
-      <InputText v-model="registrationData.surName"
+      <InputText :value.sync="registrationData.surName"
                  :label="t(appName, 'Sur Name')"
                  :placeholder="t(appName, 'e.g. Smith')"
                  :readonly="readonly"
@@ -43,7 +43,7 @@
       />
     </div>
     <div class="input-row">
-      <InputText v-model="registrationData.nickName"
+      <InputText :value.sync="registrationData.nickName"
                  :label="t(appName, 'Nick Name (optional)')"
                  :placeholder="t(appName, 'e.g. Jonny')"
                  :readonly="readonly"
@@ -51,19 +51,19 @@
       />
     </div>
     <div v-show="registrationData.addressSupplement" class="input-row">
-      <InputText v-model="registrationData.addressSupplement"
+      <InputText :value.sync="registrationData.addressSupplement"
                  :label="t(appName, 'Address Supplement')"
                  :placeholder="t(appName, 'e.g. c/o Doe')"
                  :readonly="readonly"
       />
     </div>
     <div class="input-row">
-      <InputText v-model="registrationData.street"
+      <InputText :value.sync="registrationData.street"
                  :label="t(appName, 'Street')"
                  :placeholder="t(appName, 'e.g. Underhill')"
                  :readonly="readonly"
       />
-      <InputText v-model="registrationData.streetNumber"
+      <InputText :value.sync="registrationData.streetNumber"
                  type="number"
                  :label="t(appName, 'Number')"
                  :placeholder="t(appName, 'e.g. 13')"
@@ -71,20 +71,20 @@
       />
     </div>
     <div class="input-row">
-      <InputText v-model="registrationData.postalCode"
+      <InputText :value.sync="registrationData.postalCode"
                  type="text"
                  :label="t(appName, 'Postal Code')"
                  :placeholder="t(appName, 'e.g. 4711')"
                  :readonly="readonly"
       />
-      <InputText v-model="registrationData.city"
+      <InputText :value.sync="registrationData.city"
                  :label="t(appName, 'City')"
                  :placeholder="t(appName, 'e.g. Bagend')"
                  :readonly="readonly"
       />
     </div>
     <div class="input-row">
-      <InputText v-model="registrationCountry"
+      <InputText :value.sync="registrationCountry"
                  type="multiselect"
                  class="country"
                  :label="t(appName, 'Country')"
@@ -95,7 +95,7 @@
                  option-label="name"
                  :multiple="false"
       />
-      <InputText v-model="registrationData.birthday"
+      <InputText :value.sync="registrationData.birthday"
                  type="date"
                  class="birthday"
                  :label="t(appName, 'Birthday')"
@@ -105,7 +105,7 @@
       />
     </div>
     <div class="input-row">
-      <InputText v-model="registrationData.email"
+      <InputText :value.sync="registrationData.email"
                  :label="t(appName, 'Email')"
                  :placeholder="t(appName, 'e.g. me@you.tld')"
                  :readonly="readonly"
@@ -116,7 +116,7 @@
     <div v-if="registrationData.emailAddresses.length > 1"
          class="input-row"
     >
-      <InputText v-model="registrationData.emailAddresses"
+      <InputText :value.sync="registrationData.emailAddresses"
                  type="multiselect"
                  :label="t(appName, 'All Email Addresses')"
                  :options="registrationData.emailAddresses"
@@ -127,19 +127,19 @@
       />
     </div>
     <div class="input-row">
-      <InputText v-model="registrationData.mobilePhone"
+      <InputText :value.sync="registrationData.mobilePhone"
                  :label="t(appName, 'Mobile Phone')"
                  :placeholder="t(appName, 'e.g. +12 34 5678 901234')"
                  :readonly="readonly"
       />
-      <InputText v-model="registrationData.fixedLinePhone"
+      <InputText :value.sync="registrationData.fixedLinePhone"
                  :label="t(appName, 'Fixed Line Phone')"
                  :placeholder="t(appName, 'e.g. +12 34 5678 901234')"
                  :readonly="readonly"
       />
     </div>
     <div class="input-row">
-      <InputText v-model="registrationData.selectedInstruments"
+      <InputText :value.sync="registrationData.selectedInstruments"
                  type="multiselect"
                  :label="t(appName, 'All my Instruments or Roles')"
                  :options="instruments"
@@ -246,7 +246,7 @@ onBeforeMount(async () => {
     return
   }
   await registrationData.initializeRegistrationData()
-  registrationCountry.value = countries.value.find(country => country.code === registrationData.country)
+  registrationCountry.value = countries.value!.find(country => country.code === registrationData.country)
   readonly.value = false
   loading.value = false
 })

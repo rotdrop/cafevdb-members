@@ -200,6 +200,7 @@ interface TargetedMouseEvent extends MouseEvent {
 }
 
 const handleInput = (vueEvent: Event) => {
+  console.info('EVENT', { vueEvent })
   const event = vueEvent as TargetedMouseEvent
   emit('input', event.target.value)
   emit('update:value', event.target.value)
