@@ -121,8 +121,17 @@ export const useAppDataStore = defineStore('app-data', () => {
     optionGroup.sortOrder += instrument.sortOrder
     groupedInstruments[familyTag] = optionGroup
   }
+  const instruments: Instrument[] = []
+  for (const optionGroup of Object.values(groupedInstruments).sort((a, b) => a.sortOrder - b.sortOrder)) {
+    instruments.push({
+      id: -1,
+      name: optionGroup.family,
+      sortOrder: -1,
+      families: [],
+    })
+    instruments.splice(instruments.length, 0, ...optionGroup.instruments)
+  }
 
-  const instruments = computed(() => Object.values(groupedInstruments).sort((a, b) => a.sortOrder - b.sortOrder))
   const orchestraName = computed(() => initialState?.orchestraName || t(appName, '[UNKNOWN]'))
 
   if (activeProjectIndex === null && projectsArray) {

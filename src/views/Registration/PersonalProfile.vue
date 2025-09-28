@@ -143,8 +143,7 @@
                  type="multiselect"
                  :label="t(appName, 'All my Instruments or Roles')"
                  :options="instruments"
-                 group-values="instruments"
-                 group-label="family"
+                 :selectable="isNotAnInstrumentFamily"
                  track-by="id"
                  option-label="name"
                  :auto-limit="true"
@@ -216,7 +215,7 @@ import {
   watch,
 } from 'vue'
 import { storeToRefs } from 'pinia'
-import type { Country } from '../../stores/appData.ts'
+import type { Country, Instrument } from '../../stores/appData.ts'
 
 const registrationData = useMemberDataStore()
 const appData = useAppDataStore()
@@ -227,6 +226,8 @@ const {
   instruments,
   projectName,
 } = storeToRefs(appData)
+const isNotAnInstrumentFamily = (option: Instrument) => option.id > 0
+console.info('INSTRUMENTS', instruments)
 const {
   country,
   firstName,
