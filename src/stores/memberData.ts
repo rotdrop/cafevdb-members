@@ -194,7 +194,6 @@ export const useMemberDataStore = defineStore('member-data', () => {
     nickName: ref(undefined as string|undefined),
     personalPublicName: ref(undefined as string|undefined),
     postalCode: ref(undefined as string|undefined),
-    projectApplication: ref([]),
     projectParticipation: ref([] as ProjectParticipant[]),
     sepaBankAccounts: ref([] as SepaBankAccount[]),
     street: ref(undefined as string|undefined),
@@ -211,6 +210,27 @@ export const useMemberDataStore = defineStore('member-data', () => {
   const initialState = Object.fromEntries(Object.entries(simpleState).map(([key, value]) => {
     return [key, typeof value.value === 'object' && value.value !== null ? deepCopy(value.value) : value.value]
   }))
+  // The fields of the simple state are submitted during the project registration process.
+  const personalProfileKeys = ref([
+    'addressSupplement',
+    'birthday',
+    'city',
+    'country',
+    'email',
+    'emailAddresses',
+    'firstName',
+    'fixedLinePhone',
+    'instruments',
+    'mobilePhone',
+    'nickName',
+    'postalCode',
+    'street',
+    'streetNumber',
+    'surName',
+    'whoAmI',
+    'selectedInstruments',
+    'firstTimeApplication',
+  ])
 
   const resetState = () => {
     for (const [key, value] of Object.entries(initialState)) {
@@ -370,5 +390,6 @@ export const useMemberDataStore = defineStore('member-data', () => {
     registrationProject,
     noAbsence,
     personalProjectInstrumentOptions,
+    personalProfileKeys,
   }
 })

@@ -73,13 +73,20 @@ const {
 
 const submit = async () => {
   try {
+    logger.info('REGDATA', { registrationData })
+    const personalProfile = Object.fromEntries(
+      registrationData.personalProfileKeys.map(key => [key, registrationData[key]]),
+    )
     const response = await axios.post(
       generateAppUrl(
         'registration/{projectName}/submit',
         { projectName: projectName.value },
       ),
       {
-        data: registrationProject.value,
+        data: {
+          projectData: registrationProject.value,
+          personalProfile,
+        },
       },
     )
     logger.info('Submission Response', { response })
