@@ -379,6 +379,8 @@ class ProjectRegistrationController extends Controller
    * Receive the submit request, generate an email share and send all
    * neccessary data back to the frontend.
    *
+   * @param string $projectName
+   *
    * @param array $data User input, registration data.
    *
    * @return DataResponse
@@ -390,9 +392,9 @@ class ProjectRegistrationController extends Controller
    */
   #[Attribute\NoAdminRequired]
   #[Attribute\PublicPage]
-  public function submit(array $data): DataResponse
+  public function submit(string $projectName, array $data): DataResponse
   {
-    $this->registationService->handleSubmission($data);
+    $this->registationService->handleSubmission($projectName, $data);
     return new DataResponse($data, Http::STATUS_OK);
   }
 }
