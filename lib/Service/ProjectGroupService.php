@@ -3,7 +3,7 @@
  * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022-2024 Claus-Justus Heine
+ * @copyright Copyright (c) 2022-2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -68,7 +68,7 @@ class ProjectGroupService
    *
    * @return void
    */
-  public function synchronizeFolderStructure(string $gid = null):void
+  public function synchronizeFolderStructure(?string $gid = null):void
   {
     if (empty($gid)) {
       throw new InvalidArgumentException($this->l->t('Syncing all groups in one run is no longer supported.'));
@@ -127,7 +127,7 @@ class ProjectGroupService
    *
    * @return string
    */
-  public function getProjectFolderMountPoint(string $projectName, array &$parentMounts = null):string
+  public function getProjectFolderMountPoint(string $projectName, ?array &$parentMounts = null):string
   {
     $projectYear = substr($projectName, -4);
     if (preg_match('/^\d{4}$/', $projectYear) !== 1) {
