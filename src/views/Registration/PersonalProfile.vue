@@ -198,6 +198,15 @@
   </div>
 </template>
 <script setup lang="ts">
+/*
+ * @todo Once personal data has been entered check whether there is
+ * already registration data. We should also do some sort of fuzzy
+ * compare and suggest to retrieve existing data if we find a
+ * match. We can authenticate by displaying a partial email and
+ * sending an authentication challenge. This would then result in
+ * a redirect to the public page where the applicant needs to authenticate
+ * (and can do password recovery).
+ */
 import { appName } from '../../config.ts'
 import { translate as t } from '@nextcloud/l10n'
 import InputText from '../../components/InputText.vue'

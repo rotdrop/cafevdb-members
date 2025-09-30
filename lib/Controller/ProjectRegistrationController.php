@@ -254,6 +254,10 @@ class ProjectRegistrationController extends Controller
     }
 
     if (!empty($this->userSession->getUser())) {
+      // need to check isLoggedIn()?
+      //
+      // @todo see whether there is existing registration data and load it,
+      // also provide the token.
       $response = new TemplateResponse($this->appName, 'project-registration', [
         'appName' => $this->appName,
         'public' => false,
