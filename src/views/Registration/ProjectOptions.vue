@@ -166,7 +166,7 @@ const fieldOptionLabel = (option: ProjectParticipantFieldDataOption, field: Proj
 
 onMounted(async () => {
   if (!activeProject.value) {
-    appData.gotoRegistratzionHome()
+    appData.gotoRegistrationHome()
     return
   }
   await registrationData.initializeRegistrationData()

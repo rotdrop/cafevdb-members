@@ -251,7 +251,7 @@ const registrationCountry = ref<undefined|Country>(undefined)
 
 onBeforeMount(async () => {
   if (!activeProject.value) {
-    appData.gotoRegistratzionHome()
+    appData.gotoRegistrationHome()
     return
   }
   await registrationData.initializeRegistrationData()

@@ -188,7 +188,7 @@ export const useAppDataStore = defineStore('app-data', () => {
     return { name: routeName, params }
   }
 
-  const gotoRegistratzionHome = () => router.replace(registrationRouteRecord('registrationHome'))
+  const gotoRegistrationHome = () => router.replace(registrationRouteRecord('registrationHome'))
 
   const loginRedirection = (routeName: string) => {
     const finalDestination = router.resolve(registrationRouteRecord(routeName))
@@ -210,7 +210,7 @@ export const useAppDataStore = defineStore('app-data', () => {
     projectName,
     projects,
     registrationRouteRecord,
-    gotoRegistratzionHome,
+    gotoRegistrationHome,
     loginRedirection,
   }
 })

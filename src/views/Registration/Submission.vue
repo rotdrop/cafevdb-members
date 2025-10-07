@@ -105,7 +105,7 @@ const submit = async () => {
 
 onBeforeMount(async () => {
   if (!activeProject.value) {
-    appData.gotoRegistratzionHome()
+    appData.gotoRegistrationHome()
     return
   }
   await registrationData.initializeRegistrationData()
