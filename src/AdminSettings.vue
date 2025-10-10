@@ -62,6 +62,14 @@
       />
     </NcSettingsSection>
     <NcSettingsSection :name="t(appName, 'Project Registration Settings')">
+      <TextField :value.sync="settings.registrationReplyTo"
+                 :label="t(appName, 'Sender and ReplyTo for the registration notification emails.')"
+                 :hint="t(appName, `The applicants are notified by email after they have submitted their project application,
+they also receive password-reset emails if they want to review or change their submitted data at a later.
+This is the sender and reply-to email address of these automatically generated emails.`)"
+                 :placeholder="t(appName, 'orchestra+registration@my.domain.tld')"
+                 @submit="saveTextInput('registrationReplyTo')"
+      />
       <div>TODO</div>
       <div>{{ t(appName, 'Terms and Conditions') }}</div>
       <div>{{ t(appName, 'Privacy Statement') }}</div>
@@ -87,6 +95,7 @@ import {
   fetchSettings,
   saveConfirmedSetting,
 } from './toolkit/util/settings-sync.ts'
+import { translate as t } from '@nextcloud/l10n'
 import { isAxiosErrorResponse } from './toolkit/types/axios-type-guards.ts'
 
 interface CloudUserGroup {
@@ -98,6 +107,7 @@ const settings = reactive({
   memberRootFolder: '',
   cloudUserViewsDatabase: '',
   memberFolderGroups: [] as CloudUserGroup[],
+  registrationReplyTo: '',
 })
 
 const syncFailure = ref(false)

@@ -44,12 +44,14 @@ class SettingsController extends Controller
   const FOLDER_GROUPS_KEY = 'memberFolderGroups';
   const SYNCHRONIZE_KEY = 'synchronize';
   const USER_VIEWS_DATABASE_KEY = 'cloudUserViewsDatabase';
+  const REGISTRATION_REPLY_TO_KEY = 'registrationReplyTo';
 
   const SETTINGS_KEYS = [
     self::FOLDER_GROUPS_KEY,
     self::MEMBER_ROOT_FOLDER_KEY,
-    // self::SYNCHRONIZE_KEY, not a setting, rather an action
+    self::REGISTRATION_REPLY_TO_KEY,
     self::USER_VIEWS_DATABASE_KEY,
+    // self::SYNCHRONIZE_KEY, not a setting, rather an action
   ];
 
   // phpcs:ignore Squiz.Commenting.FunctionComment.Missing
@@ -140,6 +142,7 @@ class SettingsController extends Controller
           return self::grumble($this->l->t('Synchronizing the shared-folder structure failed: %s', $t->getMessage()));
         }
       case self::USER_VIEWS_DATABASE_KEY:
+      case self::REGISTRATION_REPLY_TO_KEY:
         break;
       default:
         return self::grumble($this->l->t('Unknown admin setting: "%1$s"', $setting));
@@ -169,6 +172,8 @@ class SettingsController extends Controller
     foreach ($allSettings as $oneSetting) {
       switch ($oneSetting) {
         case self::USER_VIEWS_DATABASE_KEY:
+          // fall through
+        case self::REGISTRATION_REPLY_TO_KEY:
           // fall through
         case self::MEMBER_ROOT_FOLDER_KEY:
           $value = $this->config->getAppValue($this->appName, $oneSetting);
