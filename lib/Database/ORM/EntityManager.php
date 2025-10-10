@@ -26,6 +26,7 @@ use Throwable;
 use OCP\AppFramework\IAppContainer;
 use OCP\IConfig;
 use OCP\IL10N;
+use OCP\ISession;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\PsrCachedReader;
@@ -53,6 +54,7 @@ use MediaMonks\Doctrine\Transformable;
 use MyCLabs\Enum\Enum as EnumType;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 
+use OCA\CAFeVDBMembers\Constants;
 use OCA\CAFeVDBMembers\Database\DBAL\Logging\CloudLogger;
 use OCA\CAFeVDBMembers\Database\DBAL\Types;
 use OCA\CAFeVDBMembers\Database\ORM\Mapping\ReservedWordQuoteStrategy;
@@ -97,6 +99,7 @@ class EntityManager extends EntityManagerDecorator
     private AuthenticationService $authenticationService,
     private CloudLogger $sqlLogger,
     private IConfig $cloudConfig,
+    private ISession $session,
     private string $appName,
     protected IAppContainer $appContainer,
     protected IL10N $l,
@@ -407,10 +410,19 @@ class EntityManager extends EntityManagerDecorator
   public function postConnect(ConnectionEventArgs $args)
   {
     try {
+      $connection = $args->getConnection();
       if (!empty($this->userId)) {
+        // allow access to the person's private data
         $rowAccessTokenHash = $this->authenticationService->getRowAccessToken();
-        $args->getConnection()->executeStatement("SET @CLOUD_USER_ID = '" . $this->userId . "'");
-        $args->getConnection()->executeStatement("SET @ROW_ACCESS_TOKEN = '" . $rowAccessTokenHash . "'");
+        $connection->executeStatement("SET @CLOUD_USER_ID = '" . $this->userId . "'");
+        $connection->executeStatement("SET @ROW_ACCESS_TOKEN = '" . $rowAccessTokenHash . "'");
+      } else {
+        // allow access to the registration data
+        $applicationTokens = $this->session->get(Constants::APPLICATION_SESSION_KEY);
+        if (isset($applicationTokens['token']) && isset($applicationTokens['projectName'])) {
+          $connection->executeStatement("SET @APPLICATION_TOKENS = '" . $applicationTokens['token'] . "'");
+          $connection->executeStatement("SET @APPLICATION_PROJECT_NAME = '" . $applicationTokens['projectName'] . "'");
+        }
       }
     } catch (Exceptions\AuthenticationException $e) {
       $this->logException($e, 'Unable to set row access token');

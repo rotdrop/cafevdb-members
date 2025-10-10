@@ -3,7 +3,7 @@
  * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022 Claus-Justus Heine
+ * @copyright Copyright (c) 2022, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -51,7 +51,7 @@ class DatabaseStorageDirEntry implements \ArrayAccess
    */
   #[ORM\Column(type: 'integer', nullable: false)]
   #[ORM\Id]
-  #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+  #[ORM\GeneratedValue(strategy: 'NONE')]
   protected $id;
 
   /**

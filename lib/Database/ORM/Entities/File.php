@@ -51,7 +51,7 @@ class File implements \ArrayAccess
    */
   #[ORM\Column(type: 'integer', nullable: false)]
   #[ORM\Id]
-  #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+  #[ORM\GeneratedValue(strategy: 'NONE')]
   private $id;
 
   /**
