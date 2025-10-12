@@ -1,5 +1,7 @@
 <?php
 
+use OCA\CAFeVDBMembers\Constants;
+
 return [
   // 'resources' => [
   //   'note' => [
@@ -22,48 +24,104 @@ return [
       'requirements' => [ 'path' => '.+' ],
       'postfix' => 'front',
     ],
+    // Registration with given project and section, optional token
     [
-      'name' => 'project_registration#page',
-      'url' => '/registration/{projectName}/{section}',
+      'name' => 'ProjectRegistration#showShare',
+      'postfix' => '_pages',
+      'url' => '/registration/{section}/{token}',
       'verb' => 'GET',
       'defaults' => [
-        'projectName' => null,
-        'section' => null,
+        'token' => Constants::NEW_APPLICATION_TOKEN,
       ],
       'requirements' => [
-        'projectName' => '^(|.*[0-9]{4})$',
+        'section' => '[a-z-]+',
+        'token' => (
+           '^('
+           // plain project name, needs to be remapped from token to projec name
+           . Constants::TEMPORARY_PROJECT_NAME_REGEXP
+           . '|'
+           // composite project name and token, this is required as the
+           // URLGenerator call in the public-share framework just allows one
+           // parameter for the token and we decided to use the project-name +
+           // some fancy hash
+           . Constants::TEMPORARY_PROJECT_NAME_REGEXP . '/' . Constants::PROJECT_APPLICATION_TOKEN_REGEXP
+           . ')$'
+         ),
+      ],
+    ],
+    // Registration home with optional project and optional token
+    [
+      'name' => 'ProjectRegistration#showShare',
+      'url' => '/registration/{token}',
+      'verb' => 'GET',
+       'requirements' => [
+         'token' => (
+           '^('
+           // empty is ok
+           . '|'
+           // plain project name, needs to be remapped
+           . Constants::TEMPORARY_PROJECT_NAME_REGEXP
+           . '|'
+           // composite project name and token, this is required as the
+           // URLGenerator call in the public-share framework just allows one
+           // parameter for the token and we decided to use the project-name +
+           // some fancy hash
+           . Constants::TEMPORARY_PROJECT_NAME_REGEXP . '/' . Constants::PROJECT_APPLICATION_TOKEN_REGEXP
+           . ')$'
+         ),
+       ],
+      'defaults' => [
+        'token' => Constants::NEW_APPLICATION_TOKEN,
       ],
     ],
     [
       'name' => 'ProjectRegistration#submit',
-      'url' => '/registration/{projectName}/submit',
+      'url' => '/registration/submit/{token}',
       'verb' => 'POST',
       'requirements' => [
-        'projectName' => '^(|.*[0-9]{4})$',
+        'token' => (
+           '^('
+           // plain project name, needs to be remapped from token to project name
+           . Constants::TEMPORARY_PROJECT_NAME_REGEXP
+           . '|'
+           // composite project name and token, this is required as the
+           // URLGenerator call in the public-share framework just allows one
+           // parameter for the token and we decided to use the project-name +
+           // some fancy hash
+           . Constants::TEMPORARY_PROJECT_NAME_REGEXP . '/' . Constants::PROJECT_APPLICATION_TOKEN_REGEXP
+           . ')$'
+         ),
+      ],
+      'defaults' => [
+        'token' => Constants::NEW_APPLICATION_TOKEN,
       ],
     ],
     [
-      'name' => 'TestAuthPublicShare#showShare',
-      'url' => '/registration/{token}/public-auth-test',
-      'verb' => 'GET',
-      'requirements' => [
-        'token' => '^.*(?<!\d{4})$'
-      ],
-    ],
-    [
-      'name' => 'TestAuthPublicShare#showAuthenticate',
+      'name' => 'ProjectRegistration#showAuthenticate',
       'url' => '/registration/{token}/authenticate/{redirect}',
       'verb' => 'GET',
       'requirements' => [
-        'token' => '^.*(?<!\d{4})$'
+        'token' => (
+          '^'
+          . Constants::TEMPORARY_PROJECT_NAME_REGEXP
+          . '/'
+          . Constants::PROJECT_APPLICATION_TOKEN_REGEXP
+          . '$'
+        ),
       ],
     ],
     [
-      'name' => 'TestAuthPublicShare#authenticate',
+      'name' => 'ProjectRegistration#authenticate',
       'url' => '/registration/{token}/authenticate/{redirect}',
       'verb' => 'POST',
       'requirements' => [
-        'token' => '^.*(?<!\d{4})$'
+        'token' => (
+          '^'
+          . Constants::TEMPORARY_PROJECT_NAME_REGEXP
+          . '/'
+          . Constants::PROJECT_APPLICATION_TOKEN_REGEXP
+          . '$'
+        ),
       ],
     ],
     [
@@ -125,39 +183,6 @@ return [
       'name' => 'member_data#download',
       'url' => '/download/member/{optionKey}',
       'verb' => 'GET',
-    ],
-    /**
-     * Attempt a catch all ...
-     */
-    [
-      'name' => 'catch_all#post',
-      'postfix' => 'post',
-      'url' => '/{a}/{b}/{c}/{d}/{e}/{f}/{g}',
-      'verb' => 'POST',
-      'defaults' => [
-        'a' => '',
-        'b' => '',
-        'c' => '',
-        'd' => '',
-        'e' => '',
-        'f' => '',
-        'g' => '',
-      ],
-    ],
-    [
-      'name' => 'catch_all#get',
-      'postfix' => 'get',
-      'url' => '/{a}/{b}/{c}/{d}/{e}/{f}/{g}',
-      'verb' => 'GET',
-      'defaults' => [
-        'a' => '',
-        'b' => '',
-        'c' => '',
-        'd' => '',
-        'e' => '',
-        'f' => '',
-        'g' => '',
-      ],
     ],
   ],
 ];

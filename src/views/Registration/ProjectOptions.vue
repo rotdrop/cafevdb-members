@@ -111,6 +111,14 @@ import {
 } from 'vue'
 import { storeToRefs } from 'pinia'
 
+const props = withDefaults(
+  defineProps<{
+    token?: string,
+  }>(), {
+    token: undefined,
+  },
+)
+
 const appData = useAppDataStore()
 const registrationData = useMemberDataStore()
 

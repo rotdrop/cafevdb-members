@@ -22,17 +22,32 @@
 
 namespace OCA\CAFeVDBMembers\Service;
 
+use DateInterval;
+use Carbon\CarbonImmutable;
 use UnexpectedValueException;
+use Throwable;
 
-use OCP\Files\Folder;
-use OCP\Files\NotFoundException as FileNotFoundException;
+use OCP\Defaults;
+use OCP\IAppConfig;
+use OCP\IConfig;
 use OCP\IL10N;
+use OCP\ISession;
 use OCP\IUserSession;
+use OCP\Mail\IMailer;
+use OCP\Security\IHasher;
+use OCP\Util;
 use Psr\Log\LoggerInterface;
 
+use OCA\CAFEVDB;
+
+use OCA\CAFeVDBMembers\Constants;
+use OCA\CAFeVDBMembers\Controller\SettingsController;
+use OCA\CAFeVDBMembers\Database\ORM\Entities;
+use OCA\CAFeVDBMembers\Database\ORM\EntityManager;
+use OCA\CAFeVDBMembers\Database\ORM\Repositories\EntityRepository;
 use OCA\CAFeVDBMembers\Exceptions;
+use OCA\CAFeVDBMembers\Model\ApplicationShare;
 use OCA\CAFeVDBMembers\Toolkit\Traits as ToolkitTraits;
-use OCA\CAFeVDBMembers\Toolkit\Service\AppStorageDisclosure;
 
 /**
  * Service class for managing project registrations, generating shares,
@@ -42,18 +57,25 @@ class ProjectRegistrationService
 {
   use ToolkitTraits\LoggerTrait;
 
-  private const REGISTRATION_HASH_ALGORITHM = 'sha256';
   public const REGISTRATION_FOLDER = 'project-registration';
   public const PERSONAL_PROFILE_KEY = 'personalProfile';
   public const EMAIL_KEY = 'email';
   public const USER_ID_KEY = 'uid';
+  public const PROJECT_NAME_KEY = 'projectName';
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    protected AppStorageDisclosure $appStorage,
+    protected string $appName,
+    protected Defaults $defaults,
+    protected IConfig $config,
+    protected IAppConfig $appConfig,
+    protected IHasher $hasher,
     protected IL10N $l,
+    protected ISession $session,
     protected IUserSession $userSession,
     protected LoggerInterface $logger,
+    protected IMailer $mailer,
+    protected EntityManager $entityManager,
   ) {
   }
   // phpcs:enable Squiz.Commenting.FunctionComment.Missing
@@ -65,53 +87,353 @@ class ProjectRegistrationService
    *
    * @param array $data The user submitted registration data.
    *
+   * @param null|string $oldApplicationHash Hash of the primary email address.
+   *
    * @return void
    *
    * @throws Exceptions\RegistrationDataMissingException
    * @throws UnexpectedValueException
-   *
-   * @todo If we have old data then make sure that the user is authenticated
-   * before overwriting the application data.
    */
-  public function handleSubmission(string $projectName, array $data): void
+  public function handleSubmission(string $projectName, array $data, ?string $oldApplicationHash = null): void
   {
-    $this->logInfo('Submission Data ' . print_r($data, true));
+    // $this->logInfo('Submission Data ' . print_r($data, true));
     $primaryEmail = $data[self::PERSONAL_PROFILE_KEY][self::EMAIL_KEY] ?? null;
     if ($primaryEmail === null) {
       throw new Exceptions\RegistrationDataMissingException(
         message: $this->l->t(
           'The field "%1$s" in the submitted registration data is missing. '
-          . ' Unfortunately, we do without a valid email address as we need some means to communication with the persions applying of participation.',
+          . ' Unfortunately, we cannot do without a valid email address as we need some means to communication with the persions applying of participation.',
           'email',
         ),
       );
     }
     // The email is the token that we use for identification
-    $registrationHash = hash(self::REGISTRATION_HASH_ALGORITHM, $primaryEmail);
-    /** @var Folder $folder */
-    $folder = $this->appStorage->getFilesystemFolder(self::REGISTRATION_FOLDER . '/' . $projectName);
-    $oldUid = null;
+    $applicationHash = hash(Constants::EMAIL_HASH_ALGORITHM, $primaryEmail);
+    if ($oldApplicationHash === null) {
+      $oldApplicationHash = $applicationHash;
+    }
+
+    // install old and new application hash for db access
+    $this->updateDatabaseRowAccessTokens([
+      CAFEVDB\Constants::SQL_PROJECT_APPLICATION_PROJECT_NAME => $projectName,
+      CAFEVDB\Constants::SQL_PROJECT_APPLICATION_SHARE_TOKENS => implode(',', [$applicationHash, $oldApplicationHash ?? 'never']),
+    ]);
+
+    /** @var Entities\Project */
+    $project = $this->entityManager->getRepository(Entities\Project::class)->findOneBy([
+      'name' => $projectName,
+    ]);
+
+    /** @var EntityRepository $repository */
+    $repository = $this->entityManager->getRepository(Entities\ProjectApplication::class);
+
+    /** @var Entities\ProjectApplication $oldApplicationHash */
+    $oldApplicationData = $repository->findOneBy([
+      'project.name' => $projectName,
+      'email#SHA2(%s, 256)' => $oldApplicationHash,
+    ]);
+    $oldUid = $oldApplicationData?->getMusician()?->getUserIdSlug();
+
+    $this->entityManager->beginTransaction();
     try {
-      $dataFile = $folder->get($registrationHash);
-      $oldData = json_decode($dataFile->getContent(), JSON_OBJECT_AS_ARRAY);
-      $oldUid = $oldData[self::PERSONAL_PROFILE_KEY][self::USER_ID_KEY] ?? null;
-    } catch (FileNotFoundException) {
-      $dataFile = $folder->newFile($registrationHash);
-    }
-    // Remember the UID and also keep any previously submitted UID. We treat
-    // the email address as unique identifier here.
-    if ($this->userSession->isLoggedIn()) {
-      $uid = $this->userSession->getUser()->getUID();
-      if ($oldUid !== null && $oldUid !== $uid) {
-        throw new UnexpectedValueException(
-          $this->l->t(
-            'The UID "%1$s" stored in the previously submitted application differs from the uid "%2$s" of the current user.',
-            [$oldUid, $uid],
-          ),
+
+      if ($oldApplicationHash != $applicationHash || $oldApplicationData === null) {
+        /** @var Entities\ProjectApplication $applicationData */
+        $applicationData = new Entities\ProjectApplication(
+          $project,
+          $primaryEmail,
+          musician: null, // @todo
+          data: $data,
         );
+      } else {
+        $applicationData = $oldApplicationData;
       }
-      $data[self::PERSONAL_PROFILE_KEY][self::USER_ID_KEY] = $uid;
+
+      // Remember the UID and also keep any previously submitted UID. We treat
+      // the email address as unique identifier here.
+      if ($this->userSession->isLoggedIn()) {
+        $uid = $this->userSession->getUser()->getUID();
+        if ($oldUid !== null && $oldUid !== $uid) {
+          throw new UnexpectedValueException(
+            $this->l->t(
+              'The UID "%1$s" stored in the previously submitted application differs from the uid "%2$s" of the current user.',
+              [$oldUid, $uid],
+            ),
+          );
+        }
+        $musician = $this->entityManager->getRepository(Entities\Musician::class)->findOneBy([
+          'userIdSlug' => $uid,
+        ]);
+        $applicationData->setMusician($musician);
+      }
+      $applicationData->setProject($project);
+      $oldCreated = $oldApplicationData?->getCreated();
+      $applicationData->setPasswordHash($oldApplicationData?->getPasswordHash());
+      $applicationData->setData($data);
+
+      $this->entityManager->persist($applicationData);
+      $this->entityManager->flush();
+
+      $applicationData->setCreated($oldCreated ?? new CarbonImmutable());
+
+      if ($oldApplicationData && $oldApplicationData !== $applicationData) {
+        $this->entityManager->remove($oldApplicationData);
+      }
+
+      $this->entityManager->flush();
+
+      $this->entityManager->commit();
+
+    } catch (Throwable $t) {
+      $this->entityManager->rollback();
+
+      throw new Exceptions\DatabaseException(
+        $this->l->t('Unable to store the application data in the database.'),
+        previous: $t,
+      );
     }
-    $dataFile->putContent(json_encode($data, JSON_PRETTY_PRINT));
+  }
+
+  /**
+   * Find possibly existing application data for the given email-hash and
+   * project-name and wrap it into the IShare interface.
+   *
+   * @param string $projectName
+   *
+   * @param null|string $applicationHash
+   *
+   * @param null|string $cloudUserId
+   *
+   * @return null|ApplicationShare
+   */
+  public function getApplicationData(
+    string $projectName,
+    ?string $applicationHash = null,
+    ?string $cloudUserId = null,
+  ): ?ApplicationShare {
+
+    /** @var EntityRepository $repository */
+    $repository = $this->entityManager->getRepository(Entities\ProjectApplication::class);
+
+    $criteria = [ [ 'project.name' => $projectName ] ];
+    if ($applicationHash !== null) {
+      $criteria[] = [ 'email#SHA2(%s, 256)' => $applicationHash ];
+    }
+    if ($cloudUserId !== null) {
+      $criteria[] = [ 'musician.userIdSlug' => $cloudUserId ];
+    }
+
+    /** @var Entities\ProjectApplication $oldApplicationHash */
+    $applicationData = $repository->findOneBy($criteria);
+
+    if ($applicationData === null) {
+      $this->logError('Unable to find old data given criteria ' . print_r($criteria, true));
+      return null;
+    }
+
+    $registrationReplyTo = $this->appConfig->getValueString($this->appName, SettingsController::REGISTRATION_REPLY_TO_KEY);
+
+    $share = new ApplicationShare($applicationData, $registrationReplyTo);
+
+    return $share;
+  }
+
+  /**
+   * @param ApplicationShare $share
+   *
+   * @param null|string $password
+   *
+   * @return bool
+   */
+  public function checkPassword(ApplicationShare $share, ?string $password): bool
+  {
+
+    // if there is no password on the share object / passsword is null, there is nothing to check
+    if ($password === null || $share->getPassword() === null) {
+      return false;
+    }
+
+    // Makes sure password hasn't expired
+    $expirationTime = $share->getPasswordExpirationTime();
+    if ($expirationTime !== null && $expirationTime < new CarbonImmutable()) {
+      return false;
+    }
+
+    $newHash = '';
+    if (!$this->hasher->verify($password, $share->getPassword(), $newHash)) {
+      return false;
+    }
+
+    if (!empty($newHash)) {
+      $share->setPassword($newHash);
+      $this->updateApplicationData($share);
+    }
+
+    return true;
+  }
+
+  /**
+   * Possibly update and emit the row access tokens.
+   *
+   * @var array $tokens New tokens which override existing tokens. The new
+   * tokens are merged into the existing set of access tokens. Pass \null in
+   * order to remove all tokens.
+   *
+   * @return void
+   */
+  public function updateDatabaseRowAccessTokens(?array $tokens = []):void
+  {
+    $applicationTokens = $this->session->get(Constants::APPLICATION_SESSION_KEY) ?? [];
+    if ($tokens === null) {
+      $applicationTokens = array_map(fn(?string $value) => null);
+    } else {
+      $applicationTokens = array_merge($applicationTokens, $tokens);
+    }
+    $this->session->set(Constants::APPLICATION_SESSION_KEY, $applicationTokens);
+    $this->entityManager->emitRowAccessTokens(); // install into the active DB session.
+  }
+
+  /**
+   * Sync the provided application data to disk and possibly send out a password notification.
+   *
+   * @param ApplicationShare $share Dummy share wrapping the application data.
+   *
+   * @param string $plainTextPassword
+   *
+   * @return ApplicationShare
+   *
+   * @throws Exceptions\DatabaseException
+   */
+  public function updateApplicationData(ApplicationShare $share, ?string $plainTextPassword = null): ApplicationShare
+  {
+    /** @var Entities\ProjectApplication $applicationData */
+    $applicationData = $share->getNode();
+
+    $passwordChanged = !empty($plainTextPassword)
+      && (empty($share->getPassword())
+          || !$this->hasher->verify($plainTextPassword, $share->getPassword()));
+
+    if ($passwordChanged) {
+      $share->setPassword($this->hasher->hash($plainTextPassword));
+      $applicationData->setRowAccessToken($plainTextPassword);
+    }
+
+    $this->entityManager->beginTransaction();
+    try {
+      $this->entityManager->flush();
+      $this->entityManager->commit();
+    } catch (Throwable $t) {
+      $this->entityManager->rollback();
+
+      throw new Exceptions\DatabaseException(
+        $this->l->t('Unable to store the application data in the database.'),
+        previous: $t,
+      );
+    }
+
+    if ($passwordChanged) {
+      $this->sendPassword($share, $plainTextPassword, [ $share->getSharedWith() ]);
+    }
+
+    $this->updateDatabaseRowAccessTokens([
+      CAFEVDB\Constants::SQL_PROJECT_APPLICATION_ROW_ACCESS_TOKEN => $share->getPassword(),
+    ]);
+
+    return $share;
+  }
+
+  /**
+   * Borrowed and adapted from apps/sharebymail.
+   *
+   * @param ApplicationShare $share Dummy share wrapping the application data.
+   *
+   * @param string $password The new password.
+   *
+   * @param array $emails Recipient emails. We keep this as array although in
+   * our case we always only have one recipient.
+   *
+   * @return bool
+   */
+  private function sendPassword(ApplicationShare $share, string $password, array $emails): bool
+  {
+    if ($password === '' || $share->getSendPasswordByTalk()) {
+      return false;
+    }
+
+    $projectName = $share->getData()[self::PROJECT_NAME_KEY];
+    $shareWith = $share->getSharedWith();
+    $initiatorDisplayName = $this->appConfig->getValueString(Constants::CAFEVDB_APP_ID, 'orchestra');
+    $initiatorEmailAddress = $share->getSharedBy();
+
+    $htmlBodyPart =
+      $plainBodyPart = $this->l->t(
+        'You have submitted an application to participate in the project "%1$s" of the orchestra "%2$s".'
+        . ' You should have already received a separate mail with a link to access your application data.', [
+          $projectName,
+          $initiatorDisplayName,
+        ],
+      );
+
+    $message = $this->mailer->createMessage();
+
+    $emailTemplate = $this->mailer->createEMailTemplate('sharebymail.RecipientPasswordNotification', [
+      'projectName' => $projectName,
+      'password' => $password,
+      'initiator' => $initiatorDisplayName,
+      'initiatorEmail' => $initiatorEmailAddress,
+      'shareWith' => $shareWith,
+    ]);
+
+    $emailTemplate->setSubject($this->l->t(
+      'Password to access your application for "%1$s" of the orchestra "%2$s"', [
+        $projectName,
+        $initiatorDisplayName,
+      ],
+    ));
+    $emailTemplate->addHeader();
+    $emailTemplate->addHeading($this->l->t('Password for your application data for "%s"', [$projectName]), false);
+    $emailTemplate->addBodyText(htmlspecialchars($htmlBodyPart), $plainBodyPart);
+    $emailTemplate->addBodyText($this->l->t('It is protected with the following password:'));
+    $emailTemplate->addBodyText($password);
+
+    if ($this->config->getSystemValue('sharing.enable_mail_link_password_expiration', false) === true) {
+      $expirationTime = new CarbonImmutable();
+      $expirationInterval = $this->config->getSystemValue('sharing.mail_link_password_expiration_interval', 3600);
+      $expirationTime = $expirationTime->add(new DateInterval('PT' . $expirationInterval . 'S'));
+      $emailTemplate->addBodyText($this->l->t('This password will expire at %s', [$expirationTime->format('r')]));
+    }
+
+    // If multiple recipients are given, we send the mail to all of them
+    if (count($emails) > 1) {
+      // We do not want to expose the email addresses of the other recipients
+      $message->setBcc($emails);
+    } else {
+      $message->setTo($emails);
+    }
+
+    // The "From" contains the sharers name
+    $instanceName = $this->defaults->getName();
+    $senderName = $instanceName;
+    $senderName = $this->l->t(
+      '%1$s via %2$s',
+      [
+        $initiatorDisplayName,
+        $instanceName
+      ]
+    );
+    $message->setFrom([Util::getDefaultEmailAddress($instanceName) => $senderName]);
+
+    $message->setReplyTo([$initiatorEmailAddress => $initiatorDisplayName]);
+    $emailTemplate->addFooter($instanceName . ($this->defaults->getSlogan() !== '' ? ' - ' . $this->defaults->getSlogan() : ''));
+
+    $message->useTemplate($emailTemplate);
+    $failedRecipients = $this->mailer->send($message);
+    if (!empty($failedRecipients)) {
+      $this->logger->error('Share password mail could not be sent to: ' . implode(', ', $failedRecipients));
+      return false;
+    }
+
+    // $this->createPasswordSendActivity($share, $shareWith, false);
+    return true;
   }
 }

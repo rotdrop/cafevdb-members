@@ -133,14 +133,22 @@ import { useMemberDataStore } from './stores/memberData.ts'
 import { useAppDataStore } from './stores/appData.ts'
 import { storeToRefs } from 'pinia'
 import Icon from '../img/cafevdbmembers.svg'
-import { prefix as registrationPrefix } from './router/registration-routes.js'
 import {
   computed,
   onBeforeMount,
   ref,
   watch,
 } from 'vue'
-import { useRoute } from 'vue-router/composables'
+import { useRoute, useRouter } from 'vue-router/composables'
+import logger from './logger.ts'
+
+const props = withDefaults(
+  defineProps<{
+    token?: string,
+  }>(), {
+    token: undefined,
+  },
+)
 
 const registrationData = useMemberDataStore()
 const appData = useAppDataStore()
@@ -157,15 +165,15 @@ const loginRedirection = appData.loginRedirection
 const loading = ref(true)
 const readonly = ref(true)
 
+const router = useRouter()
 const currentRoute = useRoute()
 
-const isRoot = computed(() => {
-  const result = currentRoute.path === registrationPrefix
-    || currentRoute.path === registrationPrefix + '/'
-    || currentRoute.path === registrationPrefix + '/' + projectName.value
-  console.info('ROUTE PATH', currentRoute.path, registrationPrefix, projectName.value, result)
-  return result
+logger.info('CURRENT ROUTE', {
+  route: { ...currentRoute },
+  activeProject,
 })
+
+const isRoot = computed(() => currentRoute.name === 'registrationHome')
 
 const isPublicPage = computed(() => !getCurrentUser())
 
@@ -181,6 +189,11 @@ const setPageTitle = () => {
 }
 
 watch(activeProject, () => setPageTitle())
+router.onReady(() => {
+  if (!currentRoute.params.projectName && activeProject.value) {
+    appData.gotoRegistrationHome()
+  }
+})
 
 onBeforeMount(async () => {
   await registrationData.initializeRegistrationData()

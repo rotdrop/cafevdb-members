@@ -55,8 +55,16 @@ import { storeToRefs } from 'pinia'
 import axios from '@nextcloud/axios'
 import generateAppUrl from '../../toolkit/util/generate-url.ts'
 import { isAxiosErrorResponse } from '../../toolkit/types/axios-type-guards'
-import { showError, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
+import { showError, showSuccess, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
 import logger from '../../logger.ts'
+
+const props = withDefaults(
+  defineProps<{
+    token?: string,
+  }>(), {
+    token: undefined,
+  },
+)
 
 const loading = ref(true)
 const readonly = ref(true)
@@ -79,8 +87,10 @@ const submit = async () => {
     )
     const response = await axios.post(
       generateAppUrl(
-        'registration/{projectName}/submit',
-        { projectName: projectName.value },
+        'registration/submit/{projectName}/{token}', {
+          projectName: projectName.value,
+          token: props.token || null,
+        },
       ),
       {
         data: {
@@ -89,6 +99,7 @@ const submit = async () => {
         },
       },
     )
+    showSuccess(t(appName, 'Data submission successful'))
     logger.info('Submission Response', { response })
   } catch (e) {
     console.error('ERROR', e)

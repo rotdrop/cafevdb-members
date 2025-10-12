@@ -31,6 +31,7 @@ import {
   watch,
 } from 'vue'
 import { useRoute, useRouter } from 'vue-router/composables'
+import logger from '../logger.ts'
 import type { ProjectParticipantField } from './memberData.ts'
 import type { RawLocation as RouterRawLocation } from 'vue-router'
 
@@ -178,13 +179,18 @@ export const useAppDataStore = defineStore('app-data', () => {
     }
   })
 
-  const projectName = computed(() => activeProject.value?.name || '')
+  const projectName = computed(() => activeProject.value?.name || currentRoute.params.projectName || '')
 
   const router = useRouter()
 
-  const registrationRouteRecord = (routeName: string):RouterRawLocation => {
+  const registrationRouteRecord = (routeName: string, token?: string):RouterRawLocation => {
+    logger.info('CURRENT ROUTE', { currentRoute })
     // The Vue-Rouer can handle optional parameters, but seemingly not missing parameters
     const params = projectName.value ? { projectName: projectName.value } : {} as Record<string, string>
+    token = token || currentRoute.params.token
+    if (token) {
+      params.token = token
+    }
     return { name: routeName, params }
   }
 

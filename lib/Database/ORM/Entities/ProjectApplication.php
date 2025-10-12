@@ -45,6 +45,8 @@ class ProjectApplication implements \ArrayAccess
   use CAFEVDB\Traits\SoftDeleteableEntity;
   use CAFEVDB\Traits\TimestampableEntity;
 
+  const ROW_ACCESS_TOKEN_HASH_LENGTH = 512;
+
   /**
    * @var Project
    *
@@ -64,8 +66,12 @@ class ProjectApplication implements \ArrayAccess
   private string $email;
 
   /**
+   * @var null|string
+   *
    * In order to revisit their registration data people have to provide a
-   * password or -- if they have cloud account -- have to be logged in.
+   * password or -- if they have cloud account -- have to be logged in. This
+   * is the cryptographically strong password hash obtained from the NC hasher
+   * which in turn uses the PHP password_hash() function.
    */
   #[ORM\Column(type: 'string', length: 254, nullable: true, options: ['collation' => 'ascii_general_ci'])]
   private ?string $passwordHash =  null;
@@ -103,6 +109,7 @@ class ProjectApplication implements \ArrayAccess
   {
     $this->arrayCTOR();
     $this->project = $project;
+    $this->email = $email;
     $this->musician = $musician;
     $this->data = $data;
   }
@@ -158,11 +165,11 @@ class ProjectApplication implements \ArrayAccess
   /**
    * Set passwordHash.
    *
-   * @param string $passwordHash
+   * @param null|string $passwordHash
    *
    * @return ProjectApplication
    */
-  public function setPasswordHash(string $passwordHash):ProjectApplication
+  public function setPasswordHash(?string $passwordHash):ProjectApplication
   {
     $this->passwordHash = $passwordHash;
 
@@ -172,9 +179,9 @@ class ProjectApplication implements \ArrayAccess
   /**
    * Get passwordHash.
    *
-   * @return string
+   * @return null|string
    */
-  public function getPasswordHash():string
+  public function getPasswordHash():?string
   {
     return $this->passwordHash;
   }
@@ -182,11 +189,11 @@ class ProjectApplication implements \ArrayAccess
   /**
    * Set musician.
    *
-   * @param Musician $musician
+   * @param null|Musician $musician
    *
    * @return ProjectApplication
    */
-  public function setMusician(Musician $musician):ProjectApplication
+  public function setMusician(?Musician $musician):ProjectApplication
   {
     $this->musician = $musician;
 
@@ -196,9 +203,9 @@ class ProjectApplication implements \ArrayAccess
   /**
    * Get musician.
    *
-   * @return Musician
+   * @return null|Musician
    */
-  public function getMusician():Musician
+  public function getMusician():?Musician
   {
     return $this->musician;
   }

@@ -26,7 +26,7 @@ import { appName as appId } from '../config.ts'
 import { translate as t } from '@nextcloud/l10n'
 import { generateUrl as generateAppUrl } from '../toolkit/util/generate-url.ts'
 import { generateOcsUrl } from '@nextcloud/router'
-import { getCurrentUser } from '@nextcloud/auth'
+import { getCurrentUser, getGuestUser } from '@nextcloud/auth'
 import { showError, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
 import axios from '@nextcloud/axios'
 import { isAxiosErrorResponse } from '../toolkit/types/axios-type-guards.ts'
@@ -40,6 +40,7 @@ import {
 } from 'vue'
 import { deepCopy } from 'walkjs'
 import { useAppDataStore } from './appData.ts'
+import getInitialState from '../toolkit/util/initial-state.ts'
 import logger from '../logger.ts'
 
 export interface SepaDebitMandate {
@@ -146,7 +147,7 @@ export interface InstrumentInsurance {
   startOfInsurance: string,
 }
 
-export interface Receivable extends ProjectParticipantFieldData {
+export interface Receivable extends ProjectParticipantFieldDatum {
   supportingDocumentId?: number,
 }
 
@@ -163,6 +164,45 @@ export interface RegistrationProject {
   absenceReasons: Record<number, string>,
   options: Record<number, string>,
 }
+
+// The fields of the simple state are submitted during the project registration process.
+export const personalProfileKeys = [
+  'addressSupplement',
+  'birthday',
+  'city',
+  'country',
+  'email',
+  'emailAddresses',
+  'firstName',
+  'fixedLinePhone',
+  'instruments',
+  'mobilePhone',
+  'nickName',
+  'postalCode',
+  'street',
+  'streetNumber',
+  'surName',
+  'whoAmI',
+  'instruments',
+  'firstTimeApplication',
+] as const
+
+export interface ApplicationData {
+  projectName: string,
+  projectData: RegistrationProject,
+  personalProfile: { [K in typeof personalProfileKeys[number]]: string } & { uid?: string },
+  created: string,
+  modified: string,
+  deleted: null|string,
+}
+
+const initialApplicationData = getInitialState<ApplicationData>({ section: 'applicationData', defaults: null })
+const initialToken = getInitialState({ section: 'token', defaults: null })
+
+logger.info('INITIAL APPLICATION DATA', {
+  initialApplicationData,
+  initialToken,
+})
 
 export const useMemberDataStore = defineStore('member-data', () => {
   const simpleState = {
@@ -183,7 +223,6 @@ export const useMemberDataStore = defineStore('member-data', () => {
       registration: undefined as undefined|boolean,
     }),
     instrumentInsurances: ref([] as InstrumentInsurance[]),
-    instruments: ref([] as Instrument[]),
     insuranceDetails: ref({
       self: [],
       forOthers: [],
@@ -204,33 +243,12 @@ export const useMemberDataStore = defineStore('member-data', () => {
     //
     whoAmI: ref(undefined as string|undefined),
     projects: ref({} as Record<number, RegistrationProject>),
-    selectedInstruments: ref([] as Instrument[]),
+    instruments: ref([] as Instrument[]),
     firstTimeApplication: ref(undefined as undefined|'you-know-me'|'first-time'),
   }
   const initialState = Object.fromEntries(Object.entries(simpleState).map(([key, value]) => {
     return [key, typeof value.value === 'object' && value.value !== null ? deepCopy(value.value) : value.value]
   }))
-  // The fields of the simple state are submitted during the project registration process.
-  const personalProfileKeys = ref([
-    'addressSupplement',
-    'birthday',
-    'city',
-    'country',
-    'email',
-    'emailAddresses',
-    'firstName',
-    'fixedLinePhone',
-    'instruments',
-    'mobilePhone',
-    'nickName',
-    'postalCode',
-    'street',
-    'streetNumber',
-    'surName',
-    'whoAmI',
-    'selectedInstruments',
-    'firstTimeApplication',
-  ])
 
   const resetState = () => {
     for (const [key, value] of Object.entries(initialState)) {
@@ -260,10 +278,6 @@ export const useMemberDataStore = defineStore('member-data', () => {
         } else if (simpleState[key] !== undefined) {
           simpleState[key].value = value
         }
-      }
-      // do some basic initializations ...
-      for (const instrument of simpleState.instruments.value) {
-        simpleState.selectedInstruments.value.push(instrument)
       }
       initialized.promise = null
       initialized.error = null
@@ -322,14 +336,14 @@ export const useMemberDataStore = defineStore('member-data', () => {
       return []
     }
     const possibleInstruments = appData.activeProject.instrumentation.filter(
-      instrumentationNumber => instrumentationNumber.voice === 0 && simpleState.selectedInstruments.value.find(instrument => instrument.id === instrumentationNumber.instrument.id),
+      instrumentationNumber => instrumentationNumber.voice === 0 && simpleState.instruments.value.find(instrument => instrument.id === instrumentationNumber.instrument.id),
     )
     return possibleInstruments.map(instrumentationNumber => instrumentationNumber.instrument)
   })
 
   // if just one element is selected as "I can play this" then inject
   // it as chosen instrument for the project.
-  watch(simpleState.selectedInstruments, (newValue, _oldValue) => {
+  watch(simpleState.instruments, (newValue, _oldValue) => {
     if (!appData.activeProject || newValue.length !== 1) {
       return
     }
@@ -354,6 +368,18 @@ export const useMemberDataStore = defineStore('member-data', () => {
       if (!simpleState.country.value) {
         simpleState.country.value = appData.displayLocale!.region
       }
+      if (initialApplicationData) {
+        const personalProfile = initialApplicationData.personalProfile
+        if (!getCurrentUser()) {
+          const guestUser = getGuestUser()
+          guestUser.displayName = (personalProfile.nickName || personalProfile.firstName)
+            + ' '
+            + personalProfile.surName
+        }
+        for (const key of personalProfileKeys) {
+          simpleState[key].value = initialApplicationData.personalProfile[key]
+        }
+      }
       initialized.registration = true
     }
     if (appData.activeProject) {
@@ -377,6 +403,14 @@ export const useMemberDataStore = defineStore('member-data', () => {
             defaultValue = field.dataOptions?.[defaultValue]?.data
           }
           vueSet(newRegistrationProject.options, field.id, defaultValue)
+        }
+        if (initialApplicationData) {
+          newRegistrationProject.instruments.splice(0, 0, ...initialApplicationData.projectData.instruments)
+          for (const outerKey of ['absence', 'absenceReasons', 'options']) {
+            for (const [key, value] of Object.entries(initialApplicationData.projectData[outerKey])) {
+              vueSet(newRegistrationProject[outerKey], key, value)
+            }
+          }
         }
       }
     }

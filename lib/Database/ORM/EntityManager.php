@@ -28,6 +28,7 @@ use OCP\IConfig;
 use OCP\IL10N;
 use OCP\ISession;
 
+use DoctrineExtensions;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\PsrCachedReader;
 use Doctrine\Common\Cache\ArrayCache;
@@ -50,6 +51,7 @@ use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Doctrine\Persistence\Mapping\Driver\MappingDriverChain;
 use Gedmo;
 use Gedmo\SoftDeleteable\SoftDeleteableListener;
+use Gedmo\Timestampable\TimestampableListener;
 use MediaMonks\Doctrine\Transformable;
 use MyCLabs\Enum\Enum as EnumType;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
@@ -218,6 +220,11 @@ class EntityManager extends EntityManagerDecorator
     $eventManager->addEventSubscriber($softDeletableListener);
     $config->addFilter(self::SOFT_DELETEABLE_FILTER, \Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter::class);
 
+    // timestampable
+    $timestampableListener = new TimestampableListener();
+    $timestampableListener->setAnnotationReader($attributeReader);
+    $eventManager->addEventSubscriber($timestampableListener);
+
     // encryption
     $transformerPool = new Transformable\Transformer\TransformerPool();
     $transformerPool[self::TRANSFORM_ENCRYPT] = $this->appContainer->get(
@@ -375,6 +382,16 @@ class EntityManager extends EntityManagerDecorator
   }
 
   /**
+   * @param OrmConfiguration $config
+   *
+   * @return void
+   */
+  private function registerCustomFunctions(OrmConfiguration $config):void
+  {
+    $config->addCustomStringFunction('sha2', DoctrineExtensions\Query\Mysql\Sha2::class);
+  }
+
+  /**
    * @param array $params
    *
    * @return EntityManagerInterface
@@ -389,6 +406,8 @@ class EntityManager extends EntityManagerDecorator
     } else {
       $config->setAutoGenerateProxyClasses(false);
     }
+
+    $this->registerCustomFunctions($config);
 
     $namingStrategy = new UnderscoreNamingStrategy(CASE_LOWER);
     $config->setNamingStrategy($namingStrategy);
@@ -406,27 +425,77 @@ class EntityManager extends EntityManagerDecorator
     return $entityManager;
   }
 
-  /** {@inheritdoc} */
-  public function postConnect(ConnectionEventArgs $args)
+  /**
+   * Install the given $key as DB string variable. Set value to NULL if value is \null.
+   *
+   * @param DatabaseConnection $connection
+   *
+   * @param string $key
+   *
+   * @parem null|string $value
+   *
+   * @return void
+   */
+  private static function setVariable(
+    DatabaseConnection $connection,
+    string $key,
+    ?string $value,
+  ): void {
+    $connection->executeStatement(
+      $value === null
+      ? sprintf('SET @%s = NULL', $key)
+      : sprintf('SET @%1$s = "%2$s"', $key, $value),
+    );
+  }
+
+  /**
+   * Emit the row access tokens as appropriate. This sets user variables which
+   * enable access to just the database rows containing the data of the
+   * authorized identity.
+   *
+   * @param DatabaseConnection $connection
+   *
+   * @return void
+   */
+  private function doEmitRowAccessTokens(DatabaseConnection $connection):void
   {
     try {
-      $connection = $args->getConnection();
       if (!empty($this->userId)) {
         // allow access to the person's private data
         $rowAccessTokenHash = $this->authenticationService->getRowAccessToken();
-        $connection->executeStatement("SET @CLOUD_USER_ID = '" . $this->userId . "'");
-        $connection->executeStatement("SET @ROW_ACCESS_TOKEN = '" . $rowAccessTokenHash . "'");
+        self::setVariable($connection, 'CLOUD_USER_ID', $this->userId);
+        self::setVariable($connection, 'ROW_ACCESS_TOKEN', $rowAccessTokenHash);
       } else {
         // allow access to the registration data
-        $applicationTokens = $this->session->get(Constants::APPLICATION_SESSION_KEY);
-        if (isset($applicationTokens['token']) && isset($applicationTokens['projectName'])) {
-          $connection->executeStatement("SET @APPLICATION_TOKENS = '" . $applicationTokens['token'] . "'");
-          $connection->executeStatement("SET @APPLICATION_PROJECT_NAME = '" . $applicationTokens['projectName'] . "'");
+        $applicationTokens = $this->session->get(Constants::APPLICATION_SESSION_KEY) ?? [];
+        $this->logInfo('EMITTING ACCESS TOKENS ' . print_r($applicationTokens, true));
+        foreach ($applicationTokens as $name => $value) {
+          self::setVariable($connection, $name, $value);
         }
       }
     } catch (Exceptions\AuthenticationException $e) {
       $this->logException($e, 'Unable to set row access token');
     }
+  }
+
+  /**
+   * Emit the row access tokens which grant access to single rows of the
+   * database. This can be used to update the authorization tokens after
+   * changing hashes and the like.
+   */
+  public function emitRowAccessTokens():void
+  {
+    if (!$this->connected()) {
+      // auth tokens will be emitted automatically on next connect.
+      return;
+    }
+    $this->doEmitRowAccessTokens($this->getConnection());
+  }
+
+  /** {@inheritdoc} */
+  public function postConnect(ConnectionEventArgs $args)
+  {
+    $this->doEmitRowAccessTokens($args->getConnection());
   }
 
   /** {@inheritdoc} */

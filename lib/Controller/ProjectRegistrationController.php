@@ -26,6 +26,9 @@ use DateTimeImmutable;
 use DateTimeInterface;
 use DateTime;
 
+use OCA\CAFEVDB\Service\ConfigService;
+use OCA\Files_Sharing\Event\BeforeTemplateRenderedEvent;
+use OCP\AppFramework\AuthPublicShareController;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute;
@@ -37,57 +40,71 @@ use OCP\AppFramework\Services\IInitialState;
 use OCP\Calendar\ICalendar;
 use OCP\Calendar\ICalendarQuery;
 use OCP\Calendar\IManager as ICalendarMananger;
+use OCP\Constants as CoreConstants;
+use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IConfig;
+use OCP\IAppConfig;
 use OCP\IDateTimeZone;
 use OCP\IL10N;
 use OCP\IRequest;
+use OCP\ISession;
 use OCP\IURLGenerator;
 use OCP\IUserSession;
+use OCP\Share\IShare;
+use OCP\Security\Events\GenerateSecurePasswordEvent;
+use OCP\Security\ISecureRandom;
+use OCP\Security\PasswordContext;
 use OCP\Util;
 use Psr\Log\LoggerInterface;
 
-use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB;
 
 use OCA\CAFeVDBMembers\Constants;
 use OCA\CAFeVDBMembers\Database\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
 use OCA\CAFeVDBMembers\Database\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFeVDBMembers\Database\ORM\Entities;
 use OCA\CAFeVDBMembers\Database\ORM\EntityManager;
+use OCA\CAFeVDBMembers\Model\ApplicationShare;
 use OCA\CAFeVDBMembers\Service\AssetService;
 use OCA\CAFeVDBMembers\Service\EventsService;
 use OCA\CAFeVDBMembers\Service\ProjectRegistrationService;
 
 /** AJAX endpoints for a project registration form. */
-class ProjectRegistrationController extends Controller
+class ProjectRegistrationController extends AuthPublicShareController
 {
   use \OCA\CAFeVDBMembers\Toolkit\Traits\ResponseTrait;
   use \OCA\CAFeVDBMembers\Toolkit\Traits\LoggerTrait;
   use \OCA\CAFeVDBMembers\Toolkit\Traits\DateTimeTrait;
 
+  /** @var ApplicationShare */
+  private ?ApplicationShare $share = null;
+
   // phpcs:ignore Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     string $appName,
     IRequest $request,
+    ISession $session,
+    IURLGenerator $urlGenerator,
     private AssetService $assetService,
     private EntityManager $entityManager,
     private EventsService $eventsService,
+    private IAppConfig $appConfig,
     private ICalendarMananger $calendarManager,
     private IConfig $cloudConfig,
     private IDateTimeZone $dateTimeZone,
+    private IEventDispatcher $eventDispatcher,
     private IInitialState $initialState,
-    private IURLGenerator $urlGenerator,
+    private ISecureRandom $secureRandom,
     private IUserSession $userSession,
-    private ProjectRegistrationService $registationService,
+    private ProjectRegistrationService $registrationService,
     protected IL10N $l,
     protected LoggerInterface $logger,
   ) {
-    parent::__construct($appName, $request);
+    parent::__construct($appName, $request, $session, $urlGenerator);
   }
   // phpcs:enable
 
   /**
-   * @param null|string $projectName
-   *
    * @return TemplateResponse
    *
    * @todo Check whether we do want CSRF.
@@ -95,8 +112,10 @@ class ProjectRegistrationController extends Controller
   #[Attribute\NoAdminRequired]
   #[Attribute\NoCSRFRequired]
   #[Attribute\PublicPage]
-  public function page(?string $projectName):TemplateResponse
+  public function showShare():TemplateResponse
   {
+    list($projectName, $token) = $this->parseToken();
+
     $nowDate = self::convertToTimezoneDate(new DateTimeImmutable, $this->dateTimeZone->getTimeZone());
     $currentYear = $nowDate->format('Y');
 
@@ -253,11 +272,10 @@ class ProjectRegistrationController extends Controller
       ];
     }
 
-    if (!empty($this->userSession->getUser())) {
-      // need to check isLoggedIn()?
-      //
-      // @todo see whether there is existing registration data and load it,
-      // also provide the token.
+    if (!empty($this->userSession->getUser()) && $this->userSession->isLoggedIn()) {
+      if ($activeProject >= 0) {
+        $this->share = $this->registrationService->getApplicationData($projectName, cloudUserId: $this->userSession->getUser()->getUID());
+      }
       $response = new TemplateResponse($this->appName, 'project-registration', [
         'appName' => $this->appName,
         'public' => false,
@@ -273,6 +291,13 @@ class ProjectRegistrationController extends Controller
 
     $this->initialState->provideInitialState('projects', $projectsList);
     $this->initialState->provideInitialState('activeProject', $activeProject);
+    $this->initialState->provideInitialState('token', $token);
+    if ($this->share ?? null) {
+      $this->initialState->provideInitialState(
+        'applicationData',
+        array_filter($this->share->getData(), fn($value, $key) => $key !== 'passwordHash', ARRAY_FILTER_USE_BOTH),
+      );
+    }
 
     // provide the available instruments
     $instruments = $this->entityManager->getRepository(Entities\Instrument::class)->findBy(
@@ -307,7 +332,6 @@ class ProjectRegistrationController extends Controller
       $displayRegion = strtoupper($displayLocale);
       $displayLocale = $displayLocale . '_' . $displayRegion;
     }
-    $this->logInfo('LOCALE ' . $displayLocale);
 
     $locales = resourcebundle_locales('');
     $countryCodes = [];
@@ -346,7 +370,7 @@ class ProjectRegistrationController extends Controller
       return $deadline;
     }
 
-    $shareOwner = $this->cloudConfig->getAppValue(Constants::CAFEVDB_APP_ID, ConfigService::SHAREOWNER_KEY);
+    $shareOwner = $this->appConfig->getValueString(Constants::CAFEVDB_APP_ID, ConfigService::SHAREOWNER_KEY);
     if (empty($shareOwner)) {
       return null;
     }
@@ -383,7 +407,9 @@ class ProjectRegistrationController extends Controller
    * Receive the submit request, generate an email share and send all
    * neccessary data back to the frontend.
    *
-   * @param string $projectName
+   * @param string $token Project name and share token. For technical reasons
+   * of route-matching and because of what is expected by the share controller
+   * middleware the two parameters must come together.
    *
    * @param array $data User input, registration data.
    *
@@ -396,9 +422,198 @@ class ProjectRegistrationController extends Controller
    */
   #[Attribute\NoAdminRequired]
   #[Attribute\PublicPage]
-  public function submit(string $projectName, array $data): DataResponse
+  public function submit(string $token, array $data): DataResponse
   {
-    $this->registationService->handleSubmission($projectName, $data);
+    list($projectName, $token) = $this->parseToken();
+
+    $this->registrationService->handleSubmission($projectName, $data);
     return new DataResponse($data, Http::STATUS_OK);
+  }
+
+  /** {@inheritdoc} */
+  public function isValidToken(): bool
+  {
+    list($projectName, $token) = $this->parseToken();
+    if ($token === Constants::NEW_APPLICATION_TOKEN) {
+      $this->logInfo('NEW REGISTRATION');
+      return true;
+    }
+    if ($projectName === null) {
+      $this->logInfo('NO PROJECT NAME');
+      return false;
+    }
+
+    // Store project name and token in the PHP session in order to get access
+    // to the view providing the application data.
+    $this->registrationService->updateDatabaseRowAccessTokens([
+      CAFEVDB\Constants::SQL_PROJECT_APPLICATION_PROJECT_NAME => $projectName,
+      CAFEVDB\Constants::SQL_PROJECT_APPLICATION_SHARE_TOKENS => $token,
+    ]);
+
+    $this->share = $this->registrationService->getApplicationData($projectName, applicationHash: $token);
+
+    if ($this->share === null) {
+      $this->logInfo('NO SHARE; REMOVING TOKENS');
+      $this->registrationService->updateDatabaseRowAccessTokens(null);
+    }
+
+    return $this->share !== null;
+  }
+
+  /**
+   * Install the DB row-access token into the session.
+   *
+   * @param bool $remove If \true remove the access token.
+   *
+   * @return void
+   */
+  private function setRowAccessToken(bool $remove = false): void
+  {
+    if (empty($this->share)) {
+      $this->logInfo('NO SHARE; REMOVING TOKENS', [ 'exception' => new  \Exception('balh') ]);
+      $this->registrationService->updateDatabaseRowAccessTokens(null);
+      return;
+    }
+    $token = $remove ? null : $this->getPasswordHash();
+    $this->registrationService->updateDatabaseRowAccessTokens([
+      CAFEVDB\Constants::SQL_PROJECT_APPLICATION_ROW_ACCESS_TOKEN => $token,
+    ]);
+  }
+
+  /** {@inheritdoc} */
+  protected function verifyPassword(string $password): bool
+  {
+    if (!$this->registrationService->checkPassword($this->share, $password)) {
+      $this->setRowAccessToken(remove: true);
+      return false;
+    }
+    $this->setRowAccessToken();
+    return true;
+  }
+
+  /** {@inheritdoc} */
+  public function isAuthenticated(): bool
+  {
+    if (!parent::isAuthenticated()) {
+      // $this->setRowAccessToken(remove: true);
+      $this->logError('NOT AUTHENTICATED');
+      return false;
+    }
+    $this->setRowAccessToken();
+    return true;
+  }
+
+  /** {@inheritdoc} */
+  protected function getPasswordHash(): ?string
+  {
+    return $this->share?->getPassword();
+  }
+
+  /** {@inheritdoc} */
+  protected function isPasswordProtected(): bool
+  {
+    list(,$token) = $this->parseToken();
+    return $token !== Constants::NEW_APPLICATION_TOKEN;
+  }
+
+  /** {@inheritdoc} */
+  #[Attribute\NoCSRFRequired]
+  #[Attribute\PublicPage]
+  public function showAuthenticate(): PublicTemplateResponse
+  {
+    $templateParameters = ['share' => $this->share];
+
+    $this->eventDispatcher->dispatchTyped(new BeforeTemplateRenderedEvent($this->share, BeforeTemplateRenderedEvent::SCOPE_PUBLIC_SHARE_AUTH));
+
+    $response = new PublicTemplateResponse('core', 'publicshareauth', $templateParameters);
+    if ($this->share->getSendPasswordByTalk()) {
+      $csp = new ContentSecurityPolicy();
+      $csp->addAllowedConnectDomain('*');
+      $csp->addAllowedMediaDomain('blob:');
+      $response->setContentSecurityPolicy($csp);
+    }
+
+    return $response;
+  }
+
+  /** {@inheritdoc} */
+  protected function showAuthFailed(): PublicTemplateResponse {
+    $templateParameters = ['share' => $this->share, 'wrongpw' => true];
+
+    $this->eventDispatcher->dispatchTyped(new BeforeTemplateRenderedEvent($this->share, BeforeTemplateRenderedEvent::SCOPE_PUBLIC_SHARE_AUTH));
+
+    $response = new PublicTemplateResponse('core', 'publicshareauth', $templateParameters);
+    if ($this->share->getSendPasswordByTalk()) {
+      $csp = new ContentSecurityPolicy();
+      $csp->addAllowedConnectDomain('*');
+      $csp->addAllowedMediaDomain('blob:');
+      $response->setContentSecurityPolicy($csp);
+    }
+
+    return $response;
+  }
+
+  /** {@inheritdoc} */
+  protected function showIdentificationResult(bool $success = false): PublicTemplateResponse {
+    $templateParameters = ['share' => $this->share, 'identityOk' => $success];
+
+    $this->eventDispatcher->dispatchTyped(new BeforeTemplateRenderedEvent($this->share, BeforeTemplateRenderedEvent::SCOPE_PUBLIC_SHARE_AUTH));
+
+    $response = new PublicTemplateResponse('core', 'publicshareauth', $templateParameters);
+    if ($this->share->getSendPasswordByTalk()) {
+      $csp = new ContentSecurityPolicy();
+      $csp->addAllowedConnectDomain('*');
+      $csp->addAllowedMediaDomain('blob:');
+      $response->setContentSecurityPolicy($csp);
+    }
+
+    return $response;
+  }
+
+  /** {@inheritdoc} */
+  protected function validateIdentity(?string $identityToken = null): bool {
+    if ($this->share->getShareType() !== IShare::TYPE_EMAIL) {
+      return false;
+    }
+
+    if ($identityToken === null || $this->share->getSharedWith() === null) {
+      return false;
+    }
+
+    return $identityToken === $this->share->getSharedWith();
+  }
+
+  /** {@inheritdoc} */
+  protected function generatePassword(): void {
+    $event = new GenerateSecurePasswordEvent(PasswordContext::SHARING);
+    $this->eventDispatcher->dispatchTyped($event);
+    $password = $event->getPassword() ?? $this->secureRandom->generate(20);
+
+    $this->registrationService->updateApplicationData($this->share, $password);
+  }
+
+  /**
+   * The token may contain the project tag. If so, strip it off. Return an
+   * array composed of the project-name and the token.
+   *
+   * @return array
+   */
+  private function parseToken(): array
+  {
+    $projectName = null;
+    $token = $this->getToken();
+    if (empty($token)) {
+      $this->logInfo('EMPTY TOKEN -> NEW');
+      $token = Constants::NEW_APPLICATION_TOKEN;
+    } elseif (str_contains($token, '/')) {
+      $this->logInfo('COMPOUND TOKEN -> SPLIT');
+      list($projectName, $token) = explode('/', $token);
+    } elseif (preg_match('/^[A-Z]\w+\d{4}$/', $token)) {
+      $this->logInfo('TOKEN IS PROJECT -> NEW ' . $token);
+      $projectName = $token;
+      $token = Constants::NEW_APPLICATION_TOKEN;
+    }
+    $projectName = $this->request->getParam('projectName', $projectName);
+    return [$projectName, $token];
   }
 }
