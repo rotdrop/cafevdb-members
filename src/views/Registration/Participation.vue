@@ -28,7 +28,7 @@
     </h3>
     <div v-if="!loading && registrationProject">
       <div class="input-row">
-        <InputText v-model="registrationData.selectedInstruments"
+        <InputText v-model="registrationData.instruments"
                    type="multiselect"
                    :label="t(appName, 'All my Instruments or Roles')"
                    :options="instruments"
@@ -173,6 +173,14 @@ import type { CalendarObject } from '../../stores/appData.ts'
 import logger from '../../logger.ts'
 
 logger.info('Participation')
+
+const props = withDefaults(
+  defineProps<{
+    token?: string,
+  }>(), {
+    token: undefined,
+  },
+)
 
 const registrationData = useMemberDataStore()
 const appData = useAppDataStore()

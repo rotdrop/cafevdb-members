@@ -122,10 +122,10 @@
       />
     </div>
     <div class="input-row">
-      <InputText v-model="memberData.selectedInstruments"
+      <InputText v-model="memberData.instruments"
                  type="multiselect"
                  :label="t(appId, 'Instruments')"
-                 :options="memberData.instruments"
+                 :options="instruments"
                  track-by="id"
                  option-label="name"
                  :readonly="readonly"
@@ -141,11 +141,13 @@ import { translate as t } from '@nextcloud/l10n'
 import InputText from '../components/InputText.vue'
 import DebugInfo from '../components/DebugInfo.vue'
 import { useMemberDataStore } from '../stores/memberData.ts'
+import { useAppDataStore } from '../stores/appData.ts'
 import {
   computed,
   onBeforeMount,
   ref,
 } from 'vue'
+import { storeToRefs } from 'pinia'
 
 const viewName = 'PersonalProfile'
 
@@ -153,6 +155,9 @@ const loading = ref(true)
 const readonly = computed(() => true) // change to ref if changing personal data has been implemented
 
 const memberData = useMemberDataStore()
+const {
+  instruments,
+} = storeToRefs(useAppDataStore())
 
 onBeforeMount(async () => {
   await memberData.initialize()

@@ -139,7 +139,7 @@
       />
     </div>
     <div class="input-row">
-      <InputText :value.sync="registrationData.selectedInstruments"
+      <InputText :value.sync="registrationData.instruments"
                  type="multiselect"
                  :label="t(appName, 'All my Instruments or Roles')"
                  :options="instruments"
@@ -225,6 +225,14 @@ import {
 } from 'vue'
 import { storeToRefs } from 'pinia'
 import type { Country, Instrument } from '../../stores/appData.ts'
+
+const props = withDefaults(
+  defineProps<{
+    token?: string,
+  }>(), {
+    token: undefined,
+  },
+)
 
 const registrationData = useMemberDataStore()
 const appData = useAppDataStore()
