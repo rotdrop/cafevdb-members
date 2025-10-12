@@ -3,7 +3,7 @@
  * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022 Claus-Justus Heine
+ * @copyright Copyright (c) 2022, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,6 +22,9 @@
 
 namespace OCA\CAFeVDBMembers\Database\ORM\Traits;
 
+use DateTimeInterface;
+use DateTimeImmutable;
+
 use Doctrine\ORM\Mapping as ORM;
 
 use OCA\CAFeVDBMembers\Database\ORM as CAFEVDB;
@@ -32,19 +35,19 @@ trait SoftDeleteableEntity
   use \OCA\CAFeVDBMembers\Toolkit\Traits\DateTimeTrait;
 
   /**
-   * @var DateTimeImmutable|null
+   * @var null|DateTimeInterface
    */
   #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-  protected $deleted;
+  protected ?DateTimeInterface $deleted;
 
   /**
    * Set or clear the deleted at timestamp.
    *
-   * @param string|int|\DateTimeInterface $deleted
+   * @param mixed $deleted
    *
    * @return self
    */
-  public function setDeleted($deleted = null)
+  public function setDeleted(mixed $deleted = null):self
   {
     $this->deleted = self::convertToDateTime($deleted);
     return $this;
@@ -54,9 +57,9 @@ trait SoftDeleteableEntity
    * Get the deleted at timestamp value. Will return null if
    * the entity has not been soft deleted.
    *
-   * @return \DateTimeImmutable|null
+   * @return DateTimeInterface|null
    */
-  public function getDeleted()
+  public function getDeleted():?DateTimeInterface
   {
     return $this->deleted;
   }
@@ -66,8 +69,19 @@ trait SoftDeleteableEntity
    *
    * @return bool
    */
-  public function isDeleted()
+  public function isDeleted():bool
   {
     return null !== $this->deleted;
+  }
+
+  /**
+   * Return whether this object is expired and is about to be deleted on the
+   * next call to delete.
+   *
+   * @return bool
+   */
+  public function isExpired():bool
+  {
+    return $this->isDeleted() && $this->deleted <= (new DateTimeImmutable) && $this->unused();
   }
 }

@@ -3,7 +3,7 @@
  * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022, 2023, 2025 Claus-Justus Heine
+ * @copyright Copyright (c) 2022, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,20 +22,9 @@
 
 namespace OCA\CAFeVDBMembers\Database\ORM\Traits;
 
-use DateTimeInterface;
-
-use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
-
 /** Helper for Gedmo time-stampable entities. */
-trait CreatedAtEntity
+trait Timestampable
 {
   use CreatedAt;
-
-  /**
-   * @var \DateTimeImmutable
-   */
-  #[Gedmo\Timestampable(on: 'update')]
-  #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-  protected ?DateTimeInterface $created;
+  use UpdatedAt;
 }

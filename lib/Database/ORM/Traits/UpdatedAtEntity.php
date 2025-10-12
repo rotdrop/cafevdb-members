@@ -22,39 +22,20 @@
 
 namespace OCA\CAFeVDBMembers\Database\ORM\Traits;
 
+use DateTimeInterface;
+
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /** Helper for Gedmo time-stampable entities. */
 trait UpdatedAtEntity
 {
-  use \OCA\CAFeVDBMembers\Toolkit\Traits\DateTimeTrait;
+  use UpdatedAt;
 
   /**
    * @var \DateTimeImmutable
    */
+  #[Gedmo\Timestampable(on: 'update')]
   #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-  protected $updated;
-
-  /**
-   * Sets updated.
-   *
-   * @param string|int|\DateTimeInterface $updated
-   *
-   * @return self
-   */
-  public function setUpdated($updated)
-  {
-    $this->updated = self::convertToDateTime($updated);
-    return $this;
-  }
-
-  /**
-   * Returns updated.
-   *
-   * @return \DateTimeImmutable
-   */
-  public function getUpdated():?\DateTimeInterface
-  {
-    return $this->updated;
-  }
+  protected ?DateTimeInterface $updated;
 }
