@@ -1,5 +1,5 @@
 /**
- * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright Copyright (c) 2022-2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
  *
@@ -19,39 +19,45 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { joinLiterals } from '../toolkit/util/string-literals.ts'
+
 const prefix = '/registration'
+
+const projectNameParameter = '/:projectName([A-Z]\\w+\\d{4})?'
+const tokenParameter = '/:token([0-9a-f]{64})?'
+const urlParameters = joinLiterals('')(projectNameParameter, tokenParameter)
 
 const routes = [
   {
-    path: prefix + '/:projectName?',
-    name: 'registrationHome',
+    path: joinLiterals('')(prefix, urlParameters),
+    name: 'registrationHome' as const,
     props: true,
   },
   {
-    path: prefix + '/:projectName?/personal-profile',
+    path: joinLiterals('')(prefix, '/personal-profile', urlParameters),
     component: () => import('../views/Registration/PersonalProfile.vue'),
-    name: 'registrationPersonalProfile',
+    name: 'registrationPersonalProfile' as const,
     props: true,
   },
   {
-    path: prefix + '/:projectName?/participation',
+    path: joinLiterals('')(prefix, '/participation', urlParameters),
     component: () => import('../views/Registration/Participation.vue'),
-    name: 'registrationParticipation',
+    name: 'registrationParticipation' as const,
     props: true,
   },
   {
-    path: prefix + '/:projectName?/project-options',
+    path: joinLiterals('')(prefix, '/project-options', urlParameters),
     component: () => import('../views/Registration/ProjectOptions.vue'),
-    name: 'registrationProjectOptions',
+    name: 'registrationProjectOptions' as const,
     props: true,
   },
   {
-    path: prefix + '/:projectName?/submission',
+    path: joinLiterals('')(prefix, '/submission', urlParameters),
     component: () => import('../views/Registration/Submission.vue'),
-    name: 'registrationSubmission',
+    name: 'registrationSubmission' as const,
     props: true,
   },
-]
+] as const
 
 export {
   prefix,

@@ -27,7 +27,7 @@ import { translate as t, translatePlural as n } from '@nextcloud/l10n'
 // import { translate, translatePlural } from '@nextcloud/l10n'
 import Vue from 'vue'
 import App from './App.vue'
-import router from './router/app-router.js'
+import router from './router/app-router.ts'
 import { createPinia, PiniaVuePlugin } from 'pinia'
 
 Vue.use(PiniaVuePlugin)

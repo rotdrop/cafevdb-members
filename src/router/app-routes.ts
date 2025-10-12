@@ -1,5 +1,5 @@
 /**
- * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright Copyright (c) 2022, 2023, 2025, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
  *
@@ -20,11 +20,13 @@
  */
 
 import { appName } from '../config.ts'
+import { translate as t } from '@nextcloud/l10n'
+import Router from 'vue-router'
 
 const routes = [
   {
     path: '/',
-    props: router => ({
+    props: (_router: Router) => ({
       rootTitle: t(appName, 'Home'),
     }),
   },
@@ -32,7 +34,7 @@ const routes = [
     path: '/f/personalProfile',
     component: () => import('../views/PersonalProfile.vue'),
     name: 'personalProfile',
-    props: router => ({
+    props: (_router: Router) => ({
       rootTitle: t(appName, 'Personal Profile'),
     }),
   },
@@ -40,7 +42,7 @@ const routes = [
     path: '/f/bankAccounts',
     component: () => import('../views/BankAccounts.vue'),
     name: 'bankAccounts',
-    props: router => ({
+    props: (_router: Router) => ({
       rootTitle: t(appName, 'Bank Accounts'),
     }),
   },
@@ -48,7 +50,7 @@ const routes = [
     path: '/f/instrumentInsurances',
     component: () => import('../views/InstrumentInsurances.vue'),
     name: 'instrumentInsurances',
-    props: router => ({
+    props: (_router: Router) => ({
       rootTitle: t(appName, 'Instrument Insurances'),
     }),
   },
@@ -56,7 +58,7 @@ const routes = [
     path: '/f/projects',
     component: () => import('../views/Projects.vue'),
     name: 'projects',
-    props: router => ({
+    props: (_router: Router) => ({
       rootTitle: t(appName, 'Projects'),
     }),
   },
