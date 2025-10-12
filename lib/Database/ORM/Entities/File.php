@@ -22,6 +22,8 @@
 
 namespace OCA\CAFeVDBMembers\Database\ORM\Entities;
 
+use DateTimeInterface;
+
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -88,7 +90,7 @@ class File implements \ArrayAccess
    * @var \DateTimeImmutable
    */
   #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-  protected $updated;
+  protected ?DateTimeInterface $updated;
 
   // phpcs:ignore Squiz.Commenting.FunctionComment.Missing
   public function __construct()
