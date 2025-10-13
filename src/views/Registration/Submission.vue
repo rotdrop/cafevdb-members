@@ -94,6 +94,11 @@ const submit = async () => {
       ),
       {
         data: {
+          project: {
+            id: activeProject.value!.id,
+            name: activeProject.value!.name,
+            year: activeProject.value!.year,
+          },
           projectData: registrationProject.value,
           personalProfile,
         },
