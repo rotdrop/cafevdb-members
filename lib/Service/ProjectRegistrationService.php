@@ -376,7 +376,7 @@ class ProjectRegistrationService
 
     $message = $this->mailer->createMessage();
 
-    $emailTemplate = $this->mailer->createEMailTemplate('sharebymail.RecipientPasswordNotification', [
+    $emailTemplate = $this->mailer->createEMailTemplate($this->appName . '.RecipientPasswordNotification', [
       'projectName' => $projectName,
       'password' => $password,
       'initiator' => $initiatorDisplayName,
