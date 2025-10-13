@@ -57,11 +57,10 @@ class ProjectRegistrationService
 {
   use ToolkitTraits\LoggerTrait;
 
-  public const REGISTRATION_FOLDER = 'project-registration';
   public const PERSONAL_PROFILE_KEY = 'personalProfile';
   public const EMAIL_KEY = 'email';
   public const USER_ID_KEY = 'uid';
-  public const PROJECT_NAME_KEY = 'projectName';
+  public const PROJECT_KEY = 'project';
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
@@ -285,7 +284,7 @@ class ProjectRegistrationService
   {
     $applicationTokens = $this->session->get(Constants::APPLICATION_SESSION_KEY) ?? [];
     if ($tokens === null) {
-      $applicationTokens = array_map(fn(?string $value) => null);
+      $applicationTokens = array_map(fn(?string $value) => null, $applicationTokens);
     } else {
       $applicationTokens = array_merge($applicationTokens, $tokens);
     }
@@ -306,16 +305,12 @@ class ProjectRegistrationService
    */
   public function updateApplicationData(ApplicationShare $share, ?string $plainTextPassword = null): ApplicationShare
   {
-    /** @var Entities\ProjectApplication $applicationData */
-    $applicationData = $share->getNode();
-
     $passwordChanged = !empty($plainTextPassword)
       && (empty($share->getPassword())
           || !$this->hasher->verify($plainTextPassword, $share->getPassword()));
 
     if ($passwordChanged) {
       $share->setPassword($this->hasher->hash($plainTextPassword));
-      $applicationData->setRowAccessToken($plainTextPassword);
     }
 
     $this->entityManager->beginTransaction();
@@ -360,7 +355,10 @@ class ProjectRegistrationService
       return false;
     }
 
-    $projectName = $share->getData()[self::PROJECT_NAME_KEY];
+    /** @var Entities\ProjectApplication $applicationData */
+    $applicationData = $share->getNode();
+
+    $projectName = $applicationData->getProject()->getName();
     $shareWith = $share->getSharedWith();
     $initiatorDisplayName = $this->appConfig->getValueString(Constants::CAFEVDB_APP_ID, 'orchestra');
     $initiatorEmailAddress = $share->getSharedBy();
