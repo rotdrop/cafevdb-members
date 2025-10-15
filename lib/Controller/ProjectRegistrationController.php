@@ -26,7 +26,6 @@ use DateTimeImmutable;
 use DateTimeInterface;
 use DateTime;
 
-use OCA\CAFEVDB\Service\ConfigService;
 use OCA\Files_Sharing\Event\BeforeTemplateRenderedEvent;
 use OCP\AppFramework\AuthPublicShareController;
 use OCP\AppFramework\Controller;
@@ -37,9 +36,6 @@ use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Http\Template\PublicTemplateResponse;
 use OCP\AppFramework\Http\Template\SimpleMenuAction;
 use OCP\AppFramework\Services\IInitialState;
-use OCP\Calendar\ICalendar;
-use OCP\Calendar\ICalendarQuery;
-use OCP\Calendar\IManager as ICalendarMananger;
 use OCP\Constants as CoreConstants;
 use OCP\EventDispatcher\IEventDispatcher;
 use OCP\IConfig;
@@ -150,7 +146,7 @@ class ProjectRegistrationController extends AuthPublicShareController
         continue;
       }
 
-      $deadline = $this->getProjectRegistrationDeadline($project);
+      $deadline = $this->projectService->getProjectRegistrationDeadline($project);
       if (empty($deadline)) {
         // no events configured yet, no explicit deadline -> registration is
         // not yet open.
@@ -356,51 +352,6 @@ class ProjectRegistrationController extends AuthPublicShareController
     Util::addStyle($this->appName, $this->assetService->getCSSAsset('project-registration')['asset']);
 
     return $response;
-  }
-
-  /**
-   * @param Entities\Project $project
-   *
-   * @return null|DateTimeInterface
-   */
-  private function getProjectRegistrationDeadline(Entities\Project $project):?DateTimeInterface
-  {
-    $deadline = $project->getRegistrationDeadline();
-    if (!empty($deadline)) {
-      return $deadline;
-    }
-
-    $shareOwner = $this->appConfig->getValueString(Constants::CAFEVDB_APP_ID, ConfigService::SHAREOWNER_KEY);
-    if (empty($shareOwner)) {
-      return null;
-    }
-
-    $principalUri = 'principals/users/' . $shareOwner;
-    $projectCategory = $project->getName();
-    $query = $this->calendarManager->newQuery($principalUri);
-    $query->addSearchProperty(ICalendarQuery::SEARCH_PROPERTY_CATEGORIES);
-    $query->setSearchPattern($projectCategory);
-    $query->addSearchCalendar(ConfigService::REHEARSALS_CALENDAR_URI);
-    $query->addSearchCalendar(ConfigService::CONCERTS_CALENDAR_URI);
-
-    $calendarObjects = $this->calendarManager->searchForPrincipal($query);
-
-    if (empty($calendarObjects)) {
-      return null;
-    }
-
-    $startDates = [];
-
-    foreach ($calendarObjects as $objectInfo) {
-      foreach ($objectInfo['objects'] as $calendarObject) {
-        $startDates[] = $calendarObject['DTSTART'][0];
-        $this->logInfo('START ' . print_r($calendarObject['DTSTART'][0], true));
-      }
-    }
-
-    $deadline = min($startDates)->modify('-1 day');
-
-    return $deadline;
   }
 
   /**

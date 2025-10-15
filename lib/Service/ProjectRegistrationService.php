@@ -23,10 +23,14 @@
 namespace OCA\CAFeVDBMembers\Service;
 
 use DateInterval;
+use Carbon\Carbon;
 use Carbon\CarbonImmutable;
 use UnexpectedValueException;
 use Throwable;
 
+use OCP\Calendar\ICalendar;
+use OCP\Calendar\ICalendarQuery;
+use OCP\Calendar\IManager as ICalendarMananger;
 use OCP\Defaults;
 use OCP\IAppConfig;
 use OCP\IConfig;
@@ -66,15 +70,16 @@ class ProjectRegistrationService
   public function __construct(
     protected string $appName,
     protected Defaults $defaults,
-    protected IConfig $config,
+    protected EntityManager $entityManager,
     protected IAppConfig $appConfig,
+    protected ICalendarMananger $calendarManager,
+    protected IConfig $config,
     protected IHasher $hasher,
     protected IL10N $l,
+    protected IMailer $mailer,
     protected ISession $session,
     protected IUserSession $userSession,
     protected LoggerInterface $logger,
-    protected IMailer $mailer,
-    protected EntityManager $entityManager,
   ) {
   }
   // phpcs:enable Squiz.Commenting.FunctionComment.Missing
@@ -99,13 +104,24 @@ class ProjectRegistrationService
     $primaryEmail = $data[self::PERSONAL_PROFILE_KEY][self::EMAIL_KEY] ?? null;
     if ($primaryEmail === null) {
       throw new Exceptions\RegistrationDataMissingException(
-        message: $this->l->t(
-          'The field "%1$s" in the submitted registration data is missing. '
-          . ' Unfortunately, we cannot do without a valid email address as we need some means to communication with the persions applying of participation.',
-          'email',
+        message: (
+          $this->l->t('The field "%1$s" in the submitted registration data is missing.', 'email')
+          . ' '
+          . $this->l->t('Unfortunately, we cannot do without a valid email address as we need some means to communication with the persions applying of participation.')
         ),
       );
     }
+
+    if (!$this->mailer->validateMailAddress($primaryEmail)) {
+      throw new Exceptions\RegistrationDataMissingException(
+        message: (
+          $this->l->t('The data "%1$s" does not seem to be a valid email address.', $primaryEmail)
+          . ' '
+          . $this->l->t('Unfortunately, we cannot do without a valid email address as we need some means to communication with the persions applying of participation.')
+        ),
+      );
+    }
+
     // The email is the token that we use for identification
     $applicationHash = hash(Constants::EMAIL_HASH_ALGORITHM, $primaryEmail);
     if ($oldApplicationHash === null) {
@@ -209,7 +225,8 @@ class ProjectRegistrationService
     string $projectName,
     ?string $applicationHash = null,
     ?string $cloudUserId = null,
-  ): ?ApplicationShare {
+  ): ?ApplicationShare
+  {
 
     /** @var EntityRepository $repository */
     $repository = $this->entityManager->getRepository(Entities\ProjectApplication::class);
@@ -219,10 +236,10 @@ class ProjectRegistrationService
       $criteria[] = [ 'email#SHA2(%s, 256)' => $applicationHash ];
     }
     if ($cloudUserId !== null) {
-      $criteria[] = [ 'musician.userIdSlug' => $cloudUserId ];
+       $criteria[] = [ 'musician.userIdSlug' => $cloudUserId ];
     }
 
-    /** @var Entities\ProjectApplication $oldApplicationHash */
+    /** @var Entities\ProjectApplication $applicationData */
     $applicationData = $repository->findOneBy($criteria);
 
     if ($applicationData === null) {
@@ -233,6 +250,12 @@ class ProjectRegistrationService
     $registrationReplyTo = $this->appConfig->getValueString($this->appName, SettingsController::REGISTRATION_REPLY_TO_KEY);
 
     $share = new ApplicationShare($applicationData, $registrationReplyTo);
+
+    $share->setExpirationDate(Carbon::createFromImmutable($this->getRegistrationDeadline($applicationData->getProject())));
+
+    $share->setNote($this->l->t('Your application has been submitted successfully and will be reviewed by the executive board.
+We will contact you again with further information latest after the end of the registration deadline. In the unfortunate case
+that we have to decline your application we will inform you ASAP.'));
 
     return $share;
   }
@@ -338,6 +361,158 @@ class ProjectRegistrationService
   }
 
   /**
+   * Compute the effective project registration deadline.
+   *
+   * @param Entities\Project $project
+   *
+   * @return null|DateTimeInterface
+   */
+  public function getProjectRegistrationDeadline(Entities\Project $project):?DateTimeInterface
+  {
+    $deadline = $project->getRegistrationDeadline();
+    if (!empty($deadline)) {
+      return $deadline;
+    }
+
+    $shareOwner = $this->appConfig->getValueString(Constants::CAFEVDB_APP_ID, ConfigService::SHAREOWNER_KEY);
+    if (empty($shareOwner)) {
+      return null;
+    }
+
+    $principalUri = 'principals/users/' . $shareOwner;
+    $projectCategory = $project->getName();
+    $query = $this->calendarManager->newQuery($principalUri);
+    $query->addSearchProperty(ICalendarQuery::SEARCH_PROPERTY_CATEGORIES);
+    $query->setSearchPattern($projectCategory);
+    $query->addSearchCalendar(CAFEVDB\Service\ConfigService::REHEARSALS_CALENDAR_URI);
+    $query->addSearchCalendar(CAFEVDB\Service\ConfigService::CONCERTS_CALENDAR_URI);
+
+    $calendarObjects = $this->calendarManager->searchForPrincipal($query);
+
+    if (empty($calendarObjects)) {
+      return null;
+    }
+
+    $startDates = [];
+
+    foreach ($calendarObjects as $objectInfo) {
+      foreach ($objectInfo['objects'] as $calendarObject) {
+        $startDates[] = $calendarObject['DTSTART'][0];
+        $this->logInfo('START ' . print_r($calendarObject['DTSTART'][0], true));
+      }
+    }
+
+    $deadline = min($startDates)->modify('-1 day');
+
+    return $deadline;
+  }
+
+  /**
+   * Borrowed and adapted from apps/sharebymail.
+   *
+   * @param ApplicationShare $share The share to send the email for
+   *
+   * @param array $emails The email addresses to send the email to
+   *
+   * @return void
+   *
+   * @todo This should compose the entire notification email, including debit
+   * mandate form, terms of services, a record of the submitted data. This is
+   * very far from being finished.
+   */
+  protected function sendEmail(ApplicationShare $share, array $emails): void
+  {
+    $link = $this->urlGenerator->linkToRouteAbsolute($this->appName . '.ProjectRegistration.showShare', [
+      'token' => $share->getToken()
+    ]);
+
+    /** @var Entities\ProjectApplication $applicationData */
+    $applicationData = $share->getNode();
+
+    $projectName = $applicationData->getProject()->getName();
+
+    $expiration = $share->getExpirationDate();
+    $note = $share->getNote();
+    $shareWith = $share->getSharedWith();
+
+    $initiatorDisplayName = $this->appConfig->getValueString(Constants::CAFEVDB_APP_ID, 'orchestra');
+    $initiatorEmailAddress = $share->getSharedBy();
+    $message = $this->mailer->createMessage();
+
+    $emailTemplate = $this->mailer->createEMailTemplate($this->appName, '.ApplicantNotification', [
+      'projectName' => $projectName,
+      'link' => $link,
+      'initiator' => $initiatorDisplayName,
+      'initiatorEmail' => $initiatorEmailAddress,
+      'expiration' => $expiration,
+      'shareWith' => $shareWith,
+      'note' => $note,
+    ]);
+
+    $emailTemplate->setSubject($this->l->t(
+      'Your application for the project "1$s" of the orchestra "%2$s"', [
+        $projectName,
+        $initiatorDisplayName,
+      ],
+    ));
+    $emailTemplate->addHeader();
+    $emailTemplate->addHeading($this->l->t('Your application for "%1$s"', $projectName), false);
+
+    $emailTemplate->addBodyListItem(
+      htmlspecialchars($note),
+      $this->l->t('Note:'),
+      $this->getAbsoluteImagePath('caldav/description.png'),
+      $note
+    );
+
+    if ($expiration !== null) {
+      $dateString = (string)$this->l->l('date', $expiration, ['width' => 'medium']);
+      $emailTemplate->addBodyListItem(
+        $this->l->t('You can modify your application until the end of the application period, %s.', [$dateString]),
+        $this->l->t('Expiration:'),
+        $this->getAbsoluteImagePath('caldav/time.png'),
+      );
+    }
+
+    $emailTemplate->addBodyButton(
+      $this->l->t('Review your application for "%s"', [$projectName]),
+      $link
+    );
+
+    // If multiple recipients are given, we send the mail to all of them
+    if (count($emails) > 1) {
+      // We do not want to expose the email addresses of the other recipients
+      $message->setBcc($emails);
+    } else {
+      $message->setTo($emails);
+    }
+
+    // The "From" contains the sharers name
+    $instanceName = $this->defaults->getName();
+    $senderName = $instanceName;
+    if ($this->settingsManager->replyToInitiator()) {
+      $senderName = $this->l->t(
+        '%1$s via %2$s',
+        [
+          $initiatorDisplayName,
+          $instanceName
+        ]
+      );
+    }
+    $message->setFrom([Util::getDefaultEmailAddress($instanceName) => $senderName]);
+
+    $message->setReplyTo([$initiatorEmailAddress => $initiatorDisplayName]);
+    $emailTemplate->addFooter($instanceName . ($this->defaults->getSlogan() !== '' ? ' - ' . $this->defaults->getSlogan() : ''));
+
+    $message->useTemplate($emailTemplate);
+    $failedRecipients = $this->mailer->send($message);
+    if (!empty($failedRecipients)) {
+      $this->logger->error('Share notification mail could not be sent to: ' . implode(', ', $failedRecipients));
+      return;
+    }
+  }
+
+  /**
    * Borrowed and adapted from apps/sharebymail.
    *
    * @param ApplicationShare $share Dummy share wrapping the application data.
@@ -348,6 +523,8 @@ class ProjectRegistrationService
    * our case we always only have one recipient.
    *
    * @return bool
+   *
+   * @todo Customize further.
    */
   private function sendPassword(ApplicationShare $share, string $password, array $emails): bool
   {

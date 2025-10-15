@@ -40,6 +40,10 @@ use OCA\CAFeVDBMembers\Database\ORM\Entities;
  */
 class ApplicationShare implements IShare
 {
+  protected ?DateTimeInterface $expirationDate = null;
+
+  protected ?string $note = null;
+
   /**
    * @phpcs:disable Squiz.Functions.MultiLineFunctionDeclaration.BraceOnSameLine
    * @phpcs:disable Squiz.Functions.MultiLineFunctionDeclaration.ContentAfterBrace
@@ -70,7 +74,7 @@ class ApplicationShare implements IShare
   /** {@inheritdoc} */
   public function getId()
   {
-    return $this->token . '@' . $this->applicationData->getProject()->getName();
+    return $this->getSharedWith() . '#' . $this->applicationData->getProject()->getName();
   }
 
   /** {@inheritdoc} */
@@ -149,16 +153,16 @@ class ApplicationShare implements IShare
   public function getStatus(): int { return IShare::STATUS_ACCEPTED; }
 
   /** {@inheritdoc} */
-  public function setNote($note) {}
+  public function setNote($note) { $this->note = $note; return $this; }
 
   /** {@inheritdoc} */
-  public function getNote() { return ''; }
+  public function getNote() { return $this->note; }
 
   /** {@inheritdoc} */
-  public function setExpirationDate(?DateTime $expireDate) {}
+  public function setExpirationDate(?DateTime $expireDate) { $this->expirationDate = $expireDate; return $this; }
 
   /** {@inheritdoc} */
-  public function getExpirationDate() { return null; }
+  public function getExpirationDate() { return $this->expirationDate; }
 
   /** {@inheritdoc} */
   public function setNoExpirationDate(bool $noExpirationDate) {}
@@ -210,8 +214,18 @@ class ApplicationShare implements IShare
   /** {@inheritdoc} */
   public function setToken($token) {}
 
-  /** {@inheritdoc} */
-  public function getToken() { return hash(Constants::EMAIL_HASH_ALGORITHM, $this->getSharedWith()); }
+  /**
+   * Return the full composite token, including the project name.
+   *
+   * {@inheritdoc}
+   */
+  public function getToken()
+  {
+    $projectName = $this->applicationData->getProject()->getName();
+    $emailHash = hash(Constants::EMAIL_HASH_ALGORITHM, $this->getSharedWith());
+
+    return $projectName . '/' . $emailHash;
+  }
 
   /** {@inheritdoc} */
   public function setParent(int $parent):IShare { return $this; }
