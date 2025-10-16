@@ -23,6 +23,7 @@
 namespace OCA\CAFeVDBMembers\Service;
 
 use DateInterval;
+use DateTimeInterface;
 use Carbon\Carbon;
 use Carbon\CarbonImmutable;
 use UnexpectedValueException;
@@ -36,6 +37,7 @@ use OCP\IAppConfig;
 use OCP\IConfig;
 use OCP\IL10N;
 use OCP\ISession;
+use OCP\IURLGenerator;
 use OCP\IUserSession;
 use OCP\Mail\IMailer;
 use OCP\Security\IHasher;
@@ -68,7 +70,6 @@ class ProjectRegistrationService
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
-    protected string $appName,
     protected Defaults $defaults,
     protected EntityManager $entityManager,
     protected IAppConfig $appConfig,
@@ -78,11 +79,35 @@ class ProjectRegistrationService
     protected IL10N $l,
     protected IMailer $mailer,
     protected ISession $session,
+    protected IURLGenerator $urlGenerator,
     protected IUserSession $userSession,
     protected LoggerInterface $logger,
+    protected string $appName,
   ) {
   }
   // phpcs:enable Squiz.Commenting.FunctionComment.Missing
+
+  /**
+   * Wrap the given database entity into an ApplicationShare envelope.
+   *
+   * @param Entities\ProjectApplication $projectApplication
+   *
+   * @return ApplicationShare
+   */
+  private function shareFromApplicationEntity(Entities\ProjectApplication $projectApplication):ApplicationShare
+  {
+    $registrationReplyTo = $this->appConfig->getValueString($this->appName, SettingsController::REGISTRATION_REPLY_TO_KEY);
+
+    $share = new ApplicationShare($projectApplication, $registrationReplyTo);
+
+    $share->setExpirationDate(Carbon::createFromImmutable($this->getProjectRegistrationDeadline($projectApplication->getProject())));
+
+    $share->setNote($this->l->t('Your application has been submitted successfully and will be reviewed by the executive board.
+We will contact you again with further information latest after the end of the registration deadline. In the unfortunate case
+that we have to decline your application we will inform you ASAP.'));
+
+    return $share;
+  }
 
   /**
    * Data submission, this is more-or-less the main entry point.
@@ -142,26 +167,26 @@ class ProjectRegistrationService
     /** @var EntityRepository $repository */
     $repository = $this->entityManager->getRepository(Entities\ProjectApplication::class);
 
-    /** @var Entities\ProjectApplication $oldApplicationHash */
-    $oldApplicationData = $repository->findOneBy([
+    /** @var Entities\ProjectApplication $oldProjectApplication */
+    $oldProjectApplication = $repository->findOneBy([
       'project.name' => $projectName,
       'email#SHA2(%s, 256)' => $oldApplicationHash,
     ]);
-    $oldUid = $oldApplicationData?->getMusician()?->getUserIdSlug();
+    $oldUid = $oldProjectApplication?->getMusician()?->getUserIdSlug();
 
     $this->entityManager->beginTransaction();
     try {
 
-      if ($oldApplicationHash != $applicationHash || $oldApplicationData === null) {
-        /** @var Entities\ProjectApplication $applicationData */
-        $applicationData = new Entities\ProjectApplication(
+      if ($oldApplicationHash != $applicationHash || $oldProjectApplication === null) {
+        /** @var Entities\ProjectApplication $projectApplication */
+        $projectApplication = new Entities\ProjectApplication(
           $project,
           $primaryEmail,
           musician: null, // @todo
           data: $data,
         );
       } else {
-        $applicationData = $oldApplicationData;
+        $projectApplication = $oldProjectApplication;
       }
 
       // Remember the UID and also keep any previously submitted UID. We treat
@@ -179,26 +204,25 @@ class ProjectRegistrationService
         $musician = $this->entityManager->getRepository(Entities\Musician::class)->findOneBy([
           'userIdSlug' => $uid,
         ]);
-        $applicationData->setMusician($musician);
+        $projectApplication->setMusician($musician);
       }
-      $applicationData->setProject($project);
-      $oldCreated = $oldApplicationData?->getCreated();
-      $applicationData->setPasswordHash($oldApplicationData?->getPasswordHash());
-      $applicationData->setData($data);
+      $projectApplication->setProject($project);
+      $oldCreated = $oldProjectApplication?->getCreated();
+      $projectApplication->setPasswordHash($oldProjectApplication?->getPasswordHash());
+      $projectApplication->setData($data);
 
-      $this->entityManager->persist($applicationData);
+      $this->entityManager->persist($projectApplication);
       $this->entityManager->flush();
 
-      $applicationData->setCreated($oldCreated ?? new CarbonImmutable());
+      $projectApplication->setCreated($oldCreated ?? new CarbonImmutable());
 
-      if ($oldApplicationData && $oldApplicationData !== $applicationData) {
-        $this->entityManager->remove($oldApplicationData);
+      if ($oldProjectApplication && $oldProjectApplication !== $projectApplication) {
+        $this->entityManager->remove($oldProjectApplication);
       }
 
       $this->entityManager->flush();
 
       $this->entityManager->commit();
-
     } catch (Throwable $t) {
       $this->entityManager->rollback();
 
@@ -207,6 +231,7 @@ class ProjectRegistrationService
         previous: $t,
       );
     }
+    $this->sendEmail($this->shareFromApplicationEntity($projectApplication), [$primaryEmail]);
   }
 
   /**
@@ -221,12 +246,11 @@ class ProjectRegistrationService
    *
    * @return null|ApplicationShare
    */
-  public function getApplicationData(
+  public function getApplicationShare(
     string $projectName,
     ?string $applicationHash = null,
     ?string $cloudUserId = null,
-  ): ?ApplicationShare
-  {
+  ): ?ApplicationShare {
 
     /** @var EntityRepository $repository */
     $repository = $this->entityManager->getRepository(Entities\ProjectApplication::class);
@@ -239,25 +263,15 @@ class ProjectRegistrationService
        $criteria[] = [ 'musician.userIdSlug' => $cloudUserId ];
     }
 
-    /** @var Entities\ProjectApplication $applicationData */
-    $applicationData = $repository->findOneBy($criteria);
+    /** @var Entities\ProjectApplication $projectApplication */
+    $projectApplication = $repository->findOneBy($criteria);
 
-    if ($applicationData === null) {
+    if ($projectApplication === null) {
       $this->logError('Unable to find old data given criteria ' . print_r($criteria, true));
       return null;
     }
 
-    $registrationReplyTo = $this->appConfig->getValueString($this->appName, SettingsController::REGISTRATION_REPLY_TO_KEY);
-
-    $share = new ApplicationShare($applicationData, $registrationReplyTo);
-
-    $share->setExpirationDate(Carbon::createFromImmutable($this->getRegistrationDeadline($applicationData->getProject())));
-
-    $share->setNote($this->l->t('Your application has been submitted successfully and will be reviewed by the executive board.
-We will contact you again with further information latest after the end of the registration deadline. In the unfortunate case
-that we have to decline your application we will inform you ASAP.'));
-
-    return $share;
+    return $this->shareFromApplicationEntity($projectApplication);
   }
 
   /**
@@ -426,10 +440,10 @@ that we have to decline your application we will inform you ASAP.'));
       'token' => $share->getToken()
     ]);
 
-    /** @var Entities\ProjectApplication $applicationData */
-    $applicationData = $share->getNode();
+    /** @var Entities\ProjectApplication $projectApplication */
+    $projectApplication = $share->getNode();
 
-    $projectName = $applicationData->getProject()->getName();
+    $projectName = $projectApplication->getProject()->getName();
 
     $expiration = $share->getExpirationDate();
     $note = $share->getNote();
@@ -439,7 +453,7 @@ that we have to decline your application we will inform you ASAP.'));
     $initiatorEmailAddress = $share->getSharedBy();
     $message = $this->mailer->createMessage();
 
-    $emailTemplate = $this->mailer->createEMailTemplate($this->appName, '.ApplicantNotification', [
+    $emailTemplate = $this->mailer->createEMailTemplate($this->appName . '.ApplicantNotification', [
       'projectName' => $projectName,
       'link' => $link,
       'initiator' => $initiatorDisplayName,
@@ -450,7 +464,7 @@ that we have to decline your application we will inform you ASAP.'));
     ]);
 
     $emailTemplate->setSubject($this->l->t(
-      'Your application for the project "1$s" of the orchestra "%2$s"', [
+      'Your application for the project "%1$s" of the orchestra "%2$s"', [
         $projectName,
         $initiatorDisplayName,
       ],
@@ -490,15 +504,13 @@ that we have to decline your application we will inform you ASAP.'));
     // The "From" contains the sharers name
     $instanceName = $this->defaults->getName();
     $senderName = $instanceName;
-    if ($this->settingsManager->replyToInitiator()) {
-      $senderName = $this->l->t(
-        '%1$s via %2$s',
-        [
-          $initiatorDisplayName,
-          $instanceName
-        ]
-      );
-    }
+    $senderName = $this->l->t(
+      '%1$s via %2$s',
+      [
+        $initiatorDisplayName,
+        $instanceName
+      ]
+    );
     $message->setFrom([Util::getDefaultEmailAddress($instanceName) => $senderName]);
 
     $message->setReplyTo([$initiatorEmailAddress => $initiatorDisplayName]);
@@ -532,10 +544,10 @@ that we have to decline your application we will inform you ASAP.'));
       return false;
     }
 
-    /** @var Entities\ProjectApplication $applicationData */
-    $applicationData = $share->getNode();
+    /** @var Entities\ProjectApplication $projectApplication */
+    $projectApplication = $share->getNode();
 
-    $projectName = $applicationData->getProject()->getName();
+    $projectName = $projectApplication->getProject()->getName();
     $shareWith = $share->getSharedWith();
     $initiatorDisplayName = $this->appConfig->getValueString(Constants::CAFEVDB_APP_ID, 'orchestra');
     $initiatorEmailAddress = $share->getSharedBy();
@@ -610,5 +622,17 @@ that we have to decline your application we will inform you ASAP.'));
 
     // $this->createPasswordSendActivity($share, $shareWith, false);
     return true;
+  }
+
+  /**
+   * @param string $path
+   *
+   * @return string
+   */
+  private function getAbsoluteImagePath(string $path):string
+  {
+    return $this->urlGenerator->getAbsoluteURL(
+      $this->urlGenerator->imagePath('core', $path)
+    );
   }
 }

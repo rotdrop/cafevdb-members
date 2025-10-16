@@ -85,7 +85,6 @@ class ProjectRegistrationController extends AuthPublicShareController
     private EntityManager $entityManager,
     private EventsService $eventsService,
     private IAppConfig $appConfig,
-    private ICalendarMananger $calendarManager,
     private IConfig $cloudConfig,
     private IDateTimeZone $dateTimeZone,
     private IEventDispatcher $eventDispatcher,
@@ -146,7 +145,7 @@ class ProjectRegistrationController extends AuthPublicShareController
         continue;
       }
 
-      $deadline = $this->projectService->getProjectRegistrationDeadline($project);
+      $deadline = $this->registrationService->getProjectRegistrationDeadline($project);
       if (empty($deadline)) {
         // no events configured yet, no explicit deadline -> registration is
         // not yet open.
@@ -270,7 +269,7 @@ class ProjectRegistrationController extends AuthPublicShareController
 
     if (!empty($this->userSession->getUser()) && $this->userSession->isLoggedIn()) {
       if ($activeProject >= 0) {
-        $this->share = $this->registrationService->getApplicationData($projectName, cloudUserId: $this->userSession->getUser()->getUID());
+        $this->share = $this->registrationService->getApplicationShare($projectName, cloudUserId: $this->userSession->getUser()->getUID());
       }
       $response = new TemplateResponse($this->appName, 'project-registration', [
         'appName' => $this->appName,
@@ -401,7 +400,7 @@ class ProjectRegistrationController extends AuthPublicShareController
       CAFEVDB\Constants::SQL_PROJECT_APPLICATION_SHARE_TOKENS => $token,
     ]);
 
-    $this->share = $this->registrationService->getApplicationData($projectName, applicationHash: $token);
+    $this->share = $this->registrationService->getApplicationShare($projectName, applicationHash: $token);
 
     if ($this->share === null) {
       $this->logInfo('NO SHARE; REMOVING TOKENS');
