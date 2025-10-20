@@ -56,16 +56,12 @@
                 />
               </template>
             </NcSelect>
-            <pre>
-              {{ JSON.stringify(field, undefined, 2) }}
-            </pre>
+            <DebugInfo :debug-data="field" />
           </template>
         </NcListItem>
       </ul>
     </div>
-    <pre>
-       {{ JSON.stringify(registrationProject, undefined, 2) }}
-    </pre>
+    <DebugInfo :debug-data="registrationProject" />
     <div class="navigation flex flex-row flex-justify-full">
       <RouterButton :to="{ name: 'registrationParticipation', params: { projectName } }"
                     exact
@@ -97,6 +93,7 @@ import {
   NcEllipsisedOption,
 } from '@nextcloud/vue'
 import RouterButton from '../../components/RouterButton.vue'
+import DebugInfo from '../../components/DebugInfo.vue'
 import {
   ProjectParticipantFieldDataType,
   useMemberDataStore,
