@@ -578,7 +578,7 @@ that we have to decline your application we will inform you ASAP.'));
       ],
     ));
     $emailTemplate->addHeader();
-    $emailTemplate->addHeading($this->l->t('Password for your application data for "%s"', [$projectName]), false);
+    $emailTemplate->addHeading($this->l->t('Password to access your application for "%s"', [$projectName]), false);
     $emailTemplate->addBodyText(htmlspecialchars($htmlBodyPart), $plainBodyPart);
     $emailTemplate->addBodyText($this->l->t('It is protected with the following password:'));
     $emailTemplate->addBodyText($password);
