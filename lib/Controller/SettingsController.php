@@ -30,7 +30,7 @@ use OCP\IRequest;
 use OCP\IConfig;
 use OCP\IL10N;
 
-use OCA\CAFeVDBMembers\Service\GroupFoldersService;
+use OCA\CAFeVDBMembers\Toolkit\Service\GroupFoldersService;
 use OCA\CAFeVDBMembers\Service\ProjectGroupService;
 
 /** AJAX end-points for admin and personal settings. */
