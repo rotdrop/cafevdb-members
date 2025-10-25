@@ -376,7 +376,7 @@ class ProjectRegistrationController extends AuthPublicShareController
   {
     list($projectName, $token) = $this->parseToken();
 
-    $this->registrationService->handleSubmission($projectName, $data);
+    $this->registrationService->handleSubmission($projectName, $data, $token);
     return new DataResponse($data, Http::STATUS_OK);
   }
 
