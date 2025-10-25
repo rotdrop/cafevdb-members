@@ -88,7 +88,7 @@
               />
             </NcActions>
             <span v-if="projects.length > 1" class="start-button-junctor">{{ t(appName, 'or') }}</span>
-            <RouterButton :to="{ name: 'registrationPersonalProfile', params: projectName ? { projectName } : {} }"
+            <RouterButton :to="routerDestination('registrationPersonalProfile')"
                           exact
                           icon="icon-confirm"
                           icon-position="right"
@@ -152,6 +152,7 @@ const props = withDefaults(
 
 const registrationData = useMemberDataStore()
 const appData = useAppDataStore()
+
 const {
   activeProject,
   debug,

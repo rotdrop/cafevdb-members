@@ -24,7 +24,7 @@
       {{ t(appName, 'Summary and Submission') }}
     </h2>
     <div class="navigation flex flex-row flex-justify-full flex-center">
-      <RouterButton :to="{ name: 'registrationProjectOptions', params: { projectName } }"
+      <RouterButton :to="routerDestination('registrationProjectOptions')"
                     exact
                     icon="icon-history"
                     icon-position="left"
@@ -71,6 +71,8 @@ const readonly = ref(true)
 
 const registrationData = useMemberDataStore()
 const appData = useAppDataStore()
+const routerDestination = appData.registrationRouteRecord
+
 const {
   activeProject,
   projectName,

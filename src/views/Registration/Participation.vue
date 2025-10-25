@@ -124,14 +124,14 @@
       </div>
     </div>
     <div class="navigation flex flex-row flex-justify-full">
-      <RouterButton :to="{ name: 'registrationPersonalProfile', params: { projectName } }"
+      <RouterButton :to="routerDestination('registrationPersonalProfile')"
                     exact
                     icon="icon-history"
                     icon-position="left"
       >
         {{ t(appName, 'back') }}
       </RouterButton>
-      <RouterButton :to="{ name: 'registrationProjectOptions', params: { projectName } }"
+      <RouterButton :to="routerDestination('registrationProjectOptions')"
                     exact
                     icon="icon-confirm"
                     icon-position="right"
@@ -184,6 +184,7 @@ const props = withDefaults(
 
 const registrationData = useMemberDataStore()
 const appData = useAppDataStore()
+const routerDestination = appData.registrationRouteRecord
 
 const loading = ref(true)
 const readonly = ref(true)

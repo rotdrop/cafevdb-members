@@ -63,14 +63,14 @@
     </div>
     <DebugInfo :debug-data="registrationProject" />
     <div class="navigation flex flex-row flex-justify-full">
-      <RouterButton :to="{ name: 'registrationParticipation', params: { projectName } }"
+      <RouterButton :to="routerDestination('registrationParticipation')"
                     exact
                     icon="icon-history"
                     icon-position="left"
       >
         {{ t(appName, 'back') }}
       </RouterButton>
-      <RouterButton :to="{ name: 'registrationSubmission', params: { projectName } }"
+      <RouterButton :to="routerDestination('registrationSubmission')"
                     exact
                     icon="icon-confirm"
                     icon-position="right"
@@ -96,7 +96,6 @@ import RouterButton from '../../components/RouterButton.vue'
 import DebugInfo from '../../components/DebugInfo.vue'
 import {
   ProjectParticipantFieldDataType,
-  useMemberDataStore,
   type ProjectParticipantFieldDataOption,
   type ProjectParticipantField,
 } from '../../stores/memberData.ts'
@@ -117,7 +116,7 @@ const props = withDefaults(
 )
 
 const appData = useAppDataStore()
-const registrationData = useMemberDataStore()
+const routerDestination = appData.registrationRouteRecord
 
 const loading = ref(true)
 const readonly = ref(true)
