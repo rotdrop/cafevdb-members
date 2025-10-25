@@ -29,6 +29,9 @@ use Carbon\CarbonImmutable;
 use UnexpectedValueException;
 use Throwable;
 
+use Doctrine\DBAL\Exception\DriverException;
+use Doctrine\DBAL\Query;
+
 use OCP\Calendar\ICalendar;
 use OCP\Calendar\ICalendarQuery;
 use OCP\Calendar\IManager as ICalendarMananger;
@@ -156,7 +159,7 @@ that we have to decline your application we will inform you ASAP.'));
     // install old and new application hash for db access
     $this->updateDatabaseRowAccessTokens([
       CAFEVDB\Constants::SQL_PROJECT_APPLICATION_PROJECT_NAME => $projectName,
-      CAFEVDB\Constants::SQL_PROJECT_APPLICATION_SHARE_TOKENS => implode(',', [$applicationHash, $oldApplicationHash ?? 'never']),
+      CAFEVDB\Constants::SQL_PROJECT_APPLICATION_SHARE_TOKENS => implode(',', array_unique([$applicationHash, $oldApplicationHash])),
     ]);
 
     /** @var Entities\Project */
@@ -182,7 +185,7 @@ that we have to decline your application we will inform you ASAP.'));
         $projectApplication = new Entities\ProjectApplication(
           $project,
           $primaryEmail,
-          musician: null, // @todo
+          musician: $oldProjectApplication?->getMusician(),
           data: $data,
         );
       } else {
@@ -226,9 +229,28 @@ that we have to decline your application we will inform you ASAP.'));
     } catch (Throwable $t) {
       $this->entityManager->rollback();
 
+      $sql = null;
+      $params = null;
+
+      /** @var DriverException $t */
+      if (($t instanceof DriverException) && $t->getQuery() !== null) {
+        // try to get hold of the SQL statement
+        /** @var Query $query */
+        $query = $t->getQuery();
+        $sql = $query->getSQL();
+        $params = $query->getParams();
+      }
+
       throw new Exceptions\DatabaseException(
-        $this->l->t('Unable to store the application data in the database.'),
+        $sql !== null
+        ? $this->l->t('Unable to store the application data in the database ("%1$s", %2$s).', [
+          $sql,
+          print_r($params, true),
+        ])
+        : $this->l->t('Unable to store the application data in the database'),
         previous: $t,
+        sql: $sql,
+        params: $params,
       );
     }
     $this->sendEmail($this->shareFromApplicationEntity($projectApplication), [$primaryEmail]);

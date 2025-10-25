@@ -1,7 +1,7 @@
 <?php
 /**
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2022, 2023 Claus-Justus Heine
+ * @copyright 2022, 2023, 2025 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,7 +20,33 @@
 
 namespace OCA\CAFeVDBMembers\Exceptions;
 
+use Throwable;
+
 /** Thrown at authentication errors. */
 class DatabaseException extends Exception
 {
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct(
+    string $message = "",
+    int $code = 0,
+    ?Throwable $previous = null,
+    private ?string $sql = null,
+    private ?array $params = null,
+  ) {
+    parent::__construct($message, $code, $previous);
+  }
+
+  /** @return null|string */
+  public function getSql():?string
+  {
+    return $this->sql;
+  }
+
+  /** @return null|array */
+  public function getParams():?array
+  {
+    return $this->params;
+  }
 }
