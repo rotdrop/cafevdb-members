@@ -25,18 +25,18 @@ namespace OCA\CAFeVDBMembers\Service;
 use InvalidArgumentException;
 use RuntimeException;
 
-use Psr\Log\LoggerInterface;
-use OCP\IL10N;
-use OCP\IGroupManager;
 use OCP\IGroup;
+use OCP\IGroupManager;
+use OCP\IL10N;
+use Psr\Log\LoggerInterface;
 
-use OCA\CAFeVDBMembers\Database\DBAL\Types\EnumProjectTemporalType as ProjectType;
-use OCA\CAFEVDB\Events\PostProjectUpdatedEvent;
 use OCA\CAFEVDB\Events\BeforeProjectDeletedEvent;
+use OCA\CAFEVDB\Events\PostProjectUpdatedEvent;
 use OCA\CAFEVDB\Events\ProjectCreatedEvent;
 use OCA\CAFEVDB\Service\CloudUserConnectorService;
-
 use OCA\CAFeVDBMembers\Constants;
+use OCA\CAFeVDBMembers\Database\DBAL\Types\EnumProjectTemporalType as ProjectType;
+use OCA\CAFeVDBMembers\Toolkit\Service\GroupFoldersService;
 
 /** Manage the shared project-group folders. */
 class ProjectGroupService
@@ -175,7 +175,7 @@ class ProjectGroupService
     // ensure all parent mounts exist and are readable by the respective project-group
     foreach ($parentMounts as $parentMount) {
       $parentFolder = $this->groupFoldersService->getFolder($parentMount);
-      if (empty($parentFolder)) {
+      if ($parentFolder === null) {
         $this->groupFoldersService->createFolder(
           $parentMount, [
             $groupId => self::GROUP_PARENT_PERMISSIONS,
@@ -202,12 +202,12 @@ class ProjectGroupService
 
     // finally ensure the leaf-folder is there and is writable by the project group
     $leafFolder = $this->groupFoldersService->getFolder($leafMountPoint);
-    if (empty($leafFolder)) {
+    if ($leafFolder === null) {
       $groupFolders = $this->searchWritableGroupFolders($group);
       if (count($groupFolders) == 1) {
         // just rename it
         $groupFolder = array_shift($groupFolders);
-        $this->groupFoldersService->changeMountPoint($groupFolder['mount_point'], $leafMountPoint, moveChildren: true);
+        $this->groupFoldersService->changeMountPoint($groupFolder->mountPoint, $leafMountPoint, moveChildren: true);
       } else {
         $this->groupFoldersService->createFolder(
           $leafMountPoint, [
@@ -219,10 +219,10 @@ class ProjectGroupService
       }
     }
     $leafFolder = $this->groupFoldersService->getFolder($leafMountPoint);
-    if (empty($leafFolder)) {
+    if ($leafFolder === null) {
       throw new RuntimeException($this->l->t('Unable to make sure the the group-shared folder "%1$s" for group "%2$s" exists.', [ $leafMountPoint, $group->getDisplayName() ]));
     }
-    if ($leafFolder['groups'][$groupId]['permissions'] != self::GROUP_LEAF_PERMISSIONS) {
+    if ($leafFolder->groups[$groupId]['permissions'] != self::GROUP_LEAF_PERMISSIONS) {
       // add write-access to the leaf-folder, this lazily just performs the necessary steps.
       $this->groupFoldersService->addGroupToFolder(
         $leafMountPoint,
@@ -230,7 +230,7 @@ class ProjectGroupService
         self::GROUP_LEAF_PERMISSIONS,
         canManage: false);
     }
-    if ($leafFolder['groups'][$this->appManagementGroup]['permissions'] != self::MANAGEMENT_PERMISSIONS) {
+    if ($leafFolder->groups[$this->appManagementGroup]['permissions'] != self::MANAGEMENT_PERMISSIONS) {
       // add write-access to the leaf-folder, this lazily just performs the necessary steps.
       $this->groupFoldersService->addGroupToFolder(
         $leafMountPoint,
@@ -241,7 +241,7 @@ class ProjectGroupService
 
     // finally remove left-over entries
     foreach ($this->groupFoldersService->searchFolders($groupId, GroupFoldersService::SEARCH_TOPIC_GROUP) as $folderInfo) {
-      $mountPoint =  $folderInfo['mount_point'];
+      $mountPoint =  $folderInfo->mountPoint;
       if ($mountPoint == $this->memberRootFolder) {
         // skip root-folder
         continue;
@@ -270,7 +270,7 @@ class ProjectGroupService
     $groupId = $group->getGID();
     $groupFolders = [];
     foreach ($this->groupFoldersService->searchFolders($groupId, GroupFoldersService::SEARCH_TOPIC_GROUP) as $folderInfo) {
-      if (($folderInfo['groups'][$groupId]['permissions'] & self::GROUP_LEAF_PERMISSIONS) != GroupFoldersService::PERMISSION_READ) {
+      if (($folderInfo->groups[$groupId]['permissions'] & self::GROUP_LEAF_PERMISSIONS) != GroupFoldersService::PERMISSION_READ) {
         $groupFolders[] = $folderInfo;
 
       }
@@ -289,15 +289,15 @@ class ProjectGroupService
     $cleanList = [];
     $parents = [];
     foreach ($allFolders as $index => $folderInfo) {
-      if (empty($folderInfo['groups'])) {
+      if (empty($folderInfo->groups)) {
         $cleanList[] = $folderInfo;
         unset($allFolders[$index]);
         continue;
       }
-      $parents[dirname($folderInfo['mount_point'])] = true;
+      $parents[dirname($folderInfo->mountPoint)] = true;
     }
     foreach ($allFolders as $index => $folderInfo) {
-      $mountPoint = $folderInfo['mount_point'];
+      $mountPoint = $folderInfo->mountPoint;
       $groupYear = substr($mountPoint, -5);
       if (preg_match('|^/\d{4}$|', $groupYear) !== 1) {
         continue;
@@ -307,7 +307,7 @@ class ProjectGroupService
       }
     }
     foreach ($cleanList as $folderInfo) {
-      $this->groupFoldersService->deleteFolders($folderInfo['mount_point']);
+      $this->groupFoldersService->deleteFolders($folderInfo->mountPoint);
     }
   }
 
