@@ -22,6 +22,8 @@
 
 namespace OCA\CAFeVDBMembers\Controller;
 
+use Throwable;
+
 use Psr\Log\LoggerInterface;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\Attribute;
@@ -137,7 +139,7 @@ class SettingsController extends Controller
           return new DataResponse([
             'messages' => $this->l->t('Successfully synchronized the shared-folder structure.'),
           ]);
-        } catch (\Throwable $t) {
+        } catch (Throwable $t) {
           $this->logException($t);
           return self::grumble($this->l->t('Synchronizing the shared-folder structure failed: %s', $t->getMessage()));
         }
