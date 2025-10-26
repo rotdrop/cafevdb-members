@@ -248,6 +248,9 @@ class ProjectGroupService
         // maybe the contents should be moved to the current mount
       }
     }
+
+    // Finally, generate a share link with a trivial password protection.
+
   }
 
   /**
@@ -346,6 +349,16 @@ class ProjectGroupService
         $this->ensureProjectFolder($group, forcedFolderName: $newData['name']);
       } else {
         $this->logError('Cloud-group "' . $groupId . '" for project "' . $newData['name'] . ' does not exist.');
+      }
+    } else {
+      // check if the folder structure is actually there
+      $groupId = $this->getProjectGroupId($event->getProjectId());
+      $projectName = $event->getProjectName();
+      $group = $this->groupManager->get($groupId);
+      if (!empty($group)) {
+        $this->ensureProjectFolder($group);
+      } else {
+        $this->logError('Cloud-group "' . $groupId . '" for project "' . $projectName . ' does not exist.');
       }
     }
   }
