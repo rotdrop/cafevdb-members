@@ -68,26 +68,18 @@ class ProjectGroupService
    *
    * @return void
    */
-  public function synchronizeFolderStructure(?string $gid = null):void
+  public function synchronizeFolderStructure(string $gid):void
   {
-    if (empty($gid)) {
-      throw new InvalidArgumentException($this->l->t('Syncing all groups in one run is no longer supported.'));
-      $groups = $this->getProjectGroups();
-    } else {
-      if (!$this->isProjectGroup($gid)) {
-        throw new InvalidArgumentException(
-          $this->l->t('Group %1$s does not start with the correct prefix "%2$s".', [
-            $gid, self::GROUP_ID_PREFIX,
-          ]));
-      }
-      $groups = [ $this->groupManager->get($gid) ];
+    if (!$this->isProjectGroup($gid)) {
+      throw new InvalidArgumentException(
+        $this->l->t('Group %1$s does not start with the correct prefix "%2$s".', [
+          $gid, self::GROUP_ID_PREFIX,
+        ]));
     }
+    $group = $this->groupManager->get($gid);
 
-    /** @var IGroup $group */
-    foreach ($groups as $group) {
-      $this->logDebug('Should handle ' . $group->getGID() . ' / ' . $group->getDisplayName());
-      $this->ensureProjectFolder($group);
-    }
+    $this->logDebug('Should handle ' . $group->getGID() . ' / ' . $group->getDisplayName());
+    $this->ensureProjectFolder($group);
 
     // remove empty "year" folders
     $this->removeOrphanFolders();
@@ -121,6 +113,8 @@ class ProjectGroupService
   }
 
   /**
+   * Compute the leaf mount point for the given project name.
+   *
    * @param string $projectName
    *
    * @param array $parentMounts
