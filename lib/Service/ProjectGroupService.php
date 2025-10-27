@@ -174,6 +174,7 @@ class ProjectGroupService
       $this->logError('Unable to generate link-share for ' . $leafMountPoint);
     } else {
       $this->logInfo('Link share ensured: ' . $result['files_sharing'] . ' ' . $result['share']->getId());
+      $result['mount_point'] = '/' . $leafMountPoint;
     }
     return $result;
   }
@@ -182,17 +183,22 @@ class ProjectGroupService
    * Return and possibly create a read-only link-share of the group folder for
    * the project.
    *
-   * @param string $projectName
+   * @param int $projectId
    *
    * @return null|array
    * ```
    * [ 'files_sharing': URL, 'webdav' => DAV_URL, 'share' => ISHARE_INSTANCE ]
    * ```
    */
-  public function getProjectFolderLinkShare(string $projectName):?array
+  public function getProjectFolderLinkShare(int $projectId):?array
   {
-    $leafMountPoint = $this->getProjectFolderMountPoint($projectName);
-    return $this->ensureProjectFolderLinkShare($leafMountPoint, $projectName);
+    // check if the folder structure is actually there
+    $groupId = $this->getProjectGroupId($projectId);
+    $group = $this->groupManager->get($groupId);
+    if (empty($group)) {
+      return null;
+    }
+    return $this->ensureProjectFolder($group);
   }
 
   /**
@@ -215,9 +221,12 @@ class ProjectGroupService
    * used while renaming projects. If null the display name of the
    * group is used.
    *
-   * @return void
+   * @return null|array
+   * ```
+   * [ 'files_sharing': URL, 'webdav' => DAV_URL, 'share' => ISHARE_INSTANCE ]
+   * ```
    */
-  public function ensureProjectFolder(IGroup $group, ?string $forcedFolderName = null):void
+  public function ensureProjectFolder(IGroup $group, ?string $forcedFolderName = null):?array
   {
     $groupId = $group->getGID();
     $groupName = $forcedFolderName ?? $group->getDisplayName();
@@ -307,7 +316,7 @@ class ProjectGroupService
     }
 
     // Finally, generate a share link with a trivial password protection.
-    $this->ensureProjectFolderLinkShare($leafMountPoint, $groupName);
+    return $this->ensureProjectFolderLinkShare($leafMountPoint, $groupName);
   }
 
   /**
