@@ -25,6 +25,8 @@ namespace OCA\CAFeVDBMembers\Service;
 use InvalidArgumentException;
 use RuntimeException;
 
+use OCP\Files\IRootFolder;
+use OCP\IAppConfig;
 use OCP\IGroup;
 use OCP\IGroupManager;
 use OCP\IL10N;
@@ -34,9 +36,11 @@ use OCA\CAFEVDB\Events\BeforeProjectDeletedEvent;
 use OCA\CAFEVDB\Events\PostProjectUpdatedEvent;
 use OCA\CAFEVDB\Events\ProjectCreatedEvent;
 use OCA\CAFEVDB\Service\CloudUserConnectorService;
+use OCA\CAFEVDB\Service\ConfigService;
 use OCA\CAFeVDBMembers\Constants;
 use OCA\CAFeVDBMembers\Database\DBAL\Types\EnumProjectTemporalType as ProjectType;
 use OCA\CAFeVDBMembers\Toolkit\Service\GroupFoldersService;
+use OCA\CAFeVDBMembers\Toolkit\Service\SimpleSharingService;
 
 /** Manage the shared project-group folders. */
 class ProjectGroupService
@@ -51,12 +55,15 @@ class ProjectGroupService
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
+    private GroupFoldersService $groupFoldersService,
+    private IGroupManager $groupManager,
+    private SimpleSharingService $sharingService,
     private string $appManagementGroup,
     private string $memberRootFolder,
-    protected LoggerInterface $logger,
+    protected IAppConfig $appConfig,
     protected IL10N $l,
-    private IGroupManager $groupManager,
-    private GroupFoldersService $groupFoldersService,
+    protected LoggerInterface $logger,
+    protected IRootFolder $rootFolder,
   ) {
   }
   // phpcs:enable
@@ -136,6 +143,56 @@ class ProjectGroupService
       $parentMount = implode('/', $previousMounts);
     }
     return $leafMountPoint;
+  }
+
+  /**
+   * Ensure that the group folder is also r/o link-shared.
+   *
+   * @param string $leafMountPoint
+   *
+   * @param string $projectName
+   *
+   * @return null|array The absolute URLs for the share or null.
+   * ```
+   * [ 'files_sharing': URL, 'webdav' => DAV_URL, 'share' => ISHARE_INSTANCE ]
+   * ```
+   */
+  private function ensureProjectFolderLinkShare(string $leafMountPoint, string $projectName):?array
+  {
+    $shareOwner = $this->appConfig->getValueString(Constants::CAFEVDB_APP_ID, ConfigService::SHAREOWNER_KEY);
+    if (empty($shareOwner)) {
+      return null;
+    }
+    $leafFolder = $this->rootFolder->getUserFolder($shareOwner)->get($leafMountPoint);
+    $result = $this->sharingService->linkShare(
+      $leafFolder,
+      $shareOwner,
+      sharePerms: \OCP\Constants::PERMISSION_READ|\OCP\Constants::PERMISSION_SHARE,
+      password: $projectName,
+    );
+    if ($result === null) {
+      $this->logError('Unable to generate link-share for ' . $leafMountPoint);
+    } else {
+      $this->logInfo('Link share ensured: ' . $result['files_sharing'] . ' ' . $result['share']->getId());
+    }
+    return $result;
+  }
+
+  /**
+   * Return and possibly create a read-only link-share of the group folder for
+   * the project.
+   *
+   * @param string $projectName
+   *
+   * @return null|array
+   * ```
+   * [ 'files_sharing': URL, 'webdav' => DAV_URL, 'share' => ISHARE_INSTANCE ]
+   * ```
+   */
+  public function getProjectFolderLinkShare(string $projectName):?array
+  {
+    $leafMountPoint = $this->getProjectFolderMountPoint($projectName);
+    return $this->ensureProjectFolderLinkShare($leafMountPoint, $projectName);
   }
 
   /**
@@ -250,7 +307,7 @@ class ProjectGroupService
     }
 
     // Finally, generate a share link with a trivial password protection.
-
+    $this->ensureProjectFolderLinkShare($leafMountPoint, $groupName);
   }
 
   /**
