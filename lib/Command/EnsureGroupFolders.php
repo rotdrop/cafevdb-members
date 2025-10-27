@@ -3,7 +3,7 @@
  * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022-2024 Claus-Justus Heine>
+ * @copyright Copyright (c) 2022-2025 Claus-Justus Heine>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,9 +26,10 @@ use OCP\IL10N;
 use OCP\IGroup;
 
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Helper\ProgressBar;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
 
 use OCA\CAFeVDBMembers\Service\ProjectGroupService;
 
@@ -50,6 +51,18 @@ class EnsureGroupFolders extends Command
     $this
       ->setName($this->appName . ':groupfolders:ensure')
       ->setDescription($this->l->t('Ensure the group-folders structure is in sync with the orchestra projects'))
+      ->addOption(
+        'project',
+        'p',
+        InputOption::VALUE_REQUIRED,
+        'Restrict the operation to the given project.',
+      )
+      ->addOption(
+        'years',
+        'y',
+        InputOption::VALUE_REQUIRED,
+        'Restrict the operation to projects of the given years. Single years and incomplete ranges are allowed.',
+      )
       ;
   }
 
@@ -57,10 +70,33 @@ class EnsureGroupFolders extends Command
   protected function execute(InputInterface $input, OutputInterface $output): int
   {
     $projectGroups = $this->projectGroupsService->getProjectGroups();
+    $projectName = $input->getOption('project');
+    $years = $input->getOption('years');
+
+    if (!empty($projectName)) {
+      $projectGroups = array_filter($projectGroups, fn(IGroup $group) => $group->getDisplayName() == $projectName);
+    }
+
+    if (!empty($years)) {
+      if (preg_match('/([0-9]{4})?\\s*-?\\s*([0-9]{4})?/', $years, $matches)) {
+        $output->writeln('YEARS ' . print_r($matches, true));
+        $firstYear = $matches[1] ?? 1000;
+        $lastYear = $matches[2] ?? 9999;
+      }
+      $projectGroups = array_filter($projectGroups, function(IGroup $group) use ($firstYear, $lastYear) {
+        $projectYear = (int)substr($group->getDisplayName(), -4);
+        return $projectYear >= $firstYear && $projectYear <= $lastYear;
+      });
+    }
+    foreach ($projectGroups as $group) {
+      echo $group->getDisplayName() . PHP_EOL;
+    }
 
     $section = $output->section();
-    $progress = new ProgressBar($section);
-    $progress->start(count($projectGroups));
+    if (count($projectGroups) > 3) {
+      $progress = new ProgressBar($section);
+      $progress->start(count($projectGroups));
+    }
 
     /** @var IGroup $group */
     foreach ($projectGroups as $group) {
@@ -68,9 +104,13 @@ class EnsureGroupFolders extends Command
         $group->getDisplayName(), $group->getGID()
       ]), OutputInterface::VERBOSITY_VERBOSE);
       $this->projectGroupsService->synchronizeFolderStructure($group->getGID());
-      $progress->advance();
+      if (!empty($progress)) {
+        $progress->advance();
+      }
     }
-    $progress->finish();
+    if (!empty($progress)) {
+      $progress->finish();
+    }
 
     return 0;
   }
