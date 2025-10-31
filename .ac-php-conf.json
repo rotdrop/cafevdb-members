@@ -23,6 +23,7 @@
       "/vendor/squizlabs/php_codesniffer/**/*.php",
       "/build/**",
       "/3rdparty/**",
+      "/dev-scripts/playground/**",
       "#  -- end -- "
     ]
   }
