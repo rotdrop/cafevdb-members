@@ -468,7 +468,7 @@ class EntityManager extends EntityManagerDecorator
       } else {
         // allow access to the registration data
         $applicationTokens = $this->session->get(Constants::APPLICATION_SESSION_KEY) ?? [];
-        $this->logInfo('EMITTING ACCESS TOKENS ' . print_r($applicationTokens, true));
+        $this->logDebug('EMITTING ACCESS TOKENS ' . print_r($applicationTokens, true));
         foreach ($applicationTokens as $name => $value) {
           self::setVariable($connection, $name, $value);
         }
