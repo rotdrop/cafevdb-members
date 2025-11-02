@@ -410,7 +410,7 @@ that we have to decline your application we will inform you ASAP.'));
       return $deadline;
     }
 
-    $shareOwner = $this->appConfig->getValueString(Constants::CAFEVDB_APP_ID, ConfigService::SHAREOWNER_KEY);
+    $shareOwner = $this->appConfig->getValueString(Constants::CAFEVDB_APP_ID, CAFEVDB\Settings\ConfigConstants::SHAREOWNER_KEY);
     if (empty($shareOwner)) {
       return null;
     }
@@ -420,8 +420,8 @@ that we have to decline your application we will inform you ASAP.'));
     $query = $this->calendarManager->newQuery($principalUri);
     $query->addSearchProperty(ICalendarQuery::SEARCH_PROPERTY_CATEGORIES);
     $query->setSearchPattern($projectCategory);
-    $query->addSearchCalendar(CAFEVDB\Service\ConfigService::REHEARSALS_CALENDAR_URI);
-    $query->addSearchCalendar(CAFEVDB\Service\ConfigService::CONCERTS_CALENDAR_URI);
+    $query->addSearchCalendar(CAFEVDB\Settings\ConfigConstants::REHEARSALS_CALENDAR_URI);
+    $query->addSearchCalendar(CAFEVDB\Settings\ConfigConstants::CONCERTS_CALENDAR_URI);
 
     $calendarObjects = $this->calendarManager->searchForPrincipal($query);
 

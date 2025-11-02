@@ -36,7 +36,7 @@ use OCA\CAFEVDB\Events\BeforeProjectDeletedEvent;
 use OCA\CAFEVDB\Events\PostProjectUpdatedEvent;
 use OCA\CAFEVDB\Events\ProjectCreatedEvent;
 use OCA\CAFEVDB\Service\CloudUserConnectorService;
-use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFeVDBMembers\Constants;
 use OCA\CAFeVDBMembers\Database\DBAL\Types\EnumProjectTemporalType as ProjectType;
 use OCA\CAFeVDBMembers\Toolkit\Service\GroupFoldersService;
@@ -159,7 +159,7 @@ class ProjectGroupService
    */
   private function ensureProjectFolderLinkShare(string $leafMountPoint, string $projectName):?array
   {
-    $shareOwner = $this->appConfig->getValueString(Constants::CAFEVDB_APP_ID, ConfigService::SHAREOWNER_KEY);
+    $shareOwner = $this->appConfig->getValueString(Constants::CAFEVDB_APP_ID, ConfigConstants::SHAREOWNER_KEY);
     if (empty($shareOwner)) {
       return null;
     }

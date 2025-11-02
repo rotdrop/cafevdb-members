@@ -50,7 +50,7 @@ use OCA\CAFeVDBMembers\Database\ORM\Entities;
 use OCA\CAFeVDBMembers\Database\DBAL\Types\EnumVCalendarType as VCalendarType;
 use OCA\CAFeVDBMembers\Constants;
 
-use OCA\CAFEVDB\Service\ConfigService;
+use OCA\CAFEVDB\Settings\ConfigConstants;
 
 /**
  * More or less a service provider for a public page giving unauthenticated
@@ -156,7 +156,7 @@ class EventsService
    *
    * @param null|string|array $calendarUris null to get the events from all
    * calendars or the 'uri' component from
-   * OCA\CAFEVDB\Service\ConfigService::CALENDARS.
+   * OCA\CAFEVDB\Settings\ConfigConstants::CALENDARS;
    *
    * @return array
    * ```
@@ -170,14 +170,14 @@ class EventsService
   public function getProjectEventData(int|Entities\Project $projectOrId, ?array $calendarUris = null):array {
 
     if ($calendarUris === null) {
-      $calendarUris = array_filter(array_map(fn(array $cal) => $cal['public'] ? $cal['uri'] : null, ConfigService::CALENDARS));
+      $calendarUris = array_filter(array_map(fn(array $cal) => $cal['public'] ? $cal['uri'] : null, ConfigConstants::CALENDARS));
     }
 
     $events = $this->getProjectEvents($projectOrId, $calendarUris);
 
     $result = [];
 
-    $shareOwner = $this->cloudConfig->getAppValue(Constants::CAFEVDB_APP_ID, ConfigService::SHAREOWNER_KEY);
+    $shareOwner = $this->cloudConfig->getAppValue(Constants::CAFEVDB_APP_ID, ConfigConstants::SHAREOWNER_KEY);
     if (empty($shareOwner)) {
       return $result;
     }
@@ -207,12 +207,12 @@ class EventsService
    *
    * @return array The IDs of the default calendars.
    *
-   * @see ConfigService::CALENDARS
+   * @see ConfigConstants::CALENDARS
    */
   public function getDefaultCalendars(bool $public = false):array
   {
     $result = [];
-    foreach (ConfigService::CALENDARS as $cal) {
+    foreach (ConfigConstants::CALENDARS as $cal) {
       if ($public && !$cal['public']) {
         continue;
       }
