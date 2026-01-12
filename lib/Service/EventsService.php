@@ -3,7 +3,7 @@
  * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022-2025 Claus-Justus Heine
+ * @copyright Copyright (c) 2022-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -177,7 +177,7 @@ class EventsService
 
     $result = [];
 
-    $shareOwner = $this->cloudConfig->getAppValue(Constants::CAFEVDB_APP_ID, ConfigConstants::SHAREOWNER_KEY);
+    $shareOwner = $this->cloudConfig->getAppValue(Constants::CAFEVDB_APP_ID, ConfigConstants::SHARE_OWNER_KEY);
     if (empty($shareOwner)) {
       return $result;
     }

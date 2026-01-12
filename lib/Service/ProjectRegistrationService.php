@@ -3,7 +3,7 @@
  * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2025 Claus-Justus Heine>
+ * @copyright Copyright (c) 2025, 2026 Claus-Justus Heine>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -410,7 +410,7 @@ that we have to decline your application we will inform you ASAP.'));
       return $deadline;
     }
 
-    $shareOwner = $this->appConfig->getValueString(Constants::CAFEVDB_APP_ID, CAFEVDB\Settings\ConfigConstants::SHAREOWNER_KEY);
+    $shareOwner = $this->appConfig->getValueString(Constants::CAFEVDB_APP_ID, CAFEVDB\Settings\ConfigConstants::SHARE_OWNER_KEY);
     if (empty($shareOwner)) {
       return null;
     }
