@@ -11,7 +11,7 @@
   ],
   "require": {
     "acelaya/doctrine-enum-type": "^2.5",
-    "doctrine/orm": "^3.4.0",
+    "doctrine/orm": "^3.6.0",
     "gedmo/doctrine-extensions": "3.x-dev",
     "mediamonks/doctrine-extensions": "0.1.x-dev",
     "myclabs/php-enum": "^1.8",
@@ -20,10 +20,26 @@
     "ramsey/uuid": "^4"
   },
   "require-dev": {
-    "bamarni/composer-bin-plugin": "^1.8.2",
-    "phpmd/phpmd": "@stable",
-    "squizlabs/php_codesniffer": "^3.6.0",
-    "zebra-north/phpcs-short-types": "^1.0"
+    "bamarni/composer-bin-plugin": "^1.8.2"
+  },
+  "provide": {
+    "brick/math": "*",
+    "doctrine/dbal": "^3.10.4",
+    "doctrine/deprecations": "*",
+    "doctrine/event-manager": "*",
+    "doctrine/lexer": "*",
+    "psr/cache": "*",
+    "psr/clock": "*",
+    "psr/container": "*",
+    "psr/log": "*",
+    "symfony/console": "*",
+    "symfony/deprecation-contracts": "*",
+    "symfony/event-dispatcher": "*",
+    "symfony/polyfill-php80": "*",
+    "symfony/polyfill-php84": "*",
+    "symfony/process": "*",
+    "symfony/service-contracts": "*",
+    "symfony/translation": "*"
   },
   "config": {
     "optimize-autoloader": true,
@@ -37,18 +53,12 @@
   },
   "repositories": [
     {
-      "type": "path",
-      "url": "3rdparty/gedmo-doctrine-extensions",
-      "options": {
-        "symlink": false
-      }
+      "type": "vcs",
+      "url": "https://github.com/rotdrop/DoctrineExtensions.git"
     },
     {
-      "type": "path",
-      "url": "3rdparty/mediamonks-doctrine-extensions",
-      "options": {
-        "symlink": false
-      }
+      "type": "vcs",
+      "url": "https://github.com/rotdrop/mediamonks-doctrine-extensions.git"
     }
   ],
   "scripts": {
