@@ -25,9 +25,13 @@
 
 ini_set('display_errors', 'stderr');
 
-require_once(__DIR__ . '/lib/scripts/console-setup.php');
-require_once(__DIR__ . '/../vendor/autoload.php');
-require_once(__DIR__ . '/../vendor-bin/typescript-transformer/vendor/autoload.php');
+try {
+  require_once(__DIR__ . '/lib/scripts/console-setup.php');
+  require_once(__DIR__ . '/../vendor/autoload.php');
+  require_once(__DIR__ . '/../vendor-bin/typescript-transformer/vendor/autoload.php');
+} catch (Throwable) {
+  exit(1);
+}
 
 use OCA\CAFeVDBMembers\Toolkit\Console\ConsoleOutput;
 use OCA\CAFeVDBMembers\DevScripts\PhpToTypeScript;
