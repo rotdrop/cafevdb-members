@@ -3,7 +3,7 @@
  * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022-2025 Claus-Justus Heine
+ * @copyright Copyright (c) 2022-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,6 +24,8 @@ namespace OCA\CAFeVDBMembers\Controller;
 
 use Throwable;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 use Psr\Log\LoggerInterface;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\Attribute;
@@ -36,6 +38,7 @@ use OCA\CAFeVDBMembers\Toolkit\Service\GroupFoldersService;
 use OCA\CAFeVDBMembers\Service\ProjectGroupService;
 
 /** AJAX end-points for admin and personal settings. */
+#[TSAttributes\TypeScript]
 class SettingsController extends Controller
 {
   use \OCA\CAFeVDBMembers\Toolkit\Traits\UtilTrait;

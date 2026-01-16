@@ -23,6 +23,20 @@
     "stylelint:fix": "stylelint css/*.css css/*.scss src/**/*.scss src/**/*.vue --fix",
     "watch": "webpack --node-env development --progress --watch"
   },
+  "prettier": {
+    "singleQuote": true,
+    "plugins": [
+      "@prettier/plugin-php"
+    ],
+    "overrides": [
+      {
+        "files": "*.php",
+        "options": {
+          "parser": "php"
+        }
+      }
+    ]
+  },
   "browserslist": [
     "extends @nextcloud/browserslist-config"
   ],
@@ -47,6 +61,7 @@
     "@nextcloud/stylelint-config": "^2.1.2",
     "@nextcloud/vue": "^8.10.0",
     "@nextcloud/webpack-vue-config": "~6.2.0",
+    "@prettier/plugin-php": "^0.24.0",
     "@rotdrop/nextcloud-vue-components": "file:3rdparty/rotdrop-nextcloud-vue-components",
     "@types/deep-equal": "^1.0.4",
     "@vue/tsconfig": "^0.5.1",
@@ -60,6 +75,7 @@
     "material-icons": "^1.10.9",
     "mini-css-extract-plugin": "^2.9.2",
     "pinia": "^2.3.0",
+    "prettier": "^3.8.0",
     "sass": "^1.86.3",
     "stacktrace-gps": "github:stacktracejs/stacktrace-gps#62f6967fc85e6fdd5fb9cea1a056b935d9b07a9a",
     "stacktrace-js": "^2.0.2",

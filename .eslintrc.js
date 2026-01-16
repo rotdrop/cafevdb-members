@@ -14,7 +14,7 @@ module.exports = {
   },
   overrides: [
     {
-      files: ['src/toolkit/**'],
+      files: ['src/toolkit/**', 'build/ts-types/**'],
       rules: {
         semi: ['error', 'always'],
       },
@@ -23,6 +23,9 @@ module.exports = {
       files: ['*.ts', '*.cts', '*.mts', '*.tsx', '*.vue'],
       rules: {
         '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+        // Note: you must disable the base rule as it can report incorrect errors
+        'no-use-before-define': 'off',
+        '@typescript-eslint/no-use-before-define': ['error', { functions: false, variables: false }],
       },
     },
   ],

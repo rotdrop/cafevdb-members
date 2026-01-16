@@ -9,9 +9,13 @@ APP_INFO = $(SRCDIR)/appinfo/info.xml
 XPATH = $(shell which xpath 2> /dev/null)
 ifneq ($(XPATH),)
 APP_NAME = $(shell $(XPATH) -q -e '/info/id/text()' $(APP_INFO))
+APP_VERSION = $(shell $(XPATH) -q -e '/info/version/text()' $(APP_INFO))
+APP_NAMESPACE = $(shell $(XPATH) -q -e '/info/namespace/text()' $(APP_INFO))
 else
 $(warning The xpath binary could not be found, falling back to using the CWD as app-name)
 APP_NAME = $(notdir $(CURDIR))
+APP_VERSION = unknown
+APP_NAMESPACE = $(shell grep -F '<namespace>' $(APP_INFO)|sed -E 's|.*<namespace>([^<]*)</namespace>.*|\\1|g')
 endif
 DEV_LIB_DIR = $(ABSSRCDIR)/dev-scripts/lib
 BUILDDIR = ./build
@@ -29,6 +33,9 @@ WGET = $(shell which wget 2> /dev/null)
 OPENSSL = $(shell which openssl 2> /dev/null)
 PHPUNIT = ./vendor/bin/phpunit
 ORM_CLI=$(PHP) $(SRCDIR)/dev-scripts/orm-cmd.php
+TYPESCRIPT_CONVERTER = $(ABSSRCDIR)/dev-scripts/php-to-typescript.php
+ESLINT = $(ABSSRCDIR)/node_modules/.bin/eslint
+PRETTIER_FORMATTER = $(ABSSRCDIR)/node_modules/.bin/prettier
 
 COMPOSER_SYSTEM = $(shell which composer 2> /dev/null)
 ifeq (, $(COMPOSER_SYSTEM))
@@ -92,7 +99,20 @@ APP_TOOLKIT_NS = CAFeVDBMembers
 include $(APP_TOOLKIT_DIR)/tools/scopeme.mk
 include $(DEV_LIB_DIR)/makefile/ts-app-config.mk
 
-TS_APP_CONFIG_IN = $(ABSSRCDIR)/app-config.ts.in
+TS_TYPE_FILES = $(addprefix $(TS_TYPES_DIR)/, $(shell $(TYPESCRIPT_CONVERTER) --outputs))
+TS_TYPE_FILES_DEPS = $(shell for i in $(addprefix $(ABSSRCDIR)/, $(shell $(TYPESCRIPT_CONVERTER) --sources)); do { [ -d $$i ] && find $$i -name "*.php"; } || echo $$i ; done)
+
+#@private
+$(TS_TYPE_FILES): $(TS_TYPE_FILES_DEPS) $(TYPESCRIPT_CONVERTER) $(wildcard $(ABSSRCDIR)/dev-scripts/php-to-typescript/*.php) Makefile
+	$(TYPESCRIPT_CONVERTER) --output-prefix=$(TS_TYPES_DIR) --source-prefix=$(ABSSRCDIR) --as-modules --ns-prefix='OCA\$(APP_NAMESPACE)'
+	$(PRETTIER_FORMATTER) --write --ignore-path /dev/null $(TS_TYPES_DIR)
+	[ -x "$(ESLINT)" ] && $(ESLINT) $(TS_TYPES_DIR)
+
+#@private
+ts-type-files: $(TS_TYPE_FILES)
+# @echo $(TS_TYPE_FILES)
+# @echo $(TS_TYPE_FILES_DEPS)
+.PHONY: ts-type-files
 
 JS_FILES = $(shell find $(ABSSRCDIR)/src -name "*.js" -o -name "*.vue" -o -name "*.ts")\
   $(shell find $(ABSSRCDIR)/3rdparty/rotdrop-nextcloud-vue-components -name "*.js" -o -name "*.vue" -o -name "*.ts")
