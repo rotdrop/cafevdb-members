@@ -246,10 +246,13 @@ webpackConfig.module.rules = [
 webpackConfig.resolve.modules = [
   path.resolve(__dirname, 'style'),
   path.resolve(__dirname, 'src'),
+  path.resolve(__dirname, 'src/types'),
   path.resolve(__dirname, 'img'),
   path.resolve(__dirname, '.'),
   'node_modules',
 ];
+
+webpackConfig.resolve.extensions = ['.*', '.js', '.vue', '.ts'];
 
 webpackConfig.stats = {
   errorDetails: true,
