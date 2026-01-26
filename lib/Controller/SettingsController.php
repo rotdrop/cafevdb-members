@@ -3,7 +3,7 @@
  * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022-2025 Claus-Justus Heine
+ * @copyright Copyright (c) 2022-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -34,6 +34,7 @@ use OCP\IL10N;
 
 use OCA\CAFeVDBMembers\Toolkit\Service\GroupFoldersService;
 use OCA\CAFeVDBMembers\Service\ProjectGroupService;
+use OCA\CAFeVDBMembers\Settings\ConfigConstants;
 
 /** AJAX end-points for admin and personal settings. */
 class SettingsController extends Controller
@@ -41,20 +42,6 @@ class SettingsController extends Controller
   use \OCA\CAFeVDBMembers\Toolkit\Traits\UtilTrait;
   use \OCA\CAFeVDBMembers\Toolkit\Traits\ResponseTrait;
   use \OCA\CAFeVDBMembers\Toolkit\Traits\LoggerTrait;
-
-  const MEMBER_ROOT_FOLDER_KEY = 'memberRootFolder';
-  const FOLDER_GROUPS_KEY = 'memberFolderGroups';
-  const SYNCHRONIZE_KEY = 'synchronize';
-  const USER_VIEWS_DATABASE_KEY = 'cloudUserViewsDatabase';
-  const REGISTRATION_REPLY_TO_KEY = 'registrationReplyTo';
-
-  const SETTINGS_KEYS = [
-    self::FOLDER_GROUPS_KEY,
-    self::MEMBER_ROOT_FOLDER_KEY,
-    self::REGISTRATION_REPLY_TO_KEY,
-    self::USER_VIEWS_DATABASE_KEY,
-    // self::SYNCHRONIZE_KEY, not a setting, rather an action
-  ];
 
   // phpcs:ignore Squiz.Commenting.FunctionComment.Missing
   public function __construct(
@@ -88,7 +75,7 @@ class SettingsController extends Controller
     $newValue = $value;
     $oldValue = $this->config->getAppValue($this->appName, $setting);
     switch ($setting) {
-      case self::MEMBER_ROOT_FOLDER_KEY:
+      case ConfigConstants::MEMBER_ROOT_FOLDER_KEY:
         $oldRootFolder = empty($oldValue)
           ? null
           : $this->groupFoldersService->getFolder($oldValue);
@@ -133,7 +120,7 @@ class SettingsController extends Controller
           }
         }
         break;
-      case self::SYNCHRONIZE_KEY:
+      case ConfigConstants::SYNCHRONIZE_KEY:
         try {
           $this->projectGroupService->synchronizeFolderStructure($value);
           return new DataResponse([
@@ -143,8 +130,8 @@ class SettingsController extends Controller
           $this->logException($t);
           return self::grumble($this->l->t('Synchronizing the shared-folder structure failed: %s', $t->getMessage()));
         }
-      case self::USER_VIEWS_DATABASE_KEY:
-      case self::REGISTRATION_REPLY_TO_KEY:
+      case ConfigConstants::USER_VIEWS_DATABASE_KEY:
+      case ConfigConstants::REGISTRATION_REPLY_TO_KEY:
         break;
       default:
         return self::grumble($this->l->t('Unknown admin setting: "%1$s"', $setting));
@@ -166,21 +153,21 @@ class SettingsController extends Controller
   public function getAdmin(?string $setting):DataResponse
   {
     if ($setting === null) {
-      $allSettings = self::SETTINGS_KEYS;
+      $allSettings = ConfigConstants::SETTINGS_KEYS;
     } else {
       $allSettings = [ $setting ];
     }
     $results = [];
     foreach ($allSettings as $oneSetting) {
       switch ($oneSetting) {
-        case self::USER_VIEWS_DATABASE_KEY:
+        case ConfigConstants::USER_VIEWS_DATABASE_KEY:
           // fall through
-        case self::REGISTRATION_REPLY_TO_KEY:
+        case ConfigConstants::REGISTRATION_REPLY_TO_KEY:
           // fall through
-        case self::MEMBER_ROOT_FOLDER_KEY:
+        case ConfigConstants::MEMBER_ROOT_FOLDER_KEY:
           $value = $this->config->getAppValue($this->appName, $oneSetting);
           break;
-        case self::FOLDER_GROUPS_KEY:
+        case ConfigConstants::FOLDER_GROUPS_KEY:
           $groups = [];
           /** @var \OCP\IGroup $group */
           foreach ($this->projectGroupService->getProjectGroups() as $group) {
@@ -216,8 +203,8 @@ class SettingsController extends Controller
   public function getApp(string $setting):DataResponse
   {
     switch ($setting) {
-      case self::MEMBER_ROOT_FOLDER_KEY:
-      case self::FOLDER_GROUPS_KEY:
+      case ConfigConstants::MEMBER_ROOT_FOLDER_KEY:
+      case ConfigConstants::FOLDER_GROUPS_KEY:
         return $this->getAdmin($setting);
       default:
         return self::grumble($this->l->t('Unknown app setting: "%1$s"', $setting));

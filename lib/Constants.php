@@ -3,7 +3,7 @@
  * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022-2025 Claus-Justus Heine
+ * @copyright Copyright (c) 2022-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,9 +28,9 @@ use OCA\CAFeVDBMembers\Toolkit\Traits\Constants as TraitsConstants;
 class Constants extends TraitsConstants
 {
   public const APPLICATION_SESSION_KEY = 'projectApplication';
-  public const CAFEVDB_APP_ID = 'cafevdb';
   public const NEW_APPLICATION_TOKEN = 'new';
   public const EMAIL_HASH_ALGORITHM = 'sha256';
+
   /**
    * @var string
    *

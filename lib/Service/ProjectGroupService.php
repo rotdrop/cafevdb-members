@@ -47,11 +47,11 @@ class ProjectGroupService
 {
   use \OCA\CAFeVDBMembers\Toolkit\Traits\LoggerTrait;
 
-  const GROUP_ID_PREFIX = Constants::CAFEVDB_APP_ID . CloudUserConnectorService::GROUP_ID_SEPARATOR;
-
   const MANAGEMENT_PERMISSIONS = GroupFoldersService::PERMISSION_ALL;
   const GROUP_LEAF_PERMISSIONS = GroupFoldersService::PERMISSION_DELETE|GroupFoldersService::PERMISSION_WRITE;
   const GROUP_PARENT_PERMISSIONS = GroupFoldersService::PERMISSION_READ;
+
+  private string $groupIdPrefix;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
@@ -60,11 +60,14 @@ class ProjectGroupService
     private SimpleSharingService $sharingService,
     private string $appManagementGroup,
     private string $memberRootFolder,
+    private string $orchestraAppName,
     protected IAppConfig $appConfig,
     protected IL10N $l,
     protected LoggerInterface $logger,
     protected IRootFolder $rootFolder,
   ) {
+    $this->groupIdPrefix = $this->getProjectGroupId(1117);
+    $this->groupIdPrefix = substr($this->groupIdPrefix, 0, strpos($this->groupIdPrefix, '1117'));
   }
   // phpcs:enable
 
@@ -80,7 +83,7 @@ class ProjectGroupService
     if (!$this->isProjectGroup($gid)) {
       throw new InvalidArgumentException(
         $this->l->t('Group %1$s does not start with the correct prefix "%2$s".', [
-          $gid, self::GROUP_ID_PREFIX,
+          $gid, $this->groupIdPrefix,
         ]));
     }
     $group = $this->groupManager->get($gid);
@@ -99,7 +102,7 @@ class ProjectGroupService
    */
   private function isProjectGroup(string $gid):bool
   {
-    return str_starts_with($gid, self::GROUP_ID_PREFIX);
+    return str_starts_with($gid, $this->groupIdPrefix);
   }
 
   /**
@@ -159,7 +162,7 @@ class ProjectGroupService
    */
   private function ensureProjectFolderLinkShare(string $leafMountPoint, string $projectName):?array
   {
-    $shareOwner = $this->appConfig->getValueString(Constants::CAFEVDB_APP_ID, ConfigConstants::SHARE_OWNER_KEY);
+    $shareOwner = $this->appConfig->getValueString($this->orchestraAppName, ConfigConstants::SHARE_OWNER_KEY);
     if (empty($shareOwner)) {
       return null;
     }
@@ -206,9 +209,9 @@ class ProjectGroupService
    *
    * @return string
    */
-  public function getProjectGroupId(int $projectId):string
+  public function getProjectGroupId(int $projectId): string
   {
-    return self::GROUP_ID_PREFIX . $projectId;
+    return CloudUserConnectorService::getProjectGroupId($projectId, $this->orchestraAppName);
   }
 
   /**

@@ -90,6 +90,7 @@ class EventsService
     private ICalendarManager $calendarManager,
     private EntityManager $entityManager,
     private CalDavService $calDavService,
+    private string $orchestraAppName,
   ) {
     $this->dateTimeZone = $dateTimeZone->getTimeZone();
   }
@@ -177,7 +178,7 @@ class EventsService
 
     $result = [];
 
-    $shareOwner = $this->cloudConfig->getAppValue(Constants::CAFEVDB_APP_ID, ConfigConstants::SHARE_OWNER_KEY);
+    $shareOwner = $this->cloudConfig->getAppValue($this->orchestraAppName, ConfigConstants::SHARE_OWNER_KEY);
     if (empty($shareOwner)) {
       return $result;
     }

@@ -1,7 +1,7 @@
 <?php
 /**
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022, 2023, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright Copyright (c) 2022-2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -63,6 +63,7 @@ use OCA\CAFeVDBMembers\Database\ORM\Mapping\ReservedWordQuoteStrategy;
 use OCA\CAFeVDBMembers\Database\ORM\Repositories;
 use OCA\CAFeVDBMembers\Exceptions;
 use OCA\CAFeVDBMembers\Service\AuthenticationService;
+use OCA\CAFeVDBMembers\Settings\ConfigConstants;
 
 /**
  * Use this as the actual EntityManager in order to be able to
@@ -274,7 +275,7 @@ class EntityManager extends EntityManagerDecorator
   private function connectionParameters(array $params = []):array
   {
     $connectionParams = [
-      'dbname' => $this->cloudConfig->getAppValue($this->appName, 'cloudUserViewsDatabase'),
+      'dbname' => $this->cloudConfig->getAppValue($this->appName, ConfigConstants::CLOUD_USER_VIEWS_DATABASE),
       'user' => $this->cloudConfig->getSystemValue('dbuser'),
       'password' => $this->cloudConfig->getSystemvalue('dbpassword'),
       'host' => $this->cloudConfig->getSystemValue('dbhost'),
