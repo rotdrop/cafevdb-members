@@ -275,7 +275,7 @@ class EntityManager extends EntityManagerDecorator
   private function connectionParameters(array $params = []):array
   {
     $connectionParams = [
-      'dbname' => $this->cloudConfig->getAppValue($this->appName, ConfigConstants::CLOUD_USER_VIEWS_DATABASE),
+      'dbname' => $this->cloudConfig->getAppValue($this->appName, ConfigConstants::USER_VIEWS_DATABASE_KEY),
       'user' => $this->cloudConfig->getSystemValue('dbuser'),
       'password' => $this->cloudConfig->getSystemvalue('dbpassword'),
       'host' => $this->cloudConfig->getSystemValue('dbhost'),
