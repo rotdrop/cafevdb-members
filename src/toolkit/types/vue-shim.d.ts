@@ -70,9 +70,14 @@ declare module '@nextcloud/vue' {
 
   const NcListItem: Vue & {
     forceDisplayActions: true,
+    $refs: Record<string, Vue> & {
+      actions: NcActions,
+    },
   };
   const NcListItemIcon: Vue;
-  const NcModal: Vue;
+  const NcModal: Vue & {
+    close: () => void;
+  };
   const NcProgressBar: Vue;
   const NcRichContenteditable: Vue;
   const NcRichText: Vue;
