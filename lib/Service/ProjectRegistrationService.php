@@ -56,6 +56,7 @@ use OCA\CAFeVDBMembers\Database\ORM\EntityManager;
 use OCA\CAFeVDBMembers\Database\ORM\Repositories\EntityRepository;
 use OCA\CAFeVDBMembers\Exceptions;
 use OCA\CAFeVDBMembers\Model\ApplicationShare;
+use OCA\CAFeVDBMembers\Settings\ConfigConstants;
 use OCA\CAFeVDBMembers\Toolkit\Traits as ToolkitTraits;
 
 /**
@@ -86,6 +87,7 @@ class ProjectRegistrationService
     protected IUserSession $userSession,
     protected LoggerInterface $logger,
     protected string $appName,
+    protected string $orchestraAppName,
   ) {
   }
   // phpcs:enable Squiz.Commenting.FunctionComment.Missing
@@ -99,7 +101,7 @@ class ProjectRegistrationService
    */
   private function shareFromApplicationEntity(Entities\ProjectApplication $projectApplication):ApplicationShare
   {
-    $registrationReplyTo = $this->appConfig->getValueString($this->appName, SettingsController::REGISTRATION_REPLY_TO_KEY);
+    $registrationReplyTo = $this->appConfig->getValueString($this->appName, ConfigConstants::REGISTRATION_REPLY_TO_KEY);
 
     $share = new ApplicationShare($projectApplication, $registrationReplyTo);
 
@@ -410,7 +412,7 @@ that we have to decline your application we will inform you ASAP.'));
       return $deadline;
     }
 
-    $shareOwner = $this->appConfig->getValueString(Constants::CAFEVDB_APP_ID, CAFEVDB\Settings\ConfigConstants::SHARE_OWNER_KEY);
+    $shareOwner = $this->appConfig->getValueString($this->orchestraAppName, CAFEVDB\Settings\ConfigConstants::SHARE_OWNER_KEY);
     if (empty($shareOwner)) {
       return null;
     }
@@ -471,7 +473,7 @@ that we have to decline your application we will inform you ASAP.'));
     $note = $share->getNote();
     $shareWith = $share->getSharedWith();
 
-    $initiatorDisplayName = $this->appConfig->getValueString(Constants::CAFEVDB_APP_ID, 'orchestra');
+    $initiatorDisplayName = $this->appConfig->getValueString($this->orchestraAppName, CAFEVDB\Settings\ConfigConstants::ORCHESTRA_NAME_KEY);
     $initiatorEmailAddress = $share->getSharedBy();
     $message = $this->mailer->createMessage();
 
@@ -571,7 +573,7 @@ that we have to decline your application we will inform you ASAP.'));
 
     $projectName = $projectApplication->getProject()->getName();
     $shareWith = $share->getSharedWith();
-    $initiatorDisplayName = $this->appConfig->getValueString(Constants::CAFEVDB_APP_ID, 'orchestra');
+    $initiatorDisplayName = $this->appConfig->getValueString($this->orchestraAppName, CAFEVDB\Settings\ConfigConstants::ORCHESTRA_NAME_KEY);
     $initiatorEmailAddress = $share->getSharedBy();
 
     $htmlBodyPart =

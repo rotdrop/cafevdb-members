@@ -1,7 +1,23 @@
 module.exports = {
   extends: [
     '@nextcloud',
+    '@nextcloud/eslint-config/typescript',
   ],
+  settings: {
+    'import/resolver': {
+      typescript: {},
+      node: {
+        extensions: [
+          '.d.ts',
+          '.js',
+          '.jsx',
+          '.ts',
+          '.tsx',
+          '.vue',
+        ],
+      },
+    },
+  },
   rules: {
     'no-tabs': [
       'error',
@@ -34,6 +50,7 @@ module.exports = {
       files: [
         'build/ts-types/**',
         'src/toolkit/**',
+        'webpack.config.js',
       ],
       rules: {
         semi: [
@@ -64,6 +81,14 @@ module.exports = {
           {
             functions: false,
             variables: false,
+          },
+        ],
+        'import/no-unresolved': [
+          'error',
+          {
+            ignore: [
+              'cafevdbmembers',
+            ],
           },
         ],
       },

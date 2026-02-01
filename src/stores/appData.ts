@@ -1,5 +1,5 @@
 /**
- * @copyright Copyright (c) 2022, 2023, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright Copyright (c) 2022, 2023, 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
  *
@@ -103,13 +103,14 @@ const countries = getInitialState<Country[]>({ section: 'countries', defaults: [
 const displayLocale = getInitialState<Locale>({ section: 'displayLocale', defaults: null })
 
 interface InitialState {
+  orchestraAppName: string,
   orchestraName?: string,
   orchestraLocale: string,
   currencySymbol: string,
   currencyCode: string,
 }
 
-const initialState = getInitialState() as InitialState
+const initialState = getInitialState<InitialState>()
 
 // of course, total over-kill ... just playing around
 export const useAppDataStore = defineStore('app-data', () => {

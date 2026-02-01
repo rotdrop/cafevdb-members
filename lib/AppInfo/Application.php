@@ -1,7 +1,7 @@
 <?php
 /**
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine
+ * @copyright Copyright (c) 2022, 2023, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -34,7 +34,9 @@ use OCP\IConfig;
 
 use Psr\Container\ContainerInterface;
 
+use OCA\CAFEVDB;
 use OCA\CAFeVDBMembers\Listener\Registration as ListenerRegistration;
+use OCA\CAFeVDBMembers\Settings\ConfigConstants;
 
 include_once __DIR__ . '/../../vendor/autoload.php';
 
@@ -43,32 +45,54 @@ class Application extends App implements IBootstrap
 {
   use \OCA\CAFeVDBMembers\Toolkit\Traits\AppNameTrait;
 
-  const CAFEVDB_APP = 'cafevdb';
-
   const DEFAULT_LOCALE_KEY = 'DefaultLocale';
   const DEFAULT_LOCALE = 'en_US';
 
-  /** @var string */
-  protected $appName;
+  protected static string $appName;
+
+  protected static string $orchestraAppName;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct()
   {
-    $this->appName = $this->getAppInfoAppName(__DIR__);
-    parent::__construct($this->appName);
+    self::getAppName();
+    parent::__construct(self::$appName);
   }
   // phpcs:enable Squiz.Commenting.FunctionComment.Missing
+
+  /**
+   * Reads off the app-name from the info.xml file.
+   *
+   * @return string
+   */
+  public static function getAppName(): string
+  {
+    return self::$appName ?? (self::$appName = self::getAppInfoAppName(__DIR__));
+  }
+
+  /**
+   * Reads off the app-name from the info.xml file.
+   *
+   * @return string
+   */
+  public static function getOrchestraAppName(): string
+  {
+    return self::$orchestraAppName ?? (self::$orchestraAppName = CAFEVDB\AppInfo\Application::getAppName());
+  }
 
   /** {@inheritdoc} */
   public function boot(IBootContext $context):void
   {
     $context->injectFn(function(IInitialState $initialState, IConfig $config) {
-      $orchestraLocale = $config->getAppValue(self::CAFEVDB_APP, 'orchestraLocale', self::DEFAULT_LOCALE);
+      self::getOrchestraAppName();
+      $orchestraLocale = $config->getAppValue(self::$orchestraAppName, CAFEVDB\Settings\ConfigConstants::ORCHESTRA_LOCALE_KEY, self::DEFAULT_LOCALE);
       $fmt = new NumberFormatter($orchestraLocale, NumberFormatter::CURRENCY);
       $currencySymbol = $fmt->getSymbol(NumberFormatter::CURRENCY_SYMBOL);
       $currencyCode = $fmt->getTextAttribute(NumberFormatter::CURRENCY_CODE);
+      self::getOrchestraAppName();
       $initialState->provideInitialState('config', [
-        'orchestraName' => $config->getAppValue(self::CAFEVDB_APP, 'orchestra'),
+        'orchstraAppName' => self::$orchestraAppName,
+        'orchestraName' => $config->getAppValue(self::$orchestraAppName, CAFEVDB\Settings\ConfigConstants::ORCHESTRA_NAME_KEY),
         'orchestraLocale' => $orchestraLocale,
         'currencySymbol' => $currencySymbol,
         'currencyCode' => $currencyCode,
@@ -84,15 +108,18 @@ class Application extends App implements IBootstrap
    */
   public function register(IRegistrationContext $context):void
   {
+    $context->registerService('orchestraAppName', fn($c) => self::getOrchestraAppName());
     $context->registerService('appManagementGroup', function($c) {
+      self::getOrchestraAppName();
       /** @var \OCP\IConfig $config */
       $config = $c->get(\OCP\IConfig::class);
-      return $config->getAppValue(self::CAFEVDB_APP, 'usergroup');
+      return $config->getAppValue(self::$orchestraAppName, CAFEVDB\Settings\ConfigConstants::USER_GROUP_KEY);
     });
-    $context->registerService('memberRootFolder', function($c) {
+    $context->registerService(ConfigConstants::MEMBER_ROOT_FOLDER_KEY, function($c) {
+      self::getAppName();
       /** @var \OCP\IConfig $config */
       $config = $c->get(\OCP\IConfig::class);
-      return $config->getAppValue($this->appName, 'memberRootFolder');
+      return $config->getAppValue(self::$appName, ConfigConstants::MEMBER_ROOT_FOLDER_KEY);
     });
 
     $context->registerService(ucfirst(self::DEFAULT_LOCALE_KEY), function(ContainerInterface $container) {

@@ -1,5 +1,5 @@
 <!--
- - @copyright Copyright (c) 2022-2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ - @copyright Copyright (c) 2022-2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  -
  - @author Claus-Justus Heine <himself@claus-justus-heine.de>
  -
@@ -50,7 +50,7 @@
       <button v-else
               type="button"
               class="button primary"
-              :title="t(appName, 'Synchronize the hierarchy of shared folders below {root} with the projects of the {managementApp}-orchestra-management app.', { root: settings.memberRootFolder + '/', managementApp: 'cafevdb' })"
+              :title="t(appName, 'Synchronize the hierarchy of shared folders below {root} with the projects of the {managementApp}-orchestra-management app.', { root: settings.memberRootFolder + '/', managementApp: orchestraAppName })"
               @click="synchronizeFolders()"
       >
         {{ t(appName, 'Synchronize Folder-Structure') }}
@@ -97,11 +97,15 @@ import {
 } from './toolkit/util/settings-sync.ts'
 import { translate as t } from '@nextcloud/l10n'
 import { isAxiosErrorResponse } from './toolkit/types/axios-type-guards.ts'
+import getInitialState from './toolkit/util/initial-state.ts'
+import type { InitialState } from 'cafevdbmembers'
 
 interface CloudUserGroup {
   displayName: string,
   gid: string,
 }
+
+const initialState = getInitialState<InitialState>()
 
 const settings = reactive({
   memberRootFolder: '',
@@ -110,6 +114,7 @@ const settings = reactive({
   registrationReplyTo: '',
 })
 
+const orchestraAppName = ref(initialState?.orchestraAppName ?? 'unknown')
 const syncFailure = ref(false)
 const syncTotals = ref(0)
 const syncDone = ref(0)
@@ -157,7 +162,7 @@ const synchronizeFolders = async () => {
   }
   syncLabel.value = syncFailure.value
     ? t(appName, 'Failed at group "{group}" after {numFolders} have been processed successfully, {remainingFolders} are remaining.', {
-      group: group?.displayName,
+      group: group?.displayName ?? '',
       numFolders: syncDone.value,
       remainingFolders: syncTotals.value - syncDone.value,
     })
