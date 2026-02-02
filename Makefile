@@ -87,7 +87,7 @@ dev: dev-setup npm-dev
 .PHONY: dev
 
 #@private
-dev-setup: app-toolkit composer
+dev-setup: app-toolkit composer package-lock.json
 .PHONY: dev-setup
 
 include $(DEV_LIB_DIR)/makefile/composer.mk

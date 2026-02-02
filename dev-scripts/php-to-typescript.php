@@ -29,13 +29,13 @@ try {
   require_once(__DIR__ . '/lib/scripts/console-setup.php');
   require_once(__DIR__ . '/../vendor/autoload.php');
   require_once(__DIR__ . '/../vendor-bin/typescript-transformer/vendor/autoload.php');
-} catch (Throwable) {
-  exit(1);
+} catch (\Throwable $t) {
+  echo 'composer_not_set_up' . PHP_EOL;
+  return 1;
 }
 
 use OCA\CAFeVDBMembers\Toolkit\Console\ConsoleOutput;
-use OCA\CAFeVDBMembers\DevScripts\PhpToTypeScript;
-use OCA\RotDrop\DevScripts\PhpToTypeScript as PhpToTypeScriptLib;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use Spatie\TypeScriptTransformer\Transformers;
 
@@ -49,7 +49,7 @@ $outputFiles = [
   'types' => [
     'transformers' => [
       Transformers\EnumTransformer::class,
-      PhpToTypeScriptLib\ClassConstantsTransformer::class,
+      PhpToTypeScript\ClassConstantsTransformer::class,
       Transformers\DtoTransformer::class,
     ],
     'paths' => [
@@ -62,9 +62,13 @@ $excludes = [
   'lib/Database/ORM/Proxies',
 ];
 
+$scopedNamespaces = [];
+
+
 $phpToTypeScript = new PhpToTypeScript\PhpToTypeScript(
   configInfo: $outputFiles,
   excludes: $excludes,
+  scopedNamespaces: $scopedNamespaces,
 );
 
 $phpToTypeScript->run(
