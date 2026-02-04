@@ -1,5 +1,6 @@
 module.exports = {
   extends: [
+    '@nextcloud',
     '@nextcloud/eslint-config/typescript',
   ],
   settings: {
@@ -47,6 +48,7 @@ module.exports = {
   overrides: [
     {
       files: [
+        'build/ts-types/**',
         'src/toolkit/**',
         'webpack.config.js',
       ],
@@ -70,6 +72,15 @@ module.exports = {
           'warn',
           {
             argsIgnorePattern: '^_',
+          },
+        ],
+        // Note: you must disable the base rule as it can report incorrect errors
+        'no-use-before-define': 'off',
+        '@typescript-eslint/no-use-before-define': [
+          'error',
+          {
+            functions: false,
+            variables: false,
           },
         ],
         'import/no-unresolved': [
