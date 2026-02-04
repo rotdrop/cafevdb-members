@@ -66,6 +66,7 @@ $scopedNamespaces = [];
 
 
 $phpToTypeScript = new PhpToTypeScript\PhpToTypeScript(
+  devScriptsFolder: __DIR__,
   configInfo: $outputFiles,
   excludes: $excludes,
   scopedNamespaces: $scopedNamespaces,
