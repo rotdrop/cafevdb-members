@@ -27,15 +27,17 @@ date_default_timezone_set('UTC');
 putenv('TEST_DONT_LOAD_APPS=1');
 require_once __DIR__ . '/../../../../tests/bootstrap.php';
 
-define('PHPUNIT_NC_APP_NAME', \OCA\CAFeVDBMembers\AppInfo\Application::getAppName());
-
 require_once __DIR__ . "/../../vendor-bin/phpunit/vendor/autoload.php";
 require_once __DIR__ . "/../../vendor/autoload.php";
+
+define('PHPUNIT_NC_APP_NAME', \OCA\CAFeVDBMembers\AppInfo\Application::getAppName());
+define('PHPUNIT_APPDIR', realpath(\OCA\CAFeVDBMembers\Toolkit\Service\AppInfoService::getAppFolderPath()));
+define('PHPUNIT_ARTIFACTS', PHPUNIT_APPDIR . '/build/artifacts/tests/phpunit');
 
 $wantedApps = [
   'files',
   'files_sharing',
-  // \OCA\CAFeVDBMembers\AppInfo\Application::getOrchestraAppName(),
+  \OCA\CAFeVDBMembers\AppInfo\Application::getOrchestraAppName(),
   \PHPUNIT_NC_APP_NAME,
 ];
 
@@ -50,10 +52,6 @@ foreach ($wantedApps as $app) {
 // only read access to the database. The only table which can ever rightfully
 // modified is the ProjectRegistration table.
 
-define('PHPUNIT_APPDIR', realpath(\OCA\CAFEVDB\Toolkit\Service\AppInfoService::getAppFolderPath()));
-define('PHPUNIT_ARTIFACTS', PHPUNIT_APPDIR . '/build/artifacts/tests/phpunit');
-
-\OCP\Server::get(\OCA\RotDrop\Toolkit\Service\ExecutableFinder::class);
 $databaseProvider = \OCP\Server::get(\OCA\RotDrop\Tests\DatabaseProvider::class);
 
 echo 'Starting database server ...';
