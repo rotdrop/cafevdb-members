@@ -26,7 +26,6 @@ use NumberFormatter;
 use Exception;
 
 use OCP\AppFramework\App;
-use OCP\AppFramework\Bootstrap\IBootstrap;
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
 use OCP\AppFramework\Bootstrap\IBootContext;
 use OCP\AppFramework\Services\IInitialState;
@@ -37,38 +36,17 @@ use Psr\Container\ContainerInterface;
 use OCA\CAFEVDB;
 use OCA\CAFeVDBMembers\Listener\Registration as ListenerRegistration;
 use OCA\CAFeVDBMembers\Settings\ConfigConstants;
+use OCA\CAFeVDBMembers\Toolkit\AppInfo\AbstractApplication;
 
-include_once __DIR__ . '/../../vendor/autoload.php';
+include_once __DIR__ . '/../Toolkit/AppInfo/AbstractApplication.php';
 
 /** Cloud application entry point. */
-class Application extends App implements IBootstrap
+class Application extends AbstractApplication
 {
-  use \OCA\CAFeVDBMembers\Toolkit\Traits\AppNameTrait;
-
   const DEFAULT_LOCALE_KEY = 'DefaultLocale';
   const DEFAULT_LOCALE = 'en_US';
 
-  protected static string $appName;
-
   protected static string $orchestraAppName;
-
-  // phpcs:disable Squiz.Commenting.FunctionComment.Missing
-  public function __construct()
-  {
-    self::getAppName();
-    parent::__construct(self::$appName);
-  }
-  // phpcs:enable Squiz.Commenting.FunctionComment.Missing
-
-  /**
-   * Reads off the app-name from the info.xml file.
-   *
-   * @return string
-   */
-  public static function getAppName(): string
-  {
-    return self::$appName ?? (self::$appName = self::getAppInfoAppName(__DIR__));
-  }
 
   /**
    * Reads off the app-name from the info.xml file.
@@ -83,6 +61,8 @@ class Application extends App implements IBootstrap
   /** {@inheritdoc} */
   public function boot(IBootContext $context):void
   {
+    parent::boot($context);
+
     $context->injectFn(function(IInitialState $initialState, IConfig $config) {
       self::getOrchestraAppName();
       $orchestraLocale = $config->getAppValue(self::$orchestraAppName, CAFEVDB\Settings\ConfigConstants::ORCHESTRA_LOCALE_KEY, self::DEFAULT_LOCALE);
@@ -108,6 +88,8 @@ class Application extends App implements IBootstrap
    */
   public function register(IRegistrationContext $context):void
   {
+    parent::register($context);
+
     $context->registerService('orchestraAppName', fn($c) => self::getOrchestraAppName());
     $context->registerService('appManagementGroup', function($c) {
       self::getOrchestraAppName();
