@@ -15,9 +15,10 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "OCA\\CAFEVDB\\Tests\\": "../../../cafevdb/tests/phpunit/",
+      "OCA\\CAFeVDBMembers\\": "../../lib/",
       "OCA\\CAFeVDBMembers\\Tests\\": "../../tests/phpunit/",
-      "OCA\\CAFeVDBMembers\\": "../../lib/"
+      "OCA\\RotDrop\\Tests\\": "../../tests/phpunit/lib/",
+      "OCA\\RotDrop\\Toolkit\\": "../../php-toolkit/"
     }
   },
   "extra": {
