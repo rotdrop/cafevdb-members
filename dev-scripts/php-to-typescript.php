@@ -30,8 +30,8 @@ try {
   require_once(__DIR__ . '/../vendor/autoload.php');
   require_once(__DIR__ . '/../vendor-bin/typescript-transformer/vendor/autoload.php');
 } catch (\Throwable $t) {
-  echo 'composer_not_set_up' . PHP_EOL;
-  return 1;
+  fwrite(STDERR, 'Composer autoloads not set up.' . PHP_EOL);
+  exit(1);
 }
 
 use OCA\CAFeVDBMembers\Toolkit\Console\ConsoleOutput;
@@ -72,7 +72,12 @@ $phpToTypeScript = new PhpToTypeScript\PhpToTypeScript(
   scopedNamespaces: $scopedNamespaces,
 );
 
-$phpToTypeScript->run(
-  input: new \Symfony\Component\Console\Input\ArgvInput,
-  output: \OCP\Server::get(ConsoleOutput::class),
-);
+try {
+  $phpToTypeScript->run(
+    input: new \Symfony\Component\Console\Input\ArgvInput,
+    output: \OCP\Server::get(ConsoleOutput::class),
+  );
+} catch (Throwable $t) {
+  fwrite(STDERR, 'Dependency injection not set up: ' . $t->getMessage() . print_r($t->getTrace(), true) . PHP_EOL);
+  exit(1);
+}
