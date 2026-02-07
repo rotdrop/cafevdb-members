@@ -35,6 +35,7 @@ PHPUNIT = ./vendor/bin/phpunit
 ORM_CLI=$(PHP) $(SRCDIR)/dev-scripts/orm-cmd.php
 TYPESCRIPT_CONVERTER = $(ABSSRCDIR)/dev-scripts/php-to-typescript.php
 TS_TYPES_DIR = $(ABSBUILDDIR)/ts-types
+TS_PHP_SOURCE_DIRS = lib
 SCSS_VARIABLES_DIR = $(ABSBUILDDIR)/scss-variables
 #
 PHPUNIT=$(ABSSRCDIR)/vendor-bin/phpunit/vendor/bin/phpunit
@@ -103,7 +104,7 @@ APP_TOOLKIT_NS = CAFeVDBMembers
 
 include $(APP_TOOLKIT_DIR)/tools/scopeme.mk
 include $(DEV_LIB_DIR)/makefile/ts-app-config.mk
-include $(DEV_LIB_DIR)/makefile/ts-type-files.mk
+include $(DEV_LIB_DIR)/makefile/ts-types-files.mk
 
 JS_FILES = $(shell find $(ABSSRCDIR)/src -name "*.js" -o -name "*.vue" -o -name "*.ts")\
   $(shell find $(ABSSRCDIR)/3rdparty/rotdrop-nextcloud-vue-components -name "*.js" -o -name "*.vue" -o -name "*.ts")
@@ -117,7 +118,7 @@ WEBPACK_DEPS =\
  $(JS_FILES)\
  $(TS_APP_CONFIG)\
  $(SCSS_APP_CONFIG)\
- ts-type-files\
+ ts-types-files\
  scss-variables
 
 include $(DEV_LIB_DIR)/makefile/npm.mk

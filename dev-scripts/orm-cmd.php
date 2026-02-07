@@ -23,7 +23,9 @@
 
 // phpcs:disable PSR1.Files.SideEffects
 
-// Inject NC app setup
+$appDir = realpath(__DIR__) . '/..';
+define('ROT_DROP_DEV_SCRIPTS_APP_DIR', $appDir);
+
 require_once(__DIR__ . '/lib/scripts/console-setup.php');
 
 use Composer\InstalledVersions;
