@@ -22,6 +22,9 @@ BUILDDIR = ./build
 ABSBUILDDIR = $(CURDIR)/build
 BUILD_TOOLS_DIR = $(BUILDDIR)/tools
 DOWNLOADS_DIR = ./downloads
+DOC_BUILD_DIR = $(ABSBUILDDIR)/artifacts/doc
+
+MAKEFILE_DEP = Makefile
 
 SILENT = @
 
@@ -64,6 +67,18 @@ ifeq ($(WGET),)
 $(error WGET binary is needed, but could not be found and was not specified on the command-line)
 endif
 
+PHPDOC = /opt/phpDocumentor/bin/phpdoc
+export PHPDOC_PLANTUML_BIN = $(shell which plantuml 2> /dev/null)
+# The default of phpdoc -Playout=smetana sometimes errors out, here it
+# seems to work ...
+export PHPDOC_PLANTUML_ARGUMENTS = -Playout=smetana
+# The plantuml default layout engine dot takes a huge amount of time,
+# more than 2 hours ...
+export PHPDOC_PLANTUML_TIMEOUTS_SECONDS = 120
+# ... we therefore disable graphs by default.
+PHPDOC_GRAPHS ?= true
+PHPDOC_TEMPLATE =
+
 MAKE_HELP_DIR = $(SRCDIR)/dev-scripts/MakeHelp
 include $(MAKE_HELP_DIR)/MakeHelp.mk
 
@@ -93,8 +108,13 @@ dev: dev-setup npm-dev
 .PHONY: dev
 
 #@private
-dev-setup: app-toolkit composer package-lock.json
+dev-setup: dev-setup-php package-lock.json
 .PHONY: dev-setup
+
+#@private
+dev-setup-php: app-toolkit composer.lock
+.PHONY: dev-setup-php
+
 
 include $(DEV_LIB_DIR)/makefile/composer.mk
 
@@ -110,7 +130,7 @@ JS_FILES = $(shell find $(ABSSRCDIR)/src -name "*.js" -o -name "*.vue" -o -name 
   $(shell find $(ABSSRCDIR)/3rdparty/rotdrop-nextcloud-vue-components -name "*.js" -o -name "*.vue" -o -name "*.ts")
 
 NPM_INIT_DEPS =\
- Makefile package-lock.json package.json webpack.config.js .eslintrc.js
+ package-lock.json package.json webpack.config.js .eslintrc.js $(MAKEFILE_DEP)
 
 WEBPACK_DEPS =\
  $(NPM_INIT_DEPS)\
@@ -242,7 +262,7 @@ dophpunit: $(PHPUNIT)
 
 $(PHPUNIT_JUNIT_LOG): # dophpunit
 
-$(PHING_BUILD_XML): $(SRCDIR)/vendor-bin/phpunit/phing-build.xml.in Makefile
+$(PHING_BUILD_XML): $(SRCDIR)/vendor-bin/phpunit/phing-build.xml.in $(MAKEFILE_DEP)
 	sed -e 's|%BASEDIR%|$(ABSSRCDIR)|g' -e 's|%INFILE%|$(PHPUNIT_JUNIT_LOG)|g' -e 's|%OUTPUTDIR%|$(PHPUNIT_OUTPUT)/junit-log|g' < $< > $@
 
 $(PHPUNIT_JUNIT_LOG_HTML)/index.html: $(PHING_BUILD_XML) $(PHPUNIT_JUNIT_LOG) $(PHING)
@@ -258,3 +278,36 @@ phpunitfilter:
 .PHONY: verifydb
 verifydb: $(ABSSRCDIR)/vendor
 	$(ORM_CLI) orm:validate-schema
+
+###############################################################################
+#
+# START DOCS
+
+#@@ Build the documentation. May take a long time
+doc: phpdoc # doxygen jsdoc
+.PHONY: doc
+
+PHPDOC_HTML = $(DOC_BUILD_DIR)/phpdoc/
+
+#@@ Run phpDocumentor
+phpdoc: $(PHPDOC_HTML)/index.html
+.PHONY: phpdoc
+
+#@private
+$(PHPDOC_HTML)/index.html: $(APP_BUILD_HASH) $(MAKEFILE_DEP)
+	$(MAKE) dev-setup-php
+	rm -rf $(PHPDOC_HTML)
+	mkdir -p $(PHPDOC_HTML)
+	$(PHPDOC) run \
+ $(PHPDOC_TEMPLATE) \
+ -d $(SRCDIR)/lib \
+ -d $(SRCDIR)/php-toolkit \
+ -d $(SRCDIR)/tests/phpunit \
+ --defaultpackagename $(APP_NAME) \
+ --force \
+ --parseprivate \
+ --visibility api,public,protected,private,internal \
+ --sourcecode \
+ --setting graphs.enabled=$(PHPDOC_GRAPHS) \
+ --cache-folder $(ABSBUILDDIR)/phpdoc/cache \
+ -t $(PHPDOC_HTML)
