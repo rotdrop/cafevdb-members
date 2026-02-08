@@ -72,6 +72,10 @@ echo ' ... OK' . PHP_EOL;
 
 
 // stop and cleanup potentially running db-servers
-register_shutdown_function([$databaseProvider, 'stopServer']);
+register_shutdown_function(function() use ($databaseProvider) {
+  echo 'Stopping database server ...';
+  $databaseProvider->stopServer();
+  echo ' ... OK' . PHP_EOL;
+});
 
 error_reporting(E_ALL);
