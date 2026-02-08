@@ -1,5 +1,7 @@
 <?php
 /**
+ * Member's data base connector for CAFEVDB orchetra management app.
+ *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
  * @copyright Copyright (c) 2022, 2023, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
@@ -34,6 +36,7 @@ use OCP\IConfig;
 use Psr\Container\ContainerInterface;
 
 use OCA\CAFEVDB;
+use OCA\CAFeVDBMembers\Database\Registration as DatabaseRegistration;
 use OCA\CAFeVDBMembers\Listener\Registration as ListenerRegistration;
 use OCA\CAFeVDBMembers\Settings\ConfigConstants;
 use OCA\CAFeVDBMembers\Toolkit\AppInfo\AbstractApplication;
@@ -109,7 +112,7 @@ class Application extends AbstractApplication
     });
     $context->registerServiceAlias(lcfirst(self::DEFAULT_LOCALE), ucfirst(self::DEFAULT_LOCALE));
 
-    // Register listeners
+    DatabaseRegistration::register($context);
     ListenerRegistration::register($context);
   }
 }
