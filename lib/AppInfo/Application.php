@@ -64,8 +64,6 @@ class Application extends AbstractApplication
   /** {@inheritdoc} */
   public function boot(IBootContext $context):void
   {
-    parent::boot($context);
-
     $context->injectFn(function(IInitialState $initialState, IConfig $config) {
       self::getOrchestraAppName();
       $orchestraLocale = $config->getAppValue(self::$orchestraAppName, CAFEVDB\Settings\ConfigConstants::ORCHESTRA_LOCALE_KEY, self::DEFAULT_LOCALE);
