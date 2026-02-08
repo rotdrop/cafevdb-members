@@ -389,9 +389,9 @@ class EventsService
     $event['recurrenceId'] = $projectEvent->getRecurrenceId();
     $event['seriesUid'] = (string)$projectEvent->getSeriesUid();
     $absenceField = $projectEvent->getAbsenceField();
-    $softDeleteableState = $this->entityManager->disableFilter(EntityManager::SOFT_DELETEABLE_FILTER);
+    $softDeleteableState = $this->entityManager->setFilterEnabled(EntityManager::SOFT_DELETEABLE_FILTER, false);
     $event['absenceField'] = !empty($absenceField) && $absenceField->getDeleted() == null ? $absenceField->getId() : 0;
-    $this->entityManager->enableFilter(EntityManager::SOFT_DELETEABLE_FILTER, $softDeleteableState);
+    $this->entityManager->setFilterEnabled(EntityManager::SOFT_DELETEABLE_FILTER, $softDeleteableState);
     $calendarObject = $this->calDavService->getCalendarObject($event['calendarid'], $event['uri']);
     if (empty($calendarObject)) {
       $this->logDebug('Orphan project event found: ' . print_r($event, true) . (new Exception())->getTraceAsString());

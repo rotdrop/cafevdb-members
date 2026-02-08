@@ -56,9 +56,11 @@ use MediaMonks\Doctrine\Transformable;
 use MyCLabs\Enum\Enum as EnumType;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 
+use OCA\CAFeVDBMembers\Toolkit\Doctrine\ORM\AbstractEntityManager;
 use OCA\CAFeVDBMembers\Constants;
 use OCA\CAFeVDBMembers\Database\DBAL\Logging\CloudLogger;
 use OCA\CAFeVDBMembers\Database\DBAL\Types;
+use OCA\CAFeVDBMembers\Database\ORM\Entities;
 use OCA\CAFeVDBMembers\Database\ORM\Mapping\ReservedWordQuoteStrategy;
 use OCA\CAFeVDBMembers\Database\ORM\Repositories;
 use OCA\CAFeVDBMembers\Exceptions;
@@ -70,7 +72,7 @@ use OCA\CAFeVDBMembers\Settings\ConfigConstants;
  * construct it without a Factory and to define an extension point for
  * later.
  */
-class EntityManager extends EntityManagerDecorator
+class EntityManager extends AbstractEntityManager
 {
   use \OCA\CAFeVDBMembers\Toolkit\Traits\LoggerTrait;
 
@@ -78,7 +80,7 @@ class EntityManager extends EntityManagerDecorator
     __DIR__ . "/Entities",
   ];
   const PROXY_DIR = __DIR__ . "/Proxies";
-  const DEV_MODE = true;
+  const DEV_MODE = false;
 
   const TRANSFORM_ENCRYPT = 'encrypt';
 
@@ -121,20 +123,25 @@ class EntityManager extends EntityManagerDecorator
   }
   // phpcs:enable
 
+  /** {@inheritdoc} */
+  public function getEntityNamespace(): string
+  {
+    return Entities::class;
+  }
+
   /**
    * @return array
    */
   private function createConfiguration():array
   {
-    $cache = null;
-    $config = ORMSetup::createAttributeMetadataConfiguration(self::ENTITY_PATHS, self::DEV_MODE, self::PROXY_DIR, $cache);
+    $config = ORMSetup::createAttributeMetadataConfiguration(self::ENTITY_PATHS, isDevMode: self::DEV_MODE);
+    $config->enableNativeLazyObjects(true);
     $config->setEntityListenerResolver(new class($this->appContainer) extends \Doctrine\ORM\Mapping\DefaultEntityListenerResolver {
 
       // phpcs:ignore Squiz.Commenting.FunctionComment.Missing
       public function __construct(
         private IAppContainer $appContainer,
       ) {
-        $this->appContainer = $appContainer;
       }
       // phpcs:enable
 
@@ -397,7 +404,7 @@ class EntityManager extends EntityManagerDecorator
    *
    * @return EntityManagerInterface
    */
-  private function getEntityManager(array $params = []):EntityManagerInterface
+  private function getEntityManager(array $params = []): EntityManagerInterface
   {
     list($config, $eventManager) = $this->createConfiguration();
     list($config, $eventManager, ) = $this->createGedmoConfiguration($config, $eventManager);
@@ -506,40 +513,5 @@ class EntityManager extends EntityManagerDecorator
     if (\method_exists($entity, '__wakeup')) {
       $entity->__wakeup();
     }
-  }
-
-  /**
-   * Enable the given filter.
-   *
-   * @param string $filterName
-   *
-   * @param bool $state
-   *
-   * @return bool The previous isEnabled() state of the filter.
-   */
-  public function enableFilter(string $filterName, bool $state = true):bool
-  {
-    if ($this->getFilters()->isEnabled($filterName) !== $state) {
-      $this->getFilters()->enable($filterName);
-      return !$state;
-    }
-    return $state;
-  }
-
-  /**
-   * Disable the given filter. In contrast to the upstream-method does
-   * not throw an exception if the filter is not enabled.
-   *
-   * @param string $filterName
-   *
-   * @return bool The previous isEnabled() state of the filter.
-   */
-  public function disableFilter(string $filterName):bool
-  {
-    if ($this->getFilters()->isEnabled($filterName)) {
-      $this->getFilters()->disable($filterName);
-      return true;
-    }
-    return false;
   }
 }
