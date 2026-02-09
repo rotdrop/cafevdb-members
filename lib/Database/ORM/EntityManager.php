@@ -79,7 +79,6 @@ class EntityManager extends AbstractEntityManager
   const ENTITY_PATHS = [
     __DIR__ . "/Entities",
   ];
-  const PROXY_DIR = __DIR__ . "/Proxies";
   const DEV_MODE = false;
 
   const TRANSFORM_ENCRYPT = 'encrypt';
@@ -206,9 +205,6 @@ class EntityManager extends AbstractEntityManager
 
     // general ORM configuration
     //$config = new \OCA\CAFEVDB\Wrapped\Doctrine\ORM\Configuration;
-    $config->setProxyDir(self::PROXY_DIR);
-    $config->setProxyNamespace('OCA\CAFeVDBMembers\Database\ORM\Proxies');
-    $config->setAutoGenerateProxyClasses(self::DEV_MODE); // this can be based on production config.
 
     // register metadata driver
     $config->setMetadataDriverImpl($driverChain);
@@ -408,12 +404,6 @@ class EntityManager extends AbstractEntityManager
   {
     list($config, $eventManager) = $this->createConfiguration();
     list($config, $eventManager, ) = $this->createGedmoConfiguration($config, $eventManager);
-
-    if (self::DEV_MODE) {
-      $config->setAutoGenerateProxyClasses(true);
-    } else {
-      $config->setAutoGenerateProxyClasses(false);
-    }
 
     $this->registerCustomFunctions($config);
 
