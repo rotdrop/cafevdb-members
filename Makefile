@@ -23,6 +23,7 @@ ABSBUILDDIR = $(CURDIR)/build
 BUILD_TOOLS_DIR = $(BUILDDIR)/tools
 DOWNLOADS_DIR = ./downloads
 DOC_BUILD_DIR = $(ABSBUILDDIR)/artifacts/doc
+EMACS = $(shell which emacs 2> /dev/null)
 
 MAKEFILE_DEP = Makefile
 
@@ -274,6 +275,15 @@ phpunitfilter:
 	@if [ -z "$(PHPUNITTEST)" ]; then echo "Please add PHPUNITTEST=FILTER_EXPRESSION to the make command line" 1>&2; exit 1; fi
 	$(PHP) $(PHPCOVERAGE) $(PHPUNIT) -c phpunit.xml --no-coverage --display-all-issues --filter "$(PHPUNITTEST)"
 .PHONY: phpunitfilter
+
+#@private
+run-tide:
+	$(EMACS) --batch --file $(SRCDIR)/src/main.ts  -l $(DEV_LIB_DIR)/scripts/tide-project-errors.el|tee tide-errors.log
+.PHONY: run-tide
+
+#@@ Runs the Emacs Tide IDE in batch mode and diagnoses TypeScript errors.
+tide: dev-setup ts-app-config ts-types-files run-tide
+.PHONY: tide
 
 .PHONY: verifydb
 verifydb: $(ABSSRCDIR)/vendor
