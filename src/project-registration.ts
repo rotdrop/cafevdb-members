@@ -1,5 +1,5 @@
 /**
- * @copyright Copyright (c) 2023, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright Copyright (c) 2023, 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
  *
@@ -29,6 +29,7 @@ import ProjectRegistation from './ProjectRegistration.vue'
 import router from './router/app-router.ts'
 import { createPinia, PiniaVuePlugin } from 'pinia'
 import { Tooltip } from '@nextcloud/vue'
+import { translate as t, translatePlural as n } from '@nextcloud/l10n'
 
 Vue.use(PiniaVuePlugin)
 const pinia = createPinia()
@@ -37,7 +38,7 @@ Vue.directive('tooltip', Tooltip)
 
 // CSP config for webpack dynamic chunk loading
 // eslint-disable-next-line
-__webpack_nonce__ = btoa(getRequestToken())
+__webpack_nonce__ = btoa(getRequestToken() ?? '')
 
 // eslint-disable-next-line
 __webpack_public_path__ = generateFilePath(appName, '', '')
@@ -47,6 +48,7 @@ Vue.mixin({ data() { return { appId: appName } }, methods: { t, n } })
 export default new Vue({
   el: '#content',
   name: appName,
+  // @ts-expect-error 2769
   router,
   pinia,
   render: h => h(ProjectRegistation),

@@ -1,5 +1,5 @@
 /**
- * @copyright Copyright (c) 2022, 2023, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright Copyright (c) 2022, 2023, 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
  *
@@ -45,6 +45,7 @@ Vue.mixin({ data() { return { appId: appName } }, methods: { t, n } })
 export default new Vue({
   el: '#content',
   name: appName,
+  // @ts-expect-error 2769
   router,
   pinia,
   render: h => h(App),
