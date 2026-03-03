@@ -20,7 +20,7 @@
 
 namespace OCA\CAFeVDBMembers\Listener;
 
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCA\CAFEVDB\Events\PostProjectUpdatedEvent as HandledEvent;
@@ -35,7 +35,7 @@ class ProjectUpdatedEventListener implements IEventListener
   const EVENT = HandledEvent::class;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
-  public function __construct(private IAppContainer $appContainer)
+  public function __construct(private ContainerInterface $appContainer)
   {
   }
   // phpcs:enable

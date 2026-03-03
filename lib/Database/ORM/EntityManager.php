@@ -23,7 +23,7 @@ namespace OCA\CAFeVDBMembers\Database\ORM;
 use Psr\Log\LoggerInterface;
 use Throwable;
 
-use OCP\AppFramework\IAppContainer;
+use Psr\Container\ContainerInterface;
 use OCP\IConfig;
 use OCP\IL10N;
 use OCP\ISession;
@@ -105,7 +105,7 @@ class EntityManager extends AbstractEntityManager
     private IConfig $cloudConfig,
     private ISession $session,
     private string $appName,
-    protected IAppContainer $appContainer,
+    protected ContainerInterface $appContainer,
     protected IL10N $l,
     protected LoggerInterface $logger,
   ) {
@@ -139,7 +139,7 @@ class EntityManager extends AbstractEntityManager
 
       // phpcs:ignore Squiz.Commenting.FunctionComment.Missing
       public function __construct(
-        private IAppContainer $appContainer,
+        private ContainerInterface $appContainer,
       ) {
       }
       // phpcs:enable
