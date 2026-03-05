@@ -54,7 +54,7 @@ foreach ($wantedApps as $app) {
 // only read access to the database. The only table which can ever rightfully
 // modified is the ProjectRegistration table.
 
-$databaseProvider = \OCP\Server::get(\OCA\RotDrop\Tests\DatabaseProvider::class);
+$databaseProvider = \OCP\Server::get(\OCA\CAFeVDBMembers\Tests\DatabaseProvider::class);
 
 echo 'Starting database server ...';
 $databaseProvider->startServer();
