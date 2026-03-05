@@ -234,7 +234,6 @@ class EntityManager extends AbstractEntityManager
     $transformerPool[self::TRANSFORM_ENCRYPT] = $this->appContainer->get(
       Listeners\Encryption::class
     );
-    $this->transformerPool = $transformerPool;
     $transformableListener = new Transformable\TransformableSubscriber($transformerPool);
     $transformableListener->setAnnotationReader($attributeReader);
     $eventManager->addEventSubscriber($transformableListener);
@@ -283,6 +282,11 @@ class EntityManager extends AbstractEntityManager
       'password' => $this->cloudConfig->getSystemvalue('dbpassword'),
       'host' => $this->cloudConfig->getSystemValue('dbhost'),
     ];
+    if (str_contains(($connectionParams['host'] ?? ''), '://')) {
+      $parser = new DBAL\Tools\DsnParser;
+      $parsedParams = $parser->parse($connectionParams['host']);
+      $connectionParams = array_merge($connectionParams, $parsedParams);
+    }
     $driverParams = [
       'driver' => 'pdo_mysql',
     ];
@@ -430,7 +434,7 @@ class EntityManager extends AbstractEntityManager
    *
    * @param string $key
    *
-   * @parem null|string $value
+   * @param null|string $value
    *
    * @return void
    */
@@ -480,8 +484,10 @@ class EntityManager extends AbstractEntityManager
    * Emit the row access tokens which grant access to single rows of the
    * database. This can be used to update the authorization tokens after
    * changing hashes and the like.
+   *
+   * @return void
    */
-  public function emitRowAccessTokens():void
+  public function emitRowAccessTokens(): void
   {
     if (!$this->connected()) {
       // auth tokens will be emitted automatically on next connect.
