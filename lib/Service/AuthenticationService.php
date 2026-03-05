@@ -3,7 +3,7 @@
  * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022-2024 Claus-Justus Heine
+ * @copyright Copyright (c) 2022-2024, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -57,11 +57,11 @@ class AuthenticationService
    *
    * Here we fetch the token, decrypt and hash it.
    *
-   * @return The hashed row-access token.
+   * @return string The hashed row-access token.
    *
    * @throws Exceptions\AuthenticationException
    */
-  public function getRowAccessToken()
+  public function getRowAccessToken(): string
   {
     if (empty($this->userId)) {
       throw new Exceptions\NotLoggedInException($this->l->t('Empty user id, no one seems to be logged in at the moment.'));
