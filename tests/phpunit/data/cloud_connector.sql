@@ -1,4 +1,4 @@
-/*M!999999\- enable the sandbox mode */ 
+/*M!999999\- enable the sandbox mode */
 -- MariaDB dump 10.19-12.0.2-MariaDB, for Linux (x86_64)
 --
 -- Host: localhost    Database: cafevdb_cloud_connector
@@ -1138,25 +1138,6 @@ DELIMITER ;
 /*!50001 SET collation_connection      = @saved_col_connection */;
 
 --
--- Final view structure for view `PersonalizedFileDataView`
---
-
-/*!50001 DROP VIEW IF EXISTS `PersonalizedFileDataView`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_uca1400_ai_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`phpunit`@`%` SQL SECURITY DEFINER */
-/*!50001 VIEW `PersonalizedFileDataView` AS select `t`.`data_hash` AS `data_hash`,`t`.`data` AS `data`,`t`.`file_id` AS `file_id`,`t`.`type` AS `type` from (`cafevdb_cloud_connector`.`PersonalizedFilesView` `fv` join `cafevdb`.`FileData` `t` on(`t`.`file_id` = `fv`.`id`)) */
-/*!50002 WITH CASCADED CHECK OPTION */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-
---
 -- Final view structure for view `PersonalizedFilesView`
 --
 
@@ -1170,6 +1151,25 @@ DELIMITER ;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`phpunit`@`%` SQL SECURITY DEFINER */
 /*!50001 VIEW `PersonalizedFilesView` AS select `t`.`file_name` AS `file_name`,`t`.`mime_type` AS `mime_type`,`t`.`size` AS `size`,`t`.`data_hash` AS `data_hash`,`t`.`updated` AS `updated`,`t`.`id` AS `id`,`t`.`created` AS `created`,`t`.`type` AS `type`,`t`.`width` AS `width`,`t`.`height` AS `height` from `cafevdb`.`Files` `t` where `t`.`id` in (select `efov`.`encrypted_file_id` AS `file_id` from `cafevdb_cloud_connector`.`PersonalizedEncryptedFileOwnersView` `efov`) */
+/*!50002 WITH CASCADED CHECK OPTION */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `PersonalizedFileDataView`
+--
+
+/*!50001 DROP VIEW IF EXISTS `PersonalizedFileDataView`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_uca1400_ai_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`phpunit`@`%` SQL SECURITY DEFINER */
+/*!50001 VIEW `PersonalizedFileDataView` AS select `t`.`data_hash` AS `data_hash`,`t`.`data` AS `data`,`t`.`file_id` AS `file_id`,`t`.`type` AS `type` from (`cafevdb_cloud_connector`.`PersonalizedFilesView` `fv` join `cafevdb`.`FileData` `t` on(`t`.`file_id` = `fv`.`id`)) */
 /*!50002 WITH CASCADED CHECK OPTION */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;

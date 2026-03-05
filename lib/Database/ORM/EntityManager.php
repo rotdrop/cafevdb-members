@@ -359,17 +359,22 @@ class EntityManager extends AbstractEntityManager
       foreach ($types as $phpType => $sqlType) {
         if ($sqlType == 'enum') {
           $typeName = substr(strrchr($phpType, '\\'), 1);
-          Types\EnumType::registerEnumType($typeName, $phpType);
+          if (!Type::hasType($typeName)) {
+            Types\EnumType::registerEnumType($typeName, $phpType);
+          }
 
           // variant in lower case
-          $blah = strtolower($typeName);
-          Types\EnumType::registerEnumType($blah, $phpType);
-          $platform->registerDoctrineTypeMapping($sqlType, $blah);
-
+          $typeName = strtolower($typeName);
+          if (!Type::hasType($typeName)) {
+            Types\EnumType::registerEnumType($typeName, $phpType);
+          }
+          $platform->registerDoctrineTypeMapping($sqlType, $typeName);
         } else {
           $instance = new $phpType;
           $typeName = $instance->getName();
-          Type::addType($typeName, $phpType);
+          if (!Type::hasType($typeName)) {
+            Type::addType($typeName, $phpType);
+          }
         }
         if (!empty($sqlType)) {
           $platform->registerDoctrineTypeMapping($sqlType, $typeName);
@@ -385,6 +390,7 @@ class EntityManager extends AbstractEntityManager
       Type::overrideType('datetimetz_immutable', \Carbon\Doctrine\DateTimeImmutableType::class);
       $this->typesBound = true;
     } catch (Throwable $t) {
+      throw $t;
       $this->logException($t);
     }
   }

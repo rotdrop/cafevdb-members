@@ -22,37 +22,23 @@
 
 namespace OCA\CAFeVDBMembers\Tests;
 
-use OCA\RotDrop\Tests\AbstractMockProvider;
+use OCA\CAFeVDBMembers\AppInfo\Application;
+use OCA\RotDrop\Tests\EnumDatabasePurpose;
 
-/** Provide a couple of important services, partially using mocked classes. */
-class MockProvider extends AbstractMockProvider
+/** Override the database name. */
+class DatabaseProvider extends \OCA\RotDrop\Tests\DatabaseProvider
 {
-  private static array $rowAccessTokens = [];
-
-  /** @return array */
-  protected static function getMockedServices(): array
-  {
-    return array_merge([], parent::getMockedServices());
-  }
-
   /**
-   * Return the table of row access tokens as associative array.
+   * @param EnumDatabasePurpose $which
    *
-   * @return array
+   * @return string
    */
-  public static function getRowAccessTokens(): array
+  public function databaseName(EnumDatabasePurpose $which): string
   {
-    if (!empty(self::$rowAccessTokens)) {
-      return self::$rowAccessTokens;
+    $name = Application::getOrchestraAppName();
+    if ($which == EnumDatabasePurpose::CLOUD_CONNECTOR) {
+      $name .= '_cloud_connector';
     }
-    $databaseProvider = \OCP\Server::get(DatabaseProvider::class);
-    $connection = $databaseProvider->getConnection();
-    $stmt = $connection->executeQuery(
-      'SELECT * FROM MusicianRowAccessTokens',
-    );
-    while (($row = $stmt->fetchAssociative()) !== false) {
-      self::$rowAccessTokens[$row['user_id']] = $row;
-    }
-    return self::$rowAccessTokens;
+    return $name;
   }
 }
