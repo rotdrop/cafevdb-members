@@ -23,13 +23,37 @@
 namespace OCA\CAFeVDBMembers\Tests;
 
 use OCA\RotDrop\Tests\AbstractMockProvider;
+use OCA\RotDrop\Tests\DatabaseProvider;
 
 /** Provide a couple of important services, partially using mocked classes. */
 class MockProvider extends AbstractMockProvider
 {
+  private static array $rowAccessTokens = [];
+
   /** @return array */
   protected static function getMockedServices(): array
   {
     return array_merge([], parent::getMockedServices());
+  }
+
+  /**
+   * Return the table of row access tokens as associative array.
+   *
+   * @return array
+   */
+  public static function getRowAccessTokens(): array
+  {
+    if (!empty(self::$rowAccessTokens)) {
+      return self::$rowAccessTokens;
+    }
+    $databaseProvider = \OCP\Server::get(DatabaseProvider::class);
+    $connection = $databaseProvider->getConnection();
+    $stmt = $connection->executeQuery(
+      'SELECT * FROM MusicianRowAccessTokens',
+    );
+    while (($row = $stmt->fetchAssociative()) !== false) {
+      self::$rowAccessTokens[$row['user_id']] = $row;
+    }
+    return self::$rowAccessTokens;
   }
 }

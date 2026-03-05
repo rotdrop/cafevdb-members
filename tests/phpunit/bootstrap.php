@@ -64,12 +64,12 @@ $databaseProvider->loadSql(
   \OCA\RotDrop\Tests\EnumDatabasePurpose::APP,
   __DIR__ . '/data/app.sql',
 );
+
 $databaseProvider->loadSql(
   \OCA\RotDrop\Tests\EnumDatabasePurpose::CLOUD_CONNECTOR,
   __DIR__ . '/data/cloud_connector.sql',
 );
 echo ' ... OK' . PHP_EOL;
-
 
 // stop and cleanup potentially running db-servers
 register_shutdown_function(function() use ($databaseProvider) {
