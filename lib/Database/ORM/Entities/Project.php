@@ -3,7 +3,7 @@
  * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022, 2023, 2025 Claus-Justus Heine
+ * @copyright Copyright (c) 2022, 2023, 2025, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -49,25 +49,25 @@ class Project implements \ArrayAccess
   #[ORM\Column(type: 'integer', nullable: false)]
   #[ORM\Id]
   #[ORM\GeneratedValue(strategy: 'NONE')]
-  private $id;
+  private int $id;
 
   /**
    * @var int
    */
   #[ORM\Column(type: 'integer', nullable: false, options: ['unsigned' => true])]
-  private $year;
+  private int $year;
 
   /**
    * @var string
    */
   #[ORM\Column(type: 'string', length: 64, nullable: false)]
-  private $name;
+  private string $name;
 
   /**
    * @var Types\EnumProjectTemporalType
    */
   #[ORM\Column(type: 'EnumProjectTemporalType', nullable: false)]
-  private $type = Types\EnumProjectTemporalType::TEMPORARY;
+  private string $type = Types\EnumProjectTemporalType::TEMPORARY;
 
   /**
    * @var \DateTimeImmutable
@@ -76,7 +76,7 @@ class Project implements \ArrayAccess
    * is NOT available.
    */
   #[ORM\Column(type: 'date_immutable', nullable: true)]
-  private $registrationStartDate;
+  private ?DateTimeImmutable $registrationStartDate = null;
 
   /**
    * @var DateTimeImmutable
@@ -86,22 +86,22 @@ class Project implements \ArrayAccess
    * imposed.
    */
   #[ORM\Column(type: 'date_immutable', nullable: true)]
-  private $registrationDeadline;
+  private ?DateTimeImmutable $registrationDeadline = null;
 
   #[ORM\OneToMany(targetEntity: ProjectInstrumentationNumber::class, mappedBy: 'project', fetch: 'EXTRA_LAZY')]
-  private $instrumentationNumbers;
+  private Collection $instrumentationNumbers;
 
   /**
    * @var bool
    */
   #[ORM\Column(type: 'boolean')]
-  private $clubMembers;
+  private bool $clubMembers;
 
   /**
    * @var bool
    */
   #[ORM\Column(type: 'boolean')]
-  private $executiveBoard;
+  private bool $executiveBoard;
 
   #[ORM\OneToMany(targetEntity: ProjectInstrument::class, mappedBy: 'project')]
   private Collection $participantInstruments;
