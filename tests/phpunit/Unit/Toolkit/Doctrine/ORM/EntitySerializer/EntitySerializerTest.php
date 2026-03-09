@@ -22,18 +22,26 @@
 
 namespace OCA\CAFeVDBMembers\Tests\Unit\Toolkit\Doctrine\ORM\EntitySerializer;
 
+use ReflectionClass;
+
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes;
 use PHPUnit\Framework\MockObject\MockObject;
 
-use OCA\CAFeVDBMembers\Database\ORM\Entities;
+use Doctrine\Common\Collections\Collection;
+
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\MusicianRowAccessToken;
+use OCA\CAFeVDBMembers\Database\ORM\Entities;
 use OCA\CAFeVDBMembers\Tests\MockProvider;
-use OCA\CAFeVDBMembers\Toolkit\Doctrine\ORM\EntitySerializer\EntitySerializer;
+use OCA\CAFeVDBMembers\Toolkit\Doctrine\ORM\EntitySerializer;
+use OCA\CAFeVDBMembers\Toolkit\Doctrine\ORM\EntitySerializer\EntitySerializer as TestedClass;
 use OCA\RotDrop\Tests\DeprecationException;
 
 /** Test aspects of the EntitySerializer. */
-#[Attributes\CoversClass(EntitySerializer::class)]
+#[Attributes\CoversClass(EntitySerializer\EntityReference::class)]
+#[Attributes\CoversClass(EntitySerializer\EntityReferenceCollection::class)]
+#[Attributes\CoversClass(EntitySerializer\EntityResponse::class)]
+#[Attributes\CoversClass(TestedClass::class)]
 #[Attributes\UsesClass(\OCA\CAFeVDBMembers\AppInfo\Application::class)]
 #[Attributes\UsesClass(\OCA\CAFeVDBMembers\Database\DBAL\Logging\CloudLogger::class)]
 #[Attributes\UsesClass(\OCA\CAFeVDBMembers\Database\DBAL\Types\AbstractEnumType::class)]
@@ -45,8 +53,6 @@ use OCA\RotDrop\Tests\DeprecationException;
 #[Attributes\UsesClass(\OCA\CAFeVDBMembers\Database\ORM\Repositories\EntityRepository::class)]
 #[Attributes\UsesClass(\OCA\CAFeVDBMembers\Toolkit\AppInfo\AbstractApplication::class)]
 #[Attributes\UsesClass(\OCA\CAFeVDBMembers\Toolkit\Doctrine\ORM\AbstractEntityManager::class)]
-#[Attributes\UsesClass(\OCA\CAFeVDBMembers\Toolkit\Doctrine\ORM\EntitySerializer\EntityReference::class)]
-#[Attributes\UsesClass(\OCA\CAFeVDBMembers\Toolkit\Doctrine\ORM\EntitySerializer\EntityReferenceCollection::class)]
 #[Attributes\UsesTrait(\OCA\CAFeVDBMembers\Database\ORM\Traits\ArrayTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFeVDBMembers\Database\ORM\Traits\CreatedAt::class)]
 #[Attributes\UsesTrait(\OCA\CAFeVDBMembers\Database\ORM\Traits\UpdatedAt::class)]
@@ -56,7 +62,7 @@ class EntitySerializerTest extends TestCase
 {
   use \OCA\CAFeVDBMembers\Tests\Unit\Database\ORM\GenerateEntityManagerTrait;
 
-  private EntitySerializer $entitySerializer;
+  private TestedClass $entitySerializer;
 
   /** {@inheritdoc} */
   public function setup(): void
@@ -76,7 +82,7 @@ class EntitySerializerTest extends TestCase
 
     $this->generateEntityManager($rowAccessToken);
 
-    $this->entitySerializer = new EntitySerializer(
+    $this->entitySerializer = new TestedClass(
       entityManager: $this->entityManager,
       l: $this->mockProvider->getL10N(),
       logger: $this->mockProvider->getLoggerInterface(),
@@ -84,16 +90,106 @@ class EntitySerializerTest extends TestCase
   }
 
   /** @return void */
-  public function testAddEntity(): void
-  {
-    $musicians = $this->entityManager->getRepository(Entities\Musician::class)->findAll();
-    $this->assertEquals(1, count($musicians));
-    $this->entitySerializer->addEntity($musicians[0]);
-  }
-
-  /** @return void */
   public function tearDown(): void
   {
     restore_error_handler();
   }
-}
+
+  /** @return Entities\Musician */
+  private function getMusician(): Entities\Musician
+  {
+    $musicians = $this->entityManager->getRepository(Entities\Musician::class)->findAll();
+    $this->assertEquals(1, count($musicians));
+
+    return $musicians[0];
+  }
+
+  /** @return void */
+  public function testAddEntity(): void
+  {
+    $this->entitySerializer->addEntity($this->getMusician());
+  }
+
+  /** @return void */
+  public function testExport(): void
+  {
+    $this->entitySerializer->addEntity($this->getMusician());
+    $exportData = $this->entitySerializer->export();
+    json_encode($exportData, JSON_PRETTY_PRINT);
+    $this->assertInstanceOf(EntitySerializer\EntityResponse::class, $exportData);
+    $this->assertArrayHasKey(Entities\Musician::class, $exportData->entities);
+    $this->assertArrayHasKey(Entities\Musician::class, $exportData->repositories);
+    $this->assertArrayHasKey(Entities\SepaBankAccount::class, $exportData->repositories);
+    $this->assertArrayHasKey(Entities\ProjectParticipant::class, $exportData->repositories);
+  }
+
+  /** @return void */
+  public function testExportWithShortNames(): void
+  {
+    $musician = $this->getMusician();
+    $this->entitySerializer->reset();
+    $nameSpaceName = new ReflectionClass(Entities\Musician::class)->getNamespaceName();
+    $this->entitySerializer->setCommonPrefix($nameSpaceName);
+    $this->entitySerializer->addEntity($musician);
+    $exportData = $this->entitySerializer->export();
+    $jsonData = json_encode($exportData, JSON_PRETTY_PRINT);
+    $this->assertGreaterThan(0, strlen($jsonData));
+    $this->assertInstanceOf(EntitySerializer\EntityResponse::class, $exportData);
+    $this->assertArrayHasKey(new ReflectionClass(Entities\Musician::class)->getShortName(), $exportData->entities);
+    $this->assertArrayHasKey(new ReflectionClass(Entities\Musician::class)->getShortName(), $exportData->repositories);
+    $this->assertArrayHasKey(new ReflectionClass(Entities\SepaBankAccount::class)->getShortName(), $exportData->repositories);
+    $this->assertArrayHasKey(new ReflectionClass(Entities\ProjectParticipant::class)->getShortName(), $exportData->repositories);
+
+    // Test for index-by stringification of UUIDs
+    foreach ($musician->getProjectParticipantFieldsData()->getKeys() as $key) {
+      $uuidInstance = Uuid::fromBytes($key);
+      $uuidString = (string)$uuidInstance;
+      $this->assertArrayHasKey(
+        $uuidString,
+        $exportData->repositories['Musician'][$musician->getId()]['projectParticipantFieldsData']->entities,
+      );
+    }
+
+    $data = json_decode(json_encode($exportData), true);
+    array_walk_recursive(
+      $data,
+      function(mixed $value, mixed $key) use ($nameSpaceName) {
+        if (is_string($value)) {
+          $this->assertFalse(str_starts_with($value, $nameSpaceName), "Array value {$value} for key {$key} should not start with {$nameSpaceName}");
+        }
+        if (is_string($key)) {
+          $this->assertFalse(str_starts_with($key, $nameSpaceName), "Array key {$key} with value {$value} should not start with {$nameSpaceName}");
+        }
+      },
+    );
+  }
+
+  /** @return void */
+  public function testDuplicateEntities(): void
+  {
+    $musician = $this->getMusician();
+    $this->entitySerializer->addEntity($musician);
+    $this->entitySerializer->addEntity($musician);
+    $exportData = $this->entitySerializer->export();
+    $this->assertEquals(1, count($exportData->entities[Entities\Musician::class]));
+    $this->assertEquals(1, count($exportData->repositories[Entities\Musician::class]));
+    $this->assertEquals(1, count($exportData->repositories[Entities\ProjectParticipant::class]));
+    $this->assertEquals(1, count($exportData->repositories[Entities\SepaBankAccount::class]));
+  }
+
+  /** @return void */
+  public function testDeepen(): void
+  {
+    $musician = $this->getMusician();
+    $this->entitySerializer->addEntity($musician, depth: 1);
+    $this->entitySerializer->addEntity($musician, depth: 2);
+    $exportData = $this->entitySerializer->export();
+    $this->assertEquals(1, count($exportData->entities[Entities\Musician::class]));
+    $this->assertArrayHasKey(Entities\Musician::class, $exportData->entities);
+    $this->assertArrayHasKey(Entities\Musician::class, $exportData->repositories);
+    $this->assertArrayHasKey(Entities\Project::class, $exportData->repositories);
+    $this->assertArrayHasKey(Entities\ProjectParticipant::class, $exportData->repositories);
+    $this->assertArrayHasKey(Entities\SepaBankAccount::class, $exportData->repositories);
+    $this->assertArrayHasKey(Entities\MusicianEmailAddress::class, $exportData->repositories);
+    // $json = json_encode($exportData, JSON_PRETTY_PRINT);
+  }}
