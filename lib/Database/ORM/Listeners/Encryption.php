@@ -3,7 +3,7 @@
  * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022-2024 Claus-Justus Heine
+ * @copyright Copyright (c) 2022-2024, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -98,7 +98,7 @@ class Encryption implements Transformable\Transformer\TransformerInterface
    */
   public function reverseTransform(?string $value, mixed &$context = null): mixed
   {
-    if (!$this->sealCryptor->getSealService()->isSealedData($value)) {
+    if (!Crypto\SealService::isSealedData($value)) {
       return $value;
     }
 
@@ -125,7 +125,7 @@ class Encryption implements Transformable\Transformer\TransformerInterface
    *
    * @return Crypto\ICryptor
    */
-  private function getSealCryptor(string $encryptionId):Crypto\ICryptor
+  private function getSealCryptor(string $encryptionId): Crypto\ICryptor
   {
     return $this->keyService->getCryptor($encryptionId);
   }
@@ -151,7 +151,7 @@ class Encryption implements Transformable\Transformer\TransformerInterface
       $context = [];
     }
 
-    if ($this->sealCryptor->getSealService()->isSealedData($value)) {
+    if (Crypto\SealService::isSealedData($value)) {
       $sealData = $this->sealCryptor->getSealService()->parseSeal($value);
       $context = array_merge($context, array_keys($sealData['keys']));
     }
