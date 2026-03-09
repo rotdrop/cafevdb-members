@@ -23,6 +23,7 @@
 namespace OCA\CAFeVDBMembers\Tests;
 
 date_default_timezone_set('UTC');
+ini_set('display_errors', 1);
 
 putenv('TEST_DONT_LOAD_APPS=1');
 require_once __DIR__ . '/../../../../tests/bootstrap.php';
@@ -79,3 +80,4 @@ register_shutdown_function(function() use ($databaseProvider) {
 });
 
 error_reporting(E_ALL);
+ini_set('display_errors', 1);
