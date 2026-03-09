@@ -20,41 +20,43 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFeVDBMembers\Tests\Unit\Database\ORM;
+namespace OCA\CAFeVDBMembers\Tests\Unit\Toolkit\Doctrine\ORM\EntitySerializer;
 
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes;
 use PHPUnit\Framework\MockObject\MockObject;
 
-use OCP\IConfig;
-use Psr\Container\ContainerInterface;
-
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\MusicianRowAccessToken;
-use OCA\CAFeVDBMembers\Database\DBAL\Logging\CloudLogger;
 use OCA\CAFeVDBMembers\Database\ORM\Entities;
-use OCA\CAFeVDBMembers\Database\ORM\EntityManager;
-use OCA\CAFeVDBMembers\Service\AuthenticationService;
-use OCA\CAFeVDBMembers\Settings\ConfigConstants;
+use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\MusicianRowAccessToken;
 use OCA\CAFeVDBMembers\Tests\MockProvider;
-use OCA\CAFeVDBMembers\Tests\DatabaseProvider;
+use OCA\CAFeVDBMembers\Toolkit\Doctrine\ORM\EntitySerializer\EntitySerializer;
 use OCA\RotDrop\Tests\DeprecationException;
-use OCA\RotDrop\Tests\EnumDatabasePurpose;
 
-/** Test aspects of the entity manager */
-#[Attributes\CoversClass(EntityManager::class)]
+/** Test aspects of the EntitySerializer. */
+#[Attributes\CoversClass(EntitySerializer::class)]
 #[Attributes\UsesClass(\OCA\CAFeVDBMembers\AppInfo\Application::class)]
 #[Attributes\UsesClass(\OCA\CAFeVDBMembers\Database\DBAL\Logging\CloudLogger::class)]
 #[Attributes\UsesClass(\OCA\CAFeVDBMembers\Database\DBAL\Types\AbstractEnumType::class)]
 #[Attributes\UsesClass(\OCA\CAFeVDBMembers\Database\DBAL\Types\UuidType::class)]
 #[Attributes\UsesClass(\OCA\CAFeVDBMembers\Database\ORM\Entities\Musician::class)]
+#[Attributes\UsesClass(\OCA\CAFeVDBMembers\Database\ORM\EntityManager::class)]
+#[Attributes\UsesClass(\OCA\CAFeVDBMembers\Database\ORM\Listeners\Encryption::class)]
 #[Attributes\UsesClass(\OCA\CAFeVDBMembers\Database\ORM\Listeners\GedmoTranslatableListener::class)]
 #[Attributes\UsesClass(\OCA\CAFeVDBMembers\Database\ORM\Repositories\EntityRepository::class)]
 #[Attributes\UsesClass(\OCA\CAFeVDBMembers\Toolkit\AppInfo\AbstractApplication::class)]
+#[Attributes\UsesClass(\OCA\CAFeVDBMembers\Toolkit\Doctrine\ORM\AbstractEntityManager::class)]
+#[Attributes\UsesClass(\OCA\CAFeVDBMembers\Toolkit\Doctrine\ORM\EntitySerializer\EntityReference::class)]
+#[Attributes\UsesClass(\OCA\CAFeVDBMembers\Toolkit\Doctrine\ORM\EntitySerializer\EntityReferenceCollection::class)]
 #[Attributes\UsesTrait(\OCA\CAFeVDBMembers\Database\ORM\Traits\ArrayTrait::class)]
+#[Attributes\UsesTrait(\OCA\CAFeVDBMembers\Database\ORM\Traits\CreatedAt::class)]
+#[Attributes\UsesTrait(\OCA\CAFeVDBMembers\Database\ORM\Traits\UpdatedAt::class)]
+#[Attributes\UsesTrait(\OCA\CAFeVDBMembers\Database\ORM\Traits\UuidTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFeVDBMembers\Toolkit\Doctrine\ORM\FindLikeTrait::class)]
-class EntityManagerTest extends TestCase
+class EntitySerializerTest extends TestCase
 {
-  use GenerateEntityManagerTrait;
+  use \OCA\CAFeVDBMembers\Tests\Unit\Database\ORM\GenerateEntityManagerTrait;
+
+  private EntitySerializer $entitySerializer;
 
   /** {@inheritdoc} */
   public function setup(): void
@@ -63,11 +65,7 @@ class EntityManagerTest extends TestCase
     DeprecationException::throwOnDeprecations(exclude: '/OCP\\\\IConfig\\:\\:(get|set|delete)AppValue/');
 
     $this->mockProvider = $this->mockProvider ?? MockProvider::create($this);
-  }
 
-  /** @return void */
-  public function testSetup(): void
-  {
     $rowAccessTokens = $this->mockProvider->getRowAccessTokens();
     $this->assertNotNull($rowAccessTokens[MockProvider::CLOUD_USER_UID]['access_token_hash'] ?? null);
     $this->assertEquals(
@@ -75,17 +73,22 @@ class EntityManagerTest extends TestCase
       strlen($rowAccessTokens[MockProvider::CLOUD_USER_UID]['access_token_hash']),
     );
     $rowAccessToken = $rowAccessTokens[MockProvider::CLOUD_USER_UID]['access_token_hash'];
+
     $this->generateEntityManager($rowAccessToken);
-    $this->assertTrue($this->entityManager->connected());
+
+    $this->entitySerializer = new EntitySerializer(
+      entityManager: $this->entityManager,
+      l: $this->mockProvider->getL10N(),
+      logger: $this->mockProvider->getLoggerInterface(),
+    );
   }
 
   /** @return void */
-  public function testRowAccess(): void
+  public function testAddEntity(): void
   {
-    $this->testSetup();
-
     $musicians = $this->entityManager->getRepository(Entities\Musician::class)->findAll();
     $this->assertEquals(1, count($musicians));
+    $this->entitySerializer->addEntity($musicians[0]);
   }
 
   /** @return void */
