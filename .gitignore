@@ -6,6 +6,7 @@ node_modules/
 /.php_cs.cache
 js/*hot-update.*
 .phpunit.result.cache
+.phpunit.cache
 **~
 stamp*
 /composer.json
