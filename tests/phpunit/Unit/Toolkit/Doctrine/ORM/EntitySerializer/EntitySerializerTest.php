@@ -3,7 +3,7 @@
  * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022-2024, 2026 Claus-Justus Heine
+ * @copyright Copyright (c) 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -192,4 +192,5 @@ class EntitySerializerTest extends TestCase
     $this->assertArrayHasKey(Entities\SepaBankAccount::class, $exportData->repositories);
     $this->assertArrayHasKey(Entities\MusicianEmailAddress::class, $exportData->repositories);
     // $json = json_encode($exportData, JSON_PRETTY_PRINT);
-  }}
+  }
+}
