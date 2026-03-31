@@ -22,12 +22,12 @@
 
 namespace OCA\CAFeVDBMembers\Database\ORM\Entities;
 
-use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\Common\Collections\ArrayCollection;
-
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFeVDBMembers\Database\ORM as CAFEVDB;
-use OCA\CAFeVDBMembers\Database\DBAL\Types;
+use OCA\CAFeVDBMembers\Wrapped\Doctrine\Common\Collections\ArrayCollection;
+use OCA\CAFeVDBMembers\Wrapped\Doctrine\Common\Collections\Collection;
+use OCA\CAFeVDBMembers\Wrapped\Doctrine\DBAL\Types\Types as DBALTypes;
+use OCA\CAFeVDBMembers\Wrapped\Doctrine\ORM\Mapping as ORM;
 
 /**
  * Musician
@@ -75,6 +75,9 @@ class Musician implements \ArrayAccess, \JsonSerializable
    */
   #[ORM\Column(type: 'string', length: 256, nullable: true)]
   private $displayName;
+
+  #[ORM\Column(type: DBALTypes::ENUM, nullable: true)]
+  private ?Types\EnumGender $gender = null;
 
   /**
    * @var string
@@ -174,11 +177,8 @@ class Musician implements \ArrayAccess, \JsonSerializable
   #[ORM\OneToMany(targetEntity: MusicianEmailAddress::class, mappedBy: 'musician', indexBy: 'address')]
   private $emailAddresses;
 
-  /**
-   * @var Types\EnumParticipationStatus|null
-   */
-  #[ORM\Column(type: 'EnumParticipationStatus', nullable: false)]
-  private $defaultParticipationStatus;
+  #[ORM\Column(type: DBALTypes::ENUM, nullable: false)]
+  private Types\EnumParticipationStatus $defaultParticipationStatus;
 
   /**
    * @var string|null
@@ -424,9 +424,19 @@ class Musician implements \ArrayAccess, \JsonSerializable
    *
    * @return EnumParticipationStatus
    */
-  public function getDefaultParticipationStatus():Types\EnumParticipationStatus
+  public function getDefaultParticipationStatus(): Types\EnumParticipationStatus
   {
     return $this->defaultParticipationStatus;
+  }
+
+  /**
+   * Get gender.
+   *
+   * @return EnumGender
+   */
+  public function getGender(): ?Types\EnumGender
+  {
+    return $this->gender;
   }
 
   /**

@@ -20,3 +20,5 @@ lib/Toolkit/[A-Z]*
 build-flavour
 /vendor-bin/**/vendor/
 /vendor-bin/**/composer.lock
+composer-wrapped.lock
+vendor-wrapped/**

@@ -1,9 +1,9 @@
 <?php
 /**
- * Member's data base connector for CAFEVDB orchetra management app.
+ * Some PHP utility functions for Nextcloud apps.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,20 +20,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFeVDBMembers\Database\DBAL\Types;
+namespace OCA\RotDrop\Toolkit\Doctrine\DBAL\Types;
 
-use MyCLabs\Enum\Enum as EnumType;
+use OCA\RotDrop\Toolkit\Common\DecimalRationalP2S2 as NumberClass;
 
 /**
- * Enum for data transformations.
- *
- * @method static EnumDirEntryType GENERIC()
- * @method static EnumDirEntryType FOLDER()
- * @method static EnumDirEntryType FILE()
+ * Database type for whole number percentages.
  */
-class EnumDirEntryType extends EnumType
+class DecimalRationalP2S2Type extends AbstractDecimalRationalType
 {
-  public const GENERIC = 'generic';
-  public const FOLDER = 'folder';
-  public const FILE = 'file';
+  protected const NUMBER_CLASS = NumberClass::class;
 }

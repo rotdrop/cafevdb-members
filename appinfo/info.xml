@@ -9,6 +9,7 @@
   <licence>agpl</licence>
   <author mail="himself@claus-justus-heine.de" >Claus-Justus Heine</author>
   <namespace>CAFeVDBMembers</namespace>
+  <scopednamespace>Wrapped</scopednamespace>
   <category>organisation</category>
   <bugs>https://github.com/rotdrop/cafevdb-members.git</bugs>
   <dependencies>

@@ -1,9 +1,9 @@
 <?php
 /**
- * Member's data base connector for CAFEVDB orchetra management app.
+ * Some PHP utility functions for Nextcloud apps.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,20 +20,24 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFeVDBMembers\Database\DBAL\Types;
+namespace OCA\RotDrop\Toolkit\Common;
 
-use MyCLabs\Enum\Enum as EnumType;
+use OutOfBoundsException;
+
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use Spatie\TypeScriptTransformer\Transformers\DtoTransformer;
+
+use OCA\RotDrop\Toolkit\Constants;
 
 /**
- * Enum for data transformations.
- *
- * @method static EnumFileType GENERIC()
- * @method static EnumFileType IMAGE()
- * @method static EnumFileType ENCRYPTED()
+ * Just like RationalNumber, but the jsonSerialize() implementation yields a
+ * decimal number string with the given scale and maximum precision.
  */
-class EnumFileType extends EnumType
+#[TSAttributes\TypeScript]
+#[TSAttributes\LiteralTypeScriptType('string')]
+#[TSAttributes\TypeScriptTransformer(DtoTransformer::class)]
+class DecimalRationalP2S2 extends AbstractDecimalRational
 {
-  public const GENERIC = 'generic';
-  public const IMAGE = 'image';
-  public const ENCRYPTED = 'encrypted';
+  public const PRECISION = 2;
+  public const SCALE = 2;
 }

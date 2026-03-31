@@ -28,44 +28,43 @@ use OCP\IConfig;
 use OCP\IL10N;
 use OCP\ISession;
 
-use DoctrineExtensions;
-use Doctrine\Common\Annotations\AnnotationReader;
-use Doctrine\Common\Annotations\PsrCachedReader;
-use Doctrine\Common\Cache\ArrayCache;
-use Doctrine\Common\Cache\Psr6\CacheAdapter;
-use Doctrine\Common\Cache\Psr6\DoctrineProvider;
-use Doctrine\Common\EventManager as DoctrineEventManager;
-use Doctrine\DBAL;
-use Doctrine\DBAL\Connection as DatabaseConnection;
-use Doctrine\DBAL\Event\ConnectionEventArgs;
-use Doctrine\DBAL\Types\Type;
-use Doctrine\ORM;
-use Doctrine\ORM\Configuration as OrmConfiguration;
-use Doctrine\ORM\Decorator\EntityManagerDecorator;
-use Doctrine\ORM\EntityManager as ORMEntityManager;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Mapping\UnderscoreNamingStrategy;
-use Doctrine\ORM\ORMSetup;
-use Doctrine\ORM\Query\Filter\SQLFilter;
-use Doctrine\Persistence\Event\LifecycleEventArgs;
-use Doctrine\Persistence\Mapping\Driver\MappingDriverChain;
-use Gedmo;
-use Gedmo\SoftDeleteable\SoftDeleteableListener;
-use Gedmo\Timestampable\TimestampableListener;
-use MediaMonks\Doctrine\Transformable;
-use MyCLabs\Enum\Enum as EnumType;
-use Symfony\Component\Cache\Adapter\ArrayAdapter;
-
-use OCA\CAFeVDBMembers\Toolkit\Doctrine\ORM\AbstractEntityManager;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFeVDBMembers\Constants;
 use OCA\CAFeVDBMembers\Database\DBAL\Logging\CloudLogger;
-use OCA\CAFeVDBMembers\Database\DBAL\Types;
 use OCA\CAFeVDBMembers\Database\ORM\Entities;
 use OCA\CAFeVDBMembers\Database\ORM\Mapping\ReservedWordQuoteStrategy;
 use OCA\CAFeVDBMembers\Database\ORM\Repositories;
 use OCA\CAFeVDBMembers\Exceptions;
 use OCA\CAFeVDBMembers\Service\AuthenticationService;
 use OCA\CAFeVDBMembers\Settings\ConfigConstants;
+use OCA\CAFeVDBMembers\Toolkit\Doctrine\ORM\AbstractEntityManager;
+use OCA\CAFeVDBMembers\Wrapped\Carbon;
+use OCA\CAFeVDBMembers\Wrapped\DoctrineExtensions;
+use OCA\CAFeVDBMembers\Wrapped\Doctrine\Common\Annotations\AnnotationReader;
+use OCA\CAFeVDBMembers\Wrapped\Doctrine\Common\Annotations\PsrCachedReader;
+use OCA\CAFeVDBMembers\Wrapped\Doctrine\Common\Cache\ArrayCache;
+use OCA\CAFeVDBMembers\Wrapped\Doctrine\Common\Cache\Psr6\CacheAdapter;
+use OCA\CAFeVDBMembers\Wrapped\Doctrine\Common\Cache\Psr6\DoctrineProvider;
+use OCA\CAFeVDBMembers\Wrapped\Doctrine\Common\EventManager as DoctrineEventManager;
+use OCA\CAFeVDBMembers\Wrapped\Doctrine\DBAL;
+use OCA\CAFeVDBMembers\Wrapped\Doctrine\DBAL\Connection as DatabaseConnection;
+use OCA\CAFeVDBMembers\Wrapped\Doctrine\DBAL\Types\Type;
+use OCA\CAFeVDBMembers\Wrapped\Doctrine\ORM;
+use OCA\CAFeVDBMembers\Wrapped\Doctrine\ORM\Configuration as OrmConfiguration;
+use OCA\CAFeVDBMembers\Wrapped\Doctrine\ORM\Decorator\EntityManagerDecorator;
+use OCA\CAFeVDBMembers\Wrapped\Doctrine\ORM\EntityManager as ORMEntityManager;
+use OCA\CAFeVDBMembers\Wrapped\Doctrine\ORM\EntityManagerInterface;
+use OCA\CAFeVDBMembers\Wrapped\Doctrine\ORM\Mapping\UnderscoreNamingStrategy;
+use OCA\CAFeVDBMembers\Wrapped\Doctrine\ORM\ORMSetup;
+use OCA\CAFeVDBMembers\Wrapped\Doctrine\ORM\Query\Filter\SQLFilter;
+use OCA\CAFeVDBMembers\Wrapped\Doctrine\Persistence\Event\LifecycleEventArgs;
+use OCA\CAFeVDBMembers\Wrapped\Doctrine\Persistence\Mapping\Driver\MappingDriverChain;
+use OCA\CAFeVDBMembers\Wrapped\Firehed\DbalLogger;
+use OCA\CAFeVDBMembers\Wrapped\Gedmo;
+use OCA\CAFeVDBMembers\Wrapped\Gedmo\SoftDeleteable\SoftDeleteableListener;
+use OCA\CAFeVDBMembers\Wrapped\Gedmo\Timestampable\TimestampableListener;
+use OCA\CAFeVDBMembers\Wrapped\MediaMonks;
+use OCA\CAFeVDBMembers\Wrapped\MediaMonks\Doctrine\Transformable;
 
 /**
  * Use this as the actual EntityManager in order to be able to
@@ -135,7 +134,7 @@ class EntityManager extends AbstractEntityManager
   {
     $config = ORMSetup::createAttributeMetadataConfiguration(self::ENTITY_PATHS, isDevMode: self::DEV_MODE);
     $config->enableNativeLazyObjects(true);
-    $config->setEntityListenerResolver(new class($this->appContainer) extends \Doctrine\ORM\Mapping\DefaultEntityListenerResolver {
+    $config->setEntityListenerResolver(new class($this->appContainer) extends ORM\Mapping\DefaultEntityListenerResolver {
 
       // phpcs:ignore Squiz.Commenting.FunctionComment.Missing
       public function __construct(
@@ -164,8 +163,8 @@ class EntityManager extends AbstractEntityManager
       // ORM\Events::loadClassMetadata,
       // ORM\Events::preUpdate,
       // ORM\Events::postUpdate,
-      \Doctrine\DBAL\Events::postConnect,
-      \Doctrine\ORM\Events::postLoad,
+      // DBAL\Events::postConnect,
+      ORM\Events::postLoad,
     ], $this);
 
     return [ $config, $eventManager, ];
@@ -185,11 +184,11 @@ class EntityManager extends AbstractEntityManager
 
     // load superclass metadata mapping only, into driver chain
     // also registers Gedmo annotations.NOTE: you can personalize it
-    \Gedmo\DoctrineExtensions::registerAbstractMappingIntoDriverChainORM(
+    Gedmo\DoctrineExtensions::registerAbstractMappingIntoDriverChainORM(
       $driverChain, // our metadata driver chain, to hook into
     );
     //<<< Further annotations can go here
-    \MediaMonks\Doctrine\DoctrineExtensions::registerAnnotations();
+    MediaMonks\Doctrine\DoctrineExtensions::registerAnnotations();
     // CJH\Setup::registerAnnotations();
     //>>>
 
@@ -222,7 +221,7 @@ class EntityManager extends AbstractEntityManager
     $softDeletableListener = new SoftDeleteableListener();
     $softDeletableListener->setAnnotationReader($attributeReader);
     $eventManager->addEventSubscriber($softDeletableListener);
-    $config->addFilter(self::SOFT_DELETEABLE_FILTER, \Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter::class);
+    $config->addFilter(self::SOFT_DELETEABLE_FILTER, Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter::class);
 
     // timestampable
     $timestampableListener = new TimestampableListener();
@@ -254,15 +253,15 @@ class EntityManager extends AbstractEntityManager
     $eventManager->addEventSubscriber($translatableListener);
 
     $config->setDefaultQueryHint(
-      \Doctrine\ORM\Query::HINT_CUSTOM_OUTPUT_WALKER,
-      \Gedmo\Translatable\Query\TreeWalker\TranslationWalker::class
+      ORM\Query::HINT_CUSTOM_OUTPUT_WALKER,
+      Gedmo\Translatable\Query\TreeWalker\TranslationWalker::class
     );
     $config->setDefaultQueryHint(
-      \Gedmo\Translatable\TranslatableListener::HINT_TRANSLATABLE_LOCALE,
+      Gedmo\Translatable\TranslatableListener::HINT_TRANSLATABLE_LOCALE,
       $localeCode
     );
     $config->setDefaultQueryHint(
-      \Gedmo\Translatable\TranslatableListener::HINT_FALLBACK,
+      Gedmo\Translatable\TranslatableListener::HINT_FALLBACK,
       1 // fallback to default values in case if record is not translated
     );
 
@@ -289,6 +288,8 @@ class EntityManager extends AbstractEntityManager
     }
     $driverParams = [
       'driver' => 'pdo_mysql',
+      'wrapperClass' => Connection::class,
+      Connection::POST_CONNECT_KEY => $this->doEmitRowAccessTokens(...),
     ];
     $charSetParams = [
       'collate' => 'utf8mb4_unicode_520_ci',
@@ -303,7 +304,7 @@ class EntityManager extends AbstractEntityManager
    *
    * @return bool
    */
-  public function connected():bool
+  public function connected(): bool
   {
     $connection = $this->getConnection();
     if (empty($connection)) {
@@ -322,10 +323,9 @@ class EntityManager extends AbstractEntityManager
     }
     try {
       if (!$connection->isConnected()) {
-        if (!$connection->connect()) {
-          $this->logError('db cannot connect');
-          return false;
-        }
+        // $connection->connect() is deprecated
+        $connection->getNativeConnection();
+        return $connection->isConnected();
       }
     } catch (Throwable $t) {
       $this->logException($t);
@@ -335,59 +335,22 @@ class EntityManager extends AbstractEntityManager
   }
 
   /** @return void */
-  private function registerTypes():void
+  protected function registerTypes(): void
   {
     if ($this->typesBound) {
       return;
     }
-    $types = [
-      Types\EnumDirEntryType::class => 'enum',
-      Types\EnumFileType::class => 'enum',
-      Types\EnumGeographicalScope::class => 'enum',
-      Types\EnumMemberStatus::class => 'enum',
-      Types\EnumParticipantFieldDataType::class => 'enum',
-      Types\EnumParticipantFieldMultiplicity::class => 'enum',
-      Types\EnumParticipationStatus::class => 'enum',
-      Types\EnumProjectTemporalType::class => 'enum',
-      Types\EnumVCalendarType::class => 'enum',
-      Types\UuidType::class => 'binary',
-    ];
 
-    $connection = $this->entityManager->getConnection();
+    parent::registerTypes();
+
     try {
-      $platform = $connection->getDatabasePlatform();
-      foreach ($types as $phpType => $sqlType) {
-        if ($sqlType == 'enum') {
-          $typeName = substr(strrchr($phpType, '\\'), 1);
-          if (!Type::hasType($typeName)) {
-            Types\EnumType::registerEnumType($typeName, $phpType);
-          }
-
-          // variant in lower case
-          $typeName = strtolower($typeName);
-          if (!Type::hasType($typeName)) {
-            Types\EnumType::registerEnumType($typeName, $phpType);
-          }
-          $platform->registerDoctrineTypeMapping($sqlType, $typeName);
-        } else {
-          $instance = new $phpType;
-          $typeName = $instance->getName();
-          if (!Type::hasType($typeName)) {
-            Type::addType($typeName, $phpType);
-          }
-        }
-        if (!empty($sqlType)) {
-          $platform->registerDoctrineTypeMapping($sqlType, $typeName);
-        }
-      }
-
       // Override datetime stuff
-      Type::overrideType('date', \Carbon\Doctrine\CarbonType::class);
-      Type::overrideType('date_immutable', \Carbon\Doctrine\CarbonImmutableType::class);
-      Type::overrideType('datetime', \Carbon\Doctrine\DateTimeType::class);
-      Type::overrideType('datetime_immutable', \Carbon\Doctrine\DateTimeImmutableType::class);
-      Type::overrideType('datetimetz', \Carbon\Doctrine\DateTimeType::class);
-      Type::overrideType('datetimetz_immutable', \Carbon\Doctrine\DateTimeImmutableType::class);
+      Type::overrideType('date', Carbon\Doctrine\CarbonType::class);
+      Type::overrideType('date_immutable', Carbon\Doctrine\CarbonImmutableType::class);
+      Type::overrideType('datetime', Carbon\Doctrine\DateTimeType::class);
+      Type::overrideType('datetime_immutable', Carbon\Doctrine\DateTimeImmutableType::class);
+      Type::overrideType('datetimetz', Carbon\Doctrine\DateTimeType::class);
+      Type::overrideType('datetimetz_immutable', Carbon\Doctrine\DateTimeImmutableType::class);
       $this->typesBound = true;
     } catch (Throwable $t) {
       throw $t;
@@ -420,10 +383,7 @@ class EntityManager extends AbstractEntityManager
     $namingStrategy = new UnderscoreNamingStrategy(CASE_LOWER);
     $config->setNamingStrategy($namingStrategy);
 
-    // $quoteStrategy = new ReservedWordQuoteStrategy();
-    // $config->setQuoteStrategy($quoteStrategy);
-
-    $config->setSQLLogger($this->sqlLogger);
+    $config->setMiddlewares([new DBalLogger\Middleware($this->sqlLogger)]);
 
     // obtaining the entity manager
     $conParams = $this->connectionParameters($params);
@@ -500,12 +460,6 @@ class EntityManager extends AbstractEntityManager
       return;
     }
     $this->doEmitRowAccessTokens($this->getConnection());
-  }
-
-  /** {@inheritdoc} */
-  public function postConnect(ConnectionEventArgs $args)
-  {
-    $this->doEmitRowAccessTokens($args->getConnection());
   }
 
   /** {@inheritdoc} */

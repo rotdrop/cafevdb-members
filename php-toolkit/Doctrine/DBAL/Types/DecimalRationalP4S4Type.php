@@ -1,9 +1,9 @@
 <?php
 /**
- * Member's data base connector for CAFEVDB orchetra management app.
+ * Some PHP utility functions for Nextcloud apps.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine
+ * @copyright 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,22 +20,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFeVDBMembers\Database\DBAL\Types;
+namespace OCA\RotDrop\Toolkit\Doctrine\DBAL\Types;
 
-use MyCLabs\Enum\Enum as EnumType;
+use OCA\RotDrop\Toolkit\Common\DecimalRationalP4S4 as NumberClass;
 
 /**
- * Some CalDAV related types.
- *
- * @method static EnumVCalendarType VEVENT()
- * @method static EnumVCalendarType VTODO()
- * @method static EnumVCalendarType VJOURNAL()
- * @method static EnumVCalendarType VCARD()
+ * Database type fractions of percentages.
  */
-class EnumVCalendarType extends EnumType
+class DecimalRationalP4S4Type extends AbstractDecimalRationalType
 {
-  public const VEVENT = 'VEVENT';
-  public const VTODO = 'VTODO';
-  public const VJOURNAL = 'VJOURNAL';
-  public const VCARD = 'VCARD';
+  protected const NUMBER_CLASS = NumberClass::class;
 }

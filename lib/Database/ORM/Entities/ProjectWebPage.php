@@ -23,7 +23,7 @@
 namespace OCA\CAFeVDBMembers\Database\ORM\Entities;
 
 use OCA\CAFeVDBMembers\Database\ORM as CAFEVDB;
-use Doctrine\ORM\Mapping as ORM;
+use OCA\CAFeVDBMembers\Wrapped\Doctrine\ORM\Mapping as ORM;
 
 /**
  * ProjectWebPage

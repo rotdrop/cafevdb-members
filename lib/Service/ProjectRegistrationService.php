@@ -29,8 +29,8 @@ use Carbon\CarbonImmutable;
 use UnexpectedValueException;
 use Throwable;
 
-use Doctrine\DBAL\Exception\DriverException;
-use Doctrine\DBAL\Query;
+use OCA\CAFeVDBMembers\Wrapped\Doctrine\DBAL\Exception\DriverException;
+use OCA\CAFeVDBMembers\Wrapped\Doctrine\DBAL\Query;
 
 use OCP\Calendar\ICalendar;
 use OCP\Calendar\ICalendarQuery;

@@ -3,7 +3,7 @@
  * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022, 2023, 2025 Claus-Justus Heine
+ * @copyright Copyright (c) 2022, 2023, 2025, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,12 +22,12 @@
 
 namespace OCA\CAFeVDBMembers\Database\ORM\Entities;
 
-use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumFileType;
 use OCA\CAFeVDBMembers\Database\ORM as CAFEVDB;
-use OCA\CAFeVDBMembers\Database\DBAL\Types;
+use OCA\CAFeVDBMembers\Wrapped\Doctrine\Common\Collections\ArrayCollection;
+use OCA\CAFeVDBMembers\Wrapped\Doctrine\Common\Collections\Collection;
+use OCA\CAFeVDBMembers\Wrapped\Doctrine\DBAL\Types\Types as DBALTypes;
+use OCA\CAFeVDBMembers\Wrapped\Doctrine\ORM\Mapping as ORM;
 
 /**
  * FileData
@@ -36,8 +36,12 @@ use OCA\CAFeVDBMembers\Database\DBAL\Types;
  */
 #[ORM\Table(name: 'PersonalizedFileDataView')]
 #[ORM\InheritanceType('SINGLE_TABLE')]
-#[ORM\DiscriminatorColumn(name: 'type', type: 'EnumFileType')]
-#[ORM\DiscriminatorMap(['generic' => 'FileData', 'image' => 'ImageFileData', 'encrypted' => 'EncryptedFileData'])]
+#[ORM\DiscriminatorColumn(name: 'type', type: DBALTypes::ENUM, enumType: EnumFileType::class)]
+#[ORM\DiscriminatorMap([
+  EnumFileType::GENERIC->value => 'FileData',
+  EnumFileType::IMAGE->value => 'ImageFileData',
+  EnumFileType::ENCRYPTED->value => 'EncryptedFileData',
+])]
 #[ORM\Entity]
 class FileData implements \ArrayAccess
 {

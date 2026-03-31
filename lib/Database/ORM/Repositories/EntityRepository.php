@@ -22,7 +22,7 @@
 
 namespace OCA\CAFeVDBMembers\Database\ORM\Repositories;
 
-use Doctrine\ORM\EntityManagerInterface;
+use OCA\CAFeVDBMembers\Wrapped\Doctrine\ORM\EntityManagerInterface;
 
 /** Base class for all of our repositories. */
 class EntityRepository extends \OCA\CAFeVDBMembers\Toolkit\Doctrine\ORM\EntityRepository
@@ -32,7 +32,7 @@ class EntityRepository extends \OCA\CAFeVDBMembers\Toolkit\Doctrine\ORM\EntityRe
    *
    * @return EntityManagerInterface
    */
-  public function getEntityManager():EntityManagerInterface
+  public function getEntityManager(): EntityManagerInterface
   {
     return parent::getEntityManager();
   }

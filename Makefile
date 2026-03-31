@@ -11,6 +11,7 @@ ifneq ($(XPATH),)
 APP_NAME = $(shell $(XPATH) -q -e '/info/id/text()' $(APP_INFO))
 APP_VERSION = $(shell $(XPATH) -q -e '/info/version/text()' $(APP_INFO))
 APP_NAMESPACE = $(shell $(XPATH) -q -e '/info/namespace/text()' $(APP_INFO))
+WRAPPER_NAMESPACE_POSTFIX = $(shell $(XPATH) -q -e '/info/scopednamespace/text()' $(APP_INFO))
 else
 $(warning The xpath binary could not be found, falling back to using the CWD as app-name)
 APP_NAME = $(notdir $(CURDIR))
@@ -37,6 +38,7 @@ WGET = $(shell which wget 2> /dev/null)
 OPENSSL = $(shell which openssl 2> /dev/null)
 PHPUNIT = ./vendor/bin/phpunit
 ORM_CLI=$(PHP) $(SRCDIR)/dev-scripts/orm-cmd.php
+PHP_SCOPER = $(ABSSRCDIR)/vendor-bin/php-scoper/vendor/bin/php-scoper
 TYPESCRIPT_CONVERTER = $(ABSSRCDIR)/dev-scripts/php-to-typescript.php
 TS_TYPES_DIR = $(ABSBUILDDIR)/ts-types
 TS_PHP_SOURCE_DIRS = lib
@@ -45,7 +47,7 @@ SCSS_VARIABLES_DIR = $(ABSBUILDDIR)/scss-variables
 PHPUNIT=$(ABSSRCDIR)/vendor-bin/phpunit/vendor/bin/phpunit
 # PHPCOVERAGE = -d extension=pcov.so -d pcov.directory=$(ABSSRCDIR)/lib
 PHPCOVERAGE = -d zend_extension=xdebug.so -d xdebug.mode=coverage
-PHING=$(ABSSRCDIR)/vendor-bin/phpunit/vendor/bin/phing
+PHING=$(ABSSRCDIR)/vendor-bin/phing/vendor/bin/phing
 
 COMPOSER_SYSTEM = $(shell which composer 2> /dev/null)
 ifeq (, $(COMPOSER_SYSTEM))
@@ -113,15 +115,52 @@ dev-setup: dev-setup-php package-lock.json
 .PHONY: dev-setup
 
 #@private
-dev-setup-php: app-toolkit composer.lock
+dev-setup-php: app-toolkit composer.lock namespace-wrapper
 .PHONY: dev-setup-php
 
-
 include $(DEV_LIB_DIR)/makefile/composer.mk
+
+$(PHING) $(PHPUNIT): composer.lock
+	if ! [ -x $@ ]; then $(COMPOSER) bin phpunit install; else touch $@; fi
+
+#@private
+php-scoper-install: $(PHP_SCOPER)
+.PHONY: php-scoper-install
+
+$(PHP_SCOPER): composer.lock
+	if ! [ -x "$@" ]; then $(COMPOSER) bin php-scoper install; else touch "$@"; fi
+
+composer-wrapped.lock: composer-wrapped.json Makefile
+	rm -f composer-wrapped.lock
+
+$(BUILDDIR)/vendor-wrapped: composer-wrapped.lock
+	mkdir -p $(BUILDDIR)
+	ln -fs ../vendor $(BUILDDIR)
+	rm -rf $(BUILDDIR)/vendor-wrapped
+	ln -sf ../composer-patches $(BUILDDIR)
+	env COMPOSER="$(ABSSRCDIR)/composer-wrapped.json" $(COMPOSER) -d$(BUILDDIR) install $(COMPOSER_OPTIONS)
+	env COMPOSER="$(ABSSRCDIR)/composer-wrapped.json" $(COMPOSER) -d$(BUILDDIR) update $(COMPOSER_OPTIONS)
+
+$(BUILDDIR)/vendor-wrapped/autoload.php: $(BUILDDIR)/vendor-wrapped composer-wrapped.json $(MAKEFILE_DEP)
+	env COMPOSER="$(ABSSRCDIR)/composer-wrapped.json" $(COMPOSER) -d$(BUILDDIR) dump-autoload
+
+vendor-wrapped: $(MAKEFILE_DEP) $(PHP_SCOPER) scoper.inc.php $(BUILDDIR)/vendor-wrapped
+	$(PHP_SCOPER) add-prefix -d$(BUILDDIR) --config=$(ABSSRCDIR)/scoper.inc.php --output-dir=$(ABSSRCDIR)/vendor-wrapped --force
+# scoper does not handle symlinks
+	cp -a $(BUILDDIR)/vendor-wrapped/bin $(ABSSRCDIR)/vendor-wrapped/
+# scoper does not preserve executable bits
+	find $(ABSSRCDIR)/vendor-wrapped -name bin -a -type d -exec chmod -R gu+x {} \;
+
+vendor-wrapped/autoload.php: vendor-wrapped
+	env COMPOSER="$(ABSSRCDIR)/composer-wrapped.json" $(COMPOSER) dump-autoload
+
+namespace-wrapper: php-scoper-install vendor-wrapped/autoload.php
+.PHONY: namespace-wrapper
 
 APP_TOOLKIT_DIR = $(ABSSRCDIR)/php-toolkit
 APP_TOOLKIT_DEST = $(ABSSRCDIR)/lib/Toolkit
 APP_TOOLKIT_NS = CAFeVDBMembers
+APP_WRAPPER_NS = $(WRAPPER_NAMESPACE_POSTFIX)
 
 include $(APP_TOOLKIT_DIR)/tools/scopeme.mk
 include $(DEV_LIB_DIR)/makefile/ts-app-config.mk
@@ -263,7 +302,7 @@ dophpunit: $(PHPUNIT)
 
 $(PHPUNIT_JUNIT_LOG): # dophpunit
 
-$(PHING_BUILD_XML): $(SRCDIR)/vendor-bin/phpunit/phing-build.xml.in $(MAKEFILE_DEP)
+$(PHING_BUILD_XML): $(SRCDIR)/vendor-bin/phing/phing-build.xml.in $(MAKEFILE_DEP)
 	sed -e 's|%BASEDIR%|$(ABSSRCDIR)|g' -e 's|%INFILE%|$(PHPUNIT_JUNIT_LOG)|g' -e 's|%OUTPUTDIR%|$(PHPUNIT_OUTPUT)/junit-log|g' < $< > $@
 
 $(PHPUNIT_JUNIT_LOG_HTML)/index.html: $(PHING_BUILD_XML) $(PHPUNIT_JUNIT_LOG) $(PHING)

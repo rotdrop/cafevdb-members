@@ -24,8 +24,8 @@ namespace OCA\CAFeVDBMembers\Database\ORM\Traits;
 
 use DateTimeInterface;
 
-use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
+use OCA\CAFeVDBMembers\Wrapped\Doctrine\ORM\Mapping as ORM;
+use OCA\CAFeVDBMembers\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 
 /** Helper for Gedmo time-stampable entities. */
 trait CreatedAtEntity

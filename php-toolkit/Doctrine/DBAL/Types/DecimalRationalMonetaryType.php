@@ -1,9 +1,9 @@
 <?php
 /**
- * Member's data base connector for CAFEVDB orchetra management app.
+ * Some PHP utility functions for Nextcloud apps.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,26 +20,23 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFeVDBMembers\Database\DBAL\Types;
+namespace OCA\RotDrop\Toolkit\Doctrine\DBAL\Types;
 
-use MyCLabs\Enum\Enum as EnumType;
+use OCA\RotDrop\Toolkit\Common\DecimalRationalMonetary;
 
 /**
- * Member status enum for musicians.
- *
- * @method static EnumMemberStatus REGULAR()
- * @method static EnumMemberStatus PASSIVE()
- * @method static EnumMemberStatus SOLOIST()
- * @method static EnumMemberStatus CONDUCTOR()
- * @method static EnumMemberStatus TEMPORARY()
- *
- * @todo This should rather be specified per project.
+ * Abstract base class for decimal types
  */
-class EnumMemberStatus extends EnumType
+class DecimalRationalMonetaryType extends AbstractDecimalRationalType
 {
-  public const REGULAR = 'regular';
-  public const PASSIVE = 'passive';
-  public const SOLOIST = 'soloist';
-  public const CONDUCTOR = 'conductor';
-  public const TEMPORARY = 'temporary';
+  protected const NUMBER_CLASS = DecimalRationalMonetary::class;
+  public const NAME = parent::NAME_BASE . '_monetary';
+
+  /**
+   * {@inheritDoc}
+   */
+  public function getName()
+  {
+    return self::NAME;
+  }
 }

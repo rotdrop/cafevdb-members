@@ -1,9 +1,9 @@
 <?php
 /**
- * Member's data base connector for CAFEVDB orchetra management app.
+ * Some PHP utility functions for Nextcloud apps.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022 Claus-Justus Heine
+ * @copyright 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,10 +20,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace OCA\CAFeVDBMembers\Database\DBAL\Types;
+namespace OCA\RotDrop\Toolkit\Doctrine\DBAL\Types;
 
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\Doctrine\UuidBinaryType;
+use Ramsey\Uuid\UuidInterface;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 
 /**
@@ -32,8 +33,16 @@ use Doctrine\DBAL\Platforms\AbstractPlatform;
  */
 class UuidType extends UuidBinaryType
 {
+  public const NAME = 'uuid_binary';
+
+  /** @return string */
+  public function getName(): string
+  {
+    return self::NAME;
+  }
+
   /** {@inheritdoc} */
-  public function convertToPHPValue($value, AbstractPlatform $platform)
+  public function convertToPHPValue($value, AbstractPlatform $platform): ?UuidInterface
   {
     if (is_string($value) && strlen($value) == 36) {
       try {
@@ -47,7 +56,7 @@ class UuidType extends UuidBinaryType
   }
 
   /** {@inheritdoc} */
-  public function convertToDatabaseValue($value, AbstractPlatform $platform)
+  public function convertToDatabaseValue($value, AbstractPlatform $platform): ?string
   {
     if (is_string($value) && strlen($value) == 16) {
       try {
