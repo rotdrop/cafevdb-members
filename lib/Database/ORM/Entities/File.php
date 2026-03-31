@@ -3,7 +3,7 @@
  * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022, 2023, 2023, 2025 Claus-Justus Heine
+ * @copyright Copyright (c) 2022, 2023, 2025, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,12 +24,12 @@ namespace OCA\CAFeVDBMembers\Database\ORM\Entities;
 
 use DateTimeInterface;
 
-use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumFileType;
 use OCA\CAFeVDBMembers\Database\ORM as CAFEVDB;
-use OCA\CAFeVDBMembers\Database\DBAL\Types;
+use OCA\CAFeVDBMembers\Wrapped\Doctrine\Common\Collections\ArrayCollection;
+use OCA\CAFeVDBMembers\Wrapped\Doctrine\Common\Collections\Collection;
+use OCA\CAFeVDBMembers\Wrapped\Doctrine\DBAL\Types\Types as DBALTypes;
+use OCA\CAFeVDBMembers\Wrapped\Doctrine\ORM\Mapping as ORM;
 
 /**
  * An entity which modesl a file-system file. While it is not always
@@ -38,8 +38,12 @@ use OCA\CAFeVDBMembers\Database\DBAL\Types;
  */
 #[ORM\Table(name: 'PersonalizedFilesView')]
 #[ORM\InheritanceType('SINGLE_TABLE')]
-#[ORM\DiscriminatorColumn(name: 'type', type: 'EnumFileType')]
-#[ORM\DiscriminatorMap(['generic' => 'File', 'encrypted' => 'EncryptedFile', 'image' => 'Image'])]
+#[ORM\DiscriminatorColumn(name: 'type', type: DBALTypes::ENUM, enumType: EnumFileType::class)]
+#[ORM\DiscriminatorMap([
+  EnumFileType::GENERIC->value => 'File',
+  EnumFileType::ENCRYPTED->value => 'EncryptedFile',
+  EnumFileType::IMAGE->value => 'Image',
+])]
 #[ORM\Entity]
 class File implements \ArrayAccess
 {

@@ -20,10 +20,10 @@
 
 namespace OCA\CAFeVDBMembers\Database\ORM\Mapping;
 
-use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\Mapping\ClassMetadata;
-use Doctrine\ORM\Mapping\QuoteStrategy;
-use Doctrine\DBAL\Platforms\AbstractPlatform;
+use OCA\CAFeVDBMembers\Wrapped\Doctrine\ORM\Mapping as ORM;
+use OCA\CAFeVDBMembers\Wrapped\Doctrine\ORM\Mapping\ClassMetadata;
+use OCA\CAFeVDBMembers\Wrapped\Doctrine\ORM\Mapping\QuoteStrategy;
+use OCA\CAFeVDBMembers\Wrapped\Doctrine\DBAL\Platforms\AbstractPlatform;
 
 /**
  * A set of rules for determining the physical column, alias and table quotes

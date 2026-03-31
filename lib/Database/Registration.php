@@ -24,7 +24,7 @@ namespace OCA\CAFeVDBMembers\Database;
 
 use UnexpectedValueException;
 
-use Doctrine\ORM\EntityManagerInterface;
+use OCA\CAFeVDBMembers\Wrapped\Doctrine\ORM\EntityManagerInterface;
 
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
 use OCP\App\IAppManager;

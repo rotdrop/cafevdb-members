@@ -44,14 +44,16 @@ use OCA\RotDrop\Tests\EnumDatabasePurpose;
 #[Attributes\CoversClass(EntityManager::class)]
 #[Attributes\UsesClass(\OCA\CAFeVDBMembers\AppInfo\Application::class)]
 #[Attributes\UsesClass(\OCA\CAFeVDBMembers\Database\DBAL\Logging\CloudLogger::class)]
-#[Attributes\UsesClass(\OCA\CAFeVDBMembers\Database\DBAL\Types\AbstractEnumType::class)]
-#[Attributes\UsesClass(\OCA\CAFeVDBMembers\Database\DBAL\Types\UuidType::class)]
+#[Attributes\UsesClass(\OCA\CAFeVDBMembers\Database\ORM\Connection::class)]
 #[Attributes\UsesClass(\OCA\CAFeVDBMembers\Database\ORM\Entities\Musician::class)]
 #[Attributes\UsesClass(\OCA\CAFeVDBMembers\Database\ORM\Listeners\GedmoTranslatableListener::class)]
 #[Attributes\UsesClass(\OCA\CAFeVDBMembers\Database\ORM\Repositories\EntityRepository::class)]
 #[Attributes\UsesClass(\OCA\CAFeVDBMembers\Toolkit\AppInfo\AbstractApplication::class)]
+#[Attributes\UsesClass(\OCA\CAFeVDBMembers\Toolkit\Doctrine\DBAL\Types\AbstractDecimalRationalType::class)]
+#[Attributes\UsesClass(\OCA\CAFeVDBMembers\Toolkit\Doctrine\DBAL\Types\ArrayType::class)]
+#[Attributes\UsesClass(\OCA\CAFeVDBMembers\Toolkit\Doctrine\DBAL\Types\DecimalRationalMonetaryType::class)]
+#[Attributes\UsesClass(\OCA\CAFeVDBMembers\Toolkit\Doctrine\DBAL\Types\UuidType::class)]
 #[Attributes\UsesTrait(\OCA\CAFeVDBMembers\Database\ORM\Traits\ArrayTrait::class)]
-#[Attributes\UsesTrait(\OCA\CAFeVDBMembers\Toolkit\Doctrine\ORM\FindLikeTrait::class)]
 class EntityManagerTest extends TestCase
 {
   use GenerateEntityManagerTrait;

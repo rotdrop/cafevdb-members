@@ -3,7 +3,7 @@
  * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022, 2023, 2025 Claus-Justus Heine
+ * @copyright Copyright (c) 2022, 2023, 2025, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,14 +22,16 @@
 
 namespace OCA\CAFeVDBMembers\Database\ORM\Entities;
 
-use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\Common\Collections\ArrayCollection;
-
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext as ParticipationContext;
 use OCA\CAFeVDBMembers\Database\ORM as CAFEVDB;
 use OCA\CAFeVDBMembers\Utils\Uuid;
-use OCA\CAFeVDBMembers\Database\DBAL\Types;
+use OCA\CAFeVDBMembers\Wrapped\Doctrine\Common\Collections\ArrayCollection;
+use OCA\CAFeVDBMembers\Wrapped\Doctrine\Common\Collections\Collection;
+use OCA\CAFeVDBMembers\Wrapped\Doctrine\DBAL\Types\Types as DBALTypes;
+use OCA\CAFeVDBMembers\Wrapped\Doctrine\ORM\Mapping as ORM;
+use OCA\CAFeVDBMembers\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * ProjectParticipantFields
@@ -75,17 +77,11 @@ class ProjectParticipantField implements \ArrayAccess
    */
   private $untranslatedName;
 
-  /**
-   * @var Types\EnumParticipantFieldMultiplicity
-   */
-  #[ORM\Column(type: 'EnumParticipantFieldMultiplicity', nullable: false)]
-  private $multiplicity;
+  #[ORM\Column(type: DBALTypes::ENUM, nullable: false)]
+  private FieldMultiplicity $multiplicity;
 
-  /**
-   * @var EnumParticipantFieldDataType
-   */
-  #[ORM\Column(type: 'EnumParticipantFieldDataType', nullable: false, options: ['default' => 'text'])]
-  private $dataType = 'text';
+  #[ORM\Column(type: DBALTypes::ENUM, nullable: false)]
+  private FieldDataType $dataType;
 
   /**
    * @var Collection

@@ -90,6 +90,9 @@ class Application extends AbstractApplication
   public function register(IRegistrationContext $context):void
   {
     parent::register($context);
+    if ((include_once __DIR__ . '/../../vendor-wrapped/autoload.php') === false) {
+      throw new Exception('Cannot include wrapped-autoload. Did you run install dependencies using composer?');
+    }
 
     $context->registerService('orchestraAppName', fn($c) => self::getOrchestraAppName());
     $context->registerService('appManagementGroup', function($c) {

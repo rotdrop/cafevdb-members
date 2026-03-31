@@ -22,7 +22,7 @@
 
 namespace OCA\CAFeVDBMembers\Database\ORM\Traits;
 
-use Doctrine\Common\Collections\Collection;
+use OCA\CAFeVDBMembers\Wrapped\Doctrine\Common\Collections\Collection;
 
 use OCA\CAFeVDBMembers\Utils\Uuid;
 

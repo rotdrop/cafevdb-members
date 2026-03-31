@@ -25,12 +25,13 @@ namespace OCA\CAFeVDBMembers\Database\ORM\Entities;
 use DateTimeImmutable;
 use DateTimeInterface;
 
-use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\Common\Collections\ArrayCollection;
-
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext as ParticipationContext;
 use OCA\CAFeVDBMembers\Database\ORM as CAFEVDB;
-use OCA\CAFeVDBMembers\Database\DBAL\Types;
+use OCA\CAFeVDBMembers\Wrapped\Doctrine\Common\Collections\ArrayCollection;
+use OCA\CAFeVDBMembers\Wrapped\Doctrine\Common\Collections\Collection;
+use OCA\CAFeVDBMembers\Wrapped\Doctrine\DBAL\Types\Types as DBALTypes;
+use OCA\CAFeVDBMembers\Wrapped\Doctrine\ORM\Mapping as ORM;
 
 /**
  * Projects
@@ -63,11 +64,8 @@ class Project implements \ArrayAccess
   #[ORM\Column(type: 'string', length: 64, nullable: false)]
   private string $name;
 
-  /**
-   * @var Types\EnumProjectTemporalType
-   */
-  #[ORM\Column(type: 'EnumProjectTemporalType', nullable: false)]
-  private string $type = Types\EnumProjectTemporalType::TEMPORARY;
+  #[ORM\Column(type: DBALTypes::ENUM, nullable: false)]
+  private Types\EnumProjectTemporalType $type;
 
   /**
    * @var \DateTimeImmutable
@@ -144,7 +142,7 @@ class Project implements \ArrayAccess
     $this->participants = new ArrayCollection();
     $this->payments = new ArrayCollection();
     $this->sepaDebitMandates = new ArrayCollection();
-    $this->type = Types\EnumProjectTemporalType::from($this->type);
+    $this->type = Types\EnumProjectTemporalType::TEMPORARY;
     $this->webPages = new ArrayCollection();
   }
   // phpcs:enable
@@ -184,7 +182,7 @@ class Project implements \ArrayAccess
    *
    * @return EnumProjectTemporalType
    */
-  public function getType():Types\EnumProjectTemporalType
+  public function getType(): Types\EnumProjectTemporalType
   {
     return $this->type;
   }

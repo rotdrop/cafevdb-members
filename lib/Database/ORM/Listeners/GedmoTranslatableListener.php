@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2024 Claus-Justus Heine
+ * @copyright 2020-2024, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,12 +24,11 @@
 
 namespace OCA\CAFeVDBMembers\Database\ORM\Listeners;
 
-use Doctrine\Persistence\ObjectManager;
-use Gedmo\Translatable\Mapping\Event\TranslatableAdapter;
-
+use OCA\CAFeVDBMembers\Wrapped\Doctrine\Persistence\ObjectManager;
+use OCA\CAFeVDBMembers\Wrapped\Gedmo\Translatable\Mapping\Event\TranslatableAdapter;
+use OCA\CAFeVDBMembers\Wrapped\Gedmo\Translatable\TranslatableListener;
 use OCA\CAFEVDB\Database\Doctrine\ORM\Entities as TranslatedEntities;
 use OCA\CAFeVDBMembers\Database\ORM\Entities;
-
 use OCA\CAFEVDB\Service\L10N\BiDirectionalL10N;
 
 /**
@@ -37,7 +36,7 @@ use OCA\CAFEVDB\Service\L10N\BiDirectionalL10N;
  * which also queries other sources of translations if a concrete
  * translations has not been persisted yet.
  */
-class GedmoTranslatableListener extends \Gedmo\Translatable\TranslatableListener
+class GedmoTranslatableListener extends TranslatableListener
 {
   private const USE_OBJECT_CLASS = 'useObjectClass';
   private const TRANSLATED_ENTITIES = TranslatedEntities::class;
