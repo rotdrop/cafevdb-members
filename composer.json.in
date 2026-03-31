@@ -10,11 +10,6 @@
     }
   ],
   "require": {
-    "acelaya/doctrine-enum-type": "^2.5",
-    "doctrine/orm": "^3.6.0",
-    "gedmo/doctrine-extensions": "3.x-dev",
-    "mediamonks/doctrine-extensions": "0.1.x-dev",
-    "myclabs/php-enum": "^1.8",
     "nesbot/carbon": "^2.46",
     "ramsey/uuid-doctrine": "^1.6",
     "ramsey/uuid": "^4"

@@ -31,6 +31,7 @@ define('ROT_DROP_DEV_SCRIPTS_APP_DIR', $appDir);
 try {
   require_once(__DIR__ . '/lib/scripts/console-setup.php');
   require_once($appDir . '/vendor/autoload.php');
+  require_once($appDir . '/vendor-wrapped/autoload.php');
   require_once($appDir . '/vendor-bin/typescript-transformer/vendor/autoload.php');
 } catch (\Throwable $t) {
   fwrite(STDERR, 'Composer autoloads not set up: ' . $t->getMessage() . PHP_EOL);
@@ -51,19 +52,15 @@ try {
 use OCA\CAFeVDBMembers\Toolkit\Console\ConsoleOutput;
 use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
-use Spatie\TypeScriptTransformer\Transformers;
-
 // store output of different transformers in different files
 
-$outputPrefix = __DIR__ . '/../build/ts-types/php-';
-$outputSuffix = '.d.ts';
-$sourcePrefix = __DIR__ . '/../';
+$excludes = [];
 
-$excludes = [
-  'lib/Database/ORM/Proxies',
+$scopedNamespaces = [
+  \Doctrine::class,
+  \Carbon::class,
+  \Ramsey\Uuid::class,
 ];
-
-$scopedNamespaces = [];
 
 $phpToTypeScript = new PhpToTypeScript\PhpToTypeScript(
   devScriptsFolder: __DIR__,

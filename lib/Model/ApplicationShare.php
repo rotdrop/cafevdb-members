@@ -3,7 +3,7 @@
  * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2025 Claus-Justus Heine>
+ * @copyright Copyright (c) 2025, 2026 Claus-Justus Heine>
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -271,4 +271,7 @@ class ApplicationShare implements IShare
 
   /** {@inheritdoc} */
   public function canSeeContent(): bool { return true; }
+
+  /** {@inheritdoc} */
+  public function canDownload(): bool { return true; }
 }

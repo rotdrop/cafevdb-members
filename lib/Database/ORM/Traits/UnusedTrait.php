@@ -22,7 +22,7 @@
 
 namespace OCA\CAFeVDBMembers\Database\ORM\Traits;
 
-use Doctrine\ORM\Mapping as ORM;
+use OCA\CAFeVDBMembers\Wrapped\Doctrine\ORM\Mapping as ORM;
 
 /**
  * Simple trait that adds two convenience methods provided the

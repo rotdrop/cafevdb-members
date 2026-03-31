@@ -3,7 +3,7 @@
  * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022, 2023 Claus-Justus Heine
+ * @copyright Copyright (c) 2022, 2023, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,12 +22,15 @@
 
 namespace OCA\CAFeVDBMembers\Database\ORM\Entities;
 
-use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-
+use OCA\CAFeVDBMembers\Toolkit\Common\RationalNumber;
+use OCA\CAFeVDBMembers\Toolkit\Common\DecimalRationalP4S4 as RateNumberType;
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
+use OCA\CAFeVDBMembers\Toolkit\Doctrine\DBAL\Types\DecimalRationalP4S4Type as RateDatabaseType;
 use OCA\CAFeVDBMembers\Database\ORM as CAFEVDB;
-use OCA\CAFeVDBMembers\Database\DBAL\Types;
+use OCA\CAFeVDBMembers\Wrapped\Doctrine\Common\Collections\ArrayCollection;
+use OCA\CAFeVDBMembers\Wrapped\Doctrine\Common\Collections\Collection;
+use OCA\CAFeVDBMembers\Wrapped\Doctrine\DBAL\Types\Types as DBALTypes;
+use OCA\CAFeVDBMembers\Wrapped\Doctrine\ORM\Mapping as ORM;
 
 /**
  * InsuranceRate
@@ -47,15 +50,12 @@ class InsuranceRate implements \ArrayAccess
   /**
    * @var Types\EnumGeographicalScope
    */
-  #[ORM\Column(type: 'EnumGeographicalScope', nullable: false, options: ['default' => 'Germany'])]
+  #[ORM\Column(type: DBALTypes::ENUM, nullable: false)]
   #[ORM\Id]
-  private $geographicalScope;
+  private Types\EnumGeographicalScope $geographicalScope;
 
-  /**
-   * @var float
-   */
-  #[ORM\Column(type: 'float', precision: 10, scale: 0, nullable: false, options: ['comment' => 'fraction, not percentage, excluding taxes'])]
-  private $rate;
+  #[ORM\Column(type: RateDatabaseType::NAME_BASE . '_' . RateNumberType::PRECISION . '_' . RateNumberType::SCALE, nullable: false, options: ['unsigned' => true, 'comment' => 'fraction, not percentage, excluding taxes'])]
+  private RateNumberType $rate;
 
   /**
    * @var \DateTimeImmutable
@@ -96,9 +96,9 @@ class InsuranceRate implements \ArrayAccess
   /**
    * Get geographicalScope.
    *
-   * @return array
+   * @return Types\EnumGeographicalScope
    */
-  public function getGeographicalScope():Types\EnumGeographicalScope
+  public function getGeographicalScope(): Types\EnumGeographicalScope
   {
     return $this->geographicalScope;
   }
@@ -106,11 +106,11 @@ class InsuranceRate implements \ArrayAccess
   /**
    * Get rate.
    *
-   * @return float
+   * @return ?RateNumberType
    */
-  public function getRate():float
+  public function getRate(): ?RateNumberType
   {
-    return $this->rate;
+    return $this->rate ?? null;
   }
 
   /**

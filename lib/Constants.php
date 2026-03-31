@@ -22,10 +22,10 @@
 
 namespace OCA\CAFeVDBMembers;
 
-use OCA\CAFeVDBMembers\Toolkit\Traits\Constants as TraitsConstants;
+use OCA\CAFeVDBMembers\Toolkit\Constants as ToolkitConstants;
 
 /** A couple of constants in order to avoid string literals. */
-class Constants extends TraitsConstants
+class Constants extends ToolkitConstants
 {
   public const APPLICATION_SESSION_KEY = 'projectApplication';
   public const NEW_APPLICATION_TOKEN = 'new';

@@ -3,7 +3,7 @@
  * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022, 2023, 2025 Claus-Justus Heine
+ * @copyright Copyright (c) 2022, 2023, 2025, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,15 +24,13 @@ namespace OCA\CAFeVDBMembers\Database\ORM\Entities;
 
 use DateTimeInterface;
 
-use Ramsey\Uuid\UuidInterface;
-
-use OCA\CAFeVDBMembers\Database\DBAL\Types;
-
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
 use OCA\CAFeVDBMembers\Database\ORM as CAFEVDB;
-use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
-
 use OCA\CAFeVDBMembers\Utils\Uuid;
+use OCA\CAFeVDBMembers\Wrapped\Doctrine\DBAL\Types\Types as DBALTypes;
+use OCA\CAFeVDBMembers\Wrapped\Doctrine\ORM\Mapping as ORM;
+use OCA\CAFeVDBMembers\Wrapped\Gedmo\Mapping\Annotation as Gedmo;
+use OCA\CAFeVDBMembers\Wrapped\Ramsey\Uuid\UuidInterface;
 
 /**
  * ProjectEvents
@@ -120,11 +118,8 @@ class ProjectEvent implements \ArrayAccess
   #[ORM\Column(type: 'integer', nullable: false, options: ['default' => 0])]
   private $sequence;
 
-  /**
-   * @var null|Types\EnumVCalendarType
-   */
-  #[ORM\Column(type: 'EnumVCalendarType', nullable: false)]
-  private $type;
+  #[ORM\Column(type: DBALTypes::ENUM, nullable: false)]
+  private Types\EnumVCalendarType $type;
 
   /**
    * @var ProjectParticipantField
@@ -238,7 +233,7 @@ class ProjectEvent implements \ArrayAccess
    *
    * @return Types\EnumVCalendarType|null
    */
-  public function getType(): ?Types\EnumVCalendarType
+  public function getType(): Types\EnumVCalendarType
   {
     return $this->type;
   }

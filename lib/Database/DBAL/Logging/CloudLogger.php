@@ -5,7 +5,7 @@
  * CAFEVDB -- Camerata Academica Freiburg e.V. DataBase.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright 2020-2024 Claus-Justus Heine
+ * @copyright 2020-2024, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,13 +24,13 @@
 
 namespace OCA\CAFeVDBMembers\Database\DBAL\Logging;
 
-use Doctrine\DBAL\Logging\SQLLogger;
+use OCA\CAFeVDBMembers\Wrapped\Firehed\DbalLogger\QueryLogger;
 
-use Psr\Log\LoggerInterface;
 use OCP\IL10N;
+use Psr\Log\LoggerInterface;
 
 /** Logger implementation for DBAL. */
-class CloudLogger implements SQLLogger
+class CloudLogger implements QueryLogger
 {
   use \OCA\CAFeVDBMembers\Toolkit\Traits\LoggerTrait;
 

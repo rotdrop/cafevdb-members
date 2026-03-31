@@ -24,13 +24,14 @@ namespace OCA\CAFeVDBMembers\Database\ORM\Listeners;
 
 use RuntimeException;
 
-use Psr\Log\LoggerInterface;
-use OCP\IUserSession;
-use OCP\Authentication\LoginCredentials\IStore as ICredentialsStore;
 use OCP\Authentication\LoginCredentials\ICredentials;
-use MediaMonks\Doctrine\Transformable;
+use OCP\Authentication\LoginCredentials\IStore as ICredentialsStore;
+use OCP\IUserSession;
+use Psr\Log\LoggerInterface;
+
 use OCA\CAFEVDB\Crypto;
 use OCA\CAFEVDB\Exceptions\EncryptionException;
+use OCA\CAFeVDBMembers\Wrapped\MediaMonks\Doctrine\Transformable;
 
 /** Implement transparent encryption/decryption of database fields. */
 class Encryption implements Transformable\Transformer\TransformerInterface

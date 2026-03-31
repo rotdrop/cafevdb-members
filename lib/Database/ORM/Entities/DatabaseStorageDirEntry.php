@@ -3,7 +3,7 @@
  * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022, 2025 Claus-Justus Heine
+ * @copyright Copyright (c) 2022, 2025, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -22,20 +22,24 @@
 
 namespace OCA\CAFeVDBMembers\Database\ORM\Entities;
 
-use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumDirEntryType as DirEntryType;
 use OCA\CAFeVDBMembers\Database\ORM as CAFEVDB;
-use OCA\CAFeVDBMembers\Database\DBAL\Types\EnumDirEntryType as DirEntryType;
+use OCA\CAFeVDBMembers\Wrapped\Doctrine\Common\Collections\ArrayCollection;
+use OCA\CAFeVDBMembers\Wrapped\Doctrine\Common\Collections\Collection;
+use OCA\CAFeVDBMembers\Wrapped\Doctrine\DBAL\Types\Types as DBALTypes;
+use OCA\CAFeVDBMembers\Wrapped\Doctrine\ORM\Mapping as ORM;
 
 /**
  * Generic directory entry for a database-backed file.
  */
 #[ORM\Table(name: 'PersonalizedDatabaseStorageDirEntriesView')]
 #[ORM\InheritanceType('SINGLE_TABLE')]
-#[ORM\DiscriminatorColumn(name: 'type', type: 'EnumDirEntryType')]
-#[ORM\DiscriminatorMap(['generic' => 'DatabaseStorageDirEntry', 'file' => 'DatabaseStorageFile', 'folder' => 'DatabaseStorageFolder'])]
+#[ORM\DiscriminatorColumn(name: 'type', type: DBALTypes::ENUM, enumType: DirEntryType::class)]
+#[ORM\DiscriminatorMap([
+  DirEntryType::GENERIC->value => 'DatabaseStorageDirEntry',
+  DirEntryType::FILE->value => 'DatabaseStorageFile',
+  DirEntryType::FOLDER->value => 'DatabaseStorageFolder',
+])]
 #[ORM\Entity]
 class DatabaseStorageDirEntry implements \ArrayAccess
 {

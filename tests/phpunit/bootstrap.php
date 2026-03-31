@@ -30,6 +30,7 @@ require_once __DIR__ . '/../../../../tests/bootstrap.php';
 
 require_once __DIR__ . "/../../vendor-bin/phpunit/vendor/autoload.php";
 require_once __DIR__ . "/../../vendor/autoload.php";
+require_once __DIR__ . "/../../vendor-wrapped/autoload.php";
 
 define('ROT_DROP_PHPUNIT', true);
 define('PHPUNIT_NC_APP_NAME', \OCA\CAFeVDBMembers\AppInfo\Application::getAppName());
