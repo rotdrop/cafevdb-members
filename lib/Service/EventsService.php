@@ -45,12 +45,12 @@ use OCP\IConfig as ICloudConfig;
 use OCP\IDateTimeZone;
 use OCP\IDateTimeFormatter;
 
-use OCA\CAFeVDBMembers\Database\ORM\EntityManager;
-use OCA\CAFeVDBMembers\Database\ORM\Entities;
-use OCA\CAFeVDBMembers\Database\DBAL\Types\EnumVCalendarType as VCalendarType;
-use OCA\CAFeVDBMembers\Constants;
-
+use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumVCalendarType as VCalendarType;
 use OCA\CAFEVDB\Settings\ConfigConstants;
+
+use OCA\CAFeVDBMembers\Constants;
+use OCA\CAFeVDBMembers\Database\ORM\Entities;
+use OCA\CAFeVDBMembers\Database\ORM\EntityManager;
 
 /**
  * More or less a service provider for a public page giving unauthenticated
@@ -63,11 +63,6 @@ use OCA\CAFEVDB\Settings\ConfigConstants;
 class EventsService
 {
   use \OCA\CAFeVDBMembers\Toolkit\Traits\LoggerTrait;
-
-  private const VTODO = VCalendarType::VTODO;
-  private const VEVENT = VCalendarType::VEVENT;
-  private const VCARD = VCalendarType::VCARD;
-  private const VJOURNAL = VCalendarType::VJOURNAL;
 
   private DateTimeZone $dateTimeZone;
 
@@ -571,11 +566,11 @@ class EventsService
    *
    * @param VCalendar $vCalendar VCalendar object.
    *
-   * @param string $type Defaults to 'VEVENT'
+   * @param VCalendarType $type Defaults to 'VEVENT'
    *
    * @return array
    */
-  private static function getAllVObjects(VCalendar $vCalendar, string $type = self::VEVENT):array
+  private static function getAllVObjects(VCalendar $vCalendar, VCalendarType $type = VCalendarType::VEVENT):array
   {
     $vObjects = [];
     foreach ($vCalendar->children() as $child) {
@@ -583,7 +578,7 @@ class EventsService
         continue;
       }
 
-      if ($child->name !== $type) {
+      if ($child->name !== $type->value) {
         continue;
       }
 
