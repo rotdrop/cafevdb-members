@@ -300,7 +300,7 @@ class ProjectParticipantField implements \ArrayAccess
    *
    * @return EnumParticipantFieldMultiplicity
    */
-  public function getMultiplicity():Types\EnumParticipantFieldMultiplicity
+  public function getMultiplicity(): FieldMultiplicity
   {
     return $this->multiplicity;
   }
@@ -310,7 +310,7 @@ class ProjectParticipantField implements \ArrayAccess
    *
    * @return EnumParticipantFieldDataType
    */
-  public function getDataType():Types\EnumParticipantFieldDataType
+  public function getDataType(): FieldDataType
   {
     return $this->dataType;
   }
