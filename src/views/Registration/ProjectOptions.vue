@@ -1,5 +1,5 @@
 <!--
- - @copyright Copyright (c) 2023, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ - @copyright Copyright (c) 2023-2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  -
  - @author Claus-Justus Heine <himself@claus-justus-heine.de>
  -
@@ -19,7 +19,7 @@
  - along with this program. If not, see <http://www.gnu.org/licenses/>.
  -->
 <template>
-  <div :class="{ 'icon-loading': loading, 'page-container': true, loading, 'project-options-view': true, }">
+  <div class="page-container project-options-view" :class="{ 'icon-loading': loading, loading }">
     <h2>
       {{ t(appName, 'Project Fees and Options') }}
     </h2>
@@ -34,7 +34,7 @@
             <div class="option-helptext" v-html="field.tooltip" />
             <NcTextArea v-if="field.dataType === 'html' && field.multiplicity === 'simple'"
                         v-model="registrationProject.options[field.id]"
-                        label-outside
+                        labelOutside
             />
             <NcSelect v-else-if="field.multiplicity === 'multiple' || field.multiplicity === 'parallel'"
                       :ref="(el) => addOptionSelectRef(el, field.id)"
@@ -43,7 +43,7 @@
                       :multiple="field.multiplicity === 'parallel'"
                       :options="Object.values(field.dataOptions)"
                       :reduce="reduceFieldOptions"
-                      label-outside
+                      labelOutside
             >
               <template #option="option">
                 <NcEllipsisedOption :name="fieldOptionLabel(option, field)"
@@ -56,64 +56,64 @@
                 />
               </template>
             </NcSelect>
-            <DebugInfo :debug-data="field" />
+            <DebugInfo :debugData="field" />
           </template>
         </NcListItem>
       </ul>
     </div>
-    <DebugInfo :debug-data="registrationProject" />
+    <DebugInfo :debugData="registrationProject" />
     <div class="navigation flex flex-row flex-justify-full">
       <RouterButton :to="routerDestination('registrationParticipation')"
-                    exact
                     icon="icon-history"
-                    icon-position="left"
+                    iconPosition="left"
       >
         {{ t(appName, 'back') }}
       </RouterButton>
       <RouterButton :to="routerDestination('registrationSubmission')"
-                    exact
                     icon="icon-confirm"
-                    icon-position="right"
+                    iconPosition="right"
       >
         {{ t(appName, 'Summary and Submission') }}
       </RouterButton>
     </div>
   </div>
 </template>
+
 <script setup lang="ts">
-import { appName } from '../../config.ts'
+import type { ProjectParticipantField, ProjectParticipantFieldDataOption } from '../../stores/memberData.ts'
+
 import {
   getCanonicalLocale,
   translate as t,
 } from '@nextcloud/l10n'
 import {
+  NcEllipsisedOption,
   NcListItem,
   NcSelect,
   NcTextArea,
-  NcEllipsisedOption,
 } from '@nextcloud/vue'
-import RouterButton from '../../components/RouterButton.vue'
-import DebugInfo from '../../components/DebugInfo.vue'
-import {
-  ProjectParticipantFieldDataType,
-  type ProjectParticipantFieldDataOption,
-  type ProjectParticipantField,
-} from '../../stores/memberData.ts'
-import { useAppDataStore } from '../../stores/appData.ts'
+import { storeToRefs } from 'pinia'
 import {
   computed,
   onMounted,
   ref,
 } from 'vue'
-import { storeToRefs } from 'pinia'
+import DebugInfo from '../../components/DebugInfo.vue'
+import RouterButton from '../../components/RouterButton.vue'
+import { appName } from '../../config.ts'
+import { useAppDataStore } from '../../stores/appData.ts'
+import {
+  ProjectParticipantFieldDataType,
+} from '../../stores/memberData.ts'
 
-const props = withDefaults(
-  defineProps<{
-    token?: string,
-  }>(), {
-    token: undefined,
-  },
-)
+// const props = withDefaults(
+//   defineProps<{
+//     token?: string
+//   }>(),
+//   {
+//     token: undefined,
+//   },
+// )
 
 const appData = useAppDataStore()
 const routerDestination = appData.registrationRouteRecord
@@ -125,7 +125,7 @@ const optionSelects: Record<number, typeof NcSelect> = {}
 
 const {
   activeProject,
-  projectName,
+  // projectName,
 } = storeToRefs(appData)
 const {
   registrationProject,
@@ -147,10 +147,12 @@ const formatMoneyValue = (
   locale: string = getCanonicalLocale(),
 ) => {
   return new Intl.NumberFormat(
-    locale, {
+    locale,
+    {
       style: 'currency',
       currency: currencyCode,
-    })
+    },
+  )
     .format(value)
 }
 
@@ -160,11 +162,11 @@ const formatMoneyValue = (
 // - add debit-note info
 const fieldOptionLabel = (option: ProjectParticipantFieldDataOption, field: ProjectParticipantField) => {
   switch (field.dataType) {
-  case ProjectParticipantFieldDataType.LIABILITIES:
-  case ProjectParticipantFieldDataType.RECEIVABLES:
-    return option.label + ' -- ' + formatMoneyValue(+option.data)
-  default:
-    return option.label
+    case ProjectParticipantFieldDataType.LIABILITIES:
+    case ProjectParticipantFieldDataType.RECEIVABLES:
+      return option.label + ' -- ' + formatMoneyValue(+option.data)
+    default:
+      return option.label
   }
 }
 
@@ -178,6 +180,7 @@ onMounted(async () => {
   loading.value = false
 })
 </script>
+
 <style lang="scss" scoped>
 .page-container {
   padding: 12px 0.5em 0 50px;
@@ -220,13 +223,13 @@ onMounted(async () => {
       min-width:210px;
     }
   }
-  ::v-deep .input-effect {
+  :deep(.input-effect) {
     margin-bottom:0;
   }
 }
 
 .project-options {
-  ::v-deep .list-item {
+  :deep(.list-item) {
     flex-wrap: wrap;
     .list-item__extra {
       width: 100%;

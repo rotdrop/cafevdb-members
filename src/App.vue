@@ -1,5 +1,5 @@
 <!--
- * @copyright Copyright (c) 2022-2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright Copyright (c) 2022-2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  -
  - @author Claus-Justus Heine <himself@claus-justus-heine.de>
  -
@@ -20,79 +20,55 @@
  -
  -->
 <template>
-  <NcContent :app-name="appId">
+  <NcContent :appName="appId">
     <NcAppNavigation>
       <template #list>
         <NcAppNavigationItem :to="{ name: '/' }"
                              :name="t(appId, 'Home')"
                              icon="icon-home"
-                             exact
                              @click="showSidebar = false"
         />
         <NcAppNavigationItem :to="memberDataError ? {} : { name: 'personalProfile' }"
                              :name="t(appId, 'Personal Profile')"
                              icon="icon-files-dark"
                              :class="{ disabled: memberDataError }"
-                             exact
                              @click="showSidebar = false"
         />
         <NcAppNavigationItem :to="memberDataError ? {} : { name: 'bankAccounts' }"
                              :name="t(appId, 'Bank Accounts')"
                              icon="icon-files-dark"
                              :class="{ disabled: memberDataError }"
-                             exact
                              @click="showSidebar = false"
         />
         <NcAppNavigationItem :to="memberDataError ? {} : { name: 'instrumentInsurances' }"
                              :name="t(appId, 'Instrument Insurances')"
                              icon="icon-files-dark"
                              :class="{ disabled: memberDataError }"
-                             exact
                              @click="showSidebar = false"
         />
         <NcAppNavigationItem :to="memberDataError ? {} : { name: 'projects' }"
                              :name="t(appId, 'Projects')"
                              icon="icon-files-dark"
                              :class="{ disabled: memberDataError }"
-                             exact
                              @click="showSidebar = false"
         />
       </template>
       <template #footer>
         <NcAppNavigationSettings>
-          <NcCheckboxRadioSwitch :checked.sync="debug">
+          <NcCheckboxRadioSwitch v-model="debug">
             {{ t(appId, 'Enable Debug') }}
           </NcCheckboxRadioSwitch>
         </NcAppNavigationSettings>
       </template>
     </NcAppNavigation>
 
-    <NcAppContent :class="{ 'icon-loading': loading }" @insurance-details="showSidebar = true">
-      <router-view v-show="!loading && !memberDataError" :loading.sync="loading" @view-details="handleDetailsRequest" />
-      <NcEmptyContent v-if="isRoot || memberDataError" class="emp-content">
-        {{ t(appId, '{orchestraName} Orchestra Member Portal', { orchestraName, }) }}
-        <template #icon>
-          <img :src="Icon">
-        </template>
-        <template #description>
-          <div v-if="memberDataError" class="error-section">
-            <p class="error-info">
-              {{ t(appId, 'Error') + ': ' + memberDataError }}
-            </p>
-            <button class="button primary" @click="putRecryptionRequest">
-              {{ t(appId, 'Request Access to my personal Data') }}
-            </button>
-            <p class="hint">
-              {{ t(appId, 'The authorization request has to be processed by a human being, this means that it will need some time before you are granted access to your data. You will be notified by the cloud-software when the request has been processed.') }}
-            </p>
-          </div>
-        </template>
-      </NcEmptyContent>
+    <NcAppContent :class="{ 'icon-loading': loading }" @showDetails="showSidebar = true">
+      <router-view v-show="!loading" v-model:loading="loading" @viewDetails="handleDetailsRequest" />
     </NcAppContent>
 
     <NcAppSidebar v-show="showSidebar"
+                  v-model:loading="loading"
                   :name="sidebarTitle"
-                  :loading.sync="loading"
                   @close="closeSidebar"
     >
       <NcAppSidebarTab v-if="sidebarView === 'InstrumentInsurances'"
@@ -100,89 +76,92 @@
                        icon="icon-share"
                        :name="t(appId, 'details')"
       >
-        <InsuranceDetails v-bind="sidebarProps" />
+        <InsuranceDetails v-bind="sidebarProps as InsuranceDetailsProps" />
       </NcAppSidebarTab>
       <NcAppSidebarTab v-if="sidebarView === 'Projects'"
                        id="details-side-bar"
                        icon="icon-share"
                        :name="t(appId, 'details')"
       >
-        <ProjectDetails v-bind="sidebarProps" />
+        <ProjectDetails v-bind="sidebarProps as SideBarProps[typeof sidebarView]" />
       </NcAppSidebarTab>
     </NcAppSidebar>
   </NcContent>
 </template>
+
 <script setup lang="ts">
-import { appName as appId } from './config.ts'
 import { translate as t } from '@nextcloud/l10n'
-import { getCurrentUser } from '@nextcloud/auth'
 import {
-  NcContent,
   NcAppContent,
   NcAppNavigation,
   NcAppNavigationItem,
   NcAppNavigationSettings,
-  NcCheckboxRadioSwitch,
   NcAppSidebar,
   NcAppSidebarTab,
-  NcEmptyContent,
+  NcCheckboxRadioSwitch,
+  NcContent,
 } from '@nextcloud/vue'
-import { generateOcsUrl } from '@nextcloud/router'
-import { showError, showInfo, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
-import axios from '@nextcloud/axios'
-import InsuranceDetails from './views/InstrumentInsurances/InsuranceDetails.vue'
-import ProjectDetails from './views/Projects/ProjectDetails.vue'
-import Icon from '../img/cafevdbmembers.svg'
-import getInitialState from './toolkit/util/initial-state.ts'
-import { useMemberDataStore } from './stores/memberData.ts'
-import { useAppDataStore } from './stores/appData.ts'
 import { storeToRefs } from 'pinia'
 import {
   computed,
   ref,
   watch,
 } from 'vue'
-import {
-  useRoute,
-} from 'vue-router/composables'
-import { isAxiosErrorResponse } from './toolkit/types/axios-type-guards'
-import type { OCSResponse } from '@nextcloud/typings/ocs'
+import { useRouter } from 'vue-router'
+import InsuranceDetails from './views/InstrumentInsurances/InsuranceDetails.vue'
+import ProjectDetails from './views/Projects/ProjectDetails.vue'
+import { appName as appId } from './config.ts'
+import { useAppDataStore } from './stores/appData.ts'
+import { useMemberDataStore } from './stores/memberData.ts'
 
-const initialState = getInitialState()
+type InsuranceDetailsProps = InstanceType<typeof InsuranceDetails>['$props']
+type ProjectDetailsProps = InstanceType<typeof ProjectDetails>['$props']
+type SideBarProps = {
+  Projects: ProjectDetailsProps
+  InstrumentInsurances: InsuranceDetailsProps
+}
+
+export type ViewDetailsComponent = keyof SideBarProps
+
+export type ViewDetailsEventData<T extends ViewDetailsComponent> = {
+  viewName: T
+  title: string
+  props: SideBarProps[T]
+}
+
 const memberData = useMemberDataStore()
 const appData = useAppDataStore()
-const { debug } = storeToRefs(appData)
+const {
+  debug,
+} = storeToRefs(appData)
 
-const orchestraName = computed(() => initialState?.orchestraName || t(appId, '[UNKNOWN]'))
 const loading = ref(true)
 const showSidebar = ref(false)
 const sidebarTitle = ref('')
-const sidebarView = ref('')
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const sidebarProps = ref<Record<string, any> >({})
+const sidebarView = ref<ViewDetailsComponent|undefined>(undefined)
+const sidebarProps = ref<SideBarProps[ViewDetailsComponent]>({} as SideBarProps[ViewDetailsComponent])
 let memberDataPollTimer = null as null|ReturnType<typeof setTimeout>
 const memberDataPollTimeout = 60 * 1000
 
-const currentRoute = useRoute()
-const isRoot = computed(() => currentRoute.path === '/')
 const memberDataError = computed(() => memberData.initialized.error)
 
-watch(memberDataError, (newVal, oldVal) => {
-  if (oldVal && memberDataPollTimer) {
-    clearTimeout(memberDataPollTimer)
-    memberDataPollTimer = null
-  } else if (newVal && !memberDataPollTimer) {
-    memberDataPollTimer = setTimeout(() => pollMemberData(), memberDataPollTimeout)
+memberData.initialized.error = null
+memberData.initialize(true, true).finally(() => {
+  loading.value = false
+})
+
+const router = useRouter()
+router.beforeEach((to) => {
+  if (memberDataError.value && to.name !== 'home') {
+    return { name: 'home' }
   }
 })
 
-memberData.initialized.error = null
-memberData.initialize(true, true).finally(() => { loading.value = false })
+const closeSidebar = () => {
+  showSidebar.value = false
+}
 
-const closeSidebar = () => { showSidebar.value = false }
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const handleDetailsRequest = (data: { title: string, viewName: string, props: Record<string, any> }) => {
+const handleDetailsRequest = <T extends ViewDetailsComponent>(data: { title: string, viewName: T, props: SideBarProps[T] }) => {
   showSidebar.value = true
   sidebarTitle.value = data.title
   sidebarView.value = data.viewName
@@ -199,35 +178,18 @@ const pollMemberData = async () => {
   }
 }
 
-const putRecryptionRequest = async () => {
-  const cloudUser = getCurrentUser()
-  if (!cloudUser) {
-    showError(t(appId, 'Unable to determine the identity of the current user.'))
-    return
+watch(memberDataError, (newVal, oldVal) => {
+  if (oldVal && memberDataPollTimer) {
+    clearTimeout(memberDataPollTimer)
+    memberDataPollTimer = null
+  } else if (newVal && !memberDataPollTimer) {
+    memberDataPollTimer = setTimeout(() => pollMemberData(), memberDataPollTimeout)
   }
-  const userId = cloudUser.uid
-  try {
-    const url = generateOcsUrl('apps/cafevdb/api/v1/maintenance/encryption/recrypt/{userId}', { userId })
-    await axios.put(url + '?format=json')
-    showInfo(t(appId, 'The authorization request for {userId} has been submitted successfully', { userId }))
-  } catch (e) {
-    console.info('ERROR', e)
-    let message = t(appId, 'reason unknown')
-    if (isAxiosErrorResponse(e) && e.response.data) {
-      const data = e.response.data as OCSResponse
-      if (data.ocs && data.ocs.meta && data.ocs.meta.message) {
-        message = data.ocs.meta.message
-      }
-    }
-    showError(
-      t(appId, 'Unable to handle access action: {message}', { message }),
-      { timeout: TOAST_PERMANENT_TIMEOUT },
-    )
-  }
-}
+})
 </script>
+
 <style lang="scss" scoped>
-.app-navigation-entry.disabled::v-deep {
+.app-navigation-entry.disabled :deep() {
   opacity: 0.5;
   &, & * {
     cursor: default !important;
@@ -235,7 +197,7 @@ const putRecryptionRequest = async () => {
   }
 }
 
-.empty-content::v-deep {
+.empty-content :deep() {
   h2 ~ p {
     text-align: center;
   }

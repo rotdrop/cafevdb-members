@@ -1,5 +1,5 @@
 /**
- * @copyright Copyright (c) 2022-2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright Copyright (c) 2022-2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
  *
@@ -17,71 +17,69 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
-import { defineStore } from 'pinia'
+import type { Instrument, Project } from './appData.ts';
 
-import { appName as appId } from '../config.ts'
-import { translate as t } from '@nextcloud/l10n'
-import { generateUrl as generateAppUrl } from '../toolkit/util/generate-url.ts'
-import { generateOcsUrl } from '@nextcloud/router'
-import { getCurrentUser, getGuestUser } from '@nextcloud/auth'
-import { showError, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
-import axios from '@nextcloud/axios'
-import { isAxiosErrorResponse } from '../toolkit/types/axios-type-guards.ts'
-import type { Project, Instrument } from './appData.ts'
+import { getCurrentUser, getGuestUser } from '@nextcloud/auth';
+import axios from '@nextcloud/axios';
+import { showError, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs';
+import { translate as t } from '@nextcloud/l10n';
+import { generateOcsUrl } from '@nextcloud/router';
+import { defineStore } from 'pinia';
 import {
   computed,
   reactive,
   ref,
-  set as vueSet,
   watch,
-} from 'vue'
-import { deepCopy } from 'walkjs'
-import { useAppDataStore } from './appData.ts'
-import getInitialState from '../toolkit/util/initial-state.ts'
-import logger from '../logger.ts'
+} from 'vue';
+import { deepCopy } from 'walkjs';
+import { appName as appId } from '../config.ts';
+import logger from '../logger.ts';
+import { isAxiosErrorResponse } from '../toolkit/types/axios-type-guards.ts';
+import { generateUrl as generateAppUrl } from '../toolkit/util/generate-url.ts';
+import getInitialState from '../toolkit/util/initial-state.ts';
+import { useAppDataStore } from './appData.ts';
 
 export interface SepaDebitMandate {
-  sequence: number,
-  mandateReference: string,
-  deleted: null|string,
-  created: null|string,
-  updated: null|string,
-  lastUsedDate?: string,
-  mandateDate: string,
+  sequence: number;
+  mandateReference: string;
+  deleted: null|string;
+  created: null|string;
+  updated: null|string;
+  lastUsedDate?: string;
+  mandateDate: string;
 }
 
 export interface SepaBankAccount {
-  sequence: number,
-  iban: string,
-  deleted: null|string,
-  created: null|string,
-  updated: null|string,
-  bankAccountOwner: string,
-  sepaDebitMandates: SepaDebitMandate[],
-  numActiveDebitMandates: number,
-  numDeletedDebitMandates: number,
+  sequence: number;
+  iban: string;
+  deleted: null|string;
+  created: null|string;
+  updated: null|string;
+  bankAccountOwner: string;
+  sepaDebitMandates: SepaDebitMandate[];
+  numActiveDebitMandates: number;
+  numDeletedDebitMandates: number;
 }
 
 export interface ProjectParticipantFieldDatum {
-  optionKey: string,
+  optionKey: string;
   dataOption: {
-    label: string,
-    data: string,
-  }
+    label: string;
+    data: string;
+  };
 }
 
 export interface ProjectParticipantFieldDataOption {
-  key: string,
-  field: number,
-  label: string,
-  untranslatedLabel: string,
-  data: string,
-  deposit: number,
-  limit: number,
-  tooltip: null|string,
+  key: string;
+  field: number;
+  label: string;
+  untranslatedLabel: string;
+  data: string;
+  deposit: number;
+  limit: number;
+  tooltip: null|string;
 }
 
 export enum ProjectParticipantFieldDataType {
@@ -100,69 +98,69 @@ export enum ProjectParticipantFieldDataType {
 }
 
 export interface ProjectParticipantField {
-  id: number,
-  name: string,
-  untranslatedName: string,
-  tooltip: null|string,
-  dataType: ProjectParticipantFieldDataType,
-  multiplicity: 'simple'|'multiple'|'parallel',
-  fieldData: Record<string, ProjectParticipantFieldDatum>,
-  dataOptions: Record<string, ProjectParticipantFieldDataOption>,
-  defaultValue: null|string,
-  absenceEvent: number,
-  deleted: null|string,
+  id: number;
+  name: string;
+  untranslatedName: string;
+  tooltip: null|string;
+  dataType: ProjectParticipantFieldDataType;
+  multiplicity: 'simple'|'multiple'|'parallel';
+  fieldData: Record<string, ProjectParticipantFieldDatum>;
+  dataOptions: Record<string, ProjectParticipantFieldDataOption>;
+  defaultValue: null|string;
+  absenceEvent: number;
+  deleted: null|string;
 }
 
 export interface ProjectInstrument {
-  id: number,
-  name: string,
-  voice: number,
-  sectionLeader: boolean,
+  id: number;
+  name: string;
+  voice: number;
+  sectionLeader: boolean;
 }
 
 export interface ProjectParticipant {
-  project: Project,
-  participantFields: Record<number, ProjectParticipantField>,
-  projectInstruments: ProjectInstrument[],
+  project: Project;
+  participantFields: Record<number, ProjectParticipantField>;
+  projectInstruments: ProjectInstrument[];
 }
 
 export interface InstrumentInsurance {
-  id: number,
-  deleted?: string,
-  isHolder: boolean,
-  isDebitor: boolean,
-  isOwner: boolean,
-  object: string,
-  insuranceAmount: number,
+  id: number;
+  deleted?: string;
+  isHolder: boolean;
+  isDebitor: boolean;
+  isOwner: boolean;
+  object: string;
+  insuranceAmount: number;
   insuranceRate: {
-    rate: number,
+    rate: number;
     broker: {
-      shortName: string,
-    },
-    geographicalScope: string,
-    dueDate: string,
-  }
-  manufacturer: string,
-  yearOfConstruction: string,
-  startOfInsurance: string,
+      shortName: string;
+    };
+    geographicalScope: string;
+    dueDate: string;
+  };
+  manufacturer: string;
+  yearOfConstruction: string;
+  startOfInsurance: string;
 }
 
 export interface Receivable extends ProjectParticipantFieldDatum {
-  supportingDocumentId?: number,
+  supportingDocumentId?: number;
 }
 
 export interface InsuranceDetails {
-  self: InstrumentInsurance[],
-  forOthers: InstrumentInsurance[],
-  byOthers: InstrumentInsurance[],
-  receivables: Receivable[],
+  self: InstrumentInsurance[];
+  forOthers: InstrumentInsurance[];
+  byOthers: InstrumentInsurance[];
+  receivables: Receivable[];
 }
 
 export interface RegistrationProject {
-  instruments: Instrument[],
-  absence: Record<number, boolean>,
-  absenceReasons: Record<number, string>,
-  options: Record<number, string>,
+  instruments: Instrument[];
+  absence: Record<number, boolean>;
+  absenceReasons: Record<number, string>;
+  options: Record<number, string>;
 }
 
 // The fields of the simple state are submitted during the project registration process.
@@ -185,24 +183,24 @@ export const personalProfileKeys = [
   'whoAmI',
   'instruments',
   'firstTimeApplication',
-] as const
+] as const;
 
 export interface ApplicationData {
-  projectName: string,
-  projectData: RegistrationProject,
-  personalProfile: { [K in typeof personalProfileKeys[number]]: string } & { uid?: string },
-  created: string,
-  modified: string,
-  deleted: null|string,
+  projectName: string;
+  projectData: RegistrationProject;
+  personalProfile: { [K in typeof personalProfileKeys[number]]: string } & { uid?: string };
+  created: string;
+  modified: string;
+  deleted: null|string;
 }
 
-const initialApplicationData = getInitialState<ApplicationData>({ section: 'applicationData', defaults: null })
-const initialToken = getInitialState({ section: 'token', defaults: null })
+const initialApplicationData = getInitialState<ApplicationData>({ section: 'applicationData', defaults: null });
+const initialToken = getInitialState({ section: 'token', defaults: null });
 
 logger.info('INITIAL APPLICATION DATA', {
   initialApplicationData,
   initialToken,
-})
+});
 
 export const useMemberDataStore = defineStore('member-data', () => {
   const simpleState = {
@@ -245,142 +243,140 @@ export const useMemberDataStore = defineStore('member-data', () => {
     projects: ref({} as Record<number, RegistrationProject>),
     instruments: ref([] as Instrument[]),
     firstTimeApplication: ref(undefined as undefined|'you-know-me'|'first-time'),
-  }
+  };
   const initialState = Object.fromEntries(Object.entries(simpleState).map(([key, value]) => {
-    return [key, typeof value.value === 'object' && value.value !== null ? deepCopy(value.value) : value.value]
-  }))
+    return [key, typeof value.value === 'object' && value.value !== null ? deepCopy(value.value) : value.value];
+  }));
 
   const resetState = () => {
     for (const [key, value] of Object.entries(initialState)) {
-      simpleState[key].value = value
+      simpleState[key].value = value;
     }
-  }
+  };
 
   const initialize = async (silent?: boolean, reset?: boolean) => {
-    let initialized = simpleState.initialized.value
+    let initialized = simpleState.initialized.value;
     if (initialized.loaded && !reset) {
-      return
+      return;
     }
     if (initialized.promise !== null) {
-      await initialized.promise
-      return
+      await initialized.promise;
+      return;
     }
     if (reset) {
-      resetState()
-      initialized = simpleState.initialized.value
+      resetState();
+      initialized = simpleState.initialized.value;
     }
     try {
-      initialized.promise = axios.get(generateAppUrl('member'))
-      const response = await initialized.promise
+      initialized.promise = axios.get(generateAppUrl('member'));
+      const response = await initialized.promise;
       for (const [key, value] of Object.entries(response.data)) {
         if (key === 'birthday') {
-          simpleState[key].value = new Date(value as string)
+          simpleState[key].value = new Date(value as string);
         } else if (simpleState[key] !== undefined) {
-          simpleState[key].value = value
+          simpleState[key].value = value;
         }
       }
-      initialized.promise = null
-      initialized.error = null
-      initialized.loaded = true
+      initialized.promise = null;
+      initialized.error = null;
+      initialized.loaded = true;
     } catch (e) {
-      logger.error('ERROR', e)
-      let message = t(appId, 'general failure')
+      logger.error('ERROR', e);
+      let message = t(appId, 'general failure');
       if (isAxiosErrorResponse(e) && e.response.data) {
-        const messages = (e.response.data as { messages?: string[] }).messages
+        const messages = (e.response.data as { messages?: string[] }).messages;
         if (Array.isArray(messages)) {
-          message = messages.join(' ')
+          message = messages.join(' ');
         }
       }
-      initialized.error = message
+      initialized.error = message;
       if (!silent) {
-        showError(t(appId, 'Could not fetch musician(s): {message}', { message }), { timeout: TOAST_PERMANENT_TIMEOUT })
+        showError(t(appId, 'Could not fetch musician(s): {message}', { message }), { timeout: TOAST_PERMANENT_TIMEOUT });
       }
-      const cloudUser = getCurrentUser()
-      initialized.recryptRequest = null
+      const cloudUser = getCurrentUser();
+      initialized.recryptRequest = null;
       if (cloudUser?.uid) {
         try {
           const url = generateOcsUrl('apps/cafevdb/api/v1/maintenance/encryption/recrypt/{userId}', {
             userId: cloudUser.uid,
-          })
-          const response = await axios.get(url + '?format=json')
-          initialized.recryptRequest = response.data.ocs.data.request
+          });
+          const response = await axios.get(url + '?format=json');
+          initialized.recryptRequest = response.data.ocs.data.request;
         } catch (e) {
-          logger.error('Error retrieving recryption request', e)
+          logger.error('Error retrieving recryption request', e);
         }
       }
-      initialized.promise = null
+      initialized.promise = null;
     }
-  }
+  };
 
   const load = async () => {
-    logger.info('LOAD')
-    resetState()
-    await initialize()
-  }
+    logger.info('LOAD');
+    resetState();
+    await initialize();
+  };
 
-  const appData = useAppDataStore()
+  const appData = useAppDataStore();
 
   // computed data
   const registrationProject = computed(() =>
-    appData.activeProject ? simpleState.projects.value[appData.activeProject.id] : null,
-  )
+    appData.activeProject ? simpleState.projects.value[appData.activeProject.id] : null);
 
   const noAbsence = computed(() =>
     registrationProject.value
       ? !Object.values(registrationProject.value.absence).reduce((result, current) => result || !!current, false)
-      : true,
-  )
+      : true);
 
   const personalProjectInstrumentOptions = computed(() => {
     if (!appData.activeProject) {
-      return []
+      return [];
     }
     const possibleInstruments = appData.activeProject.instrumentation.filter(
-      instrumentationNumber => instrumentationNumber.voice === 0 && simpleState.instruments.value.find(instrument => instrument.id === instrumentationNumber.instrument.id),
-    )
-    return possibleInstruments.map(instrumentationNumber => instrumentationNumber.instrument)
-  })
+      (instrumentationNumber) => instrumentationNumber.voice === 0 && simpleState.instruments.value.find((instrument) => instrument.id === instrumentationNumber.instrument.id),
+    );
+    return possibleInstruments.map((instrumentationNumber) => instrumentationNumber.instrument);
+  });
 
   // if just one element is selected as "I can play this" then inject
   // it as chosen instrument for the project.
   watch(simpleState.instruments, (newValue, _oldValue) => {
     if (!appData.activeProject || newValue.length !== 1) {
-      return
+      return;
     }
     if (personalProjectInstrumentOptions.value.length === 1
       && personalProjectInstrumentOptions.value[0].id === newValue[0].id) {
-      const projectId = appData.activeProject.id
-      vueSet(simpleState.projects.value[projectId], 'instruments', newValue)
+      const projectId = appData.activeProject.id;
+      simpleState.projects.value[projectId].instruments = newValue;
     }
-  })
+  });
 
   const initializeRegistrationData = async () => {
-    const initialized = simpleState.initialized.value
+    const initialized = simpleState.initialized.value;
     if (!initialized.registration) {
       if (getCurrentUser()) {
-        logger.info('CURRENT USER', getCurrentUser())
-        await initialize()
-        simpleState.firstTimeApplication.value = 'you-know-me'
+        logger.info('CURRENT USER', getCurrentUser());
+        await initialize();
+        simpleState.firstTimeApplication.value = 'you-know-me';
       } else {
-        logger.info('NOT LOGGED IN')
-        simpleState.firstTimeApplication.value = 'first-time'
+        logger.info('NOT LOGGED IN');
+        simpleState.firstTimeApplication.value = 'first-time';
       }
       if (!simpleState.country.value) {
-        simpleState.country.value = appData.displayLocale!.region
+        simpleState.country.value = appData.displayLocale!.region;
       }
       if (initialApplicationData) {
-        const personalProfile = initialApplicationData.personalProfile
+        const personalProfile = initialApplicationData.personalProfile;
         if (!getCurrentUser()) {
-          const guestUser = getGuestUser()
+          const guestUser = getGuestUser();
           guestUser.displayName = (personalProfile.nickName || personalProfile.firstName)
             + ' '
-            + personalProfile.surName
+            + personalProfile.surName;
         }
         for (const key of personalProfileKeys) {
-          simpleState[key].value = initialApplicationData.personalProfile[key]
+          simpleState[key].value = initialApplicationData.personalProfile[key];
         }
       }
-      initialized.registration = true
+      initialized.registration = true;
     }
     if (appData.activeProject) {
       if (!registrationProject.value) {
@@ -389,32 +385,34 @@ export const useMemberDataStore = defineStore('member-data', () => {
           absence: {},
           absenceReasons: {},
           options: {},
-        })
-        vueSet(simpleState.projects.value, appData.activeProject.id, newRegistrationProject)
-        logger.info('REGISTRATION PROJECT', { registrationProject: { ...newRegistrationProject } })
+        });
+        simpleState.projects.value[appData.activeProject.id] = newRegistrationProject;
+        logger.info('REGISTRATION PROJECT', { registrationProject: { ...newRegistrationProject } });
         for (const event of appData.activeProject.projectEvents) {
-          vueSet(newRegistrationProject.absence, event.id, false)
-          vueSet(newRegistrationProject.absenceReasons, event.id, '')
+          newRegistrationProject.absence[event.id] = false;
+          newRegistrationProject.absenceReasons[event.id] = '';
         }
-        const relevantFields = Object.values(appData.activeProject.participantFields).filter((fieldData) => !fieldData.deleted && !(fieldData.absenceEvent > 0))
+        const relevantFields = Object.values(appData.activeProject.participantFields).filter((fieldData) => !fieldData.deleted && !(fieldData.absenceEvent > 0));
         for (const field of relevantFields) {
-          let defaultValue = field.defaultValue
-          if (defaultValue && field.multiplicity === 'simple') {
-            defaultValue = field.dataOptions?.[defaultValue]?.data
+          let defaultValue = field.defaultValue;
+          if (defaultValue) {
+            if (field.multiplicity === 'simple') {
+              defaultValue = field.dataOptions?.[defaultValue]?.data;
+            }
+            newRegistrationProject.options[field.id] = defaultValue;
           }
-          vueSet(newRegistrationProject.options, field.id, defaultValue)
         }
         if (initialApplicationData) {
-          newRegistrationProject.instruments.splice(0, 0, ...initialApplicationData.projectData.instruments)
+          newRegistrationProject.instruments.splice(0, 0, ...initialApplicationData.projectData.instruments);
           for (const outerKey of ['absence', 'absenceReasons', 'options']) {
             for (const [key, value] of Object.entries(initialApplicationData.projectData[outerKey])) {
-              vueSet(newRegistrationProject[outerKey], key, value)
+              newRegistrationProject[outerKey][key] = value;
             }
           }
         }
       }
     }
-  }
+  };
 
   return {
     initialize,
@@ -425,5 +423,5 @@ export const useMemberDataStore = defineStore('member-data', () => {
     noAbsence,
     personalProjectInstrumentOptions,
     personalProfileKeys,
-  }
-})
+  };
+});

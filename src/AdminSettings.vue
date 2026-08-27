@@ -24,7 +24,7 @@
       {{ t(appName, 'CAFeVDB Database Connector, Admin Settings') }}
     </h1>
     <NcSettingsSection :name="t(appName, 'Settings for Registered Members')">
-      <TextField :value.sync="settings.memberRootFolder"
+      <TextField v-model:value="settings.memberRootFolder"
                  :label="t(appName, 'Member-Data Root-Folder')"
                  :hint="t(appName, 'Specify the root folder below which all member-data will be mounted.')"
                  @submit="saveTextInput('memberRootFolder')"
@@ -55,14 +55,14 @@
       >
         {{ t(appName, 'Synchronize Folder-Structure') }}
       </button>
-      <TextField :value.sync="settings.cloudUserViewsDatabase"
+      <TextField v-model:value="settings.cloudUserViewsDatabase"
                  :label="t(appName, 'Personalized Views Database')"
                  :hint="t(appName, 'The name of the data-base which holds the personalized single-row views which contain the data for the currently logged-on user.')"
                  @submit="saveTextInput('cloudUserViewsDatabase')"
       />
     </NcSettingsSection>
     <NcSettingsSection :name="t(appName, 'Project Registration Settings')">
-      <TextField :value.sync="settings.registrationReplyTo"
+      <TextField v-model:value="settings.registrationReplyTo"
                  :label="t(appName, 'Sender and ReplyTo for the registration notification emails.')"
                  :hint="t(appName, `The applicants are notified by email after they have submitted their project application,
 they also receive password-reset emails if they want to review or change their submitted data at a later.
@@ -76,33 +76,35 @@ This is the sender and reply-to email address of these automatically generated e
     </NcSettingsSection>
   </div>
 </template>
+
 <script setup lang="ts">
-import { appName } from './config.ts'
+import type { InitialState } from 'cafevdbmembers'
+
+import axios from '@nextcloud/axios'
+import { showError, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
+import { translate as t } from '@nextcloud/l10n'
+import { generateUrl } from '@nextcloud/router'
 import {
   NcProgressBar,
   NcSettingsSection,
 } from '@nextcloud/vue'
-import TextField from '@rotdrop/nextcloud-vue-components/lib/components/TextFieldWithSubmitButton.vue'
-import { generateUrl } from '@nextcloud/router'
-import { showError, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
-import axios from '@nextcloud/axios'
 import {
   computed,
   reactive,
   ref,
 } from 'vue'
+import TextField from '@rotdrop/nextcloud-vue-components/lib/components/TextFieldWithSubmitButton.vue'
+import { appName } from './config.ts'
+import { isAxiosErrorResponse } from './toolkit/types/axios-type-guards.ts'
+import getInitialState from './toolkit/util/initial-state.ts'
 import {
   fetchSettings,
   saveConfirmedSetting,
 } from './toolkit/util/settings-sync.ts'
-import { translate as t } from '@nextcloud/l10n'
-import { isAxiosErrorResponse } from './toolkit/types/axios-type-guards.ts'
-import getInitialState from './toolkit/util/initial-state.ts'
-import type { InitialState } from 'cafevdbmembers'
 
 interface CloudUserGroup {
-  displayName: string,
-  gid: string,
+  displayName: string
+  gid: string
 }
 
 const initialState = getInitialState<InitialState>()
@@ -182,6 +184,7 @@ const saveTextInput = async (settingsKey: string, value?: string, force?: boolea
 }
 
 </script>
+
 <style lang="scss" scoped>
 .templateroot {
   h1.title {

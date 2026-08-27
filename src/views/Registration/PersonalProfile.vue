@@ -1,5 +1,5 @@
 <!--
- - @copyright Copyright (c) 2023, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ - @copyright Copyright (c) 2023-2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  -
  - @author Claus-Justus Heine <himself@claus-justus-heine.de>
  -
@@ -19,7 +19,7 @@
  - along with this program. If not, see <http://www.gnu.org/licenses/>.
  -->
 <template>
-  <div :class="{ 'icon-loading': loading, 'page-container': true, loading, 'personal-profile-view': true, }">
+  <div class="page-container personal-profile-view" :class="{ 'icon-loading': loading, loading }">
     <h2 v-if="!!registrationData.personalPublicName">
       {{ t(appName, 'Personal Profile of {publicName}', { publicName: registrationData.personalPublicName || '' }) }}
     </h2>
@@ -27,14 +27,14 @@
       {{ t(appName, 'Personal Profile') }}
     </h2>
     <div class="input-row">
-      <InputText :value.sync="registrationData.firstName"
+      <InputText v-model:value="registrationData.firstName"
                  :label="t(appName, 'First Name')"
                  :placeholder="t(appName, 'e.g. Jonathan')"
                  :readonly="readonly"
                  :required="true"
                  @input="updatePublicName"
       />
-      <InputText :value.sync="registrationData.surName"
+      <InputText v-model:value="registrationData.surName"
                  :label="t(appName, 'Sur Name')"
                  :placeholder="t(appName, 'e.g. Smith')"
                  :readonly="readonly"
@@ -43,7 +43,7 @@
       />
     </div>
     <div class="input-row">
-      <InputText :value.sync="registrationData.nickName"
+      <InputText v-model:value="registrationData.nickName"
                  :label="t(appName, 'Nick Name (optional)')"
                  :placeholder="t(appName, 'e.g. Jonny')"
                  :readonly="readonly"
@@ -51,19 +51,19 @@
       />
     </div>
     <div v-show="registrationData.addressSupplement" class="input-row">
-      <InputText :value.sync="registrationData.addressSupplement"
+      <InputText v-model:value="registrationData.addressSupplement"
                  :label="t(appName, 'Address Supplement')"
                  :placeholder="t(appName, 'e.g. c/o Doe')"
                  :readonly="readonly"
       />
     </div>
     <div class="input-row">
-      <InputText :value.sync="registrationData.street"
+      <InputText v-model:value="registrationData.street"
                  :label="t(appName, 'Street')"
                  :placeholder="t(appName, 'e.g. Underhill')"
                  :readonly="readonly"
       />
-      <InputText :value.sync="registrationData.streetNumber"
+      <InputText v-model:value="registrationData.streetNumber"
                  type="number"
                  :label="t(appName, 'Number')"
                  :placeholder="t(appName, 'e.g. 13')"
@@ -71,31 +71,31 @@
       />
     </div>
     <div class="input-row">
-      <InputText :value.sync="registrationData.postalCode"
+      <InputText v-model:value="registrationData.postalCode"
                  type="text"
                  :label="t(appName, 'Postal Code')"
                  :placeholder="t(appName, 'e.g. 4711')"
                  :readonly="readonly"
       />
-      <InputText :value.sync="registrationData.city"
+      <InputText v-model:value="registrationData.city"
                  :label="t(appName, 'City')"
                  :placeholder="t(appName, 'e.g. Bagend')"
                  :readonly="readonly"
       />
     </div>
     <div class="input-row">
-      <InputText :value.sync="registrationCountry"
+      <InputText v-model:value="registrationCountry"
                  type="multiselect"
                  class="country"
                  :label="t(appName, 'Country')"
                  :placeholder="t(appName, 'e.g. The Shire')"
                  :readonly="readonly"
                  :options="countries"
-                 track-by="code"
-                 option-label="name"
+                 trackBy="code"
+                 optionLabel="name"
                  :multiple="false"
       />
-      <InputText :value.sync="registrationData.birthday"
+      <InputText v-model:value="registrationData.birthday"
                  type="date"
                  class="birthday"
                  :label="t(appName, 'Birthday')"
@@ -105,7 +105,7 @@
       />
     </div>
     <div class="input-row">
-      <InputText :value.sync="registrationData.email"
+      <InputText v-model:value="registrationData.email"
                  :label="t(appName, 'Email')"
                  :placeholder="t(appName, 'e.g. me@you.tld')"
                  :readonly="readonly"
@@ -116,38 +116,38 @@
     <div v-if="registrationData.emailAddresses.length > 1"
          class="input-row"
     >
-      <InputText :value.sync="registrationData.emailAddresses"
+      <InputText v-model:value="registrationData.emailAddresses"
                  type="multiselect"
                  :label="t(appName, 'All Email Addresses')"
                  :options="registrationData.emailAddresses"
-                 track-by="address"
-                 option-label="address"
+                 trackBy="address"
+                 optionLabel="address"
                  :readonly="readonly"
                  :multiple="true"
       />
     </div>
     <div class="input-row">
-      <InputText :value.sync="registrationData.mobilePhone"
+      <InputText v-model:value="registrationData.mobilePhone"
                  :label="t(appName, 'Mobile Phone')"
                  :placeholder="t(appName, 'e.g. +12 34 5678 901234')"
                  :readonly="readonly"
       />
-      <InputText :value.sync="registrationData.fixedLinePhone"
+      <InputText v-model:value="registrationData.fixedLinePhone"
                  :label="t(appName, 'Fixed Line Phone')"
                  :placeholder="t(appName, 'e.g. +12 34 5678 901234')"
                  :readonly="readonly"
       />
     </div>
     <div class="input-row">
-      <InputText :value.sync="registrationData.instruments"
+      <InputText v-model:value="registrationData.instruments"
                  type="multiselect"
                  :label="t(appName, 'All my Instruments or Roles')"
                  :options="instruments"
                  :selectable="isNotAnInstrumentFamily"
-                 track-by="id"
-                 option-label="name"
-                 :auto-limit="true"
-                 :tag-width="100"
+                 trackBy="id"
+                 optionLabel="name"
+                 :autoLimit="true"
+                 :tagWidth="100"
                  :readonly="readonly"
                  :multiple="true"
                  :placeholder="t(appName, 'e.g. double bass')"
@@ -155,14 +155,14 @@
       />
     </div>
     <div class="input-row">
-      <NcCheckboxRadioSwitch :checked.sync="registrationData.firstTimeApplication"
+      <NcCheckboxRadioSwitch v-model="registrationData.firstTimeApplication"
                              type="radio"
                              value="first-time"
                              :required="true"
       >
         {{ t(appName, 'First time application') }}
       </NcCheckboxRadioSwitch>
-      <NcCheckboxRadioSwitch :checked.sync="registrationData.firstTimeApplication"
+      <NcCheckboxRadioSwitch v-model="registrationData.firstTimeApplication"
                              type="radio"
                              value="you-know-me"
                              :required="true"
@@ -170,9 +170,9 @@
         {{ t(appName, 'You know me') }}
       </NcCheckboxRadioSwitch>
       <NcRichContenteditable v-if="registrationData.firstTimeApplication === 'first-time'"
-                             :value.sync="registrationData.whoAmI"
+                             v-model="registrationData.whoAmI"
                              :maxlength="1024"
-                             :auto-complete="autoComplete"
+                             :autoComplete="autoComplete"
                              :placeholder="t(appName, 'Please introduce yourself!')"
                              :multiline="true"
                              :required="registrationData.firstTimeApplication === 'first-time'"
@@ -180,24 +180,39 @@
     </div>
     <div class="navigation flex flex-row flex-justify-full">
       <RouterButton :to="routerDestination('registrationHome')"
-                    exact
                     icon="icon-home"
-                    icon-position="left"
+                    iconPosition="left"
       >
         {{ t(appName, 'Registration Start-Page') }}
       </RouterButton>
       <RouterButton :to="routerDestination('registrationParticipation')"
-                    exact
                     icon="icon-confirm"
-                    icon-position="right"
+                    iconPosition="right"
       >
         {{ t(appName, 'next') }}
       </RouterButton>
     </div>
-    <DebugInfo :debug-data="registrationData" />
+    <DebugInfo :debugData="registrationData" />
   </div>
 </template>
+
 <script setup lang="ts">
+import type { Country, Instrument } from '../../stores/appData.ts'
+
+import { translate as t } from '@nextcloud/l10n'
+import {
+  NcCheckboxRadioSwitch,
+  NcRichContenteditable,
+} from '@nextcloud/vue'
+import { storeToRefs } from 'pinia'
+import {
+  onBeforeMount,
+  ref,
+  watch,
+} from 'vue'
+import DebugInfo from '../../components/DebugInfo.vue'
+import InputText from '../../components/InputText.vue'
+import RouterButton from '../../components/RouterButton.vue'
 /*
  * @todo Once personal data has been entered check whether there is
  * already registration data. We should also do some sort of fuzzy
@@ -208,31 +223,17 @@
  * (and can do password recovery).
  */
 import { appName } from '../../config.ts'
-import { translate as t } from '@nextcloud/l10n'
-import InputText from '../../components/InputText.vue'
-import DebugInfo from '../../components/DebugInfo.vue'
-import RouterButton from '../../components/RouterButton.vue'
-import {
-  NcCheckboxRadioSwitch,
-  NcRichContenteditable,
-} from '@nextcloud/vue'
+import { useAppDataStore } from '../../stores/appData.ts'
 import { useMemberDataStore } from '../../stores/memberData.ts'
-import { useAppDataStore } from '../../stores/appData'
-import {
-  ref,
-  onBeforeMount,
-  watch,
-} from 'vue'
-import { storeToRefs } from 'pinia'
-import type { Country, Instrument } from '../../stores/appData.ts'
 
-const props = withDefaults(
-  defineProps<{
-    token?: string,
-  }>(), {
-    token: undefined,
-  },
-)
+// const props = withDefaults(
+//   defineProps<{
+//     token?: string
+//   }>(),
+//   {
+//     token: undefined,
+//   },
+// )
 
 const registrationData = useMemberDataStore()
 const appData = useAppDataStore()
@@ -242,7 +243,7 @@ const {
   activeProject,
   countries,
   instruments,
-  projectName,
+  // projectName,
 } = storeToRefs(appData)
 const isNotAnInstrumentFamily = (option: Instrument) => option.id > 0
 console.info('INSTRUMENTS', instruments)
@@ -264,7 +265,7 @@ onBeforeMount(async () => {
     return
   }
   await registrationData.initializeRegistrationData()
-  registrationCountry.value = countries.value!.find(country => country.code === registrationData.country)
+  registrationCountry.value = countries.value!.find((country) => country.code === registrationData.country)
   readonly.value = false
   loading.value = false
 })
@@ -282,6 +283,7 @@ const autoComplete = (_search: any, callback: (arg: any) => void) => {
   callback(null)
 }
 </script>
+
 <style lang="scss" scoped>
 .page-container {
   padding: 12px 0.5em 0 50px;
@@ -324,7 +326,7 @@ const autoComplete = (_search: any, callback: (arg: any) => void) => {
       min-width:210px;
     }
   }
-  ::v-deep .input-effect {
+  :deep(.input-effect) {
     margin-bottom:0;
   }
 }

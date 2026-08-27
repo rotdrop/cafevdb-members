@@ -1,5 +1,5 @@
 /**
- * @copyright Copyright (c) 2023, 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright Copyright (c) 2022, 2023, 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
  *
@@ -19,19 +19,21 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export * from './webpack-setup.ts';
-import Tooltip from '@rotdrop/nextcloud-vue-components/lib/directives/Tooltip';
-import { createPinia } from 'pinia';
-import { createApp } from 'vue';
-import ProjectRegistation from './ProjectRegistration.vue';
-import router from './router/app-router.ts';
+import { getRequestToken, onRequestTokenUpdate } from '@nextcloud/auth';
+import { generateFilePath } from '@nextcloud/router';
+import { appName } from './config.ts';
 
-const pinia = createPinia();
+declare global {
+  var __webpack_public_path__: string;
+  var __webpack_nonce__: string;
+}
 
-const app = createApp(ProjectRegistation);
-app.directive('tooltip', Tooltip);
-app.use(router);
-app.use(pinia);
-app.mount('#content');
+__webpack_public_path__ = generateFilePath(appName, '', '');
+__webpack_nonce__ = btoa(getRequestToken() || '');
 
-export default app;
+// this may not be necessary as the actual secret value does not change
+onRequestTokenUpdate(function(token) {
+  __webpack_nonce__ = btoa(token);
+});
+
+export {};

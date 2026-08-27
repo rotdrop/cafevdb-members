@@ -1,5 +1,5 @@
 <!--
- - @copyright Copyright (c) 2022-2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ - @copyright Copyright (c) 2022-2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  -
  - @author Claus-Justus Heine <himself@claus-justus-heine.de>
  -
@@ -20,7 +20,7 @@
  -
  -->
 <template>
-  <div :class="{ 'icon-loading': loading, 'page-container': true, loading, }">
+  <div class="page-container" :class="{ 'icon-loading': loading, loading }">
     <h2>
       {{ t(appId, 'Project-Participation of {publicName}', { publicName: memberData.personalPublicName }) }}
     </h2>
@@ -29,7 +29,7 @@
                   :key="participant.project.id"
                   :name="participant.project.name"
                   :bold="true"
-                  :force-display-actions="true"
+                  :forceDisplayActions="true"
       >
         <template #actions>
           <NcActionButton @click="requestProjectDetails(participant)">
@@ -41,42 +41,48 @@
         </template>
       </NcListItem>
     </ul>
-    <DebugInfo :debug-data="memberData" />
+    <DebugInfo :debugData="memberData" />
   </div>
 </template>
+
 <script setup lang="ts">
-import { appName as appId } from '../config.ts'
+import type { ViewDetailsEventData } from '../App.vue'
+import type { ProjectParticipant } from '../stores/memberData.ts'
+
+import axios from '@nextcloud/axios'
+import { showError, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
 import { translate as t } from '@nextcloud/l10n'
-import DebugInfo from '../components/DebugInfo.vue'
 import {
   NcActionButton,
   NcListItem,
 } from '@nextcloud/vue'
-import InfoIcon from 'vue-material-design-icons/InformationVariant.vue'
-import generateAppUrl from '../toolkit/util/generate-url.ts'
-import { showError, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
-import axios from '@nextcloud/axios'
+import { storeToRefs } from 'pinia'
 import {
   onBeforeMount,
   ref,
 } from 'vue'
+import InfoIcon from 'vue-material-design-icons/InformationVariant.vue'
+import DebugInfo from '../components/DebugInfo.vue'
+import { appName as appId } from '../config.ts'
 import { useAppDataStore } from '../stores/appData.ts'
 import { useMemberDataStore } from '../stores/memberData.ts'
-import { storeToRefs } from 'pinia'
-import { isAxiosErrorResponse } from '../toolkit/types/axios-type-guards'
-import type { ProjectParticipant } from '../stores/memberData.ts'
+import { isAxiosErrorResponse } from '../toolkit/types/axios-type-guards.ts'
+import generateAppUrl from '../toolkit/util/generate-url.ts'
 
-const emit = defineEmits(['view-details'])
+const viewName = 'Projects'
+
+// eslint-disable-next-line vue/define-macros-order
+const emit = defineEmits<{
+  viewDetails: [data: ViewDetailsEventData<typeof viewName>]
+}>()
 
 const loading = ref(false)
 const { memberRootFolder } = storeToRefs(useAppDataStore())
 
 const memberData = useMemberDataStore()
 
-const viewName = 'Projects'
-
 const requestProjectDetails = (participant: ProjectParticipant) => {
-  emit('view-details', {
+  emit('viewDetails', {
     viewName,
     title: participant.project.name,
     props: {
@@ -111,6 +117,7 @@ onBeforeMount(async () => {
   loading.value = false
 })
 </script>
+
 <style lang="scss" scoped>
 .page-container {
   padding-left:50px;

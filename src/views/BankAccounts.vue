@@ -19,11 +19,11 @@
  - along with this program. If not, see <http://www.gnu.org/licenses/>.
  -->
 <template>
-  <div :class="{ 'icon-loading': loading, 'page-container': true, loading, }">
+  <div class="page-container" :class="{ 'icon-loading': loading, loading }">
     <h2>
       {{ t(appId, 'Bank Accounts of {publicName} ({count})', { publicName: memberData.personalPublicName, count: showDeleted ? memberData.sepaBankAccounts.length : numActiveBankAccounts }) }}
     </h2>
-    <NcCheckboxRadioSwitch v-if="haveDeleted" :checked.sync="showDeleted">
+    <NcCheckboxRadioSwitch v-if="haveDeleted" v-model="showDeleted">
       {{ t(appId, 'show deleted') }}
     </NcCheckboxRadioSwitch>
     <div v-if="memberData.sepaBankAccounts.length === 0">
@@ -49,7 +49,7 @@
             <NcListItem v-if="account.updated" :name="t(appId, 'modified')" :details="formatDate(account.updated)" />
             <NcListItem v-if="account.deleted" :name="t(appId, 'revoked')" :details="formatDate(account.deleted)" />
             <NcListItem v-if="(showDeleted && account.sepaDebitMandates) || (!showDeleted && account.numActiveDebitMandates > 0)"
-                        :name="t(appId, 'Debit Mandates ({count})', { count: showDeleted ? account.sepaDebitMandates.length : account.numActiveDebitMandates, })"
+                        :name="t(appId, 'Debit Mandates ({count})', { count: showDeleted ? account.sepaDebitMandates.length : account.numActiveDebitMandates })"
             >
               <template #subname>
                 <ul v-for="mandate in account.sepaDebitMandates"
@@ -76,23 +76,24 @@
         </template>
       </NcListItem>
     </ul>
-    <DebugInfo :debug-data="memberData" />
+    <DebugInfo :debugData="memberData" />
   </div>
 </template>
+
 <script setup lang="ts">
-import { appName as appId } from '../config.ts'
 import { translate as t } from '@nextcloud/l10n'
-import DebugInfo from '../components/DebugInfo.vue'
 import {
   NcCheckboxRadioSwitch,
   NcListItem,
 } from '@nextcloud/vue'
-import formatDate from '../util/formatDate.ts'
-import { useMemberDataStore } from '../stores/memberData.ts'
 import {
-  ref,
   onBeforeMount,
+  ref,
 } from 'vue'
+import DebugInfo from '../components/DebugInfo.vue'
+import { appName as appId } from '../config.ts'
+import { useMemberDataStore } from '../stores/memberData.ts'
+import formatDate from '../util/formatDate.ts'
 
 const viewName = 'BankAccounts'
 
@@ -109,7 +110,7 @@ onBeforeMount(async () => {
   if (memberData.initialized.loaded && !memberData.initialized[viewName]) {
     memberData.sepaBankAccounts.forEach((account, _index) => {
       // memberData.sepaBankAccounts[index].numDeletedDebitMandates = account.sepaDebitMandates.filter(mandate => !!account.deleted).length
-      account.numDeletedDebitMandates = account.sepaDebitMandates.filter(mandate => !!mandate.deleted).length
+      account.numDeletedDebitMandates = account.sepaDebitMandates.filter((mandate) => !!mandate.deleted).length
       account.numActiveDebitMandates = account.sepaDebitMandates.length - account.numDeletedDebitMandates
     })
     memberData.initialized[viewName] = true
@@ -117,7 +118,7 @@ onBeforeMount(async () => {
 
   if (memberData.initialized[viewName]) {
     // @todo: why are the following things not just "computed"
-    numDeletedBankAccounts.value = memberData.sepaBankAccounts.filter(account => !!account.deleted).length
+    numDeletedBankAccounts.value = memberData.sepaBankAccounts.filter((account) => !!account.deleted).length
     haveDeleted.value = numDeletedBankAccounts.value > 0
     numActiveBankAccounts.value = memberData.sepaBankAccounts.length - numDeletedBankAccounts.value
     memberData.sepaBankAccounts.forEach((account, _index) => {
@@ -127,6 +128,7 @@ onBeforeMount(async () => {
   loading.value = false
 })
 </script>
+
 <style lang="scss" scoped>
 .page-container {
   padding-left:50px;

@@ -1,5 +1,5 @@
 <!--
- - @copyright Copyright (c) 2022-2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ - @copyright Copyright (c) 2022-2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  -
  - @author Claus-Justus Heine <himself@claus-justus-heine.de>
  -
@@ -20,23 +20,24 @@
  -->
 <template>
   <NcSettingsSection :name="t(appName, 'CAFeVDB Database Connector, Personal Settings')">
-    <TextField :id="'test-input'"
-               :value.sync="settings.inputTest"
+    <TextField id="test-input"
+               v-model="settings.inputTest"
                :label="t(appName, 'Test Input')"
                :hint="t(appName, 'Test Hint')"
                @submit="saveTextInput('inputTest')"
     />
   </NcSettingsSection>
 </template>
+
 <script setup lang="ts">
-import { appName } from './config.ts'
 import {
   NcSettingsSection,
 } from '@nextcloud/vue'
-import TextField from '@rotdrop/nextcloud-vue-components/lib/components/TextFieldWithSubmitButton.vue'
 import {
   reactive,
 } from 'vue'
+import TextField from '@rotdrop/nextcloud-vue-components/lib/components/TextFieldWithSubmitButton.vue'
+import { appName } from './config.ts'
 import {
   fetchSettings,
   saveConfirmedSetting,
@@ -58,9 +59,10 @@ const saveTextInput = async (settingsKey: string, value?: string, force?: boolea
   return saveConfirmedSetting({ value, section: 'personal', settingsKey, force, settings })
 }
 </script>
+
 <style lang="scss" scoped>
 .settings-section {
-  ::v-deep &__name {
+  :deep(&__name) {
     padding-left:60px;
     background-image:url('../img/cafevdbmembers.svg');
     background-repeat:no-repeat;

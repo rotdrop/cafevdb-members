@@ -1,5 +1,5 @@
 <!--
- - @copyright Copyright (c) 2022, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ - @copyright Copyright (c) 2022, 2024-2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  -
  - @author Claus-Justus Heine <himself@claus-justus-heine.de>
  -
@@ -20,7 +20,7 @@
  -->
 <template>
   <div v-if="debug" class="debug-container">
-    <NcCheckboxRadioSwitch :checked.sync="debug">
+    <NcCheckboxRadioSwitch v-model="debug">
       {{ t(appId, 'Enable Debug') }}
     </NcCheckboxRadioSwitch>
     <div class="debug">
@@ -29,14 +29,15 @@
     </div>
   </div>
 </template>
+
 <script setup lang="ts">
-import { appName as appId } from '../config.ts'
 import { translate as t } from '@nextcloud/l10n'
 import { NcCheckboxRadioSwitch } from '@nextcloud/vue'
-import { useAppDataStore } from '../stores/appData.ts'
 import { storeToRefs } from 'pinia'
+import { appName as appId } from '../config.ts'
+import { useAppDataStore } from '../stores/appData.ts'
 
-const props = withDefaults(defineProps<{
+withDefaults(defineProps<{
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   debugData?: Record<string, any>
 }>(), {
@@ -70,6 +71,7 @@ const stringify = (data: typeof props.debugData) => {
   }
 }
 </script>
+
 <style lang="scss" scoped>
 .debug-container {
   width:100%;

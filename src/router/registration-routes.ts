@@ -1,5 +1,5 @@
 /**
- * @copyright Copyright (c) 2022-2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright Copyright (c) 2022-2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
  *
@@ -19,48 +19,49 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { joinLiterals } from '../toolkit/util/string-literals.ts'
+import type { RouteRecordRaw } from 'vue-router';
 
-const prefix = '/registration'
+const prefix = '/registration';
 
-const projectNameParameter = '/:projectName([A-Z]\\w+\\d{4})?'
-const tokenParameter = '/:token([0-9a-f]{64})?'
-const urlParameters = joinLiterals('')(projectNameParameter, tokenParameter)
+const projectNameParameter = '/:projectName([A-Z]\\w+\\d{4})?' as const;
+const tokenParameter = '/:token([0-9a-f]{64})?' as const;
+const urlParameters = `${projectNameParameter}${tokenParameter}` as const;
 
-const routes = [
+const routes: RouteRecordRaw[] = [
   {
-    path: joinLiterals('')(prefix, urlParameters),
+    path: `${prefix}${urlParameters}`,
+    component: () => import('../views/RegistrationStart.vue'),
     name: 'registrationHome' as const,
     props: true,
   },
   {
-    path: joinLiterals('')(prefix, '/personal-profile', urlParameters),
+    path: `${prefix}${'/personal-profile'}${urlParameters}`,
     component: () => import('../views/Registration/PersonalProfile.vue'),
     name: 'registrationPersonalProfile' as const,
     props: true,
   },
   {
-    path: joinLiterals('')(prefix, '/participation', urlParameters),
+    path: `${prefix}${'/participation'}${urlParameters}`,
     component: () => import('../views/Registration/Participation.vue'),
     name: 'registrationParticipation' as const,
     props: true,
   },
   {
-    path: joinLiterals('')(prefix, '/project-options', urlParameters),
+    path: `${prefix}${'/project-options'}${urlParameters}`,
     component: () => import('../views/Registration/ProjectOptions.vue'),
     name: 'registrationProjectOptions' as const,
     props: true,
   },
   {
-    path: joinLiterals('')(prefix, '/submission', urlParameters),
+    path: `${prefix}${'/submission'}${urlParameters}`,
     component: () => import('../views/Registration/Submission.vue'),
     name: 'registrationSubmission' as const,
     props: true,
   },
-] as const
+] as const;
 
 export {
   prefix,
-}
+};
 
-export default routes
+export default routes;

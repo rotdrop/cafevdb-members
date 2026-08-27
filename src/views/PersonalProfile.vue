@@ -1,5 +1,5 @@
 <!--
- - @copyright Copyright (c) 2022-2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ - @copyright Copyright (c) 2022-2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  -
  - @author Claus-Justus Heine <himself@claus-justus-heine.de>
  -
@@ -19,7 +19,7 @@
  - along with this program. If not, see <http://www.gnu.org/licenses/>.
  -->
 <template>
-  <div :class="{ 'icon-loading': loading, 'page-container': true, loading, }">
+  <div class="page-container" :class="{ 'icon-loading': loading, loading }">
     <h2>{{ t(appId, 'Personal Profile of {publicName}', { publicName: memberData.personalPublicName }) }}</h2>
     <div class="input-row">
       <InputText v-model="memberData.firstName"
@@ -103,8 +103,8 @@
                  type="multiselect"
                  :label="t(appId, 'All Email Addresses')"
                  :options="memberData.emailAddresses"
-                 track-by="address"
-                 option-label="address"
+                 trackBy="address"
+                 optionLabel="address"
                  :readonly="readonly"
                  :multiple="true"
       />
@@ -126,28 +126,29 @@
                  type="multiselect"
                  :label="t(appId, 'Instruments')"
                  :options="instruments"
-                 track-by="id"
-                 option-label="name"
+                 trackBy="id"
+                 optionLabel="name"
                  :readonly="readonly"
                  :multiple="true"
       />
     </div>
-    <DebugInfo :debug-data="memberData" />
+    <DebugInfo :debugData="memberData" />
   </div>
 </template>
+
 <script setup lang="ts">
-import { appName as appId } from '../config.ts'
 import { translate as t } from '@nextcloud/l10n'
-import InputText from '../components/InputText.vue'
-import DebugInfo from '../components/DebugInfo.vue'
-import { useMemberDataStore } from '../stores/memberData.ts'
-import { useAppDataStore } from '../stores/appData.ts'
+import { storeToRefs } from 'pinia'
 import {
   computed,
   onBeforeMount,
   ref,
 } from 'vue'
-import { storeToRefs } from 'pinia'
+import DebugInfo from '../components/DebugInfo.vue'
+import InputText from '../components/InputText.vue'
+import { appName as appId } from '../config.ts'
+import { useAppDataStore } from '../stores/appData.ts'
+import { useMemberDataStore } from '../stores/memberData.ts'
 
 const viewName = 'PersonalProfile'
 
@@ -165,6 +166,7 @@ onBeforeMount(async () => {
   loading.value = false
 })
 </script>
+
 <style lang="scss" scoped>
 .page-container {
   padding-left:50px;
@@ -194,7 +196,7 @@ onBeforeMount(async () => {
       min-width:210px;
     }
   }
-  ::v-deep .input-effect {
+  :deep(.input-effect) {
     margin-bottom:0;
   }
 }

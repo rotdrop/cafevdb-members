@@ -1,5 +1,5 @@
 <!--
- - @copyright Copyright (c) 2022-2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ - @copyright Copyright (c) 2022-2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  -
  - @author Claus-Justus Heine <himself@claus-justus-heine.de>
  -
@@ -19,9 +19,9 @@
  - along with this program. If not, see <http://www.gnu.org/licenses/>.
  -->
 <template>
-  <div :class="{ 'icon-loading': loading, 'page-container': true, loading, }">
+  <div class="page-container" :class="{ 'icon-loading': loading, loading }">
     <h2>{{ t(appId, 'Instrument Insurances of {publicName}', {publicName: memberData.personalPublicName }) }}</h2>
-    <NcCheckboxRadioSwitch v-if="haveDeleted" :checked.sync="showDeleted">
+    <NcCheckboxRadioSwitch v-if="haveDeleted" v-model="showDeleted">
       {{ t(appId, 'show deleted') }}
     </NcCheckboxRadioSwitch>
     <div v-if="memberData.instrumentInsurances.length === 0">
@@ -44,11 +44,11 @@
             <NcListItem :name="t(appId, 'Yearly Insurance fees w/o taxes')"
                         :details="totalPayableFees.toFixed(2) + ' ' + currencySymbol"
             />
-            <NcListItem :name="t(appId, 'Yearly Insurance fees with {taxes}% taxes', { taxes: taxRate*100.0 })"
+            <NcListItem :name="t(appId, 'Yearly Insurance fees with {taxes}% taxes', { taxes: taxRate * 100.0 })"
                         :details="(totalPayableFees * (1.0 + taxRate)).toFixed(2) + ' ' + currencySymbol"
             />
             <NcListItem :name="t(appId, 'Yearly Insurance Bills')"
-                        :force-display-actions="true"
+                        :forceDisplayActions="true"
             >
               <template #actions>
                 <NcActionLink v-for="receivable in insuranceBills"
@@ -146,43 +146,49 @@
         </template>
       </NcListItem>
     </ul>
-    <DebugInfo :debug-data="memberData" />
+    <DebugInfo :debugData="memberData" />
   </div>
 </template>
+
 <script setup lang="ts">
-import { appName as appId } from '../config.ts'
-import { translate as t } from '@nextcloud/l10n'
-import {
-  ref,
-  computed,
-  set as vueSet,
-  onBeforeMount,
-} from 'vue'
-import DebugInfo from '../components/DebugInfo.vue'
-import {
-  NcActions,
-  NcActionLink,
-  NcActionButton,
-  NcCheckboxRadioSwitch,
-  NcListItem,
-} from '@nextcloud/vue'
-import generateAppUrl from '../toolkit/util/generate-url.ts'
-import getInitialState from '../toolkit/util/initial-state.ts'
-import { getRequestToken } from '@nextcloud/auth'
-import { useMemberDataStore } from '../stores/memberData.ts'
-import IconInfo from 'vue-material-design-icons/InformationVariant.vue'
-import IconDownload from 'vue-material-design-icons/Download.vue'
-import logger from '../logger.ts'
+import type { InitialState } from 'cafevdbmembers'
+import type { ViewDetailsEventData } from '../App.vue'
 import type {
   InstrumentInsurance,
   Receivable,
 } from '../stores/memberData.ts'
 
-const initialState = getInitialState()
+import { getRequestToken } from '@nextcloud/auth'
+import { translate as t } from '@nextcloud/l10n'
+import {
+  NcActionButton,
+  NcActionLink,
+  NcActions,
+  NcCheckboxRadioSwitch,
+  NcListItem,
+} from '@nextcloud/vue'
+import {
+  computed,
+  onBeforeMount,
+  ref,
+} from 'vue'
+import IconDownload from 'vue-material-design-icons/Download.vue'
+import IconInfo from 'vue-material-design-icons/InformationVariant.vue'
+import DebugInfo from '../components/DebugInfo.vue'
+import { appName as appId } from '../config.ts'
+import logger from '../logger.ts'
+import { useMemberDataStore } from '../stores/memberData.ts'
+import generateAppUrl from '../toolkit/util/generate-url.ts'
+import getInitialState from '../toolkit/util/initial-state.ts'
 
-const viewName = 'InstrumentInsurances'
+const viewName = 'InstrumentInsurances' as const
 
-const emit = defineEmits(['view-details'])
+// eslint-disable-next-line vue/define-macros-order
+const emit = defineEmits<{
+  viewDetails: [data: ViewDetailsEventData<typeof viewName>]
+}>()
+
+const initialState = getInitialState<InitialState>()!
 
 const memberData = useMemberDataStore()
 
@@ -200,14 +206,14 @@ const haveDeleted = ref(false)
 const haveOthers = ref(false)
 
 const insuranceBills = computed(
-  () => memberData.insuranceDetails.receivables.filter(x => x.supportingDocumentId),
+  () => memberData.insuranceDetails.receivables.filter((x) => x.supportingDocumentId),
 )
 
 const optionDownloadUrl = (key: string) =>
   generateAppUrl('download/member/' + key + '?requesttoken=' + encodeURIComponent(getRequestToken() || ''))
 
 const requestInsuranceDetails = (insurance: InstrumentInsurance) => {
-  emit('view-details', {
+  emit('viewDetails', {
     viewName,
     title: t(appId, '{insuredObject} ({insuredValue} {currencySymbol})', {
       insuredObject: insurance.object,
@@ -242,9 +248,9 @@ onBeforeMount(async () => {
         insurancesByOthers.push(insurance)
       }
     }
-    vueSet(memberData.insuranceDetails, 'forOthers', insurancesForOthers)
-    vueSet(memberData.insuranceDetails, 'byOthers', insurancesByOthers)
-    vueSet(memberData.insuranceDetails, 'self', ownInsurances)
+    memberData.insuranceDetails.forOthers = insurancesForOthers
+    memberData.insuranceDetails.byOthers = insurancesByOthers
+    memberData.insuranceDetails.self = ownInsurances
 
     const insuranceReceivables: Receivable[] = []
     for (const participant of memberData.projectParticipation) {
@@ -267,7 +273,7 @@ onBeforeMount(async () => {
     }
     insuranceReceivables.sort((left, right) => -parseInt(left.dataOption.data) + parseInt(right.dataOption.data))
 
-    vueSet(memberData.insuranceDetails, 'receivables', insuranceReceivables)
+    memberData.insuranceDetails.receivables = insuranceReceivables
 
     memberData.initialized[viewName] = true
   }
@@ -300,6 +306,7 @@ onBeforeMount(async () => {
   logger.info('INSURANCE MEMBER DATA', { memberData })
 })
 </script>
+
 <style lang="scss" scoped>
 .page-container {
   padding-left:50px;
@@ -315,13 +322,13 @@ onBeforeMount(async () => {
 
 .insurance-sections {
   min-width:32rem;
-  ::v-deep > li:not(.summary) > .list-item {
+  :deep(&) > li:not(.summary) > .list-item {
     &:hover, &:focus {
       background-color:inherit;
     }
   }
 
-  ::v-deep {
+  :deep(&) {
     .list-item {
       padding-right: 0;
       ul .list-item {

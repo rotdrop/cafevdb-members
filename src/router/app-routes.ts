@@ -1,5 +1,5 @@
 /**
- * @copyright Copyright (c) 2022, 2023, 2025, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright Copyright (c) 2022, 2023, 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
  *
@@ -19,14 +19,17 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { appName } from '../config.ts'
-import { translate as t } from '@nextcloud/l10n'
-import Router from 'vue-router'
+import type { RouteRecordRaw } from 'vue-router';
 
-const routes = [
+import { translate as t } from '@nextcloud/l10n';
+import { appName } from '../config.ts';
+
+const routes: RouteRecordRaw[] = [
   {
     path: '/',
-    props: (_router: Router) => ({
+    name: 'home',
+    component: () => import('../views/StartPage.vue'),
+    props: (_to) => ({
       rootTitle: t(appName, 'Home'),
     }),
   },
@@ -34,7 +37,7 @@ const routes = [
     path: '/f/personalProfile',
     component: () => import('../views/PersonalProfile.vue'),
     name: 'personalProfile',
-    props: (_router: Router) => ({
+    props: (_to) => ({
       rootTitle: t(appName, 'Personal Profile'),
     }),
   },
@@ -42,7 +45,7 @@ const routes = [
     path: '/f/bankAccounts',
     component: () => import('../views/BankAccounts.vue'),
     name: 'bankAccounts',
-    props: (_router: Router) => ({
+    props: (_to) => ({
       rootTitle: t(appName, 'Bank Accounts'),
     }),
   },
@@ -50,7 +53,7 @@ const routes = [
     path: '/f/instrumentInsurances',
     component: () => import('../views/InstrumentInsurances.vue'),
     name: 'instrumentInsurances',
-    props: (_router: Router) => ({
+    props: (_to) => ({
       rootTitle: t(appName, 'Instrument Insurances'),
     }),
   },
@@ -58,10 +61,10 @@ const routes = [
     path: '/f/projects',
     component: () => import('../views/Projects.vue'),
     name: 'projects',
-    props: (_router: Router) => ({
+    props: (_to) => ({
       rootTitle: t(appName, 'Projects'),
     }),
   },
-]
+];
 
-export default routes
+export default routes;

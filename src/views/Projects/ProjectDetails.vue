@@ -1,5 +1,5 @@
 <!--
- - @copyright Copyright (c) 2022-2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ - @copyright Copyright (c) 2022-2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  -
  - @author Claus-Justus Heine <himself@claus-justus-heine.de>
  -
@@ -50,23 +50,25 @@
     </NcListItem>
   </ul>
 </template>
+
 <script setup lang="ts">
-import { appName as appId } from '../../config.ts'
+import type {
+  Project,
+} from '../../stores/appData.ts'
+import type {
+  ProjectParticipant,
+} from '../../stores/memberData.ts'
+
 import { translate as t } from '@nextcloud/l10n'
 import { generateUrl } from '@nextcloud/router'
 import { NcListItem } from '@nextcloud/vue'
 import { md5 } from 'js-md5'
+import { appName as appId } from '../../config.ts'
 import logger from '../../logger.ts'
-import type {
-  ProjectParticipant,
-} from '../../stores/memberData.ts'
-import type {
-  Project,
-} from '../../stores/appData.ts'
 
 const props = defineProps<{
-  participant: ProjectParticipant,
-  memberRootFolder: string,
+  participant: ProjectParticipant
+  memberRootFolder: string
 }>()
 
 logger.info('PROPS', { props })
@@ -88,9 +90,10 @@ const projectPathUrl = (project: Project) => {
   return generateUrl('apps/files') + '?dir=' + path
 }
 </script>
+
 <style lang="scss" scoped>
 .project-details {
-  ::v-deep {
+  :deep() {
     .list-item {
       padding-right: 0;
       ul .list-item {

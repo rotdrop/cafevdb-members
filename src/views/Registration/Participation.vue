@@ -1,5 +1,5 @@
 <!--
- - @copyright Copyright (c) 2023, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ - @copyright Copyright (c) 2023-2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  -
  - @author Claus-Justus Heine <himself@claus-justus-heine.de>
  -
@@ -19,7 +19,7 @@
  - along with this program. If not, see <http://www.gnu.org/licenses/>.
  -->
 <template>
-  <div :class="{ 'icon-loading': loading, 'page-container': true, loading, 'participation-view': true, }">
+  <div class="page-container participation-view" :class="{ 'icon-loading': loading, loading }">
     <h2>
       {{ t(appName, 'Instrumentation, Rehearsals and Concerts for "{name}"', { name: activeProject?.name || '' }) }}
     </h2>
@@ -32,12 +32,12 @@
                    type="multiselect"
                    :label="t(appName, 'All my Instruments or Roles')"
                    :options="instruments"
-                   group-values="instruments"
-                   group-label="family"
-                   track-by="id"
-                   option-label="name"
-                   :auto-limit="true"
-                   :tag-width="100"
+                   groupValues="instruments"
+                   groupLabel="family"
+                   trackBy="id"
+                   optionLabel="name"
+                   :autoLimit="true"
+                   :tagWidth="100"
                    :readonly="readonly"
                    :multiple="true"
                    :placeholder="t(appName, 'e.g. double bass')"
@@ -49,10 +49,10 @@
                    type="multiselect"
                    :label="t(appName, 'Project Instruments or Roles')"
                    :options="personalProjectInstrumentOptions"
-                   track-by="id"
-                   option-label="name"
-                   :auto-limit="true"
-                   :tag-width="100"
+                   trackBy="id"
+                   optionLabel="name"
+                   :autoLimit="true"
+                   :tagWidth="100"
                    :readonly="readonly"
                    :multiple="true"
                    :placeholder="t(appName, 'e.g. double bass')"
@@ -67,7 +67,7 @@
         <h3>
           {{ t(appName, 'Timetable') }}
         </h3>
-        <NcCheckboxRadioSwitch :checked.sync="noAbsenceCheck" :disabled="!noAbsence">
+        <NcCheckboxRadioSwitch v-model="noAbsenceCheck" :disabled="!noAbsence">
           {{ t(appName, 'I will participate in all events and not miss a single one!') }}
         </NcCheckboxRadioSwitch>
         <div v-if="!noAbsenceCheck"
@@ -83,7 +83,7 @@
                       :key="event.id"
                       :ref="(el) => addEventItemRef(el, event.id)"
                       :name="event.calendarObject.summary"
-                      :force-display-actions="true"
+                      :forceDisplayActions="true"
                       class="calendar-event"
           >
             <template #subname>
@@ -91,15 +91,15 @@
               <span v-if="event.calendarObject.location" class="event-location">{{ ', ' + t(appName, 'location: {location}', { location: event.calendarObject.location }) }}</span>
             </template>
             <template v-if="registrationProject?.absence[event.id]" #indicator>
-              <AbsenceIndicator :size="24" fill-color="#ff0000" />
+              <AbsenceIndicator :size="24" fillColor="#ff0000" />
             </template>
             <template v-if="!noAbsenceCheck && event.absenceField > 0" #actions>
               <NcActionCheckbox v-model="registrationProject.absence[event.id]">
                 {{ t(appName, 'I cannot participate') }}
               </NcActionCheckbox>
               <NcActionTextEditable v-if="registrationProject.absence[event.id]"
-                                    :model-value.sync="registrationProject.absenceReasons[event.id]"
-                                    :name="t(appName, '... because ...')"
+                                    v-model:modelValue="registrationProject.absenceReasons[event.id]"
+                                    :name="t(appName, '… because …')"
                                     required
                                     @submit="submitAbsenceReason($event, event.id)"
               >
@@ -113,7 +113,7 @@
                 {{ event.calendarObject.description }}
               </div>
               <div v-if="registrationProject.absence[event.id]" class="absence-reason">
-                <span class="absence-reason-intro">{{ t(appName, 'I cannot participate because ...') }}</span>
+                <span class="absence-reason-intro">{{ t(appName, 'I cannot participate because …') }}</span>
                 <NcTextArea v-model="registrationProject.absenceReasons[event.id]"
                             class="absence-reason-text"
                 />
@@ -125,62 +125,65 @@
     </div>
     <div class="navigation flex flex-row flex-justify-full">
       <RouterButton :to="routerDestination('registrationPersonalProfile')"
-                    exact
                     icon="icon-history"
-                    icon-position="left"
+                    iconPosition="left"
       >
         {{ t(appName, 'back') }}
       </RouterButton>
       <RouterButton :to="routerDestination('registrationProjectOptions')"
-                    exact
                     icon="icon-confirm"
-                    icon-position="right"
+                    iconPosition="right"
       >
         {{ t(appName, 'next') }}
       </RouterButton>
     </div>
   </div>
 </template>
+
 <script setup lang="ts">
-import { appName } from '../../config.ts'
+import type {
+  NcActions,
+} from '@nextcloud/vue'
+import type Vue from 'vue'
+import type { CalendarObject } from '../../stores/appData.ts'
+
 import {
-  translate as t,
   getCanonicalLocale,
+  translate as t,
 } from '@nextcloud/l10n'
-import Pencil from 'vue-material-design-icons/Pencil.vue'
-import AbsenceIndicator from 'vue-material-design-icons/AlertOctagon.vue'
-import InputText from '../../components/InputText.vue'
-import RouterButton from '../../components/RouterButton.vue'
 import {
   NcActionCheckbox,
   NcActionTextEditable,
-  NcActions,
   NcCheckboxRadioSwitch,
   NcListItem,
   NcTextArea,
 } from '@nextcloud/vue'
-import { useMemberDataStore } from '../../stores/memberData.ts'
-import { useAppDataStore } from '../../stores/appData'
+import { storeToRefs } from 'pinia'
 import {
   getCurrentInstance,
   onBeforeMount,
   onMounted,
   ref,
 } from 'vue'
-import type Vue from 'vue'
-import { storeToRefs } from 'pinia'
-import type { CalendarObject } from '../../stores/appData.ts'
+import AbsenceIndicator from 'vue-material-design-icons/AlertOctagon.vue'
+import Pencil from 'vue-material-design-icons/Pencil.vue'
+import InputText from '../../components/InputText.vue'
+import RouterButton from '../../components/RouterButton.vue'
+import { appName } from '../../config.ts'
 import logger from '../../logger.ts'
+import { useAppDataStore } from '../../stores/appData.ts'
+import { useMemberDataStore } from '../../stores/memberData.ts'
+
+// const props = withDefaults(
+//   defineProps<{
+//     token?: string
+//   }>(),
+//   {
+//     token: undefined,
+//   },
+// )
 
 logger.info('Participation')
-
-const props = withDefaults(
-  defineProps<{
-    token?: string,
-  }>(), {
-    token: undefined,
-  },
-)
 
 const registrationData = useMemberDataStore()
 const appData = useAppDataStore()
@@ -196,7 +199,7 @@ const {
   activeProject,
   instruments,
   projectInstrumentsText,
-  projectName,
+  // projectName,
 } = storeToRefs(appData)
 const {
   noAbsence,
@@ -279,6 +282,7 @@ const calendarDateTime = (calendarEvent: CalendarObject) => {
   }
 }
 </script>
+
 <style lang="scss" scoped>
 .page-container {
   padding: 12px 0.5em 0 50px;
@@ -321,7 +325,7 @@ const calendarDateTime = (calendarEvent: CalendarObject) => {
       min-width:210px;
     }
   }
-  ::v-deep .input-effect {
+  :deep(.input-effect) {
     margin-bottom:0;
   }
 }
@@ -332,7 +336,7 @@ const calendarDateTime = (calendarEvent: CalendarObject) => {
 }
 
 .event-list {
-  ::v-deep .list-item {
+  :deep(.list-item) {
     flex-wrap: wrap;
     .list-item__extra {
       width: 100%;

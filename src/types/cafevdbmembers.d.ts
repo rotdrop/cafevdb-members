@@ -21,10 +21,10 @@
 
 declare module 'cafevdbmembers' {
   export interface InitialState {
-    orchestraAppName: string,
-    orchestraName?: string,
-    orchestraLocale: string,
-    currencySymbol: string,
-    currencyCode: string,
+    orchestraAppName: string;
+    orchestraName?: string;
+    orchestraLocale: string;
+    currencySymbol: string;
+    currencyCode: string;
   }
 }

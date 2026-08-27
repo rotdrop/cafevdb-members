@@ -1,5 +1,5 @@
 <!--
- - @copyright Copyright (c) 2023, 2024 Claus-Justus Heine <himself@claus-justus-heine.de>
+ - @copyright Copyright (c) 2023, 2024, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  -
  - @author Claus-Justus Heine <himself@claus-justus-heine.de>
  -
@@ -22,86 +22,66 @@
   <router-link v-if="!external"
                class="button router"
                :to="to"
-               :exact="exact"
   >
     <slot v-if="hasIconSlot && iconLeft" name="icon" />
     <span v-else-if="icon && iconLeft"
-          :class="[ icon, 'left-icon' ]"
+          class="left-icon"
+          :class="[ icon ]"
     />
     <slot />
     <slot v-if="hasIconSlot && iconRight" name="icon" />
     <span v-else-if="icon && iconRight"
-          :class="[ icon, 'right-icon' ]"
+          class="right-icon"
+          :class="[ icon ]"
     />
   </router-link>
   <a v-else
      class="button router"
-     :href="to"
+     :href="to as string"
   >
     <slot v-if="hasIconSlot && iconLeft" name="icon" />
     <span v-else-if="icon && iconLeft"
-          :class="[ icon, 'left-icon' ]"
+          class="left-icon"
+          :class="[ icon ]"
     />
     <slot />
     <slot v-if="hasIconSlot && iconRight" name="icon" />
     <span v-else-if="icon && iconRight"
-          :class="[ icon, 'right-icon' ]"
+          class="right-icon"
+          :class="[ icon ]"
     />
   </a>
 </template>
-<script>
 
-export default {
-  props: {
-    /**
-     * router-link to prop [https://router.vuejs.org/api/#to](https://router.vuejs.org/api/#to)
-     */
-    to: {
-      type: [String, Object],
-      default: '',
-      required: true,
-    },
-    /**
-     * router-link exact prop [https://router.vuejs.org/api/#exact](https://router.vuejs.org/api/#exact)
-     */
-    exact: {
-      type: Boolean,
-      default: false,
-    },
-    external: {
-      type: Boolean,
-      default: false,
-    },
-    iconPosition: {
-      type: String,
-      default: 'left',
-    },
-    icon: {
-      type: String,
-      default: null,
-    },
-  },
-  data() {
-    return {
-      /**
-       * Making sure the slots are reactive
-       */
-      slots: this.$slots,
-    }
-  },
-  computed: {
-    iconLeft() {
-      return this.iconPosition === 'left'
-    },
-    iconRight() {
-      return this.iconPosition === 'right'
-    },
-    hasIconSlot() {
-      return this.slots.icon !== undefined
-    },
-  },
-}
+<script setup lang="ts">
+import type { RouteLocationRaw } from 'vue-router'
+
+import {
+  computed,
+  useSlots,
+} from 'vue'
+
+const props = withDefaults(defineProps<{
+  /**
+   * router-link to prop [https://router.vuejs.org/api/#to](https://router.vuejs.org/api/#to)
+   */
+  to: string|RouteLocationRaw
+  external?: boolean
+  iconPosition?: 'left'|'right'
+  icon?: string
+}>(), {
+  external: false,
+  iconPosition: 'left',
+  icon: undefined,
+})
+
+const slots = useSlots()
+
+const iconLeft = computed(() => props.iconPosition === 'left')
+const iconRight = computed(() => props.iconPosition === 'right')
+const hasIconSlot = computed(() => slots.icon !== undefined)
 </script>
+
 <style lang="scss" scoped>
 .button {
   display: flex;

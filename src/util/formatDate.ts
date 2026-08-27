@@ -17,25 +17,24 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
- *
  */
 
-import moment from '@nextcloud/moment'
-import { getCanonicalLocale } from '@nextcloud/l10n'
+import { getCanonicalLocale } from '@nextcloud/l10n';
+import moment from '@nextcloud/moment';
 
 const formatDate = (date: number|string|Date, flavour: string|'short'|'medium'|'long'|'omit-year' = 'medium') => {
-  flavour = flavour || 'medium'
+  flavour = flavour || 'medium';
   switch (flavour) {
-  case 'short':
-  case 'medium':
-  case 'long':
-    return moment(date).format('L')
-  case 'omit-year': {
-    const event = new Date(date)
-    return event.toLocaleString(getCanonicalLocale(), { month: 'short', day: 'numeric' })
+    case 'short':
+    case 'medium':
+    case 'long':
+      return moment(date).format('L');
+    case 'omit-year': {
+      const event = new Date(date);
+      return event.toLocaleString(getCanonicalLocale(), { month: 'short', day: 'numeric' });
+    }
   }
-  }
-  return moment(date).format(flavour)
-}
+  return moment(date).format(flavour);
+};
 
-export default formatDate
+export default formatDate;

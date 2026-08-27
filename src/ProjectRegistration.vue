@@ -1,5 +1,5 @@
 <!--
- - @copyright Copyright (c) 2023, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ - @copyright Copyright (c) 2023, 2024, 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  -
  - @author Claus-Justus Heine <himself@claus-justus-heine.de>
  -
@@ -19,136 +19,80 @@
  - along with this program. If not, see <http://www.gnu.org/licenses/>.
  -->
 <template>
-  <NcContent :class="{ 'icon-loading': loading, 'root-view': true }" :app-name="appName">
+  <NcContent class="root-view" :class="{ 'icon-loading': loading }" :appName="appName">
     <NcAppNavigation>
       <template #list>
         <NcAppNavigationItem :to="routerDestination('registrationHome')"
                              :name="isPublicPage ? t(appName, 'Home') : t(appName, 'Start Registration')"
                              icon="icon-home"
-                             exact
         />
         <NcAppNavigationItem :to="routerDestination('registrationPersonalProfile')"
                              :name="t(appName, 'Personal Profile')"
                              icon="icon-user"
                              :class="{ disabled: !activeProject }"
-                             exact
         />
         <NcAppNavigationItem :to="routerDestination('registrationParticipation')"
                              :name="t(appName, 'Instrumentation and Events')"
                              icon="icon-music"
                              :class="{ disabled: !activeProject }"
-                             exact
         />
         <NcAppNavigationItem :to="routerDestination('registrationProjectOptions')"
                              :name="t(appName, 'Options')"
                              icon="icon-details"
                              :class="{ disabled: !activeProject }"
-                             exact
         />
         <NcAppNavigationItem :to="routerDestination('registrationSubmission')"
                              :name="t(appName, 'Summary and Submission')"
                              icon="icon-checkmark"
                              :class="{ disabled: !activeProject }"
-                             exact
         />
       </template>
       <template #footer>
         <NcAppNavigationSettings>
-          <NcCheckboxRadioSwitch :checked.sync="debug">
+          <NcCheckboxRadioSwitch v-model="debug">
             {{ t(appName, 'Enable Debug') }}
           </NcCheckboxRadioSwitch>
         </NcAppNavigationSettings>
       </template>
     </NcAppNavigation>
     <NcAppContent :class="{ 'icon-loading': loading }">
-      <router-view v-show="!loading" :loading.sync="loading" />
-      <NcEmptyContent v-if="isRoot" class="emp-content">
-        <template #icon>
-          <img :src="Icon">
-        </template>
-        <template #name>
-          <h2 v-if="activeProject">
-            {{ t(appName, '{orchestraName} project registration for {projectName}', { orchestraName, projectName }) }}
-          </h2>
-          <h2 v-else>
-            {{ t(appName, '{orchestraName} project registration', { orchestraName }) }}
-          </h2>
-        </template>
-        <template #description>
-          <div v-if="activeProject"
-               class="flex-container flex-center"
-          >
-            <NcActions v-if="projects.length > 1"
-                       :menu-title="t(appName, 'choose another one')"
-            >
-              <NcActionRouter v-for="project in projects"
-                              :key="project.id"
-                              :name="project.name"
-                              :to="{ name: 'registrationHome', params: { projectName: project.name } }"
-              />
-            </NcActions>
-            <span v-if="projects.length > 1" class="start-button-junctor">{{ t(appName, 'or') }}</span>
-            <RouterButton :to="routerDestination('registrationPersonalProfile')"
-                          exact
-                          icon="icon-confirm"
-                          icon-position="right"
-            >
-              {{ t(appName, 'register') }}
-            </RouterButton>
-            <span v-if="isPublicPage" class="start-button-junctor">{{ t(appName, 'or') }}</span>
-            <RouterButton v-if="isPublicPage"
-                          :to="loginRedirection('registrationHome')"
-                          :external="true"
-                          icon="icon-confirm"
-                          icon-position="right"
-            >
-              {{ t(appName, 'login and register') }}
-            </RouterButton>
-          </div>
-          <h2 v-else>
-            {{ t(appName, 'The project registration for all projects is closed.') }}
-          </h2>
-        </template>
-      </NcEmptyContent>
+      <router-view v-show="!loading" v-model:loading="loading" />
     </NcAppContent>
   </NcContent>
 </template>
+
 <script setup lang="ts">
-import { appName } from './config.ts'
+import { getCurrentUser } from '@nextcloud/auth'
 import { translate as t } from '@nextcloud/l10n'
 import {
-  NcActions,
-  NcActionRouter,
   NcAppContent,
   NcAppNavigation,
   NcAppNavigationItem,
   NcAppNavigationSettings,
-  NcContent,
   NcCheckboxRadioSwitch,
-  NcEmptyContent,
+  NcContent,
 } from '@nextcloud/vue'
-import { getCurrentUser } from '@nextcloud/auth'
-import RouterButton from './components/RouterButton.vue'
-import { useMemberDataStore } from './stores/memberData.ts'
-import { useAppDataStore } from './stores/appData.ts'
 import { storeToRefs } from 'pinia'
-import Icon from '../img/cafevdbmembers.svg'
 import {
   computed,
   onBeforeMount,
   ref,
   watch,
 } from 'vue'
-import { useRoute, useRouter } from 'vue-router/composables'
+import { useRoute, useRouter } from 'vue-router'
+import { appName } from './config.ts'
 import logger from './logger.ts'
+import { useAppDataStore } from './stores/appData.ts'
+import { useMemberDataStore } from './stores/memberData.ts'
 
-const props = withDefaults(
-  defineProps<{
-    token?: string,
-  }>(), {
-    token: undefined,
-  },
-)
+// const props = withDefaults(
+//   defineProps<{
+//     token?: string
+//   }>(),
+//   {
+//     token: undefined,
+//   },
+// )
 
 const registrationData = useMemberDataStore()
 const appData = useAppDataStore()
@@ -156,12 +100,9 @@ const appData = useAppDataStore()
 const {
   activeProject,
   debug,
-  orchestraName,
   projectName,
-  projects,
 } = storeToRefs(appData)
 const routerDestination = appData.registrationRouteRecord
-const loginRedirection = appData.loginRedirection
 
 const loading = ref(true)
 const readonly = ref(true)
@@ -173,8 +114,6 @@ logger.info('CURRENT ROUTE', {
   route: { ...currentRoute },
   activeProject,
 })
-
-const isRoot = computed(() => currentRoute.name === 'registrationHome')
 
 const isPublicPage = computed(() => !getCurrentUser())
 
@@ -203,6 +142,7 @@ onBeforeMount(async () => {
   loading.value = false
 })
 </script>
+
 <style lang="scss" scoped>
 span {
   &[class^='icon-'], &[class*=' icon-'] {
@@ -216,7 +156,7 @@ span {
   }
 }
 
-.app-navigation-entry-wrapper.balhdisabled::v-deep {
+.app-navigation-entry-wrapper.balhdisabled :deep() {
   opacity: 0.5;
   &, & * {
     cursor: default !important;
@@ -224,7 +164,7 @@ span {
   }
 }
 
-.empty-content::v-deep {
+.empty-content :deep() {
   h2 ~ p {
     text-align: center;
   }
@@ -241,17 +181,6 @@ span {
     .hint {
       max-width: 66ex;
     }
-  }
-}
-
-.start-button-junctor {
-  margin: 0 1ex;
-}
-
-.flex-container {
-  display: flex;
-  &.flex-center {
-    align-items:center;
   }
 }
 </style>

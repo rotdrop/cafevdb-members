@@ -19,34 +19,29 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { appName } from './config.ts'
-import { generateFilePath } from '@nextcloud/router'
-import { getRequestToken } from '@nextcloud/auth'
-import { translate as t, translatePlural as n } from '@nextcloud/l10n'
-// import { sync } from 'vuex-router-sync'
-// import { translate, translatePlural } from '@nextcloud/l10n'
-import Vue from 'vue'
-import App from './App.vue'
-import router from './router/app-router.ts'
-import { createPinia, PiniaVuePlugin } from 'pinia'
+export * from './webpack-setup.ts';
+import Tooltip from '@rotdrop/nextcloud-vue-components/lib/directives/Tooltip';
+import { createPinia } from 'pinia';
+import { createApp } from 'vue';
+import App from './App.vue';
+import { appName } from './config.ts';
+import router from './router/app-router.ts';
 
-Vue.use(PiniaVuePlugin)
-const pinia = createPinia()
+import 'core-js/actual';
 
-// CSP config for webpack dynamic chunk loading
-// eslint-disable-next-line
-__webpack_nonce__ = btoa(getRequestToken() || '')
+const pinia = createPinia();
 
-// eslint-disable-next-line
-__webpack_public_path__ = generateFilePath(appName, '', '')
+const provide = {
+  appId: appName,
+};
 
-Vue.mixin({ data() { return { appId: appName } }, methods: { t, n } })
+const app = createApp(App);
+app.directive('tooltip', Tooltip);
+app.use(router);
+app.use(pinia);
+for (const [key, value] of Object.entries(provide)) {
+  app.provide(key, value);
+}
+app.mount('#content');
 
-export default new Vue({
-  el: '#content',
-  name: appName,
-  // @ts-expect-error 2769
-  router,
-  pinia,
-  render: h => h(App),
-})
+export default app;

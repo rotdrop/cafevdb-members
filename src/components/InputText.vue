@@ -3,17 +3,16 @@
  - and modified quite a bit ..
  -->
 <template>
-  <div :class="['input__container', 'input-type-' + type, { readonly, collapse }, has_hint, has_icon, ...cloudVersionClasses ]">
-    <div :class="['input-effect', filled, { readonly, collapse }, has_hint, has_icon ]">
+  <div class="input__container" :class="['input-type-' + type, { readonly, collapse }, has_hint, has_icon, ...cloudVersionClasses ]">
+    <div class="input-effect" :class="[filled, { readonly, collapse }, has_hint, has_icon ]">
       <NcDateTimePicker v-if="isDatePickerType"
-                        ref="datepicker"
                         class="effect"
                         :type="isDatePickerType"
                         :format="format ? format : formatTypeMap"
-                        :value="value"
+                        :modelValue="value"
                         :data-foo="value"
                         :placeholder="placeholder"
-                        :input-class="['effect', 'mx-input', { focusable: isFocusable }]"
+                        :inputClass="['effect', 'mx-input', { focusable: isFocusable }]"
                         :disabled="disabled || readonly"
                         :readonly="readonly"
                         :required="required"
@@ -24,15 +23,14 @@
       />
       <NcSelect v-else-if="isMultiselectType"
                 class="effect"
-                :value="value"
+                :modelValue="value"
                 :placeholder="placeholder"
                 :disabled="disabled || readonly"
                 :readonly="readonly"
                 :label="optionLabel"
                 :required="required"
-                :label-outside="true"
+                :labelOutside="true"
                 v-bind="$attrs"
-                v-on="$listeners"
                 @focus="show = !show;"
                 @blur="show = !show;"
       />
@@ -41,11 +39,11 @@
              :value="value"
              :placeholder="placeholder"
              :disabled="disabled"
-             :class="['effect', has_icon, { focusable: isFocusable }]"
+             class="effect"
+             :class="[has_icon, { focusable: isFocusable }]"
              :readonly="readonly"
              :required="required"
              v-bind="$attrs"
-             v-on="$listeners"
              @focus="show = !show"
              @blur="show = !show"
              @input="(event) => handleInput(event)"
@@ -57,51 +55,39 @@
     <i class="material-icons input__icon">{{ icon }}</i>
   </div>
 </template>
+
 <script setup lang="ts">
 import { getLanguage } from '@nextcloud/l10n'
 import {
   NcDateTimePicker,
   NcSelect,
 } from '@nextcloud/vue'
-import LockIcon from 'vue-material-design-icons/Lock.vue'
-// The following would interfere with the rest of NC:
-// import 'vue-material-design-icons/styles.css'
-import 'material-icons/iconfont/material-icons.css'
-import cloudVersionClassesImport from '../toolkit/util/cloud-version-classes.ts'
 import {
   computed,
   ref,
 } from 'vue'
+import LockIcon from 'vue-material-design-icons/Lock.vue'
+import cloudVersionClassesImport from '../toolkit/util/cloud-version-classes.ts'
 
-const formatMapDE = {
-  date: 'DD.MM.YYYY',
-  datetime: 'DD.MM.YYYY H:mm:ss',
-  year: 'YYYY',
-  month: 'MM.YYYY',
-  time: 'H:mm:ss',
-  week: 'w',
-}
-
-const emit = defineEmits(['input', 'update:value'])
-
-const cloudVersionClasses = computed(() => cloudVersionClassesImport)
-const show = ref(false)
+// The following would interfere with the rest of NC:
+// import 'vue-material-design-icons/styles.css'
+import 'material-icons/iconfont/material-icons.css'
 
 const props = withDefaults(defineProps<{
-  type?: string,
-  disabled?: boolean,
-  readonly?: boolean,
-  required?: boolean,
+  type?: string
+  disabled?: boolean
+  readonly?: boolean
+  required?: boolean
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  value?: string|Date|any[]|object,
-  label?: string,
-  hint?: string,
-  icon?: string,
-  placeholder?: string,
-  color?: string,
-  optionLabel?: string,
-  collapse?: boolean,
-  format?: string,
+  value?: string|Date|any[]|object
+  label?: string
+  hint?: string
+  icon?: string
+  placeholder?: string
+  color?: string
+  optionLabel?: string
+  collapse?: boolean
+  format?: string
 }>(), {
   type: 'text',
   disabled: false,
@@ -114,9 +100,24 @@ const props = withDefaults(defineProps<{
   placeholder: '',
   color: 'indigo',
   optionLabel: '',
+  // eslint-disable-next-line vue/no-boolean-default
   collapse: true,
   format: undefined,
 })
+
+const emit = defineEmits(['input', 'update:value'])
+
+const formatMapDE = {
+  date: 'DD.MM.YYYY',
+  datetime: 'DD.MM.YYYY H:mm:ss',
+  year: 'YYYY',
+  month: 'MM.YYYY',
+  time: 'H:mm:ss',
+  week: 'w',
+}
+
+const cloudVersionClasses = computed(() => cloudVersionClassesImport)
+const show = ref(false)
 
 // @todo change in vue 3.5+ to props destructuring in order to remove this boiler plate code
 const type = computed(() => props.type)
@@ -166,13 +167,13 @@ const isMultiselectType = computed(() => props.type === 'multiselect')
 
 const isDatePickerType = computed(() => {
   switch (props.type) {
-  case 'time':
-  case 'month':
-  case 'year':
-  case 'week':
-  case 'date':
-  case 'datetime':
-    return props.type
+    case 'time':
+    case 'month':
+    case 'year':
+    case 'week':
+    case 'date':
+    case 'datetime':
+      return props.type
   }
   return false
 })
@@ -196,7 +197,7 @@ const formatTypeMap = computed(() => {
 const isFocusable = computed(() => !props.disabled)
 
 interface TargetedMouseEvent extends MouseEvent {
-  target: HTMLInputElement,
+  target: HTMLInputElement
 }
 
 const handleInput = (vueEvent: Event) => {
@@ -206,6 +207,7 @@ const handleInput = (vueEvent: Event) => {
   emit('update:value', event.target.value)
 }
 </script>
+
 <style lang="scss" scoped>
 .cloud-version {
   &:not(.cloud-version-major-23, .cloud-version-major-24) {
@@ -292,7 +294,7 @@ input.effect {
     width:100%;
   }
   &,
-  ::v-deep .mx-input-wrapper input.effect.mx-input {
+  :deep(.mx-input-wrapper) input.effect.mx-input {
     border: 0;
     padding: 4px 0;
     border-bottom: 1px solid #ccc;
@@ -303,7 +305,7 @@ input.effect {
       outline: none;
     }
   }
-  ::v-deep &.multiselect {
+  :deep(&.multiselect) {
     max-height:37px;
     &.multiselect--disabled {
       &, & .multiselect__single {

@@ -1,5 +1,5 @@
 <!--
- - @copyright Copyright (c) 2023, 2024, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ - @copyright Copyright (c) 2023-2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  -
  - @author Claus-Justus Heine <himself@claus-justus-heine.de>
  -
@@ -19,15 +19,14 @@
  - along with this program. If not, see <http://www.gnu.org/licenses/>.
  -->
 <template>
-  <div :class="{ 'icon-loading': loading, 'page-container': true, loading, 'submission-view': true, }">
+  <div class="page-container submission-view" :class="{ 'icon-loading': loading, loading }">
     <h2>
       {{ t(appName, 'Summary and Submission') }}
     </h2>
     <div class="navigation flex flex-row flex-justify-full flex-center">
       <RouterButton :to="routerDestination('registrationProjectOptions')"
-                    exact
                     icon="icon-history"
-                    icon-position="left"
+                    iconPosition="left"
       >
         {{ t(appName, 'back') }}
       </RouterButton>
@@ -40,28 +39,30 @@
     </div>
   </div>
 </template>
+
 <script setup lang="ts">
-import { appName } from '../../config.ts'
-import { translate as t } from '@nextcloud/l10n'
-import RouterButton from '../../components/RouterButton.vue'
-import { NcButton } from '@nextcloud/vue'
-import { useMemberDataStore } from '../../stores/memberData.ts'
-import { useAppDataStore } from '../../stores/appData.ts'
-import {
-  ref,
-  onBeforeMount,
-} from 'vue'
-import { storeToRefs } from 'pinia'
 import axios from '@nextcloud/axios'
-import generateAppUrl from '../../toolkit/util/generate-url.ts'
-import { isAxiosErrorResponse } from '../../toolkit/types/axios-type-guards'
 import { showError, showSuccess, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
+import { translate as t } from '@nextcloud/l10n'
+import { NcButton } from '@nextcloud/vue'
+import { storeToRefs } from 'pinia'
+import {
+  onBeforeMount,
+  ref,
+} from 'vue'
+import RouterButton from '../../components/RouterButton.vue'
+import { appName } from '../../config.ts'
 import logger from '../../logger.ts'
+import { useAppDataStore } from '../../stores/appData.ts'
+import { useMemberDataStore } from '../../stores/memberData.ts'
+import { isAxiosErrorResponse } from '../../toolkit/types/axios-type-guards.ts'
+import generateAppUrl from '../../toolkit/util/generate-url.ts'
 
 const props = withDefaults(
   defineProps<{
-    token?: string,
-  }>(), {
+    token?: string
+  }>(),
+  {
     token: undefined,
   },
 )
@@ -85,11 +86,12 @@ const submit = async () => {
   try {
     logger.info('REGDATA', { registrationData })
     const personalProfile = Object.fromEntries(
-      registrationData.personalProfileKeys.map(key => [key, registrationData[key]]),
+      registrationData.personalProfileKeys.map((key) => [key, registrationData[key]]),
     )
     const response = await axios.post(
       generateAppUrl(
-        'registration/submit/{projectName}/{token}', {
+        'registration/submit/{projectName}/{token}',
+        {
           projectName: projectName.value,
           token: props.token || null,
         },
@@ -131,6 +133,7 @@ onBeforeMount(async () => {
   loading.value = false
 })
 </script>
+
 <style lang="scss" scoped>
 .page-container {
   padding: 12px 0.5em 0 50px;
@@ -176,7 +179,7 @@ onBeforeMount(async () => {
       min-width:210px;
     }
   }
-  ::v-deep .input-effect {
+  :deep(.input-effect) {
     margin-bottom:0;
   }
 }

@@ -1,5 +1,5 @@
 /**
- * @copyright Copyright (c) 2022, 2023, 2025 Claus-Justus Heine <himself@claus-justus-heine.de>
+ * @copyright Copyright (c) 2022, 2023, 2025, 2026 Claus-Justus Heine <himself@claus-justus-heine.de>
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
  *
@@ -19,26 +19,26 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import { appName } from '../config.ts'
-import Vue from 'vue'
-import Router from 'vue-router'
-import { generateUrl } from '@nextcloud/router'
-import { getCurrentUser } from '@nextcloud/auth'
-import appRoutes from './app-routes.ts'
-import registrationRoutes from './registration-routes.ts'
+import { getCurrentUser } from '@nextcloud/auth';
+import { generateUrl } from '@nextcloud/router';
+import {
+  createRouter,
+  createWebHistory,
+} from 'vue-router';
+import { appName } from '../config.ts';
+import appRoutes from './app-routes.ts';
+import registrationRoutes from './registration-routes.ts';
 
-Vue.use(Router)
+const base = generateUrl('/apps/' + appName);
 
-const base = generateUrl('/apps/' + appName)
+const history = createWebHistory(base);
 
-const routes = getCurrentUser() ? [...appRoutes, ...registrationRoutes] : registrationRoutes
+const routes = getCurrentUser() ? [...appRoutes, ...registrationRoutes] : registrationRoutes;
 
-const router = new Router({
-  mode: 'history',
-  base,
+const router = createRouter({
+  history,
   linkActiveClass: 'active',
-  // @ts-expect-error 2322 ignore, so what
   routes,
-})
+});
 
-export default router
+export default router;
