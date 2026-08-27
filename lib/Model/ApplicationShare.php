@@ -228,7 +228,7 @@ class ApplicationShare implements IShare
   }
 
   /** {@inheritdoc} */
-  public function setParent(int $parent):IShare { return $this; }
+  public function setParent(int $parent): IShare { return $this; }
 
   /** {@inheritdoc} */
   public function getParent(): ?int { return null; }
@@ -238,6 +238,9 @@ class ApplicationShare implements IShare
 
   /** {@inheritdoc} */
   public function getTarget() { return ''; }
+
+  /** {@inheritdoc} */
+  public function getOriginalTarget(): ?string { return null; }
 
   /** {@inheritdoc} */
   public function setShareTime(DateTime $shareTime) {}
