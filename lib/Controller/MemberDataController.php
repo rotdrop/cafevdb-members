@@ -3,7 +3,7 @@
  * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022-2025 Claus-Justus Heine
+ * @copyright Copyright (c) 2022-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,7 +23,7 @@
 namespace OCA\CAFeVDBMembers\Controller;
 
 use OCP\AppFramework\Controller;
-use OCP\AppFramework\Http\Attribute;
+use OCP\AppFramework\Http\Attribute as CoreAttributes;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\Response;
 use OCP\IL10N;
@@ -68,7 +68,11 @@ class MemberDataController extends Controller
    *
    * @return DataResponse
    */
-  #[Attribute\NoAdminRequired]
+  #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(
+    url: '/member',
+    verb: 'GET',
+  )]
   public function get():DataResponse
   {
     $authOk = $this->checkAccess();
@@ -319,7 +323,11 @@ class MemberDataController extends Controller
    *
    * @return Response
    */
-  #[Attribute\NoAdminRequired]
+  #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontpageRoute(
+    url: '/download/member/{optionKey}',
+    verb: 'GET',
+  )]
   public function download(string $optionKey):Response
   {
     $authOk = $this->checkAccess();

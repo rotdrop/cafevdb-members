@@ -30,7 +30,7 @@ use OCA\Files_Sharing\Event\BeforeTemplateRenderedEvent;
 use OCP\AppFramework\AuthPublicShareController;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
-use OCP\AppFramework\Http\Attribute;
+use OCP\AppFramework\Http\Attribute as CoreAttributes;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Http\Template\PublicTemplateResponse;
@@ -104,9 +104,57 @@ class ProjectRegistrationController extends AuthPublicShareController
    *
    * @todo Check whether we do want CSRF.
    */
-  #[Attribute\NoAdminRequired]
-  #[Attribute\NoCSRFRequired]
-  #[Attribute\PublicPage]
+  #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\NoCSRFRequired]
+  #[CoreAttributes\PublicPage]
+  #[CoreAttributes\FrontpageRoute(
+    // Registration with given project and section, optional token
+    postfix: '_pages',
+    url: '/registration/{section}/{token}',
+    verb: 'GET',
+    defaults: [
+      'token' => Constants::NEW_APPLICATION_TOKEN,
+    ],
+    requirements: [
+      'section' => '[a-z-]+',
+      'token' => (
+        '^('
+        // plain project name, needs to be remapped from token to projec name
+        . Constants::TEMPORARY_PROJECT_NAME_REGEXP
+        . '|'
+        // composite project name and token, this is required as the
+        // URLGenerator call in the public-share framework just allows one
+        // parameter for the token and we decided to use the project-name +
+        // some fancy hash
+        . Constants::TEMPORARY_PROJECT_NAME_REGEXP . '/' . Constants::PROJECT_APPLICATION_TOKEN_REGEXP
+        . ')$'
+      ),
+    ],
+  )]
+  #[CoreAttributes\FrontpageRoute(
+    // Registration home with optional project and optional token
+    url: '/registration/{token}',
+    verb: 'GET',
+    requirements: [
+      'token' => (
+        '^('
+        // empty is ok
+        . '|'
+        // plain project name, needs to be remapped
+        . Constants::TEMPORARY_PROJECT_NAME_REGEXP
+        . '|'
+        // composite project name and token, this is required as the
+        // URLGenerator call in the public-share framework just allows one
+        // parameter for the token and we decided to use the project-name +
+        // some fancy hash
+        . Constants::TEMPORARY_PROJECT_NAME_REGEXP . '/' . Constants::PROJECT_APPLICATION_TOKEN_REGEXP
+        . ')$'
+      ),
+    ],
+    defaults: [
+      'token' => Constants::NEW_APPLICATION_TOKEN,
+    ],
+  )]
   public function showShare():TemplateResponse
   {
     list($projectName, $token) = $this->parseToken();
@@ -368,10 +416,31 @@ class ProjectRegistrationController extends AuthPublicShareController
    * @todo Mayhaps use a public template response. This causes a page reload
    * but this might even be desirable for security considerations.
    *
-   * #[Attribute\NoCSRFRequired]
+   * #[CoreAttributes\NoCSRFRequired]
    */
-  #[Attribute\NoAdminRequired]
-  #[Attribute\PublicPage]
+  #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\PublicPage]
+  #[CoreAttributes\FrontpageRoute(
+    url: '/registration/submit/{token}',
+    verb: 'POST',
+    requirements: [
+      'token' => (
+        '^('
+        // plain project name, needs to be remapped from token to project name
+        . Constants::TEMPORARY_PROJECT_NAME_REGEXP
+        . '|'
+        // composite project name and token, this is required as the
+        // URLGenerator call in the public-share framework just allows one
+        // parameter for the token and we decided to use the project-name +
+        // some fancy hash
+        . Constants::TEMPORARY_PROJECT_NAME_REGEXP . '/' . Constants::PROJECT_APPLICATION_TOKEN_REGEXP
+        . ')$'
+      ),
+    ],
+    defaults: [
+      'token' => Constants::NEW_APPLICATION_TOKEN,
+    ],
+  )]
   public function submit(string $token, array $data): DataResponse
   {
     list($projectName, $token) = $this->parseToken();
@@ -467,8 +536,21 @@ class ProjectRegistrationController extends AuthPublicShareController
   }
 
   /** {@inheritdoc} */
-  #[Attribute\NoCSRFRequired]
-  #[Attribute\PublicPage]
+  #[CoreAttributes\NoCSRFRequired]
+  #[CoreAttributes\PublicPage]
+  #[CoreAttributes\FrontpageRoute(
+    url: '/registration/{token}/authenticate/{redirect}',
+    verb: 'GET',
+    requirements: [
+      'token' => (
+        '^'
+        . Constants::TEMPORARY_PROJECT_NAME_REGEXP
+        . '/'
+        . Constants::PROJECT_APPLICATION_TOKEN_REGEXP
+        . '$'
+      ),
+    ],
+  )]
   public function showAuthenticate(): PublicTemplateResponse
   {
     $templateParameters = ['share' => $this->share];

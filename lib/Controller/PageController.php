@@ -3,7 +3,7 @@
  * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2022, 2025 Claus-Justus Heine
+ * @copyright Copyright (c) 2022, 2025, 2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,7 +23,7 @@
 namespace OCA\CAFeVDBMembers\Controller;
 
 use OCP\AppFramework\Controller;
-use OCP\AppFramework\Http\Attribute;
+use OCP\AppFramework\Http\Attribute as  CoreAttributes;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IRequest;
 use OCP\Util;
@@ -51,8 +51,15 @@ class PageController extends Controller
    *
    * @todo Why NoCSRF?
    */
-  #[Attribute\NoAdminRequired]
-  #[Attribute\NoCSRFRequired]
+  #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\NoCSRFRequired]
+  #[CoreAttributes\FrontpageRoute(verb: 'GET', url: '/')]
+  #[CoreAttributes\FrontPageRoute(
+    verb: 'GET',
+    url: '/f/{path}',
+    requirements: [ 'path' => '.+' ],
+    postfix: 'front',
+  )]
   public function index():TemplateResponse
   {
     Util::addScript($this->appName, $this->assetService->getJSAsset('main')['asset']);

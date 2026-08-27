@@ -28,7 +28,7 @@ use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
 
 use Psr\Log\LoggerInterface;
 use OCP\AppFramework\Controller;
-use OCP\AppFramework\Http\Attribute;
+use OCP\AppFramework\Http\Attribute as CoreAttributes;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\IRequest;
 use OCP\IConfig;
@@ -70,9 +70,12 @@ class SettingsController extends Controller
    * @param bool $force
    *
    * @return DataResponse
-   *
-   * @AuthorizedAdminSetting(settings=OCA\CAFeVDBMembers\Settings\Admin)
    */
+  #[CoreAttributes\AuthorizedAdminSetting(settings: \OCA\CAFeVDBMembers\Settings\Admin::class)]
+  #[CoreAttributes\FrontPageRoute(
+    url: '/settings/admin/{setting}',
+    verb: 'POST',
+  )]
   public function setAdmin(string $setting, ?string $value, bool $force = false):DataResponse
   {
     $newValue = $value;
@@ -150,9 +153,15 @@ class SettingsController extends Controller
    * @param null|string $setting
    *
    * @return DataResponse
-   *
-   * @AuthorizedAdminSetting(settings=OCA\CAFeVDBMembers\Settings\Admin)
    */
+  #[CoreAttributes\AuthorizedAdminSetting(settings: \OCA\CAFeVDBMembers\Settings\Admin::class)]
+  #[CoreAttributes\FrontPageRoute(
+    url: '/settings/admin/{setting}',
+    verb: 'GET',
+    defaults: [
+      'setting' => null,
+    ],
+  )]
   public function getAdmin(?string $setting):DataResponse
   {
     if ($setting === null) {
@@ -202,7 +211,11 @@ class SettingsController extends Controller
    *
    * @return DataResponse
    */
-  #[Attribute\NoAdminRequired]
+  #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontPageRoute(
+    url: '/settings/app/{setting}',
+    verb: 'GET',
+  )]
   public function getApp(string $setting):DataResponse
   {
     switch ($setting) {
@@ -221,7 +234,11 @@ class SettingsController extends Controller
    *
    * @return DataResponse
    */
-  #[Attribute\NoAdminRequired]
+  #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontPageRoute(
+    url: '/settings/personal/{setting}',
+    verb: 'POST',
+  )]
   public function setPersonal(string $setting, mixed $value):DataResponse
   {
     $oldValue = $this->config->getUserValue($this->userId, $this->appName, $setting);
@@ -236,7 +253,11 @@ class SettingsController extends Controller
    *
    * @return DataResponse
    */
-  #[Attribute\NoAdminRequired]
+  #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\FrontPageRoute(
+    url: '/settings/personal/{setting}',
+    verb: 'GET',
+  )]
   public function getPersonal(string $setting):DataResponse
   {
     return new DataResponse([

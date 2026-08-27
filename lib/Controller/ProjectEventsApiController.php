@@ -3,7 +3,7 @@
  * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2023-2025 Claus-Justus Heine
+ * @copyright Copyright (c) 2023-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -26,7 +26,7 @@ use DateTimeZone;
 
 use OCP\AppFramework\ApiController;
 use OCP\AppFramework\Http;
-use OCP\AppFramework\Http\Attribute;
+use OCP\AppFramework\Http\Attribute as CoreAttributes;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\IDateTimeZone;
 use OCP\IL10N;
@@ -78,10 +78,22 @@ class ProjectEventsApiController extends ApiController
    *
    * @return DataResponse
    */
-  #[Attribute\CORS]
-  #[Attribute\NoAdminRequired]
-  #[Attribute\NoCSRFRequired]
-  #[Attribute\PublicPage]
+  #[CoreAttributes\CORS]
+  #[CoreAttributes\NoAdminRequired]
+  #[CoreAttributes\NoCSRFRequired]
+  #[CoreAttributes\PublicPage]
+  #[CoreAttributes\FrontpageRoute(
+    url: '/api/{apiVersion}/projects/events/{indexObject}/{objectId}/{calendar}/{timezone}/{locale}',
+    verb: 'GET',
+    defaults: [
+      'calendar' => 'all',
+      'timezone' => null,
+      'locale' => null,
+    ],
+    requirements: [
+      'apiVersion' => '0.1',
+    ],
+  )]
   public function serviceSwitch(
     string $indexObject,
     int|string $objectId,
