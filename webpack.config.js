@@ -1,14 +1,34 @@
 const BabelLoaderExcludeNodeModulesExcept = require('babel-loader-exclude-node-modules-except');
 const CssoWebpackPlugin = require('csso-webpack-plugin').default;
-const DeadCodePlugin = require('webpack-deadcode-plugin');
+const webpackConfig = require('@nextcloud/webpack-vue-config');
 const ESLintPlugin = require('eslint-webpack-plugin');
 const fs = require('fs');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const path = require('path');
 const webpack = require('webpack');
-const webpackConfig = require('@nextcloud/webpack-vue-config');
+const DeadCodePlugin = require('webpack-deadcode-plugin');
 const xml2js = require('xml2js');
+
+const svgoOptions = {
+  multipass: true,
+  js2svg: {
+    indent: 2,
+    pretty: true,
+  },
+  plugins: [
+    {
+      name: 'preset-default',
+      params: {
+        overrides: {
+          // viewBox is required to resize SVGs with CSS.
+          // @see https://github.com/svg/svgo/issues/1128
+          // removeViewBox: false,
+        },
+      },
+    },
+  ],
+};
 
 const infoFile = path.join(__dirname, 'appinfo/info.xml');
 let appInfo;
@@ -61,13 +81,6 @@ webpackConfig.plugins = webpackConfig.plugins.concat([
       return JSON.stringify(arg.htmlWebpackPlugin.files, null, 2);
     },
   }),
-  new webpack.ProvidePlugin({
-    $: 'jquery',
-    jQuery: 'jquery',
-    jquery: 'jquery',
-    'window.$': 'jquery',
-    'window.jQuery': 'jquery',
-  }),
   new MiniCssExtractPlugin({
     filename: 'css/[name]-[contenthash].css',
   }),
@@ -75,7 +88,7 @@ webpackConfig.plugins = webpackConfig.plugins.concat([
     {
       pluginOutputPostfix: productionMode ? null : 'min',
     },
-    productionMode ? /\.css$/ : /^$/
+    productionMode ? /\.css$/ : /^$/,
   ),
   new DeadCodePlugin({
     patterns: [
@@ -143,25 +156,7 @@ webpackConfig.module.rules = [
       filename: 'css/img/[name]-[hash][ext]',
       publicPath: '',
     },
-    options: {
-      multipass: true,
-      js2svg: {
-        indent: 2,
-        pretty: true,
-      },
-      plugins: [
-        {
-          name: 'preset-default',
-          params: {
-            overrides: {
-              // viewBox is required to resize SVGs with CSS.
-              // @see https://github.com/svg/svgo/issues/1128
-              removeViewBox: false,
-            },
-          },
-        },
-      ],
-    },
+    options: svgoOptions,
   },
   {
     test: /\.vue$/,

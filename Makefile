@@ -170,7 +170,7 @@ JS_FILES = $(shell find $(ABSSRCDIR)/src -name "*.js" -o -name "*.vue" -o -name 
   $(shell find $(ABSSRCDIR)/3rdparty/rotdrop-nextcloud-vue-components -name "*.js" -o -name "*.vue" -o -name "*.ts")
 
 NPM_INIT_DEPS =\
- package-lock.json package.json webpack.config.js .eslintrc.js $(MAKEFILE_DEP)
+ package-lock.json package.json webpack.config.js eslint.config.mjs $(MAKEFILE_DEP)
 
 WEBPACK_DEPS =\
  $(NPM_INIT_DEPS)\
