@@ -41,6 +41,7 @@ use OCA\RotDrop\Tests\DeprecationException;
 #[Attributes\UsesClass(\OCA\CAFeVDBMembers\Database\ORM\Connection::class)]
 #[Attributes\UsesClass(\OCA\CAFeVDBMembers\Database\ORM\Entities\Musician::class)]
 #[Attributes\UsesClass(\OCA\CAFeVDBMembers\Database\ORM\EntityManager::class)]
+#[Attributes\UsesClass(\OCA\CAFeVDBMembers\Database\ORM\Listeners\Encryption::class)]
 #[Attributes\UsesClass(\OCA\CAFeVDBMembers\Database\ORM\Listeners\GedmoTranslatableListener::class)]
 #[Attributes\UsesClass(\OCA\CAFeVDBMembers\Database\ORM\Repositories\EntityRepository::class)]
 #[Attributes\UsesClass(\OCA\CAFeVDBMembers\Service\AuthenticationService::class)]
