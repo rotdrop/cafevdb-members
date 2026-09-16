@@ -22,9 +22,12 @@
 
 namespace OCA\CAFeVDBMembers;
 
+use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+
 use OCA\CAFeVDBMembers\Toolkit\Constants as ToolkitConstants;
 
 /** A couple of constants in order to avoid string literals. */
+#[TSAttributes\TypeScript]
 class Constants extends ToolkitConstants
 {
   public const APPLICATION_SESSION_KEY = 'projectApplication';
