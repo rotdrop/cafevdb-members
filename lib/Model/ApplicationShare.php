@@ -69,25 +69,25 @@ class ApplicationShare implements IShare
   /**
    * {@inheritdoc}
    */
-  public function setId($id) {}
+  public function setId(string $id): IShare { return $this; }
 
   /** {@inheritdoc} */
-  public function getId()
+  public function getId(): string
   {
     return $this->getSharedWith() . '#' . $this->applicationData->getProject()->getName();
   }
 
   /** {@inheritdoc} */
-  public function getFullId() { return $this->appName . ':' . $this->getId(); }
+  public function getFullId(): string { return $this->appName . ':' . $this->getId(); }
 
   /** {@inheritdoc} */
-  public function setProviderId($id) {}
+  public function setProviderId(string $id): IShare { return $this; }
 
   /** {@inheritdoc} */
-  public function setNode(Node $node) {}
+  public function setNode(Node $node): IShare { return $this; }
 
   /** {@inheritdoc} */
-  public function getNode() { return $this->applicationData; }
+  public function getNode(): Node { return $this->applicationData; }
 
   /** {@inheritdoc} */
   public function setNodeId($id) {}
