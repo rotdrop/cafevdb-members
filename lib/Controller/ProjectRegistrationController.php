@@ -3,7 +3,7 @@
  * Member's data base connector for CAFEVDB orchetra management app.
  *
  * @author Claus-Justus Heine <himself@claus-justus-heine.de>
- * @copyright Copyright (c) 2023-2025 Claus-Justus Heine
+ * @copyright Copyright (c) 2023-2026 Claus-Justus Heine
  * @license AGPL-3.0-or-later
  *
  * This program is free software: you can redistribute it and/or modify
@@ -395,8 +395,8 @@ class ProjectRegistrationController extends AuthPublicShareController
       'language' => locale_get_primary_language($displayLocale),
     ]);
 
-    Util::addScript($this->appName, $this->assetService->getJSAsset('project-registration')['asset']);
-    Util::addStyle($this->appName, $this->assetService->getCSSAsset('project-registration')['asset']);
+    Util::addScript($this->appName, $this->assetService->getJSAsset('project-registration'));
+    Util::addStyle($this->appName, $this->assetService->getCSSAsset('project-registration'));
 
     return $response;
   }
