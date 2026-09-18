@@ -81,7 +81,6 @@ This is the sender and reply-to email address of these automatically generated e
 import type { InitialState } from 'cafevdbmembers'
 
 import axios from '@nextcloud/axios'
-import { showError, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
 import { translate as t } from '@nextcloud/l10n'
 import { generateUrl } from '@nextcloud/router'
 import {
@@ -101,6 +100,7 @@ import {
   fetchSettings,
   saveConfirmedSetting,
 } from './toolkit/util/settings-sync.ts'
+import { showError, TOAST_PERMANENT_TIMEOUT } from './toolkit/util/toasts.ts'
 
 interface CloudUserGroup {
   displayName: string
