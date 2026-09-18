@@ -24,7 +24,7 @@
       {{ t(appName, 'CAFeVDB Database Connector, Admin Settings') }}
     </h1>
     <NcSettingsSection :name="t(appName, 'Settings for Registered Members')">
-      <TextField v-model:value="settings.memberRootFolder"
+      <TextField v-model="settings.memberRootFolder"
                  :label="t(appName, 'Member-Data Root-Folder')"
                  :hint="t(appName, 'Specify the root folder below which all member-data will be mounted.')"
                  @submit="saveTextInput('memberRootFolder')"
@@ -55,14 +55,14 @@
       >
         {{ t(appName, 'Synchronize Folder-Structure') }}
       </button>
-      <TextField v-model:value="settings.cloudUserViewsDatabase"
+      <TextField v-model="settings.cloudUserViewsDatabase"
                  :label="t(appName, 'Personalized Views Database')"
                  :hint="t(appName, 'The name of the data-base which holds the personalized single-row views which contain the data for the currently logged-on user.')"
                  @submit="saveTextInput('cloudUserViewsDatabase')"
       />
     </NcSettingsSection>
     <NcSettingsSection :name="t(appName, 'Project Registration Settings')">
-      <TextField v-model:value="settings.registrationReplyTo"
+      <TextField v-model="settings.registrationReplyTo"
                  :label="t(appName, 'Sender and ReplyTo for the registration notification emails.')"
                  :hint="t(appName, `The applicants are notified by email after they have submitted their project application,
 they also receive password-reset emails if they want to review or change their submitted data at a later.
@@ -188,13 +188,17 @@ const saveTextInput = async (settingsKey: string, value?: string, force?: boolea
 <style lang="scss" scoped>
 .templateroot {
   h1.title {
+    margin: calc(var(--default-grid-baseline) * 7);
+    margin-bottom: 0;
+    font-size:revert;
+    font-weight:revert;
     padding-left:60px;
     background-image:url('../img/cafevdbmembers.svg');
     background-repeat:no-repeat;
     background-origin:border-box;
     background-size:45px;
     background-position:left center;
-    height:30px;
+    height:fit-content;
   }
   .sync-status {
     display:flex;
