@@ -62,8 +62,8 @@ class PageController extends Controller
   )]
   public function index():TemplateResponse
   {
-    Util::addScript($this->appName, $this->assetService->getJSAsset('main')['asset']);
-    Util::addStyle($this->appName, $this->assetService->getCSSAsset('main')['asset']);
+    Util::addScript($this->appName, $this->assetService->getJSAsset('main'));
+    Util::addStyle($this->appName, $this->assetService->getCSSAsset('main'));
 
     return new TemplateResponse($this->appName, 'main');
   }
