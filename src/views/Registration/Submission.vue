@@ -42,7 +42,6 @@
 
 <script setup lang="ts">
 import axios from '@nextcloud/axios'
-import { showError, showSuccess, TOAST_PERMANENT_TIMEOUT } from '@nextcloud/dialogs'
 import { translate as t } from '@nextcloud/l10n'
 import { NcButton } from '@nextcloud/vue'
 import { storeToRefs } from 'pinia'
@@ -57,6 +56,7 @@ import { useAppDataStore } from '../../stores/appData.ts'
 import { useMemberDataStore } from '../../stores/memberData.ts'
 import { isAxiosErrorResponse } from '../../toolkit/types/axios-type-guards.ts'
 import generateAppUrl from '../../toolkit/util/generate-url.ts'
+import { showError, showSuccess, TOAST_PERMANENT_TIMEOUT } from '../../toolkit/util/toasts.ts'
 
 const props = withDefaults(
   defineProps<{
