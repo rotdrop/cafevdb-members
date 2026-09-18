@@ -103,6 +103,7 @@ function postBuildHook(): Plugin {
 const overrides = defineConfig(({ mode }) => ({
   define: {
     APP_NAME: JSON.stringify(appName),
+    __VUE_PROD_DEVTOOLS__: mode === 'development',
   },
   optimizeDeps: {
     rolldownOptions: {
