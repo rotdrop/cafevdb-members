@@ -19,9 +19,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export * from './webpack-setup.ts';
 import { createApp } from 'vue';
 import PersonalSettings from './PersonalSettings.vue';
 
 const app = createApp(PersonalSettings);
+app.config.performance = !!(import.meta?.env?.DEV);
 app.mount('#personal-settings');

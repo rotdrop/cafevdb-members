@@ -19,8 +19,6 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-export * from './webpack-setup.ts';
-import Tooltip from '@rotdrop/nextcloud-vue-components/lib/directives/Tooltip';
 import { createPinia } from 'pinia';
 import { createApp } from 'vue';
 import App from './App.vue';
@@ -36,7 +34,7 @@ const provide = {
 };
 
 const app = createApp(App);
-app.directive('tooltip', Tooltip);
+app.config.performance = !!(import.meta?.env?.DEV);
 app.use(router);
 app.use(pinia);
 for (const [key, value] of Object.entries(provide)) {
