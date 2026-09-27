@@ -59,6 +59,14 @@ class ApplicationShare implements IShare
   // phpcs:enable Squiz.Commenting.FunctionComment.Missing
 
   /**
+   * {@inheritdoc}
+   */
+  public function isPasswordProtected(): bool
+  {
+    return true;
+  }
+
+  /**
    * @return The underlying data array.
    */
   public function getData():array
@@ -69,43 +77,75 @@ class ApplicationShare implements IShare
   /**
    * {@inheritdoc}
    */
-  public function setId($id) {}
+  public function setId($id): IShare
+  {
+    return $this;
+  }
 
   /** {@inheritdoc} */
-  public function getId()
+  public function getId(): string
   {
     return $this->getSharedWith() . '#' . $this->applicationData->getProject()->getName();
   }
 
   /** {@inheritdoc} */
-  public function getFullId() { return $this->appName . ':' . $this->getId(); }
+  public function getFullId(): string
+  {
+    return $this->appName . ':' . $this->getId();
+  }
 
   /** {@inheritdoc} */
-  public function setProviderId($id) {}
+  public function setProviderId($id): IShare
+  {
+    return $this;
+  }
 
   /** {@inheritdoc} */
-  public function setNode(Node $node) {}
+  public function setNode(Node $node): IShare
+  {
+    return $this;
+  }
 
   /** {@inheritdoc} */
-  public function getNode() { return $this->applicationData; }
+  public function getNode(): Node {
+    return $this->applicationData;
+  }
 
   /** {@inheritdoc} */
-  public function setNodeId($id) {}
+  public function setNodeId($id): IShare
+  {
+    return $this;
+  }
 
   /** {@inheritdoc} */
-  public function getNodeId():int { return -1; }
+  public function getNodeId(): int
+  {
+    return -1;
+  }
 
   /** {@inheritdoc} */
-  public function setNodeType($id) {}
+  public function setNodeType($id): IShare
+  {
+    return $this;
+  }
 
   /** {@inheritdoc} */
-  public function getNodeType() { return 'custom'; }
+  public function getNodeType(): string
+  {
+    return 'custom';
+  }
 
   /** {@inheritdoc} */
-  public function setShareType($shareType) {}
+  public function setShareType($shareType): IShare
+  {
+    return $this;
+  }
 
   /** {@inheritdoc} */
-  public function getShareType() { return IShare::TYPE_EMAIL; }
+  public function getShareType()
+  {
+    return IShare::TYPE_EMAIL;
+  }
 
   /** {@inheritdoc} */
   public function setSharedWith($sharedWith) {}
