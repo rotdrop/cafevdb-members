@@ -56,6 +56,7 @@
     "@nextcloud/l10n": "*",
     "@nextcloud/moment": "*",
     "@nextcloud/router": "*",
+    "@nextcloud/vite-config": "^3.0.0-beta.1",
     "@nextcloud/vue": "^9.10.0",
     "@prettier/plugin-php": "^0.25.0",
     "@rotdrop/nextcloud-vue-components": "file:3rdparty/rotdrop-nextcloud-vue-components",
@@ -73,6 +74,7 @@
     "stacktrace-js": "^2.0.2",
     "svgo-loader": "^5.0.0",
     "typescript": "^6.0.0",
+    "vite": "^8.3.1",
     "vite-plugin-svgo": "^3.0.1",
     "vue": "^3.5.41",
     "vue-material-design-icons": "^5.3.1",
@@ -90,9 +92,5 @@
     "core-js@3.50.0": true,
     "github:stacktracejs/stacktrace-gps#62f6967fc85e6fdd5fb9cea1a056b935d9b07a9a": true,
     "uuid@14.0.2": true
-  },
-  "dependencies": {
-    "@nextcloud/vite-config": "^3.0.0-beta.1",
-    "vite": "^8.3.0"
   }
 }
