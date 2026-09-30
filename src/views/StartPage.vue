@@ -23,7 +23,7 @@
   <NcEmptyContent class="emp-content">
     {{ t(appId, '{orchestraName} Orchestra Member Portal', { orchestraName }) }}
     <template #icon>
-      <img :src="Icon">
+      <DynamicSvgIcon :size="64" :data="appIcon" :title="orchestraName + ' members logo'" />
     </template>
     <template #description>
       <div v-if="memberDataError" class="error-section">
@@ -51,7 +51,8 @@ import { generateOcsUrl } from '@nextcloud/router'
 import { NcEmptyContent } from '@nextcloud/vue'
 import { storeToRefs } from 'pinia'
 import { computed } from 'vue'
-import Icon from '../../img/cafevdbmembers.svg'
+import DynamicSvgIcon from '@rotdrop/nextcloud-vue-components/lib/components/DynamicSvgIcon.vue'
+import appIcon from '../../img/cafevdbmembers.svg'
 import { appName as appId } from '../config.ts'
 import { useAppDataStore } from '../stores/appData.ts'
 import { useMemberDataStore } from '../stores/memberData.ts'
