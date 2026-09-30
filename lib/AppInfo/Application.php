@@ -40,7 +40,6 @@ use OCA\CAFeVDBMembers\Database\Registration as DatabaseRegistration;
 use OCA\CAFeVDBMembers\Listener\Registration as ListenerRegistration;
 use OCA\CAFeVDBMembers\Settings\ConfigConstants;
 use OCA\CAFeVDBMembers\Toolkit\AppInfo\AbstractApplication;
-use OCA\CAFeVDBMembers\Toolkit\Middleware\ExceptionMiddleware;
 
 include_once __DIR__ . '/../Toolkit/AppInfo/AbstractApplication.php';
 
@@ -91,11 +90,6 @@ class Application extends AbstractApplication
   public function register(IRegistrationContext $context):void
   {
     parent::register($context);
-    if ((include_once __DIR__ . '/../../vendor-wrapped/autoload.php') === false) {
-      throw new Exception('Cannot include wrapped-autoload. Did you run install dependencies using composer?');
-    }
-
-    $context->registerMiddleWare(ExceptionMiddleware::class);
 
     $context->registerService('orchestraAppName', fn($c) => self::getOrchestraAppName());
     $context->registerService('appManagementGroup', function($c) {
