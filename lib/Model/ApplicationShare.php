@@ -24,6 +24,7 @@ namespace OCA\CAFeVDBMembers\Model;
 
 use DateTime;
 use DateTimeInterface;
+use UnexpectedValueException;
 
 use OCP\Files\Cache\ICacheEntry;
 use OCP\Files\Node;
@@ -193,13 +194,19 @@ class ApplicationShare implements IShare
   public function getStatus(): int { return IShare::STATUS_ACCEPTED; }
 
   /** {@inheritdoc} */
-  public function setNote($note) { $this->note = $note; return $this; }
+  public function setNote($note) {
+    $this->note = $note;
+    return $this;
+  }
 
   /** {@inheritdoc} */
   public function getNote() { return $this->note; }
 
   /** {@inheritdoc} */
-  public function setExpirationDate(?DateTime $expireDate) { $this->expirationDate = $expireDate; return $this; }
+  public function setExpirationDate(?DateTime $expireDate) {
+    $this->expirationDate = $expireDate;
+    return $this;
+  }
 
   /** {@inheritdoc} */
   public function getExpirationDate() { return $this->expirationDate; }
@@ -237,6 +244,18 @@ class ApplicationShare implements IShare
   }
 
   /** {@inheritdoc} */
+  public function isPasswordHashed(): bool
+  {
+    return true;
+  }
+
+  /** {@inheritdoc} */
+  public function setPasswordHash(string $passwordHash): IShare
+  {
+    throw new UnexpectedValueException('I DO NOT EXPECT TO RECEIVE AN ALREADY HASHED PASSWORD');
+  }
+
+  /** {@inheritdoc} */
   public function getPassword() { return $this->applicationData->getPasswordHash(); }
 
   /** {@inheritdoc} */
@@ -258,6 +277,8 @@ class ApplicationShare implements IShare
    * Return the full composite token, including the project name.
    *
    * {@inheritdoc}
+   *
+   * @return string
    */
   public function getToken()
   {
