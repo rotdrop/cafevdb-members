@@ -22,6 +22,8 @@
 
 namespace OCA\CAFeVDBMembers\Controller;
 
+use Throwable;
+
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\Attribute as CoreAttributes;
 use OCP\AppFramework\Http\DataResponse;
@@ -30,11 +32,13 @@ use OCP\IL10N;
 use OCP\IRequest;
 use Psr\Log\LoggerInterface;
 
+use OCA\CAFEVDB\Exceptions\EncryptionFailedException;
 use OCA\CAFeVDBMembers\AppInfo\Application;
 use OCA\CAFeVDBMembers\Database\ORM\Entities;
 use OCA\CAFeVDBMembers\Database\ORM\EntityManager;
 use OCA\CAFeVDBMembers\Service\AuthenticationService;
 use OCA\CAFeVDBMembers\Service\MemberDataService;
+use OCA\CAFeVDBMembers\Toolkit\Exceptions\EnduserNotificationException;
 
 /**
  * AJAX endpoints for dealing with the personal data of the logged in user.
@@ -73,7 +77,7 @@ class MemberDataController extends Controller
     url: '/member',
     verb: 'GET',
   )]
-  public function get():DataResponse
+  public function get(): DataResponse
   {
     $authOk = $this->checkAccess();
     if ($authOk !== true) {
@@ -82,13 +86,31 @@ class MemberDataController extends Controller
     $musicians = $this->entityManager->getRepository(Entities\Musician::class)->findAll();
     $this->logInfo('NUMBER OF MUSICIANS ' . count($musicians));
     if (count($musicians) == 0) {
-      return self::grumble($this->l->t('No member-data found for user-id "%s".', $this->userId));
+      throw new EnduserNotificationException($this->l->t('No member-data found for user-id "%s".', $this->userId));
     } elseif (count($musicians) > 1) {
-      return self::grumble($this->l->t('More than one musician found for user-id "%s".', $this->userId));
+      throw new EnduserNotificationException($this->l->t('More than one musician found for user-id "%s".', $this->userId));
     }
     /** @var Entities\Musician $musician */
     $musician = $musicians[0];
 
+    try {
+      $musicianData = $this->generateMusicianData($musician);
+    } catch (EncryptionFailedException $e) {
+      throw new EnduserNotificationException($this->l->t('Unable to decrypt sensitive data for "%s".', $this->userId), 0, $e);
+    } catch (Throwable $t) {
+      throw new EnduserNotificationException($this->l->t('Unable to retrieve all data for "%s".', $this->userId), 0, $t);
+    }
+
+    return new DataResponse($musicianData);
+  }
+
+  /**
+   * @param Entities\Musician $musician
+   *
+   * @return array
+   */
+  private function generateMusicianData(Entities\Musician $musician): array
+  {
     $this->logInfo('NAME ' . $musician->getPublicName() . ' #Instruments ' . $musician->getInstruments()->count());
     $musicianData = $musician->toArray();
 
@@ -287,7 +309,7 @@ class MemberDataController extends Controller
 
     $this->logInfo('SIZE OF DATA ' . strlen(json_encode($musicianData)));
 
-    return self::dataResponse($musicianData);
+    return $musicianData;
   }
 
   /**
@@ -337,9 +359,9 @@ class MemberDataController extends Controller
     $musicians = $this->entityManager->getRepository(Entities\Musician::class)->findAll();
     $this->logInfo('NUMBER OF MUSICIANS ' . count($musicians));
     if (count($musicians) == 0) {
-      return self::grumble($this->l->t('No member-data found for user-id "%s".', $this->userId));
+      throw new EnduserNotificationException($this->l->t('No member-data found for user-id "%s".', $this->userId));
     } elseif (count($musicians) > 1) {
-      return self::grumble($this->l->t('More than one musician found for user-id "%s".', $this->userId));
+      throw new EnduserNotificationException($this->l->t('More than one musician found for user-id "%s".', $this->userId));
     }
 
     /** @var Entities\Musician $musician */
@@ -347,12 +369,12 @@ class MemberDataController extends Controller
 
     $fieldDatum = $musician->getProjectParticipantFieldsDatum($optionKey);
     if (empty($fieldDatum)) {
-      return self::grumble($this->l->t('Unable to find data for the option-uuid "%s".', $optionKey));
+      throw new EnduserNotificationException($this->l->t('Unable to find data for the option-uuid "%s".', $optionKey));
     }
 
     $pathInfo = $this->dataService->participantFileInfo($fieldDatum);
     if (empty($pathInfo)) {
-      return self::grumble($this->l->t('The option "%s" does not have any associated files.', $fieldDatum->getDataOption()->getLabel()));
+      throw new EnduserNotificationException($this->l->t('The option "%s" does not have any associated files.', $fieldDatum->getDataOption()->getLabel()));
     }
 
     // $pathInfo['file'] is already the file entity
@@ -376,7 +398,7 @@ class MemberDataController extends Controller
       $this->authenticationService->getRowAccessToken();
       return true;
     } catch (\Throwable $t) {
-      return self::grumble($this->l->t('Access to the member-data is not authorized: %s', $t->getMessage()));
+      throw new EnduserNotificationException($this->l->t('Access to the member-data is not authorized: %s', $t->getMessage()));
     }
   }
 }

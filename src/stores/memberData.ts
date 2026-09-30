@@ -281,7 +281,7 @@ export const useMemberDataStore = defineStore('member-data', () => {
       initialized.error = null;
       initialized.loaded = true;
     } catch (e) {
-      logger.error('ERROR', e);
+      logger.error('ERROR', { e });
       let message = t(appId, 'general failure');
       if (isAxiosErrorResponse(e) && e.response.data) {
         const messages = (e.response.data as { messages?: string[] }).messages;
@@ -303,7 +303,7 @@ export const useMemberDataStore = defineStore('member-data', () => {
           const response = await axios.get(url + '?format=json');
           initialized.recryptRequest = response.data.ocs.data.request;
         } catch (e) {
-          logger.error('Error retrieving recryption request', e);
+          logger.error('Error retrieving recryption request', { e });
         }
       }
       initialized.promise = null;
