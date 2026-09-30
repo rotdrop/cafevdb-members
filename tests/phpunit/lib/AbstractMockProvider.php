@@ -274,6 +274,7 @@ abstract class AbstractMockProvider
     self::$appContainer = $this->app->get(ContainerInterface::class);
     self::$appContainer->registerService(LoggerInterface::class, fn() => $this->logger);
     \OC::$server->registerService(LoggerInterface::class, fn() => $this->logger);
+    unset(\OC::$server[\OC\L10N\Factory::class]);
     $appContainers = new ReflectionProperty(\OC\ServerContainer::class, 'appContainers')->getValue(\OC::$server);
     if (empty(self::$serverContainerSnapshot)) {
       self::$serverContainerSnapshot = self::snapshotContainer(\OC::$server);
@@ -344,17 +345,17 @@ abstract class AbstractMockProvider
     $instance->method('getLoginCredentials')->willReturn(
       new class implements ILoginCredentials {
         /** {@inheritdoc} */
-        public function getUID()
+        public function getUID(): string
         {
           return AbstractMockProvider::CLOUD_USER_UID;
         }
         /** {@inheritdoc} */
-        public function getLoginName()
+        public function getLoginName(): string
         {
           return $this->getUID();
         }
         /** {@inheritdoc} */
-        public function getPassword()
+        public function getPassword(): string
         {
           return 'nothing';
         }
