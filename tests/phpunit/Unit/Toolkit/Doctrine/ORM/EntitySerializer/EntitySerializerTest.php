@@ -38,6 +38,7 @@ use OCA\CAFeVDBMembers\Toolkit\Doctrine\ORM\EntitySerializer\EntitySerializer as
 use OCA\RotDrop\Tests\DeprecationException;
 
 /** Test aspects of the EntitySerializer. */
+#[Attributes\CoversClass(EntitySerializer\CollectionEntityReference::class)]
 #[Attributes\CoversClass(EntitySerializer\EntityReference::class)]
 #[Attributes\CoversClass(EntitySerializer\EntityReferenceCollection::class)]
 #[Attributes\CoversClass(EntitySerializer\EntityResponse::class)]
