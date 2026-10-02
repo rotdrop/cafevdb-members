@@ -20,7 +20,7 @@
  -->
 <template>
   <div class="page-container" :class="{ 'icon-loading': loading, loading }">
-    <h2>{{ t(appId, 'Personal Profile of {publicName}', { publicName: memberData.personalPublicName }) }}</h2>
+    <h2>{{ t(appId, 'Personal Profile of {publicName}', { publicName: memberData.personalPublicName ?? '' }) }}</h2>
     <div class="input-row">
       <InputText v-model="memberData.firstName"
                  :label="t(appId, 'First Name')"

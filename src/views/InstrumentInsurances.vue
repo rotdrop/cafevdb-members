@@ -328,33 +328,35 @@ onBeforeMount(async () => {
     }
   }
 
-  :deep(&) {
-    .list-item {
+  & {
+    :deep(.list-item) {
       padding-right: 0;
       ul .list-item {
         padding-top:2px;
         padding-bottom:2px;
       }
     }
-    .list-item__anchor {
+
+    :deep(.list-item__anchor) {
       height: auto;
     }
 
-    .list-item-content__subname {
+    :deep(.list-item-content__subname) {
       padding-right:0;
-      &--bold {
-        .list-item-content {
-          &__details {
-            font-weight:inherit;
-          }
-          &__subname {
-            font-weight: normal;
-          }
+    }
+    :deep(.list-item-content__subname--bold) {
+      padding-right:0;
+      .list-item-content {
+        &__details {
+          font-weight:inherit;
+        }
+        &__subname {
+          font-weight: normal;
         }
       }
     }
 
-    .list-item__wrapper.insurance-item {
+    :deep(.list-item__wrapper).insurance-item {
       .list-item-content__details {
         color:inherit;
         display:flex;

@@ -23,7 +23,7 @@
   <NcContent :appName="appId">
     <NcAppNavigation>
       <template #list>
-        <NcAppNavigationItem :to="{ name: '/' }"
+        <NcAppNavigationItem :to="{ name: 'home' }"
                              :name="t(appId, 'Home')"
                              icon="icon-home"
                              @click="showSidebar = false"

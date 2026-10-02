@@ -6,10 +6,10 @@
   <div class="input__container" :class="['input-type-' + type, { readonly, collapse }, has_hint, has_icon, ...cloudVersionClasses ]">
     <div class="input-effect" :class="[filled, { readonly, collapse }, has_hint, has_icon ]">
       <NcDateTimePicker v-if="isDatePickerType"
+                        v-model="model"
                         class="effect"
                         :type="isDatePickerType"
                         :format="format ? format : formatTypeMap"
-                        :modelValue="value"
                         :data-foo="value"
                         :placeholder="placeholder"
                         :inputClass="['effect', 'mx-input', { focusable: isFocusable }]"
@@ -22,8 +22,8 @@
                         @input="$emit('input', $event.target ? $event.target.value : $event);"
       />
       <NcSelect v-else-if="isMultiselectType"
+                v-model="model"
                 class="effect"
-                :modelValue="value"
                 :placeholder="placeholder"
                 :disabled="disabled || readonly"
                 :readonly="readonly"
@@ -35,8 +35,8 @@
                 @blur="show = !show;"
       />
       <input v-else
+             v-model="model"
              :type="type"
-             :value="value"
              :placeholder="placeholder"
              :disabled="disabled"
              class="effect"
@@ -73,13 +73,14 @@ import cloudVersionClassesImport from '../toolkit/util/cloud-version-classes.ts'
 // import 'vue-material-design-icons/styles.css'
 import 'material-icons/iconfont/material-icons.css'
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const model = defineModel<string|Date|any[]|object>()
+
 const props = withDefaults(defineProps<{
   type?: string
   disabled?: boolean
   readonly?: boolean
   required?: boolean
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  value?: string|Date|any[]|object
   label?: string
   hint?: string
   icon?: string
@@ -105,13 +106,13 @@ const props = withDefaults(defineProps<{
   format: undefined,
 })
 
-const emit = defineEmits(['input', 'update:value'])
+const emit = defineEmits(['input'])
 
 const formatMapDE = {
-  date: 'DD.MM.YYYY',
-  datetime: 'DD.MM.YYYY H:mm:ss',
+  date: 'dd.MM.yyyy',
+  datetime: 'dd.MM.yyyy H:mm:ss',
   year: 'YYYY',
-  month: 'MM.YYYY',
+  month: 'MM.yyyy',
   time: 'H:mm:ss',
   week: 'w',
 }
@@ -203,8 +204,9 @@ interface TargetedMouseEvent extends MouseEvent {
 const handleInput = (vueEvent: Event) => {
   console.info('EVENT', { vueEvent })
   const event = vueEvent as TargetedMouseEvent
+  const value = event.target.value
+  model.value = value
   emit('input', event.target.value)
-  emit('update:value', event.target.value)
 }
 </script>
 
