@@ -44,7 +44,7 @@ class EncryptedFileData extends FileData
 
   /**
    * @var string
-   *
+   */
   #[MediaMonks\Transformable(name: 'encrypt', override: true, context: 'encryptionContext')]
   protected $data;
 
