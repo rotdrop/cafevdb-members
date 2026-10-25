@@ -1,9 +1,9 @@
 /*M!999999\- enable the sandbox mode */ 
--- MariaDB dump 10.19-12.0.2-MariaDB, for Linux (x86_64)
+-- MariaDB dump 10.20-12.3.3-MariaDB, for Linux (x86_64)
 --
 -- Host: localhost    Database: cafevdb
 -- ------------------------------------------------------
--- Server version	12.0.2-MariaDB
+-- Server version	12.3.3-MariaDB
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -42,12 +42,13 @@ CREATE TABLE `ChangeLog` (
 -- Dumping data for table `ChangeLog`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `ChangeLog` WRITE;
 /*!40000 ALTER TABLE `ChangeLog` DISABLE KEYS */;
-set autocommit=0;
 /*!40000 ALTER TABLE `ChangeLog` ENABLE KEYS */;
 UNLOCK TABLES;
-commit;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `CompositePayments`
@@ -98,12 +99,13 @@ CREATE TABLE `CompositePayments` (
 -- Dumping data for table `CompositePayments`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `CompositePayments` WRITE;
 /*!40000 ALTER TABLE `CompositePayments` DISABLE KEYS */;
-set autocommit=0;
 /*!40000 ALTER TABLE `CompositePayments` ENABLE KEYS */;
 UNLOCK TABLES;
-commit;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `DatabaseStorageDirEntries`
@@ -133,12 +135,13 @@ CREATE TABLE `DatabaseStorageDirEntries` (
 -- Dumping data for table `DatabaseStorageDirEntries`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `DatabaseStorageDirEntries` WRITE;
 /*!40000 ALTER TABLE `DatabaseStorageDirEntries` DISABLE KEYS */;
-set autocommit=0;
 /*!40000 ALTER TABLE `DatabaseStorageDirEntries` ENABLE KEYS */;
 UNLOCK TABLES;
-commit;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `DatabaseStorages`
@@ -162,12 +165,13 @@ CREATE TABLE `DatabaseStorages` (
 -- Dumping data for table `DatabaseStorages`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `DatabaseStorages` WRITE;
 /*!40000 ALTER TABLE `DatabaseStorages` DISABLE KEYS */;
-set autocommit=0;
 /*!40000 ALTER TABLE `DatabaseStorages` ENABLE KEYS */;
 UNLOCK TABLES;
-commit;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `DoctrineMigrationsVersions`
@@ -188,25 +192,27 @@ CREATE TABLE `DoctrineMigrationsVersions` (
 -- Dumping data for table `DoctrineMigrationsVersions`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `DoctrineMigrationsVersions` WRITE;
 /*!40000 ALTER TABLE `DoctrineMigrationsVersions` DISABLE KEYS */;
-set autocommit=0;
 INSERT INTO `DoctrineMigrationsVersions` VALUES
-('OCA\\CAFEVDB\\Maintenance\\Migrations\\Version19700101000001','2026-08-30 22:02:29.603433',347),
-('OCA\\CAFEVDB\\Maintenance\\Migrations\\Version19700101000002','2026-08-30 22:02:30.000317',144),
-('OCA\\CAFEVDB\\Maintenance\\Migrations\\Version19700101000003','2026-08-30 22:02:30.159823',6),
-('OCA\\CAFEVDB\\Maintenance\\Migrations\\Version20260108084800','2026-08-30 22:02:30.179411',38),
-('OCA\\CAFEVDB\\Maintenance\\Migrations\\Version20260108115432','2026-08-30 22:02:30.232919',2),
-('OCA\\CAFEVDB\\Maintenance\\Migrations\\Version20260130130553','2026-08-30 22:02:30.250301',6),
-('OCA\\CAFEVDB\\Maintenance\\Migrations\\Version20260131090857','2026-08-30 22:02:30.270709',17),
-('OCA\\CAFEVDB\\Maintenance\\Migrations\\Version20260206193722','2026-08-30 22:02:30.302151',3),
-('OCA\\CAFEVDB\\Maintenance\\Migrations\\Version20260207000624','2026-08-30 22:02:30.319295',1),
-('OCA\\CAFEVDB\\Maintenance\\Migrations\\Version20260819094146','2026-08-30 22:02:30.334454',5),
-('OCA\\CAFEVDB\\Maintenance\\Migrations\\Version20260819094422','2026-08-30 22:02:30.353712',4),
-('OCA\\CAFEVDB\\Maintenance\\Migrations\\Version20260819105948','2026-08-30 22:02:30.372687',14);
+('OCA\\CAFEVDB\\Maintenance\\Migrations\\Version19700101000001','2026-10-25 17:29:51.119935',802),
+('OCA\\CAFEVDB\\Maintenance\\Migrations\\Version19700101000002','2026-10-25 17:29:51.988843',292),
+('OCA\\CAFEVDB\\Maintenance\\Migrations\\Version19700101000003','2026-10-25 17:29:52.309066',15),
+('OCA\\CAFEVDB\\Maintenance\\Migrations\\Version20260108084800','2026-10-25 17:29:52.350950',90),
+('OCA\\CAFEVDB\\Maintenance\\Migrations\\Version20260108115432','2026-10-25 17:29:52.469341',5),
+('OCA\\CAFEVDB\\Maintenance\\Migrations\\Version20260130130553','2026-10-25 17:29:52.500709',13),
+('OCA\\CAFEVDB\\Maintenance\\Migrations\\Version20260131090857','2026-10-25 17:29:52.539498',28),
+('OCA\\CAFEVDB\\Maintenance\\Migrations\\Version20260206193722','2026-10-25 17:29:52.594158',7),
+('OCA\\CAFEVDB\\Maintenance\\Migrations\\Version20260207000624','2026-10-25 17:29:52.628261',3),
+('OCA\\CAFEVDB\\Maintenance\\Migrations\\Version20260819094146','2026-10-25 17:29:52.659129',12),
+('OCA\\CAFEVDB\\Maintenance\\Migrations\\Version20260819094422','2026-10-25 17:29:52.698764',10),
+('OCA\\CAFEVDB\\Maintenance\\Migrations\\Version20260819105948','2026-10-25 17:29:52.737178',30),
+('OCA\\CAFEVDB\\Maintenance\\Migrations\\Version20261009150233','2026-10-25 17:29:52.795009',8);
 /*!40000 ALTER TABLE `DoctrineMigrationsVersions` ENABLE KEYS */;
 UNLOCK TABLES;
-commit;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `DonationReceipts`
@@ -242,12 +248,13 @@ CREATE TABLE `DonationReceipts` (
 -- Dumping data for table `DonationReceipts`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `DonationReceipts` WRITE;
 /*!40000 ALTER TABLE `DonationReceipts` DISABLE KEYS */;
-set autocommit=0;
 /*!40000 ALTER TABLE `DonationReceipts` ENABLE KEYS */;
 UNLOCK TABLES;
-commit;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `EmailAttachments`
@@ -273,12 +280,13 @@ CREATE TABLE `EmailAttachments` (
 -- Dumping data for table `EmailAttachments`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `EmailAttachments` WRITE;
 /*!40000 ALTER TABLE `EmailAttachments` DISABLE KEYS */;
-set autocommit=0;
 /*!40000 ALTER TABLE `EmailAttachments` ENABLE KEYS */;
 UNLOCK TABLES;
-commit;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `EmailDrafts`
@@ -304,12 +312,13 @@ CREATE TABLE `EmailDrafts` (
 -- Dumping data for table `EmailDrafts`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `EmailDrafts` WRITE;
 /*!40000 ALTER TABLE `EmailDrafts` DISABLE KEYS */;
-set autocommit=0;
 /*!40000 ALTER TABLE `EmailDrafts` ENABLE KEYS */;
 UNLOCK TABLES;
-commit;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `EmailTemplates`
@@ -336,12 +345,13 @@ CREATE TABLE `EmailTemplates` (
 -- Dumping data for table `EmailTemplates`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `EmailTemplates` WRITE;
 /*!40000 ALTER TABLE `EmailTemplates` DISABLE KEYS */;
-set autocommit=0;
 /*!40000 ALTER TABLE `EmailTemplates` ENABLE KEYS */;
 UNLOCK TABLES;
-commit;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `EncryptedFileOwners`
@@ -365,12 +375,15 @@ CREATE TABLE `EncryptedFileOwners` (
 -- Dumping data for table `EncryptedFileOwners`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `EncryptedFileOwners` WRITE;
 /*!40000 ALTER TABLE `EncryptedFileOwners` DISABLE KEYS */;
-set autocommit=0;
+INSERT INTO `EncryptedFileOwners` VALUES
+(1,1);
 /*!40000 ALTER TABLE `EncryptedFileOwners` ENABLE KEYS */;
 UNLOCK TABLES;
-commit;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `ExtLogEntries`
@@ -396,81 +409,83 @@ CREATE TABLE `ExtLogEntries` (
   KEY `log_version_lookup_idx` (`object_id`,`object_class`,`version`),
   KEY `log_action_lookup_idx` (`action`,`object_class`),
   KEY `log_action_class_lookup_idx` (`action`)
-) ENGINE=InnoDB AUTO_INCREMENT=62 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB AUTO_INCREMENT=63 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci ROW_FORMAT=DYNAMIC;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `ExtLogEntries`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `ExtLogEntries` WRITE;
 /*!40000 ALTER TABLE `ExtLogEntries` DISABLE KEYS */;
-set autocommit=0;
 INSERT INTO `ExtLogEntries` VALUES
-(1,'create','2026-08-30 22:02:30.062720','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\InstrumentFamily',1,'a:2:{s:6:\"family\";s:7:\"strings\";s:7:\"deleted\";N;}','john.doe','','1'),
-(2,'create','2026-08-30 22:02:30.063033','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\InstrumentFamily',1,'a:2:{s:6:\"family\";s:6:\"string\";s:7:\"deleted\";N;}','john.doe','','2'),
-(3,'create','2026-08-30 22:02:30.063230','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\InstrumentFamily',1,'a:2:{s:6:\"family\";s:7:\"plucked\";s:7:\"deleted\";N;}','john.doe','','3'),
-(4,'create','2026-08-30 22:02:30.063424','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\InstrumentFamily',1,'a:2:{s:6:\"family\";s:4:\"wind\";s:7:\"deleted\";N;}','john.doe','','4'),
-(5,'create','2026-08-30 22:02:30.063611','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\InstrumentFamily',1,'a:2:{s:6:\"family\";s:4:\"wood\";s:7:\"deleted\";N;}','john.doe','','5'),
-(6,'create','2026-08-30 22:02:30.063799','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\InstrumentFamily',1,'a:2:{s:6:\"family\";s:5:\"brass\";s:7:\"deleted\";N;}','john.doe','','6'),
-(7,'create','2026-08-30 22:02:30.063986','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\InstrumentFamily',1,'a:2:{s:6:\"family\";s:10:\"percussion\";s:7:\"deleted\";N;}','john.doe','','7'),
-(8,'create','2026-08-30 22:02:30.064175','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\InstrumentFamily',1,'a:2:{s:6:\"family\";s:8:\"keyboard\";s:7:\"deleted\";N;}','john.doe','','8'),
-(9,'create','2026-08-30 22:02:30.064370','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\InstrumentFamily',1,'a:2:{s:6:\"family\";s:13:\"miscellaneous\";s:7:\"deleted\";N;}','john.doe','','9'),
-(10,'create','2026-08-30 22:02:30.064560','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\InstrumentFamily',1,'a:2:{s:6:\"family\";s:17:\"not an instrument\";s:7:\"deleted\";N;}','john.doe','','10'),
-(11,'create','2026-08-30 22:02:30.064771','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument',1,'a:3:{s:4:\"name\";s:6:\"violin\";s:9:\"sortOrder\";i:1;s:7:\"deleted\";N;}','john.doe','','1'),
-(12,'create','2026-08-30 22:02:30.064961','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument',1,'a:3:{s:4:\"name\";s:5:\"viola\";s:9:\"sortOrder\";i:2;s:7:\"deleted\";N;}','john.doe','','2'),
-(13,'create','2026-08-30 22:02:30.065149','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument',1,'a:3:{s:4:\"name\";s:11:\"violoncello\";s:9:\"sortOrder\";i:3;s:7:\"deleted\";N;}','john.doe','','3'),
-(14,'create','2026-08-30 22:02:30.065343','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument',1,'a:3:{s:4:\"name\";s:11:\"double bass\";s:9:\"sortOrder\";i:4;s:7:\"deleted\";N;}','john.doe','','4'),
-(15,'create','2026-08-30 22:02:30.065549','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument',1,'a:3:{s:4:\"name\";s:5:\"flute\";s:9:\"sortOrder\";i:10;s:7:\"deleted\";N;}','john.doe','','5'),
-(16,'create','2026-08-30 22:02:30.065742','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument',1,'a:3:{s:4:\"name\";s:7:\"piccolo\";s:9:\"sortOrder\";i:11;s:7:\"deleted\";N;}','john.doe','','6'),
-(17,'create','2026-08-30 22:02:30.065932','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument',1,'a:3:{s:4:\"name\";s:4:\"oboe\";s:9:\"sortOrder\";i:20;s:7:\"deleted\";N;}','john.doe','','7'),
-(18,'create','2026-08-30 22:02:30.066121','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument',1,'a:3:{s:4:\"name\";s:12:\"English horn\";s:9:\"sortOrder\";i:25;s:7:\"deleted\";N;}','john.doe','','8'),
-(19,'create','2026-08-30 22:02:30.066308','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument',1,'a:3:{s:4:\"name\";s:8:\"clarinet\";s:9:\"sortOrder\";i:30;s:7:\"deleted\";N;}','john.doe','','9'),
-(20,'create','2026-08-30 22:02:30.066509','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument',1,'a:3:{s:4:\"name\";s:13:\"bass clarinet\";s:9:\"sortOrder\";i:35;s:7:\"deleted\";N;}','john.doe','','10'),
-(21,'create','2026-08-30 22:02:30.066699','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument',1,'a:3:{s:4:\"name\";s:7:\"bassoon\";s:9:\"sortOrder\";i:40;s:7:\"deleted\";N;}','john.doe','','11'),
-(22,'create','2026-08-30 22:02:30.066886','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument',1,'a:3:{s:4:\"name\";s:12:\"natural horn\";s:9:\"sortOrder\";i:50;s:7:\"deleted\";N;}','john.doe','','12'),
-(23,'create','2026-08-30 22:02:30.067073','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument',1,'a:3:{s:4:\"name\";s:7:\"trumpet\";s:9:\"sortOrder\";i:60;s:7:\"deleted\";N;}','john.doe','','13'),
-(24,'create','2026-08-30 22:02:30.067269','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument',1,'a:3:{s:4:\"name\";s:8:\"trombone\";s:9:\"sortOrder\";i:70;s:7:\"deleted\";N;}','john.doe','','14'),
-(25,'create','2026-08-30 22:02:30.067461','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument',1,'a:3:{s:4:\"name\";s:13:\"bass trombone\";s:9:\"sortOrder\";i:71;s:7:\"deleted\";N;}','john.doe','','15'),
-(26,'create','2026-08-30 22:02:30.067650','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument',1,'a:3:{s:4:\"name\";s:4:\"tuba\";s:9:\"sortOrder\";i:80;s:7:\"deleted\";N;}','john.doe','','16'),
-(27,'create','2026-08-30 22:02:30.067838','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument',1,'a:3:{s:4:\"name\";s:4:\"harp\";s:9:\"sortOrder\";i:90;s:7:\"deleted\";N;}','john.doe','','17'),
-(28,'create','2026-08-30 22:02:30.068029','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument',1,'a:3:{s:4:\"name\";s:6:\"guitar\";s:9:\"sortOrder\";i:95;s:7:\"deleted\";N;}','john.doe','','18'),
-(29,'create','2026-08-30 22:02:30.068216','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument',1,'a:3:{s:4:\"name\";s:7:\"timpani\";s:9:\"sortOrder\";i:100;s:7:\"deleted\";N;}','john.doe','','19'),
-(30,'create','2026-08-30 22:02:30.068425','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument',1,'a:3:{s:4:\"name\";s:4:\"drum\";s:9:\"sortOrder\";i:105;s:7:\"deleted\";N;}','john.doe','','20'),
-(31,'create','2026-08-30 22:02:30.068617','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument',1,'a:3:{s:4:\"name\";s:9:\"bass drum\";s:9:\"sortOrder\";i:110;s:7:\"deleted\";N;}','john.doe','','21'),
-(32,'create','2026-08-30 22:02:30.068805','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument',1,'a:3:{s:4:\"name\";s:7:\"cymbals\";s:9:\"sortOrder\";i:201;s:7:\"deleted\";N;}','john.doe','','22'),
-(33,'create','2026-08-30 22:02:30.069009','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument',1,'a:3:{s:4:\"name\";s:12:\"glockenspiel\";s:9:\"sortOrder\";i:203;s:7:\"deleted\";N;}','john.doe','','23'),
-(34,'create','2026-08-30 22:02:30.069203','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument',1,'a:3:{s:4:\"name\";s:9:\"xylophone\";s:9:\"sortOrder\";i:400;s:7:\"deleted\";N;}','john.doe','','24'),
-(35,'create','2026-08-30 22:02:30.069412','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument',1,'a:3:{s:4:\"name\";s:5:\"piano\";s:9:\"sortOrder\";i:5000;s:7:\"deleted\";N;}','john.doe','','25'),
-(36,'create','2026-08-30 22:02:30.069601','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument',1,'a:3:{s:4:\"name\";s:5:\"organ\";s:9:\"sortOrder\";i:5010;s:7:\"deleted\";N;}','john.doe','','26'),
-(37,'create','2026-08-30 22:02:30.069789','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument',1,'a:3:{s:4:\"name\";s:11:\"harpsichord\";s:9:\"sortOrder\";i:5015;s:7:\"deleted\";N;}','john.doe','','27'),
-(38,'create','2026-08-30 22:02:30.069977','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument',1,'a:3:{s:4:\"name\";s:7:\"celesta\";s:9:\"sortOrder\";i:5020;s:7:\"deleted\";N;}','john.doe','','28'),
-(39,'create','2026-08-30 22:02:30.070164','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument',1,'a:3:{s:4:\"name\";s:9:\"bandoneon\";s:9:\"sortOrder\";i:5025;s:7:\"deleted\";N;}','john.doe','','29'),
-(40,'create','2026-08-30 22:02:30.070395','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument',1,'a:3:{s:4:\"name\";s:9:\"accordion\";s:9:\"sortOrder\";i:5030;s:7:\"deleted\";N;}','john.doe','','30'),
-(41,'create','2026-08-30 22:02:30.070619','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument',1,'a:3:{s:4:\"name\";s:9:\"associate\";s:9:\"sortOrder\";i:2147483647;s:7:\"deleted\";N;}','john.doe','','31'),
-(42,'create','2026-08-30 22:02:30.070816','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument',1,'a:3:{s:4:\"name\";s:16:\"business partner\";s:9:\"sortOrder\";i:2147483647;s:7:\"deleted\";N;}','john.doe','','32'),
-(43,'create','2026-08-30 22:02:30.531479','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project',1,'a:9:{s:4:\"year\";i:2099;s:4:\"name\";s:15:\"TestProject2099\";s:4:\"type\";s:9:\"temporary\";s:13:\"mailingListId\";N;s:21:\"registrationStartDate\";N;s:20:\"registrationDeadline\";N;s:7:\"deleted\";N;s:7:\"created\";O:42:\"OCA\\CAFEVDB\\Wrapped\\Carbon\\CarbonImmutable\":3:{s:4:\"date\";s:26:\"2026-08-30 22:02:30.408668\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}s:7:\"updated\";O:42:\"OCA\\CAFEVDB\\Wrapped\\Carbon\\CarbonImmutable\":3:{s:4:\"date\";s:26:\"2026-08-30 22:02:30.407720\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}}','john.doe','','1'),
-(44,'create','2026-08-30 22:02:30.531772','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Musician',1,'a:30:{s:7:\"surName\";s:12:\"Musterperson\";s:9:\"firstName\";s:3:\"Max\";s:8:\"nickName\";N;s:11:\"displayName\";N;s:6:\"gender\";N;s:10:\"userIdSlug\";s:16:\"lieschen.mueller\";s:14:\"userPassphrase\";N;s:4:\"city\";s:8:\"Nirgends\";s:6:\"street\";s:15:\"Unauffindbarweg\";s:12:\"streetNumber\";s:2:\"42\";s:17:\"addressSupplement\";s:8:\"Igloo 13\";s:5:\"poBox\";N;s:7:\"country\";s:2:\"AQ\";s:10:\"postalCode\";s:3:\"Z-7\";s:8:\"language\";N;s:11:\"mobilePhone\";s:4:\"0815\";s:14:\"fixedLinePhone\";s:4:\"4711\";s:8:\"birthday\";O:42:\"OCA\\CAFEVDB\\Wrapped\\Carbon\\CarbonImmutable\":3:{s:4:\"date\";s:26:\"2026-08-30 22:02:30.439994\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}s:5:\"email\";s:20:\"john.doe@nowhere.tld\";s:26:\"defaultParticipationStatus\";s:7:\"regular\";s:7:\"remarks\";N;s:23:\"cloudAccountDeactivated\";N;s:20:\"cloudAccountDisabled\";b:1;s:14:\"addressBookUri\";N;s:12:\"organization\";N;s:8:\"jobTitle\";N;s:7:\"deleted\";N;s:7:\"created\";O:42:\"OCA\\CAFEVDB\\Wrapped\\Carbon\\CarbonImmutable\":3:{s:4:\"date\";s:26:\"2026-08-30 22:02:30.439994\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}s:7:\"updated\";O:42:\"OCA\\CAFEVDB\\Wrapped\\Carbon\\CarbonImmutable\":3:{s:4:\"date\";s:26:\"2026-08-30 22:02:30.439994\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}s:4:\"uuid\";O:55:\"OCA\\CAFEVDB\\Wrapped\\Ramsey\\Uuid\\Lazy\\LazyUuidFromString\":1:{s:6:\"string\";s:36:\"00000000-0000-0000-0000-000000000000\";}}','john.doe','','1'),
-(45,'create','2026-08-30 22:02:30.532040','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\MusicianEmailAddress',1,'a:3:{s:7:\"address\";s:20:\"john.doe@nowhere.tld\";s:7:\"created\";O:42:\"OCA\\CAFEVDB\\Wrapped\\Carbon\\CarbonImmutable\":3:{s:4:\"date\";s:26:\"2026-08-30 22:02:30.439994\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}s:7:\"updated\";O:42:\"OCA\\CAFEVDB\\Wrapped\\Carbon\\CarbonImmutable\":3:{s:4:\"date\";s:26:\"2026-08-30 22:02:30.439994\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}}','john.doe','','john.doe@nowhere.tld 1'),
-(46,'create','2026-08-30 22:02:30.532250','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\SepaBankAccount',1,'a:8:{s:8:\"sequence\";i:1;s:4:\"iban\";s:22:\"DE02700100800030876808\";s:3:\"bic\";s:11:\"PBNKDEFFXXX\";s:3:\"blz\";s:8:\"70010080\";s:16:\"bankAccountOwner\";s:17:\"Musterperson, Max\";s:7:\"deleted\";N;s:7:\"created\";O:42:\"OCA\\CAFEVDB\\Wrapped\\Carbon\\CarbonImmutable\":3:{s:4:\"date\";s:26:\"2026-08-30 22:02:30.460910\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}s:7:\"updated\";O:42:\"OCA\\CAFEVDB\\Wrapped\\Carbon\\CarbonImmutable\":3:{s:4:\"date\";s:26:\"2026-08-30 22:02:30.460748\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}}','john.doe','','1 1'),
-(47,'create','2026-08-30 22:02:30.563181','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipant',1,'a:5:{s:12:\"registration\";b:0;s:19:\"participationStatus\";s:7:\"regular\";s:7:\"created\";O:42:\"OCA\\CAFEVDB\\Wrapped\\Carbon\\CarbonImmutable\":3:{s:4:\"date\";s:26:\"2026-08-30 22:02:30.439994\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}s:7:\"updated\";O:42:\"OCA\\CAFEVDB\\Wrapped\\Carbon\\CarbonImmutable\":3:{s:4:\"date\";s:26:\"2026-08-30 22:02:30.439994\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}s:7:\"deleted\";N;}','john.doe','','1 1'),
-(48,'create','2026-08-30 22:02:30.603817','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\MusicianInstrument',1,'a:4:{s:7:\"ranking\";i:1;s:7:\"created\";O:42:\"OCA\\CAFEVDB\\Wrapped\\Carbon\\CarbonImmutable\":3:{s:4:\"date\";s:26:\"2026-08-30 22:02:30.590919\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}s:7:\"updated\";O:42:\"OCA\\CAFEVDB\\Wrapped\\Carbon\\CarbonImmutable\":3:{s:4:\"date\";s:26:\"2026-08-30 22:02:30.590758\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}s:7:\"deleted\";N;}','john.doe','','1 1'),
-(49,'create','2026-08-30 22:02:30.604071','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\MusicianInstrument',1,'a:4:{s:7:\"ranking\";i:1;s:7:\"created\";O:42:\"OCA\\CAFEVDB\\Wrapped\\Carbon\\CarbonImmutable\":3:{s:4:\"date\";s:26:\"2026-08-30 22:02:30.592924\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}s:7:\"updated\";O:42:\"OCA\\CAFEVDB\\Wrapped\\Carbon\\CarbonImmutable\":3:{s:4:\"date\";s:26:\"2026-08-30 22:02:30.592812\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}s:7:\"deleted\";N;}','john.doe','','1 4'),
-(50,'create','2026-08-30 22:02:30.604381','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectInstrumentationNumber',1,'a:2:{s:5:\"voice\";i:0;s:8:\"quantity\";i:0;}','john.doe','',NULL),
-(51,'create','2026-08-30 22:02:30.604589','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectInstrumentationNumber',1,'a:2:{s:5:\"voice\";i:1;s:8:\"quantity\";i:1;}','john.doe','','1 1 1'),
-(52,'create','2026-08-30 22:02:30.604775','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectInstrumentationNumber',1,'a:2:{s:5:\"voice\";i:2;s:8:\"quantity\";i:2;}','john.doe','','1 1 2'),
-(53,'create','2026-08-30 22:02:30.605071','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectInstrument',1,'a:2:{s:5:\"voice\";i:0;s:13:\"sectionLeader\";b:0;}','john.doe','',NULL),
-(54,'update','2026-08-30 22:02:30.605280','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument',2,'a:1:{s:4:\"name\";s:7:\"Violine\";}','john.doe','','1'),
-(55,'update','2026-08-30 22:02:30.609949','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument',2,'a:1:{s:4:\"name\";s:10:\"Kontrabass\";}','john.doe','','4'),
-(56,'update','2026-08-30 22:02:30.610652','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\InstrumentFamily',2,'a:1:{s:6:\"family\";s:9:\"Streicher\";}','john.doe','','1'),
-(57,'update','2026-08-30 22:02:30.611381','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\InstrumentFamily',2,'a:1:{s:6:\"family\";s:6:\"Saiten\";}','john.doe','','2'),
-(58,'create','2026-08-30 22:02:30.637365','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\MusicianRowAccessToken',1,'a:4:{s:6:\"userId\";s:8:\"john.doe\";s:15:\"accessTokenHash\";s:128:\"d404559f602eab6fd602ac7680dacbfaadd13630335e951f097af3900e9de176b6db28512f2e000b9d04fba5133e8b1c6e8df59db3a8ab9d60be4b97cc9e81db\";s:7:\"created\";O:42:\"OCA\\CAFEVDB\\Wrapped\\Carbon\\CarbonImmutable\":3:{s:4:\"date\";s:26:\"2026-08-30 22:02:30.633526\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}s:7:\"updated\";O:42:\"OCA\\CAFEVDB\\Wrapped\\Carbon\\CarbonImmutable\":3:{s:4:\"date\";s:26:\"2026-08-30 22:02:30.633425\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}}','john.doe','','1'),
-(59,'update','2026-08-30 22:02:30.637615','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project',2,'a:2:{s:21:\"registrationStartDate\";O:42:\"OCA\\CAFEVDB\\Wrapped\\Carbon\\CarbonImmutable\":3:{s:4:\"date\";s:26:\"2099-01-01 00:00:00.000000\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}s:20:\"registrationDeadline\";O:42:\"OCA\\CAFEVDB\\Wrapped\\Carbon\\CarbonImmutable\":3:{s:4:\"date\";s:26:\"2099-12-31 00:00:00.000000\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}}','john.doe','','1'),
-(60,'update','2026-08-30 22:02:30.638278','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Musician',2,'a:1:{s:10:\"userIdSlug\";s:8:\"john.doe\";}','john.doe','','1'),
-(61,'create','2026-08-30 22:02:30.767407','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectEvent',1,'a:9:{s:10:\"calendarId\";i:3;s:11:\"calendarUri\";s:8:\"personal\";s:8:\"eventUid\";s:36:\"35dddbe4-0354-4a6a-9990-522fa6dc5e37\";s:9:\"seriesUid\";N;s:8:\"eventUri\";s:40:\"7F0AA386-A4BE-11F1-AE03-33823597B2D6.ics\";s:12:\"recurrenceId\";i:0;s:8:\"sequence\";i:0;s:4:\"type\";s:6:\"VEVENT\";s:7:\"deleted\";N;}','john.doe','','1');
+(1,'create','2026-10-25 17:29:52.124668','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\InstrumentFamily',1,'a:2:{s:6:\"family\";s:7:\"strings\";s:7:\"deleted\";N;}','john.doe','','1'),
+(2,'create','2026-10-25 17:29:52.125316','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\InstrumentFamily',1,'a:2:{s:6:\"family\";s:6:\"string\";s:7:\"deleted\";N;}','john.doe','','2'),
+(3,'create','2026-10-25 17:29:52.125726','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\InstrumentFamily',1,'a:2:{s:6:\"family\";s:7:\"plucked\";s:7:\"deleted\";N;}','john.doe','','3'),
+(4,'create','2026-10-25 17:29:52.126111','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\InstrumentFamily',1,'a:2:{s:6:\"family\";s:4:\"wind\";s:7:\"deleted\";N;}','john.doe','','4'),
+(5,'create','2026-10-25 17:29:52.126501','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\InstrumentFamily',1,'a:2:{s:6:\"family\";s:4:\"wood\";s:7:\"deleted\";N;}','john.doe','','5'),
+(6,'create','2026-10-25 17:29:52.126875','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\InstrumentFamily',1,'a:2:{s:6:\"family\";s:5:\"brass\";s:7:\"deleted\";N;}','john.doe','','6'),
+(7,'create','2026-10-25 17:29:52.127269','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\InstrumentFamily',1,'a:2:{s:6:\"family\";s:10:\"percussion\";s:7:\"deleted\";N;}','john.doe','','7'),
+(8,'create','2026-10-25 17:29:52.127650','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\InstrumentFamily',1,'a:2:{s:6:\"family\";s:8:\"keyboard\";s:7:\"deleted\";N;}','john.doe','','8'),
+(9,'create','2026-10-25 17:29:52.128023','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\InstrumentFamily',1,'a:2:{s:6:\"family\";s:13:\"miscellaneous\";s:7:\"deleted\";N;}','john.doe','','9'),
+(10,'create','2026-10-25 17:29:52.128417','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\InstrumentFamily',1,'a:2:{s:6:\"family\";s:17:\"not an instrument\";s:7:\"deleted\";N;}','john.doe','','10'),
+(11,'create','2026-10-25 17:29:52.128846','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument',1,'a:3:{s:4:\"name\";s:6:\"violin\";s:9:\"sortOrder\";i:1;s:7:\"deleted\";N;}','john.doe','','1'),
+(12,'create','2026-10-25 17:29:52.129229','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument',1,'a:3:{s:4:\"name\";s:5:\"viola\";s:9:\"sortOrder\";i:2;s:7:\"deleted\";N;}','john.doe','','2'),
+(13,'create','2026-10-25 17:29:52.129642','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument',1,'a:3:{s:4:\"name\";s:11:\"violoncello\";s:9:\"sortOrder\";i:3;s:7:\"deleted\";N;}','john.doe','','3'),
+(14,'create','2026-10-25 17:29:52.130019','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument',1,'a:3:{s:4:\"name\";s:11:\"double bass\";s:9:\"sortOrder\";i:4;s:7:\"deleted\";N;}','john.doe','','4'),
+(15,'create','2026-10-25 17:29:52.130409','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument',1,'a:3:{s:4:\"name\";s:5:\"flute\";s:9:\"sortOrder\";i:10;s:7:\"deleted\";N;}','john.doe','','5'),
+(16,'create','2026-10-25 17:29:52.130779','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument',1,'a:3:{s:4:\"name\";s:7:\"piccolo\";s:9:\"sortOrder\";i:11;s:7:\"deleted\";N;}','john.doe','','6'),
+(17,'create','2026-10-25 17:29:52.131156','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument',1,'a:3:{s:4:\"name\";s:4:\"oboe\";s:9:\"sortOrder\";i:20;s:7:\"deleted\";N;}','john.doe','','7'),
+(18,'create','2026-10-25 17:29:52.131675','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument',1,'a:3:{s:4:\"name\";s:12:\"English horn\";s:9:\"sortOrder\";i:25;s:7:\"deleted\";N;}','john.doe','','8'),
+(19,'create','2026-10-25 17:29:52.132071','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument',1,'a:3:{s:4:\"name\";s:8:\"clarinet\";s:9:\"sortOrder\";i:30;s:7:\"deleted\";N;}','john.doe','','9'),
+(20,'create','2026-10-25 17:29:52.132472','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument',1,'a:3:{s:4:\"name\";s:13:\"bass clarinet\";s:9:\"sortOrder\";i:35;s:7:\"deleted\";N;}','john.doe','','10'),
+(21,'create','2026-10-25 17:29:52.132854','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument',1,'a:3:{s:4:\"name\";s:7:\"bassoon\";s:9:\"sortOrder\";i:40;s:7:\"deleted\";N;}','john.doe','','11'),
+(22,'create','2026-10-25 17:29:52.133223','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument',1,'a:3:{s:4:\"name\";s:12:\"natural horn\";s:9:\"sortOrder\";i:50;s:7:\"deleted\";N;}','john.doe','','12'),
+(23,'create','2026-10-25 17:29:52.133642','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument',1,'a:3:{s:4:\"name\";s:7:\"trumpet\";s:9:\"sortOrder\";i:60;s:7:\"deleted\";N;}','john.doe','','13'),
+(24,'create','2026-10-25 17:29:52.134032','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument',1,'a:3:{s:4:\"name\";s:8:\"trombone\";s:9:\"sortOrder\";i:70;s:7:\"deleted\";N;}','john.doe','','14'),
+(25,'create','2026-10-25 17:29:52.134435','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument',1,'a:3:{s:4:\"name\";s:13:\"bass trombone\";s:9:\"sortOrder\";i:71;s:7:\"deleted\";N;}','john.doe','','15'),
+(26,'create','2026-10-25 17:29:52.134819','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument',1,'a:3:{s:4:\"name\";s:4:\"tuba\";s:9:\"sortOrder\";i:80;s:7:\"deleted\";N;}','john.doe','','16'),
+(27,'create','2026-10-25 17:29:52.135215','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument',1,'a:3:{s:4:\"name\";s:4:\"harp\";s:9:\"sortOrder\";i:90;s:7:\"deleted\";N;}','john.doe','','17'),
+(28,'create','2026-10-25 17:29:52.135591','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument',1,'a:3:{s:4:\"name\";s:6:\"guitar\";s:9:\"sortOrder\";i:95;s:7:\"deleted\";N;}','john.doe','','18'),
+(29,'create','2026-10-25 17:29:52.135958','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument',1,'a:3:{s:4:\"name\";s:7:\"timpani\";s:9:\"sortOrder\";i:100;s:7:\"deleted\";N;}','john.doe','','19'),
+(30,'create','2026-10-25 17:29:52.136333','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument',1,'a:3:{s:4:\"name\";s:4:\"drum\";s:9:\"sortOrder\";i:105;s:7:\"deleted\";N;}','john.doe','','20'),
+(31,'create','2026-10-25 17:29:52.136699','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument',1,'a:3:{s:4:\"name\";s:9:\"bass drum\";s:9:\"sortOrder\";i:110;s:7:\"deleted\";N;}','john.doe','','21'),
+(32,'create','2026-10-25 17:29:52.137065','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument',1,'a:3:{s:4:\"name\";s:7:\"cymbals\";s:9:\"sortOrder\";i:201;s:7:\"deleted\";N;}','john.doe','','22'),
+(33,'create','2026-10-25 17:29:52.137478','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument',1,'a:3:{s:4:\"name\";s:12:\"glockenspiel\";s:9:\"sortOrder\";i:203;s:7:\"deleted\";N;}','john.doe','','23'),
+(34,'create','2026-10-25 17:29:52.137849','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument',1,'a:3:{s:4:\"name\";s:9:\"xylophone\";s:9:\"sortOrder\";i:400;s:7:\"deleted\";N;}','john.doe','','24'),
+(35,'create','2026-10-25 17:29:52.138232','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument',1,'a:3:{s:4:\"name\";s:5:\"piano\";s:9:\"sortOrder\";i:5000;s:7:\"deleted\";N;}','john.doe','','25'),
+(36,'create','2026-10-25 17:29:52.138609','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument',1,'a:3:{s:4:\"name\";s:5:\"organ\";s:9:\"sortOrder\";i:5010;s:7:\"deleted\";N;}','john.doe','','26'),
+(37,'create','2026-10-25 17:29:52.138979','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument',1,'a:3:{s:4:\"name\";s:11:\"harpsichord\";s:9:\"sortOrder\";i:5015;s:7:\"deleted\";N;}','john.doe','','27'),
+(38,'create','2026-10-25 17:29:52.139382','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument',1,'a:3:{s:4:\"name\";s:7:\"celesta\";s:9:\"sortOrder\";i:5020;s:7:\"deleted\";N;}','john.doe','','28'),
+(39,'create','2026-10-25 17:29:52.139763','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument',1,'a:3:{s:4:\"name\";s:9:\"bandoneon\";s:9:\"sortOrder\";i:5025;s:7:\"deleted\";N;}','john.doe','','29'),
+(40,'create','2026-10-25 17:29:52.140132','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument',1,'a:3:{s:4:\"name\";s:9:\"accordion\";s:9:\"sortOrder\";i:5030;s:7:\"deleted\";N;}','john.doe','','30'),
+(41,'create','2026-10-25 17:29:52.140523','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument',1,'a:3:{s:4:\"name\";s:9:\"associate\";s:9:\"sortOrder\";i:2147483647;s:7:\"deleted\";N;}','john.doe','','31'),
+(42,'create','2026-10-25 17:29:52.140894','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument',1,'a:3:{s:4:\"name\";s:16:\"business partner\";s:9:\"sortOrder\";i:2147483647;s:7:\"deleted\";N;}','john.doe','','32'),
+(43,'create','2026-10-25 17:29:53.035442','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project',1,'a:9:{s:4:\"year\";i:2099;s:4:\"name\";s:15:\"TestProject2099\";s:4:\"type\";s:9:\"temporary\";s:13:\"mailingListId\";N;s:21:\"registrationStartDate\";N;s:20:\"registrationDeadline\";N;s:7:\"deleted\";N;s:7:\"created\";O:42:\"OCA\\CAFEVDB\\Wrapped\\Carbon\\CarbonImmutable\":3:{s:4:\"date\";s:26:\"2026-10-25 17:29:52.816239\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}s:7:\"updated\";O:42:\"OCA\\CAFEVDB\\Wrapped\\Carbon\\CarbonImmutable\":3:{s:4:\"date\";s:26:\"2026-10-25 17:29:52.814794\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}}','john.doe','','1'),
+(44,'create','2026-10-25 17:29:53.035957','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Musician',1,'a:30:{s:7:\"surName\";s:12:\"Musterperson\";s:9:\"firstName\";s:3:\"Max\";s:8:\"nickName\";N;s:11:\"displayName\";N;s:6:\"gender\";N;s:10:\"userIdSlug\";s:16:\"lieschen.mueller\";s:14:\"userPassphrase\";N;s:4:\"city\";s:8:\"Nirgends\";s:6:\"street\";s:15:\"Unauffindbarweg\";s:12:\"streetNumber\";s:2:\"42\";s:17:\"addressSupplement\";s:8:\"Igloo 13\";s:5:\"poBox\";N;s:7:\"country\";s:2:\"AQ\";s:10:\"postalCode\";s:3:\"Z-7\";s:8:\"language\";N;s:11:\"mobilePhone\";s:4:\"0815\";s:14:\"fixedLinePhone\";s:4:\"4711\";s:8:\"birthday\";O:42:\"OCA\\CAFEVDB\\Wrapped\\Carbon\\CarbonImmutable\":3:{s:4:\"date\";s:26:\"2026-10-25 17:29:52.874038\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}s:5:\"email\";s:20:\"john.doe@nowhere.tld\";s:26:\"defaultParticipationStatus\";s:7:\"regular\";s:7:\"remarks\";N;s:23:\"cloudAccountDeactivated\";N;s:20:\"cloudAccountDisabled\";b:1;s:14:\"addressBookUri\";N;s:12:\"organization\";N;s:8:\"jobTitle\";N;s:7:\"deleted\";N;s:7:\"created\";O:42:\"OCA\\CAFEVDB\\Wrapped\\Carbon\\CarbonImmutable\":3:{s:4:\"date\";s:26:\"2026-10-25 17:29:52.874038\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}s:7:\"updated\";O:42:\"OCA\\CAFEVDB\\Wrapped\\Carbon\\CarbonImmutable\":3:{s:4:\"date\";s:26:\"2026-10-25 17:29:52.874038\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}s:4:\"uuid\";O:55:\"OCA\\CAFEVDB\\Wrapped\\Ramsey\\Uuid\\Lazy\\LazyUuidFromString\":1:{s:6:\"string\";s:36:\"00000000-0000-0000-0000-000000000000\";}}','john.doe','','1'),
+(45,'create','2026-10-25 17:29:53.036488','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\MusicianEmailAddress',1,'a:3:{s:7:\"address\";s:20:\"john.doe@nowhere.tld\";s:7:\"created\";O:42:\"OCA\\CAFEVDB\\Wrapped\\Carbon\\CarbonImmutable\":3:{s:4:\"date\";s:26:\"2026-10-25 17:29:52.874038\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}s:7:\"updated\";O:42:\"OCA\\CAFEVDB\\Wrapped\\Carbon\\CarbonImmutable\":3:{s:4:\"date\";s:26:\"2026-10-25 17:29:52.874038\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}}','john.doe','','john.doe@nowhere.tld 1'),
+(46,'create','2026-10-25 17:29:53.036892','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\SepaBankAccount',1,'a:8:{s:8:\"sequence\";i:1;s:4:\"iban\";s:22:\"DE02700100800030876808\";s:3:\"bic\";s:11:\"PBNKDEFFXXX\";s:3:\"blz\";s:8:\"70010080\";s:16:\"bankAccountOwner\";s:17:\"Musterperson, Max\";s:7:\"deleted\";N;s:7:\"created\";O:42:\"OCA\\CAFEVDB\\Wrapped\\Carbon\\CarbonImmutable\":3:{s:4:\"date\";s:26:\"2026-10-25 17:29:52.913152\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}s:7:\"updated\";O:42:\"OCA\\CAFEVDB\\Wrapped\\Carbon\\CarbonImmutable\":3:{s:4:\"date\";s:26:\"2026-10-25 17:29:52.912906\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}}','john.doe','','1 1'),
+(47,'create','2026-10-25 17:29:53.083675','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectParticipant',1,'a:5:{s:12:\"registration\";b:0;s:19:\"participationStatus\";s:7:\"regular\";s:7:\"created\";O:42:\"OCA\\CAFEVDB\\Wrapped\\Carbon\\CarbonImmutable\":3:{s:4:\"date\";s:26:\"2026-10-25 17:29:52.874038\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}s:7:\"updated\";O:42:\"OCA\\CAFEVDB\\Wrapped\\Carbon\\CarbonImmutable\":3:{s:4:\"date\";s:26:\"2026-10-25 17:29:52.874038\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}s:7:\"deleted\";N;}','john.doe','','1 1'),
+(48,'create','2026-10-25 17:29:53.146296','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\MusicianInstrument',1,'a:4:{s:7:\"ranking\";i:1;s:7:\"created\";O:42:\"OCA\\CAFEVDB\\Wrapped\\Carbon\\CarbonImmutable\":3:{s:4:\"date\";s:26:\"2026-10-25 17:29:53.124101\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}s:7:\"updated\";O:42:\"OCA\\CAFEVDB\\Wrapped\\Carbon\\CarbonImmutable\":3:{s:4:\"date\";s:26:\"2026-10-25 17:29:53.123897\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}s:7:\"deleted\";N;}','john.doe','','1 1'),
+(49,'create','2026-10-25 17:29:53.146753','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\MusicianInstrument',1,'a:4:{s:7:\"ranking\";i:1;s:7:\"created\";O:42:\"OCA\\CAFEVDB\\Wrapped\\Carbon\\CarbonImmutable\":3:{s:4:\"date\";s:26:\"2026-10-25 17:29:53.127424\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}s:7:\"updated\";O:42:\"OCA\\CAFEVDB\\Wrapped\\Carbon\\CarbonImmutable\":3:{s:4:\"date\";s:26:\"2026-10-25 17:29:53.127277\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}s:7:\"deleted\";N;}','john.doe','','1 4'),
+(50,'create','2026-10-25 17:29:53.147274','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectInstrumentationNumber',1,'a:2:{s:5:\"voice\";i:0;s:8:\"quantity\";i:0;}','john.doe','',NULL),
+(51,'create','2026-10-25 17:29:53.147645','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectInstrumentationNumber',1,'a:2:{s:5:\"voice\";i:1;s:8:\"quantity\";i:1;}','john.doe','','1 1 1'),
+(52,'create','2026-10-25 17:29:53.148000','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectInstrumentationNumber',1,'a:2:{s:5:\"voice\";i:2;s:8:\"quantity\";i:2;}','john.doe','','1 1 2'),
+(53,'create','2026-10-25 17:29:53.148555','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectInstrument',1,'a:2:{s:5:\"voice\";i:0;s:13:\"sectionLeader\";b:0;}','john.doe','',NULL),
+(54,'update','2026-10-25 17:29:53.148964','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument',2,'a:1:{s:4:\"name\";s:7:\"Violine\";}','john.doe','','1'),
+(55,'update','2026-10-25 17:29:53.158393','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument',2,'a:1:{s:4:\"name\";s:10:\"Kontrabass\";}','john.doe','','4'),
+(56,'update','2026-10-25 17:29:53.159499','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\InstrumentFamily',2,'a:1:{s:6:\"family\";s:9:\"Streicher\";}','john.doe','','1'),
+(57,'update','2026-10-25 17:29:53.160437','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\InstrumentFamily',2,'a:1:{s:6:\"family\";s:6:\"Saiten\";}','john.doe','','2'),
+(58,'create','2026-10-25 17:29:53.227104','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\EncryptedFile',1,'a:6:{s:8:\"fileName\";s:7:\"file.md\";s:8:\"mimeType\";s:13:\"text/markdown\";s:4:\"size\";i:9;s:8:\"dataHash\";N;s:7:\"updated\";O:42:\"OCA\\CAFEVDB\\Wrapped\\Carbon\\CarbonImmutable\":3:{s:4:\"date\";s:26:\"2026-10-25 17:29:53.196375\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}s:7:\"created\";O:42:\"OCA\\CAFEVDB\\Wrapped\\Carbon\\CarbonImmutable\":3:{s:4:\"date\";s:26:\"2026-10-25 17:29:53.196596\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}}','john.doe','','1'),
+(59,'create','2026-10-25 17:29:53.248035','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\MusicianRowAccessToken',1,'a:4:{s:6:\"userId\";s:8:\"john.doe\";s:15:\"accessTokenHash\";s:128:\"d404559f602eab6fd602ac7680dacbfaadd13630335e951f097af3900e9de176b6db28512f2e000b9d04fba5133e8b1c6e8df59db3a8ab9d60be4b97cc9e81db\";s:7:\"created\";O:42:\"OCA\\CAFEVDB\\Wrapped\\Carbon\\CarbonImmutable\":3:{s:4:\"date\";s:26:\"2026-10-25 17:29:53.240260\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}s:7:\"updated\";O:42:\"OCA\\CAFEVDB\\Wrapped\\Carbon\\CarbonImmutable\":3:{s:4:\"date\";s:26:\"2026-10-25 17:29:53.240080\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}}','john.doe','','1'),
+(60,'update','2026-10-25 17:29:53.248494','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Project',2,'a:2:{s:21:\"registrationStartDate\";O:42:\"OCA\\CAFEVDB\\Wrapped\\Carbon\\CarbonImmutable\":3:{s:4:\"date\";s:26:\"2099-01-01 00:00:00.000000\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}s:20:\"registrationDeadline\";O:42:\"OCA\\CAFEVDB\\Wrapped\\Carbon\\CarbonImmutable\":3:{s:4:\"date\";s:26:\"2099-12-31 00:00:00.000000\";s:13:\"timezone_type\";i:3;s:8:\"timezone\";s:3:\"UTC\";}}','john.doe','','1'),
+(61,'update','2026-10-25 17:29:53.249798','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Musician',2,'a:1:{s:10:\"userIdSlug\";s:8:\"john.doe\";}','john.doe','','1'),
+(62,'create','2026-10-25 17:29:53.494749','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\ProjectEvent',1,'a:9:{s:10:\"calendarId\";i:3;s:11:\"calendarUri\";s:5:\"other\";s:8:\"eventUid\";s:36:\"0c826812-96d1-48a4-95d2-e43c537b8461\";s:9:\"seriesUid\";N;s:8:\"eventUri\";s:40:\"B079DF16-D099-11F1-B470-E7E02CD0D418.ics\";s:12:\"recurrenceId\";i:0;s:8:\"sequence\";i:0;s:4:\"type\";s:6:\"VEVENT\";s:7:\"deleted\";N;}','john.doe','','1');
 /*!40000 ALTER TABLE `ExtLogEntries` ENABLE KEYS */;
 UNLOCK TABLES;
-commit;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `FileData`
@@ -484,7 +499,9 @@ CREATE TABLE `FileData` (
   `data` longblob NOT NULL,
   `file_id` int(11) NOT NULL,
   `type` enum('generic','image','encrypted') NOT NULL,
-  PRIMARY KEY (`file_id`),
+  `lazy_file_data_dummy` tinyint(4) NOT NULL DEFAULT 1,
+  PRIMARY KEY (`file_id`,`lazy_file_data_dummy`),
+  KEY `IDX_969FA96893CB796C` (`file_id`),
   CONSTRAINT `FK_969FA96893CB796C` FOREIGN KEY (`file_id`) REFERENCES `Files` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -493,12 +510,15 @@ CREATE TABLE `FileData` (
 -- Dumping data for table `FileData`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `FileData` WRITE;
 /*!40000 ALTER TABLE `FileData` DISABLE KEYS */;
-set autocommit=0;
+INSERT INTO `FileData` VALUES
+('d554528e77584bdcc1d29a2c230a7d2a','# Heading',1,'encrypted',1);
 /*!40000 ALTER TABLE `FileData` ENABLE KEYS */;
 UNLOCK TABLES;
-commit;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `Files`
@@ -520,19 +540,22 @@ CREATE TABLE `Files` (
   `height` int(11) DEFAULT -1,
   PRIMARY KEY (`id`),
   KEY `IDX_C7F46F5DD7DF1668` (`file_name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `Files`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `Files` WRITE;
 /*!40000 ALTER TABLE `Files` DISABLE KEYS */;
-set autocommit=0;
+INSERT INTO `Files` VALUES
+('file.md','text/markdown',9,'d554528e77584bdcc1d29a2c230a7d2a','2026-10-25 17:29:53.196375',1,'2026-10-25 17:29:53.196596','encrypted',-1,-1);
 /*!40000 ALTER TABLE `Files` ENABLE KEYS */;
 UNLOCK TABLES;
-commit;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `GeoContinents`
@@ -553,12 +576,13 @@ CREATE TABLE `GeoContinents` (
 -- Dumping data for table `GeoContinents`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `GeoContinents` WRITE;
 /*!40000 ALTER TABLE `GeoContinents` DISABLE KEYS */;
-set autocommit=0;
 /*!40000 ALTER TABLE `GeoContinents` ENABLE KEYS */;
 UNLOCK TABLES;
-commit;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `GeoCountries`
@@ -582,12 +606,13 @@ CREATE TABLE `GeoCountries` (
 -- Dumping data for table `GeoCountries`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `GeoCountries` WRITE;
 /*!40000 ALTER TABLE `GeoCountries` DISABLE KEYS */;
-set autocommit=0;
 /*!40000 ALTER TABLE `GeoCountries` ENABLE KEYS */;
 UNLOCK TABLES;
-commit;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `GeoPostalCodeTranslations`
@@ -610,12 +635,13 @@ CREATE TABLE `GeoPostalCodeTranslations` (
 -- Dumping data for table `GeoPostalCodeTranslations`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `GeoPostalCodeTranslations` WRITE;
 /*!40000 ALTER TABLE `GeoPostalCodeTranslations` DISABLE KEYS */;
-set autocommit=0;
 /*!40000 ALTER TABLE `GeoPostalCodeTranslations` ENABLE KEYS */;
 UNLOCK TABLES;
-commit;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `GeoPostalCodes`
@@ -644,12 +670,13 @@ CREATE TABLE `GeoPostalCodes` (
 -- Dumping data for table `GeoPostalCodes`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `GeoPostalCodes` WRITE;
 /*!40000 ALTER TABLE `GeoPostalCodes` DISABLE KEYS */;
-set autocommit=0;
 /*!40000 ALTER TABLE `GeoPostalCodes` ENABLE KEYS */;
 UNLOCK TABLES;
-commit;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `GeoStatesProvinces`
@@ -673,12 +700,13 @@ CREATE TABLE `GeoStatesProvinces` (
 -- Dumping data for table `GeoStatesProvinces`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `GeoStatesProvinces` WRITE;
 /*!40000 ALTER TABLE `GeoStatesProvinces` DISABLE KEYS */;
-set autocommit=0;
 /*!40000 ALTER TABLE `GeoStatesProvinces` ENABLE KEYS */;
 UNLOCK TABLES;
-commit;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `GnuCashAccounts`
@@ -711,12 +739,13 @@ CREATE TABLE `GnuCashAccounts` (
 -- Dumping data for table `GnuCashAccounts`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `GnuCashAccounts` WRITE;
 /*!40000 ALTER TABLE `GnuCashAccounts` DISABLE KEYS */;
-set autocommit=0;
 /*!40000 ALTER TABLE `GnuCashAccounts` ENABLE KEYS */;
 UNLOCK TABLES;
-commit;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `GnuCashBooks`
@@ -741,12 +770,13 @@ CREATE TABLE `GnuCashBooks` (
 -- Dumping data for table `GnuCashBooks`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `GnuCashBooks` WRITE;
 /*!40000 ALTER TABLE `GnuCashBooks` DISABLE KEYS */;
-set autocommit=0;
 /*!40000 ALTER TABLE `GnuCashBooks` ENABLE KEYS */;
 UNLOCK TABLES;
-commit;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `GnuCashCommodities`
@@ -773,12 +803,13 @@ CREATE TABLE `GnuCashCommodities` (
 -- Dumping data for table `GnuCashCommodities`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `GnuCashCommodities` WRITE;
 /*!40000 ALTER TABLE `GnuCashCommodities` DISABLE KEYS */;
-set autocommit=0;
 /*!40000 ALTER TABLE `GnuCashCommodities` ENABLE KEYS */;
 UNLOCK TABLES;
-commit;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `GnuCashSlots`
@@ -809,12 +840,13 @@ CREATE TABLE `GnuCashSlots` (
 -- Dumping data for table `GnuCashSlots`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `GnuCashSlots` WRITE;
 /*!40000 ALTER TABLE `GnuCashSlots` DISABLE KEYS */;
-set autocommit=0;
 /*!40000 ALTER TABLE `GnuCashSlots` ENABLE KEYS */;
 UNLOCK TABLES;
-commit;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `GnuCashSplits`
@@ -848,12 +880,13 @@ CREATE TABLE `GnuCashSplits` (
 -- Dumping data for table `GnuCashSplits`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `GnuCashSplits` WRITE;
 /*!40000 ALTER TABLE `GnuCashSplits` DISABLE KEYS */;
-set autocommit=0;
 /*!40000 ALTER TABLE `GnuCashSplits` ENABLE KEYS */;
 UNLOCK TABLES;
-commit;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `GnuCashTransactions`
@@ -880,12 +913,13 @@ CREATE TABLE `GnuCashTransactions` (
 -- Dumping data for table `GnuCashTransactions`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `GnuCashTransactions` WRITE;
 /*!40000 ALTER TABLE `GnuCashTransactions` DISABLE KEYS */;
-set autocommit=0;
 /*!40000 ALTER TABLE `GnuCashTransactions` ENABLE KEYS */;
 UNLOCK TABLES;
-commit;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `InstrumentFamilies`
@@ -907,9 +941,9 @@ CREATE TABLE `InstrumentFamilies` (
 -- Dumping data for table `InstrumentFamilies`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `InstrumentFamilies` WRITE;
 /*!40000 ALTER TABLE `InstrumentFamilies` DISABLE KEYS */;
-set autocommit=0;
 INSERT INTO `InstrumentFamilies` VALUES
 ('strings',1,NULL),
 ('string',2,NULL),
@@ -923,7 +957,8 @@ INSERT INTO `InstrumentFamilies` VALUES
 ('not an instrument',10,NULL);
 /*!40000 ALTER TABLE `InstrumentFamilies` ENABLE KEYS */;
 UNLOCK TABLES;
-commit;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `InstrumentInsurances`
@@ -964,12 +999,13 @@ CREATE TABLE `InstrumentInsurances` (
 -- Dumping data for table `InstrumentInsurances`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `InstrumentInsurances` WRITE;
 /*!40000 ALTER TABLE `InstrumentInsurances` DISABLE KEYS */;
-set autocommit=0;
 /*!40000 ALTER TABLE `InstrumentInsurances` ENABLE KEYS */;
 UNLOCK TABLES;
-commit;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `Instruments`
@@ -992,9 +1028,9 @@ CREATE TABLE `Instruments` (
 -- Dumping data for table `Instruments`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `Instruments` WRITE;
 /*!40000 ALTER TABLE `Instruments` DISABLE KEYS */;
-set autocommit=0;
 INSERT INTO `Instruments` VALUES
 ('violin',1,NULL,1),
 ('viola',2,NULL,2),
@@ -1030,7 +1066,8 @@ INSERT INTO `Instruments` VALUES
 ('business partner',2147483647,NULL,32);
 /*!40000 ALTER TABLE `Instruments` ENABLE KEYS */;
 UNLOCK TABLES;
-commit;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `InsuranceBrokers`
@@ -1051,12 +1088,13 @@ CREATE TABLE `InsuranceBrokers` (
 -- Dumping data for table `InsuranceBrokers`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `InsuranceBrokers` WRITE;
 /*!40000 ALTER TABLE `InsuranceBrokers` DISABLE KEYS */;
-set autocommit=0;
 /*!40000 ALTER TABLE `InsuranceBrokers` ENABLE KEYS */;
 UNLOCK TABLES;
-commit;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `InsuranceRates`
@@ -1082,12 +1120,13 @@ CREATE TABLE `InsuranceRates` (
 -- Dumping data for table `InsuranceRates`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `InsuranceRates` WRITE;
 /*!40000 ALTER TABLE `InsuranceRates` DISABLE KEYS */;
-set autocommit=0;
 /*!40000 ALTER TABLE `InsuranceRates` ENABLE KEYS */;
 UNLOCK TABLES;
-commit;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `InvoiceItems`
@@ -1130,12 +1169,13 @@ CREATE TABLE `InvoiceItems` (
 -- Dumping data for table `InvoiceItems`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `InvoiceItems` WRITE;
 /*!40000 ALTER TABLE `InvoiceItems` DISABLE KEYS */;
-set autocommit=0;
 /*!40000 ALTER TABLE `InvoiceItems` ENABLE KEYS */;
 UNLOCK TABLES;
-commit;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `Invoices`
@@ -1197,12 +1237,13 @@ CREATE TABLE `Invoices` (
 -- Dumping data for table `Invoices`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `Invoices` WRITE;
 /*!40000 ALTER TABLE `Invoices` DISABLE KEYS */;
-set autocommit=0;
 /*!40000 ALTER TABLE `Invoices` ENABLE KEYS */;
 UNLOCK TABLES;
-commit;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `Migrations`
@@ -1225,12 +1266,13 @@ CREATE TABLE `Migrations` (
 -- Dumping data for table `Migrations`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `Migrations` WRITE;
 /*!40000 ALTER TABLE `Migrations` DISABLE KEYS */;
-set autocommit=0;
 /*!40000 ALTER TABLE `Migrations` ENABLE KEYS */;
 UNLOCK TABLES;
-commit;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `MissingTranslations`
@@ -1252,12 +1294,13 @@ CREATE TABLE `MissingTranslations` (
 -- Dumping data for table `MissingTranslations`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `MissingTranslations` WRITE;
 /*!40000 ALTER TABLE `MissingTranslations` DISABLE KEYS */;
-set autocommit=0;
 /*!40000 ALTER TABLE `MissingTranslations` ENABLE KEYS */;
 UNLOCK TABLES;
-commit;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `MusicianEmailAddresses`
@@ -1281,14 +1324,15 @@ CREATE TABLE `MusicianEmailAddresses` (
 -- Dumping data for table `MusicianEmailAddresses`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `MusicianEmailAddresses` WRITE;
 /*!40000 ALTER TABLE `MusicianEmailAddresses` DISABLE KEYS */;
-set autocommit=0;
 INSERT INTO `MusicianEmailAddresses` VALUES
-('john.doe@nowhere.tld','2026-08-30 22:02:30.439994','2026-08-30 22:02:30.439994',1);
+('john.doe@nowhere.tld','2026-10-25 17:29:52.874038','2026-10-25 17:29:52.874038',1);
 /*!40000 ALTER TABLE `MusicianEmailAddresses` ENABLE KEYS */;
 UNLOCK TABLES;
-commit;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `MusicianInstruments`
@@ -1316,15 +1360,16 @@ CREATE TABLE `MusicianInstruments` (
 -- Dumping data for table `MusicianInstruments`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `MusicianInstruments` WRITE;
 /*!40000 ALTER TABLE `MusicianInstruments` DISABLE KEYS */;
-set autocommit=0;
 INSERT INTO `MusicianInstruments` VALUES
-(1,'2026-08-30 22:02:30.590919','2026-08-30 22:02:30.590758',NULL,1,1),
-(1,'2026-08-30 22:02:30.592924','2026-08-30 22:02:30.592812',NULL,1,4);
+(1,'2026-10-25 17:29:53.124101','2026-10-25 17:29:53.123897',NULL,1,1),
+(1,'2026-10-25 17:29:53.127424','2026-10-25 17:29:53.127277',NULL,1,4);
 /*!40000 ALTER TABLE `MusicianInstruments` ENABLE KEYS */;
 UNLOCK TABLES;
-commit;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `MusicianRowAccessTokens`
@@ -1350,14 +1395,15 @@ CREATE TABLE `MusicianRowAccessTokens` (
 -- Dumping data for table `MusicianRowAccessTokens`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `MusicianRowAccessTokens` WRITE;
 /*!40000 ALTER TABLE `MusicianRowAccessTokens` DISABLE KEYS */;
-set autocommit=0;
 INSERT INTO `MusicianRowAccessTokens` VALUES
-('john.doe','d404559f602eab6fd602ac7680dacbfaadd13630335e951f097af3900e9de176b6db28512f2e000b9d04fba5133e8b1c6e8df59db3a8ab9d60be4b97cc9e81db','2026-08-30 22:02:30.633526','2026-08-30 22:02:30.633425',1);
+('john.doe','d404559f602eab6fd602ac7680dacbfaadd13630335e951f097af3900e9de176b6db28512f2e000b9d04fba5133e8b1c6e8df59db3a8ab9d60be4b97cc9e81db','2026-10-25 17:29:53.240260','2026-10-25 17:29:53.240080',1);
 /*!40000 ALTER TABLE `MusicianRowAccessTokens` ENABLE KEYS */;
 UNLOCK TABLES;
-commit;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `Musicians`
@@ -1409,14 +1455,15 @@ CREATE TABLE `Musicians` (
 -- Dumping data for table `Musicians`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `Musicians` WRITE;
 /*!40000 ALTER TABLE `Musicians` DISABLE KEYS */;
-set autocommit=0;
 INSERT INTO `Musicians` VALUES
-('Musterperson','Max',NULL,NULL,NULL,'john.doe',NULL,'Nirgends','Unauffindbarweg','42','Igloo 13',NULL,'AQ','Z-7',NULL,'0815','4711','2026-08-30 22:02:30.439994','john.doe@nowhere.tld','regular',NULL,NULL,1,'2026-08-30 22:02:30.639039',NULL,NULL,NULL,1,'2026-08-30 22:02:30.439994',NULL,'\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0');
+('Musterperson','Max',NULL,NULL,NULL,'john.doe',NULL,'Nirgends','Unauffindbarweg','42','Igloo 13',NULL,'AQ','Z-7',NULL,'0815','4711','2026-10-25 17:29:52.874038','john.doe@nowhere.tld','regular',NULL,NULL,1,'2026-10-25 17:29:53.251169',NULL,NULL,NULL,1,'2026-10-25 17:29:52.874038',NULL,'\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0');
 /*!40000 ALTER TABLE `Musicians` ENABLE KEYS */;
 UNLOCK TABLES;
-commit;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `ProjectApplications`
@@ -1446,12 +1493,13 @@ CREATE TABLE `ProjectApplications` (
 -- Dumping data for table `ProjectApplications`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `ProjectApplications` WRITE;
 /*!40000 ALTER TABLE `ProjectApplications` DISABLE KEYS */;
-set autocommit=0;
 /*!40000 ALTER TABLE `ProjectApplications` ENABLE KEYS */;
 UNLOCK TABLES;
-commit;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `ProjectEvents`
@@ -1489,14 +1537,15 @@ CREATE TABLE `ProjectEvents` (
 -- Dumping data for table `ProjectEvents`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `ProjectEvents` WRITE;
 /*!40000 ALTER TABLE `ProjectEvents` DISABLE KEYS */;
-set autocommit=0;
 INSERT INTO `ProjectEvents` VALUES
-(3,'personal','35dddbe4-0354-4a6a-9990-522fa6dc5e37',NULL,'7F0AA386-A4BE-11F1-AE03-33823597B2D6.ics',0,0,'VEVENT',1,NULL,1,NULL);
+(3,'other','0c826812-96d1-48a4-95d2-e43c537b8461',NULL,'B079DF16-D099-11F1-B470-E7E02CD0D418.ics',0,0,'VEVENT',1,NULL,1,NULL);
 /*!40000 ALTER TABLE `ProjectEvents` ENABLE KEYS */;
 UNLOCK TABLES;
-commit;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `ProjectInstrumentationNumbers`
@@ -1522,16 +1571,17 @@ CREATE TABLE `ProjectInstrumentationNumbers` (
 -- Dumping data for table `ProjectInstrumentationNumbers`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `ProjectInstrumentationNumbers` WRITE;
 /*!40000 ALTER TABLE `ProjectInstrumentationNumbers` DISABLE KEYS */;
-set autocommit=0;
 INSERT INTO `ProjectInstrumentationNumbers` VALUES
 (0,0,1,1),
 (1,1,1,1),
 (2,2,1,1);
 /*!40000 ALTER TABLE `ProjectInstrumentationNumbers` ENABLE KEYS */;
 UNLOCK TABLES;
-commit;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `ProjectInstruments`
@@ -1566,14 +1616,15 @@ CREATE TABLE `ProjectInstruments` (
 -- Dumping data for table `ProjectInstruments`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `ProjectInstruments` WRITE;
 /*!40000 ALTER TABLE `ProjectInstruments` DISABLE KEYS */;
-set autocommit=0;
 INSERT INTO `ProjectInstruments` VALUES
 (1,0,1,1,1);
 /*!40000 ALTER TABLE `ProjectInstruments` ENABLE KEYS */;
 UNLOCK TABLES;
-commit;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `ProjectParticipantFields`
@@ -1612,12 +1663,13 @@ CREATE TABLE `ProjectParticipantFields` (
 -- Dumping data for table `ProjectParticipantFields`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `ProjectParticipantFields` WRITE;
 /*!40000 ALTER TABLE `ProjectParticipantFields` DISABLE KEYS */;
-set autocommit=0;
 /*!40000 ALTER TABLE `ProjectParticipantFields` ENABLE KEYS */;
 UNLOCK TABLES;
-commit;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `ProjectParticipantFieldsData`
@@ -1658,12 +1710,13 @@ CREATE TABLE `ProjectParticipantFieldsData` (
 -- Dumping data for table `ProjectParticipantFieldsData`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `ProjectParticipantFieldsData` WRITE;
 /*!40000 ALTER TABLE `ProjectParticipantFieldsData` DISABLE KEYS */;
-set autocommit=0;
 /*!40000 ALTER TABLE `ProjectParticipantFieldsData` ENABLE KEYS */;
 UNLOCK TABLES;
-commit;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `ProjectParticipantFieldsDataOptions`
@@ -1695,12 +1748,13 @@ CREATE TABLE `ProjectParticipantFieldsDataOptions` (
 -- Dumping data for table `ProjectParticipantFieldsDataOptions`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `ProjectParticipantFieldsDataOptions` WRITE;
 /*!40000 ALTER TABLE `ProjectParticipantFieldsDataOptions` DISABLE KEYS */;
-set autocommit=0;
 /*!40000 ALTER TABLE `ProjectParticipantFieldsDataOptions` ENABLE KEYS */;
 UNLOCK TABLES;
-commit;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `ProjectParticipants`
@@ -1732,14 +1786,15 @@ CREATE TABLE `ProjectParticipants` (
 -- Dumping data for table `ProjectParticipants`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `ProjectParticipants` WRITE;
 /*!40000 ALTER TABLE `ProjectParticipants` DISABLE KEYS */;
-set autocommit=0;
 INSERT INTO `ProjectParticipants` VALUES
-(0,'regular','2026-08-30 22:02:30.439994','2026-08-30 22:02:30.439994',NULL,1,1,NULL);
+(0,'regular','2026-10-25 17:29:52.874038','2026-10-25 17:29:52.874038',NULL,1,1,NULL);
 /*!40000 ALTER TABLE `ProjectParticipants` ENABLE KEYS */;
 UNLOCK TABLES;
-commit;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `ProjectPayments`
@@ -1783,12 +1838,13 @@ CREATE TABLE `ProjectPayments` (
 -- Dumping data for table `ProjectPayments`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `ProjectPayments` WRITE;
 /*!40000 ALTER TABLE `ProjectPayments` DISABLE KEYS */;
-set autocommit=0;
 /*!40000 ALTER TABLE `ProjectPayments` ENABLE KEYS */;
 UNLOCK TABLES;
-commit;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `ProjectWebPages`
@@ -1814,12 +1870,13 @@ CREATE TABLE `ProjectWebPages` (
 -- Dumping data for table `ProjectWebPages`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `ProjectWebPages` WRITE;
 /*!40000 ALTER TABLE `ProjectWebPages` DISABLE KEYS */;
-set autocommit=0;
 /*!40000 ALTER TABLE `ProjectWebPages` ENABLE KEYS */;
 UNLOCK TABLES;
-commit;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `Projects`
@@ -1854,14 +1911,15 @@ CREATE TABLE `Projects` (
 -- Dumping data for table `Projects`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `Projects` WRITE;
 /*!40000 ALTER TABLE `Projects` DISABLE KEYS */;
-set autocommit=0;
 INSERT INTO `Projects` VALUES
-(2099,'TestProject2099','temporary',NULL,'2099-01-01 00:00:00.000000','2099-12-31 00:00:00.000000',1,NULL,'2026-08-30 22:02:30.408668','2026-08-30 22:02:30.767921',NULL,1);
+(2099,'TestProject2099','temporary',NULL,'2099-01-01 00:00:00.000000','2099-12-31 00:00:00.000000',1,NULL,'2026-10-25 17:29:52.816239','2026-10-25 17:29:53.495398',NULL,1);
 /*!40000 ALTER TABLE `Projects` ENABLE KEYS */;
 UNLOCK TABLES;
-commit;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `SentEmails`
@@ -1899,12 +1957,13 @@ CREATE TABLE `SentEmails` (
 -- Dumping data for table `SentEmails`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `SentEmails` WRITE;
 /*!40000 ALTER TABLE `SentEmails` DISABLE KEYS */;
-set autocommit=0;
 /*!40000 ALTER TABLE `SentEmails` ENABLE KEYS */;
 UNLOCK TABLES;
-commit;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `SepaBankAccounts`
@@ -1933,14 +1992,15 @@ CREATE TABLE `SepaBankAccounts` (
 -- Dumping data for table `SepaBankAccounts`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `SepaBankAccounts` WRITE;
 /*!40000 ALTER TABLE `SepaBankAccounts` DISABLE KEYS */;
-set autocommit=0;
 INSERT INTO `SepaBankAccounts` VALUES
-(1,'DE02700100800030876808','PBNKDEFFXXX','70010080','Musterperson, Max',NULL,'2026-08-30 22:02:30.460910','2026-08-30 22:02:30.460748',1);
+(1,'DE02700100800030876808','PBNKDEFFXXX','70010080','Musterperson, Max',NULL,'2026-10-25 17:29:52.913152','2026-10-25 17:29:52.912906',1);
 /*!40000 ALTER TABLE `SepaBankAccounts` ENABLE KEYS */;
 UNLOCK TABLES;
-commit;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `SepaBulkTransactionBalancingData`
@@ -1964,12 +2024,13 @@ CREATE TABLE `SepaBulkTransactionBalancingData` (
 -- Dumping data for table `SepaBulkTransactionBalancingData`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `SepaBulkTransactionBalancingData` WRITE;
 /*!40000 ALTER TABLE `SepaBulkTransactionBalancingData` DISABLE KEYS */;
-set autocommit=0;
 /*!40000 ALTER TABLE `SepaBulkTransactionBalancingData` ENABLE KEYS */;
 UNLOCK TABLES;
-commit;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `SepaBulkTransactionData`
@@ -1993,12 +2054,13 @@ CREATE TABLE `SepaBulkTransactionData` (
 -- Dumping data for table `SepaBulkTransactionData`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `SepaBulkTransactionData` WRITE;
 /*!40000 ALTER TABLE `SepaBulkTransactionData` DISABLE KEYS */;
-set autocommit=0;
 /*!40000 ALTER TABLE `SepaBulkTransactionData` ENABLE KEYS */;
 UNLOCK TABLES;
-commit;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `SepaBulkTransactions`
@@ -2034,12 +2096,13 @@ CREATE TABLE `SepaBulkTransactions` (
 -- Dumping data for table `SepaBulkTransactions`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `SepaBulkTransactions` WRITE;
 /*!40000 ALTER TABLE `SepaBulkTransactions` DISABLE KEYS */;
-set autocommit=0;
 /*!40000 ALTER TABLE `SepaBulkTransactions` ENABLE KEYS */;
 UNLOCK TABLES;
-commit;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `SepaDebitMandates`
@@ -2082,12 +2145,13 @@ CREATE TABLE `SepaDebitMandates` (
 -- Dumping data for table `SepaDebitMandates`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `SepaDebitMandates` WRITE;
 /*!40000 ALTER TABLE `SepaDebitMandates` DISABLE KEYS */;
-set autocommit=0;
 /*!40000 ALTER TABLE `SepaDebitMandates` ENABLE KEYS */;
 UNLOCK TABLES;
-commit;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `TableFieldTranslations`
@@ -2113,9 +2177,9 @@ CREATE TABLE `TableFieldTranslations` (
 -- Dumping data for table `TableFieldTranslations`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `TableFieldTranslations` WRITE;
 /*!40000 ALTER TABLE `TableFieldTranslations` DISABLE KEYS */;
-set autocommit=0;
 INSERT INTO `TableFieldTranslations` VALUES
 (1,'de_DE','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument','name','1','Violine'),
 (2,'de_DE','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\Instrument','name','4','Kontrabass'),
@@ -2123,7 +2187,8 @@ INSERT INTO `TableFieldTranslations` VALUES
 (4,'de_DE','OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities\\InstrumentFamily','family','2','Saiten');
 /*!40000 ALTER TABLE `TableFieldTranslations` ENABLE KEYS */;
 UNLOCK TABLES;
-commit;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `TaxExemptionItems`
@@ -2147,12 +2212,13 @@ CREATE TABLE `TaxExemptionItems` (
 -- Dumping data for table `TaxExemptionItems`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `TaxExemptionItems` WRITE;
 /*!40000 ALTER TABLE `TaxExemptionItems` DISABLE KEYS */;
-set autocommit=0;
 /*!40000 ALTER TABLE `TaxExemptionItems` ENABLE KEYS */;
 UNLOCK TABLES;
-commit;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `TaxExemptionNotices`
@@ -2184,12 +2250,13 @@ CREATE TABLE `TaxExemptionNotices` (
 -- Dumping data for table `TaxExemptionNotices`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `TaxExemptionNotices` WRITE;
 /*!40000 ALTER TABLE `TaxExemptionNotices` DISABLE KEYS */;
-set autocommit=0;
 /*!40000 ALTER TABLE `TaxExemptionNotices` ENABLE KEYS */;
 UNLOCK TABLES;
-commit;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `TaxationStatutorySources`
@@ -2217,12 +2284,13 @@ CREATE TABLE `TaxationStatutorySources` (
 -- Dumping data for table `TaxationStatutorySources`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `TaxationStatutorySources` WRITE;
 /*!40000 ALTER TABLE `TaxationStatutorySources` DISABLE KEYS */;
-set autocommit=0;
 /*!40000 ALTER TABLE `TaxationStatutorySources` ENABLE KEYS */;
 UNLOCK TABLES;
-commit;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `TranslationKeys`
@@ -2244,12 +2312,13 @@ CREATE TABLE `TranslationKeys` (
 -- Dumping data for table `TranslationKeys`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `TranslationKeys` WRITE;
 /*!40000 ALTER TABLE `TranslationKeys` DISABLE KEYS */;
-set autocommit=0;
 /*!40000 ALTER TABLE `TranslationKeys` ENABLE KEYS */;
 UNLOCK TABLES;
-commit;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `TranslationLocations`
@@ -2272,12 +2341,13 @@ CREATE TABLE `TranslationLocations` (
 -- Dumping data for table `TranslationLocations`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `TranslationLocations` WRITE;
 /*!40000 ALTER TABLE `TranslationLocations` DISABLE KEYS */;
-set autocommit=0;
 /*!40000 ALTER TABLE `TranslationLocations` ENABLE KEYS */;
 UNLOCK TABLES;
-commit;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `Translations`
@@ -2300,12 +2370,13 @@ CREATE TABLE `Translations` (
 -- Dumping data for table `Translations`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `Translations` WRITE;
 /*!40000 ALTER TABLE `Translations` DISABLE KEYS */;
-set autocommit=0;
 /*!40000 ALTER TABLE `Translations` ENABLE KEYS */;
 UNLOCK TABLES;
-commit;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `WebBrowserHistoryData`
@@ -2325,12 +2396,13 @@ CREATE TABLE `WebBrowserHistoryData` (
 -- Dumping data for table `WebBrowserHistoryData`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `WebBrowserHistoryData` WRITE;
 /*!40000 ALTER TABLE `WebBrowserHistoryData` DISABLE KEYS */;
-set autocommit=0;
 /*!40000 ALTER TABLE `WebBrowserHistoryData` ENABLE KEYS */;
 UNLOCK TABLES;
-commit;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `WebBrowserHistoryEntries`
@@ -2357,12 +2429,13 @@ CREATE TABLE `WebBrowserHistoryEntries` (
 -- Dumping data for table `WebBrowserHistoryEntries`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `WebBrowserHistoryEntries` WRITE;
 /*!40000 ALTER TABLE `WebBrowserHistoryEntries` DISABLE KEYS */;
-set autocommit=0;
 /*!40000 ALTER TABLE `WebBrowserHistoryEntries` ENABLE KEYS */;
 UNLOCK TABLES;
-commit;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `WebBrowserHistoryStates`
@@ -2389,12 +2462,13 @@ CREATE TABLE `WebBrowserHistoryStates` (
 -- Dumping data for table `WebBrowserHistoryStates`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `WebBrowserHistoryStates` WRITE;
 /*!40000 ALTER TABLE `WebBrowserHistoryStates` DISABLE KEYS */;
-set autocommit=0;
 /*!40000 ALTER TABLE `WebBrowserHistoryStates` ENABLE KEYS */;
 UNLOCK TABLES;
-commit;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Table structure for table `instrument_instrument_family`
@@ -2418,9 +2492,9 @@ CREATE TABLE `instrument_instrument_family` (
 -- Dumping data for table `instrument_instrument_family`
 --
 
+SET @OLD_AUTOCOMMIT=@@AUTOCOMMIT, @@AUTOCOMMIT=0;
 LOCK TABLES `instrument_instrument_family` WRITE;
 /*!40000 ALTER TABLE `instrument_instrument_family` DISABLE KEYS */;
-set autocommit=0;
 INSERT INTO `instrument_instrument_family` VALUES
 (1,1),
 (1,2),
@@ -2474,7 +2548,8 @@ INSERT INTO `instrument_instrument_family` VALUES
 (32,10);
 /*!40000 ALTER TABLE `instrument_instrument_family` ENABLE KEYS */;
 UNLOCK TABLES;
-commit;
+COMMIT;
+SET AUTOCOMMIT=@OLD_AUTOCOMMIT;
 
 --
 -- Dumping routines for database 'cafevdb'
@@ -2494,7 +2569,8 @@ CREATE DEFINER=`phpunit`@`%` FUNCTION `BIN2UUID`(`b` BINARY(16)) RETURNS char(36
     DETERMINISTIC
 BEGIN
   RETURN BIN_TO_UUID(b, 0);
-END ;;
+END
+;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -2523,7 +2599,8 @@ BEGIN
            SUBSTR(hexStr, 17, 4), '-',
            SUBSTR(hexStr, 21)
         ));
-END ;;
+END
+;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -2550,7 +2627,8 @@ RETURN
       ),
       `delimiters`,
       ''
-    ) ;;
+    )
+;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -2571,7 +2649,8 @@ CREATE DEFINER=`phpunit`@`%` FUNCTION `UUID2BIN`(`uuid` CHAR(36)) RETURNS binary
     DETERMINISTIC
 BEGIN
   RETURN UUID_TO_BIN(uuid, 0);
-END ;;
+END
+;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -2598,7 +2677,8 @@ BEGIN
   SUBSTRING(uuid, 20, 4),
   SUBSTRING(uuid, 25))
   );
-END ;;
+END
+;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -2614,4 +2694,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*M!100616 SET NOTE_VERBOSITY=@OLD_NOTE_VERBOSITY */;
 
--- Dump completed on 2026-08-31  0:02:30
+-- Dump completed on 2026-10-25 18:29:53

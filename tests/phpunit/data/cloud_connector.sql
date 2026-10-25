@@ -1,9 +1,9 @@
 /*M!999999\- enable the sandbox mode */
--- MariaDB dump 10.19-12.0.2-MariaDB, for Linux (x86_64)
+-- MariaDB dump 10.20-12.3.3-MariaDB, for Linux (x86_64)
 --
 -- Host: localhost    Database: cafevdb_cloud_connector
 -- ------------------------------------------------------
--- Server version	12.0.2-MariaDB
+-- Server version	12.3.3-MariaDB
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -25,9 +25,9 @@ DROP TABLE IF EXISTS `NextcloudGroupView`;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8mb4;
 /*!50001 CREATE VIEW `NextcloudGroupView` AS SELECT
- 1 AS `gid`,
-  1 AS `display_name`,
-  1 AS `is_admin` */;
+ NULL AS `gid`,
+ NULL AS `display_name`,
+ NULL AS `is_admin` */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -39,8 +39,8 @@ DROP TABLE IF EXISTS `NextcloudUserGroupView`;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8mb4;
 /*!50001 CREATE VIEW `NextcloudUserGroupView` AS SELECT
- 1 AS `uid`,
-  1 AS `gid` */;
+ NULL AS `uid`,
+ NULL AS `gid` */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -52,16 +52,16 @@ DROP TABLE IF EXISTS `NextcloudUserView`;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8mb4;
 /*!50001 CREATE VIEW `NextcloudUserView` AS SELECT
- 1 AS `uid`,
-  1 AS `password`,
-  1 AS `name`,
-  1 AS `email`,
-  1 AS `quota`,
-  1 AS `home`,
-  1 AS `inactive`,
-  1 AS `disabled`,
-  1 AS `avatar`,
-  1 AS `salt` */;
+ NULL AS `uid`,
+ NULL AS `password`,
+ NULL AS `name`,
+ NULL AS `email`,
+ NULL AS `quota`,
+ NULL AS `home`,
+ NULL AS `inactive`,
+ NULL AS `disabled`,
+ NULL AS `avatar`,
+ NULL AS `salt` */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -73,21 +73,21 @@ DROP TABLE IF EXISTS `PersonalizedCompositePaymentsView`;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8mb4;
 /*!50001 CREATE VIEW `PersonalizedCompositePaymentsView` AS SELECT
- 1 AS `amount`,
-  1 AS `date_of_receipt`,
-  1 AS `subject`,
-  1 AS `notification_message_id`,
-  1 AS `id`,
-  1 AS `created`,
-  1 AS `updated`,
-  1 AS `sepa_transaction_id`,
-  1 AS `musician_id`,
-  1 AS `bank_account_sequence`,
-  1 AS `debit_mandate_sequence`,
-  1 AS `pre_notification_message_id`,
-  1 AS `project_id`,
-  1 AS `supporting_document_id`,
-  1 AS `balance_documents_folder_id` */;
+ NULL AS `amount`,
+ NULL AS `date_of_receipt`,
+ NULL AS `subject`,
+ NULL AS `notification_message_id`,
+ NULL AS `id`,
+ NULL AS `created`,
+ NULL AS `updated`,
+ NULL AS `sepa_transaction_id`,
+ NULL AS `musician_id`,
+ NULL AS `bank_account_sequence`,
+ NULL AS `debit_mandate_sequence`,
+ NULL AS `pre_notification_message_id`,
+ NULL AS `project_id`,
+ NULL AS `supporting_document_id`,
+ NULL AS `balance_documents_folder_id` */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -99,13 +99,13 @@ DROP TABLE IF EXISTS `PersonalizedDatabaseStorageDirEntriesView`;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8mb4;
 /*!50001 CREATE VIEW `PersonalizedDatabaseStorageDirEntriesView` AS SELECT
- 1 AS `name`,
-  1 AS `id`,
-  1 AS `created`,
-  1 AS `updated`,
-  1 AS `parent_id`,
-  1 AS `type`,
-  1 AS `file_id` */;
+ NULL AS `name`,
+ NULL AS `id`,
+ NULL AS `created`,
+ NULL AS `updated`,
+ NULL AS `parent_id`,
+ NULL AS `type`,
+ NULL AS `file_id` */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -117,23 +117,8 @@ DROP TABLE IF EXISTS `PersonalizedEncryptedFileOwnersView`;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8mb4;
 /*!50001 CREATE VIEW `PersonalizedEncryptedFileOwnersView` AS SELECT
- 1 AS `musician_id`,
-  1 AS `encrypted_file_id` */;
-SET character_set_client = @saved_cs_client;
-
---
--- Temporary table structure for view `PersonalizedFileDataView`
---
-
-DROP TABLE IF EXISTS `PersonalizedFileDataView`;
-/*!50001 DROP VIEW IF EXISTS `PersonalizedFileDataView`*/;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8mb4;
-/*!50001 CREATE VIEW `PersonalizedFileDataView` AS SELECT
- 1 AS `data_hash`,
-  1 AS `data`,
-  1 AS `file_id`,
-  1 AS `type` */;
+ NULL AS `musician_id`,
+ NULL AS `encrypted_file_id` */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -145,16 +130,32 @@ DROP TABLE IF EXISTS `PersonalizedFilesView`;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8mb4;
 /*!50001 CREATE VIEW `PersonalizedFilesView` AS SELECT
- 1 AS `file_name`,
-  1 AS `mime_type`,
-  1 AS `size`,
-  1 AS `data_hash`,
-  1 AS `updated`,
-  1 AS `id`,
-  1 AS `created`,
-  1 AS `type`,
-  1 AS `width`,
-  1 AS `height` */;
+ NULL AS `file_name`,
+ NULL AS `mime_type`,
+ NULL AS `size`,
+ NULL AS `data_hash`,
+ NULL AS `updated`,
+ NULL AS `id`,
+ NULL AS `created`,
+ NULL AS `type`,
+ NULL AS `width`,
+ NULL AS `height` */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Temporary table structure for view `PersonalizedFileDataView`
+--
+
+DROP TABLE IF EXISTS `PersonalizedFileDataView`;
+/*!50001 DROP VIEW IF EXISTS `PersonalizedFileDataView`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8mb4;
+/*!50001 CREATE VIEW `PersonalizedFileDataView` AS SELECT
+ NULL AS `data_hash`,
+ NULL AS `data`,
+ NULL AS `file_id`,
+ NULL AS `type`,
+ NULL AS `lazy_file_data_dummy` */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -166,9 +167,9 @@ DROP TABLE IF EXISTS `PersonalizedGeoContinentsView`;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8mb4;
 /*!50001 CREATE VIEW `PersonalizedGeoContinentsView` AS SELECT
- 1 AS `code`,
-  1 AS `target`,
-  1 AS `l10n_name` */;
+ NULL AS `code`,
+ NULL AS `target`,
+ NULL AS `l10n_name` */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -180,10 +181,10 @@ DROP TABLE IF EXISTS `PersonalizedGeoCountriesView`;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8mb4;
 /*!50001 CREATE VIEW `PersonalizedGeoCountriesView` AS SELECT
- 1 AS `iso`,
-  1 AS `target`,
-  1 AS `l10n_name`,
-  1 AS `continent_code` */;
+ NULL AS `iso`,
+ NULL AS `target`,
+ NULL AS `l10n_name`,
+ NULL AS `continent_code` */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -195,9 +196,9 @@ DROP TABLE IF EXISTS `PersonalizedGeoPostalCodeTranslationsView`;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8mb4;
 /*!50001 CREATE VIEW `PersonalizedGeoPostalCodeTranslationsView` AS SELECT
- 1 AS `target`,
-  1 AS `translation`,
-  1 AS `geo_postal_code_id` */;
+ NULL AS `target`,
+ NULL AS `translation`,
+ NULL AS `geo_postal_code_id` */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -209,15 +210,15 @@ DROP TABLE IF EXISTS `PersonalizedGeoPostalCodesView`;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8mb4;
 /*!50001 CREATE VIEW `PersonalizedGeoPostalCodesView` AS SELECT
- 1 AS `country`,
-  1 AS `state_province`,
-  1 AS `postal_code`,
-  1 AS `name`,
-  1 AS `latitude`,
-  1 AS `longitude`,
-  1 AS `id`,
-  1 AS `created`,
-  1 AS `updated` */;
+ NULL AS `country`,
+ NULL AS `state_province`,
+ NULL AS `postal_code`,
+ NULL AS `name`,
+ NULL AS `latitude`,
+ NULL AS `longitude`,
+ NULL AS `id`,
+ NULL AS `created`,
+ NULL AS `updated` */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -229,9 +230,9 @@ DROP TABLE IF EXISTS `PersonalizedInstrumentFamiliesView`;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8mb4;
 /*!50001 CREATE VIEW `PersonalizedInstrumentFamiliesView` AS SELECT
- 1 AS `family`,
-  1 AS `id`,
-  1 AS `deleted` */;
+ NULL AS `family`,
+ NULL AS `id`,
+ NULL AS `deleted` */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -243,8 +244,8 @@ DROP TABLE IF EXISTS `PersonalizedInstrumentInstrumentFamilyView`;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8mb4;
 /*!50001 CREATE VIEW `PersonalizedInstrumentInstrumentFamilyView` AS SELECT
- 1 AS `instrument_id`,
-  1 AS `instrument_family_id` */;
+ NULL AS `instrument_id`,
+ NULL AS `instrument_family_id` */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -256,25 +257,25 @@ DROP TABLE IF EXISTS `PersonalizedInstrumentInsurancesView`;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8mb4;
 /*!50001 CREATE VIEW `PersonalizedInstrumentInsurancesView` AS SELECT
- 1 AS `object`,
-  1 AS `accessory`,
-  1 AS `manufacturer`,
-  1 AS `year_of_construction`,
-  1 AS `insurance_amount`,
-  1 AS `start_of_insurance`,
-  1 AS `id`,
-  1 AS `deleted`,
-  1 AS `created`,
-  1 AS `updated`,
-  1 AS `instrument_holder_id`,
-  1 AS `instrument_owner_id`,
-  1 AS `bill_to_party_id`,
-  1 AS `broker_id`,
-  1 AS `geographical_scope`,
-  1 AS `musician_id`,
-  1 AS `is_debitor`,
-  1 AS `is_holder`,
-  1 AS `is_owner` */;
+ NULL AS `object`,
+ NULL AS `accessory`,
+ NULL AS `manufacturer`,
+ NULL AS `year_of_construction`,
+ NULL AS `insurance_amount`,
+ NULL AS `start_of_insurance`,
+ NULL AS `id`,
+ NULL AS `deleted`,
+ NULL AS `created`,
+ NULL AS `updated`,
+ NULL AS `instrument_holder_id`,
+ NULL AS `instrument_owner_id`,
+ NULL AS `bill_to_party_id`,
+ NULL AS `broker_id`,
+ NULL AS `geographical_scope`,
+ NULL AS `musician_id`,
+ NULL AS `is_debitor`,
+ NULL AS `is_holder`,
+ NULL AS `is_owner` */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -286,10 +287,10 @@ DROP TABLE IF EXISTS `PersonalizedInstrumentsView`;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8mb4;
 /*!50001 CREATE VIEW `PersonalizedInstrumentsView` AS SELECT
- 1 AS `name`,
-  1 AS `sort_order`,
-  1 AS `deleted`,
-  1 AS `id` */;
+ NULL AS `name`,
+ NULL AS `sort_order`,
+ NULL AS `deleted`,
+ NULL AS `id` */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -301,9 +302,9 @@ DROP TABLE IF EXISTS `PersonalizedInsuranceBrokersView`;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8mb4;
 /*!50001 CREATE VIEW `PersonalizedInsuranceBrokersView` AS SELECT
- 1 AS `short_name`,
-  1 AS `long_name`,
-  1 AS `address` */;
+ NULL AS `short_name`,
+ NULL AS `long_name`,
+ NULL AS `address` */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -315,11 +316,11 @@ DROP TABLE IF EXISTS `PersonalizedInsuranceRatesView`;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8mb4;
 /*!50001 CREATE VIEW `PersonalizedInsuranceRatesView` AS SELECT
- 1 AS `geographical_scope`,
-  1 AS `rate`,
-  1 AS `due_date`,
-  1 AS `policy_number`,
-  1 AS `broker_id` */;
+ NULL AS `geographical_scope`,
+ NULL AS `rate`,
+ NULL AS `due_date`,
+ NULL AS `policy_number`,
+ NULL AS `broker_id` */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -331,10 +332,10 @@ DROP TABLE IF EXISTS `PersonalizedMusicianEmailAddressesView`;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8mb4;
 /*!50001 CREATE VIEW `PersonalizedMusicianEmailAddressesView` AS SELECT
- 1 AS `address`,
-  1 AS `created`,
-  1 AS `updated`,
-  1 AS `musician_id` */;
+ NULL AS `address`,
+ NULL AS `created`,
+ NULL AS `updated`,
+ NULL AS `musician_id` */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -346,12 +347,12 @@ DROP TABLE IF EXISTS `PersonalizedMusicianInstrumentsView`;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8mb4;
 /*!50001 CREATE VIEW `PersonalizedMusicianInstrumentsView` AS SELECT
- 1 AS `ranking`,
-  1 AS `created`,
-  1 AS `updated`,
-  1 AS `deleted`,
-  1 AS `musician_id`,
-  1 AS `instrument_id` */;
+ NULL AS `ranking`,
+ NULL AS `created`,
+ NULL AS `updated`,
+ NULL AS `deleted`,
+ NULL AS `musician_id`,
+ NULL AS `instrument_id` */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -363,11 +364,11 @@ DROP TABLE IF EXISTS `PersonalizedMusicianRowAccessTokensView`;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8mb4;
 /*!50001 CREATE VIEW `PersonalizedMusicianRowAccessTokensView` AS SELECT
- 1 AS `user_id`,
-  1 AS `access_token_hash`,
-  1 AS `created`,
-  1 AS `updated`,
-  1 AS `musician_id` */;
+ NULL AS `user_id`,
+ NULL AS `access_token_hash`,
+ NULL AS `created`,
+ NULL AS `updated`,
+ NULL AS `musician_id` */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -379,37 +380,37 @@ DROP TABLE IF EXISTS `PersonalizedMusiciansView`;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8mb4;
 /*!50001 CREATE VIEW `PersonalizedMusiciansView` AS SELECT
- 1 AS `sur_name`,
-  1 AS `first_name`,
-  1 AS `nick_name`,
-  1 AS `display_name`,
-  1 AS `gender`,
-  1 AS `user_id_slug`,
-  1 AS `user_passphrase`,
-  1 AS `city`,
-  1 AS `street`,
-  1 AS `street_number`,
-  1 AS `address_supplement`,
-  1 AS `po_box`,
-  1 AS `country`,
-  1 AS `postal_code`,
-  1 AS `language`,
-  1 AS `mobile_phone`,
-  1 AS `fixed_line_phone`,
-  1 AS `birthday`,
-  1 AS `email`,
-  1 AS `default_participation_status`,
-  1 AS `remarks`,
-  1 AS `cloud_account_deactivated`,
-  1 AS `cloud_account_disabled`,
-  1 AS `updated`,
-  1 AS `address_book_uri`,
-  1 AS `organization`,
-  1 AS `job_title`,
-  1 AS `id`,
-  1 AS `created`,
-  1 AS `deleted`,
-  1 AS `uuid` */;
+ NULL AS `sur_name`,
+ NULL AS `first_name`,
+ NULL AS `nick_name`,
+ NULL AS `display_name`,
+ NULL AS `gender`,
+ NULL AS `user_id_slug`,
+ NULL AS `user_passphrase`,
+ NULL AS `city`,
+ NULL AS `street`,
+ NULL AS `street_number`,
+ NULL AS `address_supplement`,
+ NULL AS `po_box`,
+ NULL AS `country`,
+ NULL AS `postal_code`,
+ NULL AS `language`,
+ NULL AS `mobile_phone`,
+ NULL AS `fixed_line_phone`,
+ NULL AS `birthday`,
+ NULL AS `email`,
+ NULL AS `default_participation_status`,
+ NULL AS `remarks`,
+ NULL AS `cloud_account_deactivated`,
+ NULL AS `cloud_account_disabled`,
+ NULL AS `updated`,
+ NULL AS `address_book_uri`,
+ NULL AS `organization`,
+ NULL AS `job_title`,
+ NULL AS `id`,
+ NULL AS `created`,
+ NULL AS `deleted`,
+ NULL AS `uuid` */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -421,14 +422,14 @@ DROP TABLE IF EXISTS `PersonalizedProjectApplicationsView`;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8mb4;
 /*!50001 CREATE VIEW `PersonalizedProjectApplicationsView` AS SELECT
- 1 AS `email`,
-  1 AS `password_hash`,
-  1 AS `data`,
-  1 AS `deleted`,
-  1 AS `created`,
-  1 AS `updated`,
-  1 AS `project_id`,
-  1 AS `musician_id` */;
+ NULL AS `email`,
+ NULL AS `password_hash`,
+ NULL AS `data`,
+ NULL AS `deleted`,
+ NULL AS `created`,
+ NULL AS `updated`,
+ NULL AS `project_id`,
+ NULL AS `musician_id` */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -440,18 +441,18 @@ DROP TABLE IF EXISTS `PersonalizedProjectEventsView`;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8mb4;
 /*!50001 CREATE VIEW `PersonalizedProjectEventsView` AS SELECT
- 1 AS `calendar_id`,
-  1 AS `calendar_uri`,
-  1 AS `event_uid`,
-  1 AS `series_uid`,
-  1 AS `event_uri`,
-  1 AS `recurrence_id`,
-  1 AS `sequence`,
-  1 AS `type`,
-  1 AS `id`,
-  1 AS `deleted`,
-  1 AS `project_id`,
-  1 AS `absence_field_id` */;
+ NULL AS `calendar_id`,
+ NULL AS `calendar_uri`,
+ NULL AS `event_uid`,
+ NULL AS `series_uid`,
+ NULL AS `event_uri`,
+ NULL AS `recurrence_id`,
+ NULL AS `sequence`,
+ NULL AS `type`,
+ NULL AS `id`,
+ NULL AS `deleted`,
+ NULL AS `project_id`,
+ NULL AS `absence_field_id` */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -463,10 +464,10 @@ DROP TABLE IF EXISTS `PersonalizedProjectInstrumentationNumbersView`;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8mb4;
 /*!50001 CREATE VIEW `PersonalizedProjectInstrumentationNumbersView` AS SELECT
- 1 AS `voice`,
-  1 AS `quantity`,
-  1 AS `project_id`,
-  1 AS `instrument_id` */;
+ NULL AS `voice`,
+ NULL AS `quantity`,
+ NULL AS `project_id`,
+ NULL AS `instrument_id` */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -478,11 +479,11 @@ DROP TABLE IF EXISTS `PersonalizedProjectInstrumentsView`;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8mb4;
 /*!50001 CREATE VIEW `PersonalizedProjectInstrumentsView` AS SELECT
- 1 AS `voice`,
-  1 AS `section_leader`,
-  1 AS `project_id`,
-  1 AS `musician_id`,
-  1 AS `instrument_id` */;
+ NULL AS `voice`,
+ NULL AS `section_leader`,
+ NULL AS `project_id`,
+ NULL AS `musician_id`,
+ NULL AS `instrument_id` */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -494,17 +495,17 @@ DROP TABLE IF EXISTS `PersonalizedProjectParticipantFieldsDataOptionsView`;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8mb4;
 /*!50001 CREATE VIEW `PersonalizedProjectParticipantFieldsDataOptionsView` AS SELECT
- 1 AS `key`,
-  1 AS `label`,
-  1 AS `data`,
-  1 AS `balancing_account`,
-  1 AS `deposit`,
-  1 AS `limit`,
-  1 AS `tooltip`,
-  1 AS `deleted`,
-  1 AS `created`,
-  1 AS `updated`,
-  1 AS `field_id` */;
+ NULL AS `key`,
+ NULL AS `label`,
+ NULL AS `data`,
+ NULL AS `balancing_account`,
+ NULL AS `deposit`,
+ NULL AS `limit`,
+ NULL AS `tooltip`,
+ NULL AS `deleted`,
+ NULL AS `created`,
+ NULL AS `updated`,
+ NULL AS `field_id` */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -516,16 +517,16 @@ DROP TABLE IF EXISTS `PersonalizedProjectParticipantFieldsDataView`;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8mb4;
 /*!50001 CREATE VIEW `PersonalizedProjectParticipantFieldsDataView` AS SELECT
- 1 AS `option_key`,
-  1 AS `option_value`,
-  1 AS `deposit`,
-  1 AS `created`,
-  1 AS `updated`,
-  1 AS `deleted`,
-  1 AS `field_id`,
-  1 AS `project_id`,
-  1 AS `musician_id`,
-  1 AS `supporting_document_id` */;
+ NULL AS `option_key`,
+ NULL AS `option_value`,
+ NULL AS `deposit`,
+ NULL AS `created`,
+ NULL AS `updated`,
+ NULL AS `deleted`,
+ NULL AS `field_id`,
+ NULL AS `project_id`,
+ NULL AS `musician_id`,
+ NULL AS `supporting_document_id` */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -537,22 +538,22 @@ DROP TABLE IF EXISTS `PersonalizedProjectParticipantFieldsView`;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8mb4;
 /*!50001 CREATE VIEW `PersonalizedProjectParticipantFieldsView` AS SELECT
- 1 AS `id`,
-  1 AS `name`,
-  1 AS `multiplicity`,
-  1 AS `data_type`,
-  1 AS `due_date`,
-  1 AS `deposit_due_date`,
-  1 AS `balancing_account`,
-  1 AS `tooltip`,
-  1 AS `tab`,
-  1 AS `display_order`,
-  1 AS `participation_context`,
-  1 AS `encrypted`,
-  1 AS `participant_access`,
-  1 AS `deleted`,
-  1 AS `project_id`,
-  1 AS `default_value` */;
+ NULL AS `id`,
+ NULL AS `name`,
+ NULL AS `multiplicity`,
+ NULL AS `data_type`,
+ NULL AS `due_date`,
+ NULL AS `deposit_due_date`,
+ NULL AS `balancing_account`,
+ NULL AS `tooltip`,
+ NULL AS `tab`,
+ NULL AS `display_order`,
+ NULL AS `participation_context`,
+ NULL AS `encrypted`,
+ NULL AS `participant_access`,
+ NULL AS `deleted`,
+ NULL AS `project_id`,
+ NULL AS `default_value` */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -564,14 +565,14 @@ DROP TABLE IF EXISTS `PersonalizedProjectParticipantsView`;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8mb4;
 /*!50001 CREATE VIEW `PersonalizedProjectParticipantsView` AS SELECT
- 1 AS `registration`,
-  1 AS `participation_status`,
-  1 AS `created`,
-  1 AS `updated`,
-  1 AS `deleted`,
-  1 AS `project_id`,
-  1 AS `musician_id`,
-  1 AS `database_documents_id` */;
+ NULL AS `registration`,
+ NULL AS `participation_status`,
+ NULL AS `created`,
+ NULL AS `updated`,
+ NULL AS `deleted`,
+ NULL AS `project_id`,
+ NULL AS `musician_id`,
+ NULL AS `database_documents_id` */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -583,18 +584,18 @@ DROP TABLE IF EXISTS `PersonalizedProjectPaymentsView`;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8mb4;
 /*!50001 CREATE VIEW `PersonalizedProjectPaymentsView` AS SELECT
- 1 AS `amount`,
-  1 AS `is_donation`,
-  1 AS `subject`,
-  1 AS `id`,
-  1 AS `created`,
-  1 AS `updated`,
-  1 AS `field_id`,
-  1 AS `project_id`,
-  1 AS `musician_id`,
-  1 AS `receivable_key`,
-  1 AS `composite_payment_id`,
-  1 AS `balance_documents_folder_id` */;
+ NULL AS `amount`,
+ NULL AS `is_donation`,
+ NULL AS `subject`,
+ NULL AS `id`,
+ NULL AS `created`,
+ NULL AS `updated`,
+ NULL AS `field_id`,
+ NULL AS `project_id`,
+ NULL AS `musician_id`,
+ NULL AS `receivable_key`,
+ NULL AS `composite_payment_id`,
+ NULL AS `balance_documents_folder_id` */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -606,11 +607,11 @@ DROP TABLE IF EXISTS `PersonalizedProjectWebPagesView`;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8mb4;
 /*!50001 CREATE VIEW `PersonalizedProjectWebPagesView` AS SELECT
- 1 AS `article_id`,
-  1 AS `article_name`,
-  1 AS `category_id`,
-  1 AS `priority`,
-  1 AS `project_id` */;
+ NULL AS `article_id`,
+ NULL AS `article_name`,
+ NULL AS `category_id`,
+ NULL AS `priority`,
+ NULL AS `project_id` */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -622,20 +623,20 @@ DROP TABLE IF EXISTS `PersonalizedProjectsView`;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8mb4;
 /*!50001 CREATE VIEW `PersonalizedProjectsView` AS SELECT
- 1 AS `year`,
-  1 AS `name`,
-  1 AS `type`,
-  1 AS `mailing_list_id`,
-  1 AS `registration_start_date`,
-  1 AS `registration_deadline`,
-  1 AS `id`,
-  1 AS `deleted`,
-  1 AS `created`,
-  1 AS `updated`,
-  1 AS `financial_balance_documents_storage_id`,
-  1 AS `registration_calendar_event_id`,
-  1 AS `club_members`,
-  1 AS `executive_board` */;
+ NULL AS `year`,
+ NULL AS `name`,
+ NULL AS `type`,
+ NULL AS `mailing_list_id`,
+ NULL AS `registration_start_date`,
+ NULL AS `registration_deadline`,
+ NULL AS `id`,
+ NULL AS `deleted`,
+ NULL AS `created`,
+ NULL AS `updated`,
+ NULL AS `financial_balance_documents_storage_id`,
+ NULL AS `registration_calendar_event_id`,
+ NULL AS `club_members`,
+ NULL AS `executive_board` */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -647,15 +648,15 @@ DROP TABLE IF EXISTS `PersonalizedSepaBankAccountsView`;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8mb4;
 /*!50001 CREATE VIEW `PersonalizedSepaBankAccountsView` AS SELECT
- 1 AS `sequence`,
-  1 AS `iban`,
-  1 AS `bic`,
-  1 AS `blz`,
-  1 AS `bank_account_owner`,
-  1 AS `deleted`,
-  1 AS `created`,
-  1 AS `updated`,
-  1 AS `musician_id` */;
+ NULL AS `sequence`,
+ NULL AS `iban`,
+ NULL AS `bic`,
+ NULL AS `blz`,
+ NULL AS `bank_account_owner`,
+ NULL AS `deleted`,
+ NULL AS `created`,
+ NULL AS `updated`,
+ NULL AS `musician_id` */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -667,20 +668,20 @@ DROP TABLE IF EXISTS `PersonalizedSepaDebitMandatesView`;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8mb4;
 /*!50001 CREATE VIEW `PersonalizedSepaDebitMandatesView` AS SELECT
- 1 AS `sequence`,
-  1 AS `mandate_reference`,
-  1 AS `non_recurring`,
-  1 AS `mandate_date`,
-  1 AS `pre_notification_calendar_days`,
-  1 AS `pre_notification_business_days`,
-  1 AS `last_used_date`,
-  1 AS `deleted`,
-  1 AS `created`,
-  1 AS `updated`,
-  1 AS `musician_id`,
-  1 AS `bank_account_sequence`,
-  1 AS `project_id`,
-  1 AS `written_mandate_id` */;
+ NULL AS `sequence`,
+ NULL AS `mandate_reference`,
+ NULL AS `non_recurring`,
+ NULL AS `mandate_date`,
+ NULL AS `pre_notification_calendar_days`,
+ NULL AS `pre_notification_business_days`,
+ NULL AS `last_used_date`,
+ NULL AS `deleted`,
+ NULL AS `created`,
+ NULL AS `updated`,
+ NULL AS `musician_id`,
+ NULL AS `bank_account_sequence`,
+ NULL AS `project_id`,
+ NULL AS `written_mandate_id` */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -692,12 +693,12 @@ DROP TABLE IF EXISTS `PersonalizedTableFieldTranslationsView`;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8mb4;
 /*!50001 CREATE VIEW `PersonalizedTableFieldTranslationsView` AS SELECT
- 1 AS `id`,
-  1 AS `locale`,
-  1 AS `object_class`,
-  1 AS `field`,
-  1 AS `foreign_key`,
-  1 AS `content` */;
+ NULL AS `id`,
+ NULL AS `locale`,
+ NULL AS `object_class`,
+ NULL AS `field`,
+ NULL AS `foreign_key`,
+ NULL AS `content` */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -723,7 +724,8 @@ BEGIN
     RETURN musician_id;
   END IF;
   RETURN cafevdb_cloud_connector.PROJECT_APPLICATION_MUSICIAN_ID();
-END ;;
+END
+;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -745,7 +747,8 @@ CREATE DEFINER=`phpunit`@`%` FUNCTION `BIN2UUID`(`b` BINARY(16)) RETURNS char(36
     SQL SECURITY INVOKER
 BEGIN
   RETURN BIN_TO_UUID(b, 0);
-END ;;
+END
+;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -775,7 +778,8 @@ BEGIN
            SUBSTR(hexStr, 17, 4), '-',
            SUBSTR(hexStr, 21)
         ));
-END ;;
+END
+;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -797,7 +801,8 @@ CREATE DEFINER=`phpunit`@`%` FUNCTION `CLOUD_USER_ID`() RETURNS varchar(256) CHA
     SQL SECURITY INVOKER
 BEGIN
   RETURN @CLOUD_USER_ID;
-END ;;
+END
+;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -824,7 +829,8 @@ BEGIN
     (t.user_id = cafevdb_cloud_connector.CLOUD_USER_ID()
       AND t.access_token_hash = cafevdb_cloud_connector.ROW_ACCESS_TOKEN());
   RETURN musician_id;
-END ;;
+END
+;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -851,7 +857,8 @@ BEGIN
       (FIND_IN_SET(SHA2(t.email, 256), cafevdb_cloud_connector.PROJECT_APPLICATION_SHARE_TOKENS()) > 0
         AND t.password_hash = cafevdb_cloud_connector.PROJECT_APPLICATION_ROW_ACCESS_TOKEN());
   RETURN musician_id;
-END ;;
+END
+;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -879,7 +886,8 @@ BEGIN
   WHERE
     p.name = cafevdb_cloud_connector.PROJECT_APPLICATION_PROJECT_NAME();
   RETURN project_id;
-END ;;
+END
+;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -901,7 +909,8 @@ CREATE DEFINER=`phpunit`@`%` FUNCTION `PROJECT_APPLICATION_PROJECT_NAME`() RETUR
     SQL SECURITY INVOKER
 BEGIN
   RETURN @PROJECT_APPLICATION_PROJECT_NAME;
-END ;;
+END
+;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -923,7 +932,8 @@ CREATE DEFINER=`phpunit`@`%` FUNCTION `PROJECT_APPLICATION_ROW_ACCESS_TOKEN`() R
     SQL SECURITY INVOKER
 BEGIN
   RETURN @PROJECT_APPLICATION_ROW_ACCESS_TOKEN;
-END ;;
+END
+;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -945,7 +955,8 @@ CREATE DEFINER=`phpunit`@`%` FUNCTION `PROJECT_APPLICATION_SHARE_TOKENS`() RETUR
     SQL SECURITY INVOKER
 BEGIN
   RETURN @PROJECT_APPLICATION_SHARE_TOKENS;
-END ;;
+END
+;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -967,7 +978,8 @@ CREATE DEFINER=`phpunit`@`%` FUNCTION `ROW_ACCESS_TOKEN`() RETURNS char(128) CHA
     SQL SECURITY INVOKER
 BEGIN
   RETURN @ROW_ACCESS_TOKEN;
-END ;;
+END
+;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -989,7 +1001,8 @@ CREATE DEFINER=`phpunit`@`%` FUNCTION `UUID2BIN`(`uuid` CHAR(36)) RETURNS binary
     SQL SECURITY INVOKER
 BEGIN
   RETURN UUID_TO_BIN(uuid, 0);
-END ;;
+END
+;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -1017,7 +1030,8 @@ BEGIN
   SUBSTRING(uuid, 20, 4),
   SUBSTRING(uuid, 25))
   );
-END ;;
+END
+;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -1169,7 +1183,7 @@ DELIMITER ;
 /*!50001 SET collation_connection      = utf8mb4_uca1400_ai_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`phpunit`@`%` SQL SECURITY DEFINER */
-/*!50001 VIEW `PersonalizedFileDataView` AS select `t`.`data_hash` AS `data_hash`,`t`.`data` AS `data`,`t`.`file_id` AS `file_id`,`t`.`type` AS `type` from (`cafevdb_cloud_connector`.`PersonalizedFilesView` `fv` join `cafevdb`.`FileData` `t` on(`t`.`file_id` = `fv`.`id`)) */
+/*!50001 VIEW `PersonalizedFileDataView` AS select `t`.`data_hash` AS `data_hash`,`t`.`data` AS `data`,`t`.`file_id` AS `file_id`,`t`.`type` AS `type`,`t`.`lazy_file_data_dummy` AS `lazy_file_data_dummy` from (`cafevdb_cloud_connector`.`PersonalizedFilesView` `fv` join `cafevdb`.`FileData` `t` on(`t`.`file_id` = `fv`.`id`)) */
 /*!50002 WITH CASCADED CHECK OPTION */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -1713,4 +1727,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*M!100616 SET NOTE_VERBOSITY=@OLD_NOTE_VERBOSITY */;
 
--- Dump completed on 2026-08-31  0:02:31
+-- Dump completed on 2026-10-25 18:29:53
