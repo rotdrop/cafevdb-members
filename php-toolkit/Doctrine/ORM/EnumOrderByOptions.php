@@ -24,7 +24,7 @@
 
 namespace OCA\RotDrop\Toolkit\Doctrine\ORM;
 
-use Spatie\TypeScriptTransformer\Attributes\TypeScript;
+use OCA\RotDrop\DevScripts\PhpToTypeScript\TypeScript;
 
 /**
  * Possible order-by options for findBy().

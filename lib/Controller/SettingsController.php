@@ -24,7 +24,7 @@ namespace OCA\CAFeVDBMembers\Controller;
 
 use Throwable;
 
-use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
+use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
 use Psr\Log\LoggerInterface;
 use OCP\AppFramework\Controller;
@@ -39,7 +39,7 @@ use OCA\CAFeVDBMembers\Service\ProjectGroupService;
 use OCA\CAFeVDBMembers\Settings\ConfigConstants;
 
 /** AJAX end-points for admin and personal settings. */
-#[TSAttributes\TypeScript]
+#[PhpToTypeScript\TypeScript]
 class SettingsController extends Controller
 {
   use \OCA\CAFeVDBMembers\Toolkit\Traits\UtilTrait;

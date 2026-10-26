@@ -36,9 +36,6 @@ use Symfony\Component\Console\Output\ConsoleOutputInterface;
 
 use Spatie\TypeScriptTransformer\Collectors\EnumCollector;
 use Spatie\TypeScriptTransformer\Structures\TransformedType;
-use Spatie\TypeScriptTransformer\Transformers;
-use Spatie\TypeScriptTransformer\TypeScriptTransformer;
-use Spatie\TypeScriptTransformer\TypeScriptTransformerConfig;
 use Spatie\TypeScriptTransformer\Types\TypeScriptType;
 
 use Psr\Container\ContainerInterface;
@@ -76,9 +73,9 @@ class PhpToTypeScript extends Command
   private const TS_MODULES_DIR = self::PHP_PREFIX . 'modules';
   private const TS_TYPES_FILE = self::PHP_PREFIX . 'types' . self::OUTPUT_SUFFIX;
   private const TRANSFORMERS = [
-    Transformers\EnumTransformer::class,
+    EnumTransformer::class,
     ClassConstantsTransformer::class,
-    Transformers\DtoTransformer::class,
+    DtoTransformer::class,
   ];
 
   private const DEFAULT_COLLECTORS = [
@@ -107,6 +104,12 @@ class PhpToTypeScript extends Command
     protected array $collectors = self::DEFAULT_COLLECTORS,
   ) {
     parent::__construct();
+  }
+
+  /** @return bool */
+  private function classOrInterfaceExists(string $class): bool
+  {
+    return class_exists($class, autoload: true) || interface_exists($class, autoload: true);
   }
 
   /** {@inheritdoc} */
@@ -265,7 +268,7 @@ class PhpToTypeScript extends Command
     $outputFile = $outputPrefix . self::TS_TYPES_FILE;
 
     $typeReplacements = [
-      // Carbon actually just by default emits a simple strings
+      // Carbon actually just by default emits a simple string
       // Carbon\CarbonImmutable::class => new TypeScriptType('{ date: string, timezone_type: number, timezone: string }'),
       // Carbon\Carbon::class => new TypeScriptType('{ date: string, timezone_type: number, timezone: string }'),
       Carbon\CarbonImmutable::class => new TypeScriptType('string'),
@@ -274,11 +277,17 @@ class PhpToTypeScript extends Command
       DateTimeImmutable::class => new TypeScriptType('{ date: string, timezone_type: number, timezone: string }'),
       UuidInterface::class => new TypeScriptType('string'),
     ];
-    $typeReplacements = array_filter(
-      $typeReplacements,
-      fn(string $class) => class_exists($class, autoload: true),
-      ARRAY_FILTER_USE_KEY,
-    );
+    foreach ($typeReplacements as $phpClass => $tsClass) {
+      if (!$this->classOrInterfaceExists($phpClass)) {
+        unset($typeReplacements[$phpClass]);
+      }
+      if (!empty($scopedNamespacePrefix)) {
+        $phpClass = $scopedNamespacePrefix . '\\' . $phpClass;
+        if ($this->classOrInterfaceExists($phpClass)) {
+          $typeReplacements[$phpClass] = $tsClass;
+        }
+	  }
+    }
 
     $config = TransformerConfig::create()
       ->appNamespace($namespacePrefix)
@@ -296,13 +305,7 @@ class PhpToTypeScript extends Command
       // try inject default TypeScriptTransformer
       ->defaultTypeReplacements($typeReplacements)
       // try inject default TypeScriptTransformer
-      ->defaultInlineTypeReplacements([
-        // 'mixed' => 'unknown',
-        // 'array' => new TypeScriptType('Record<string|number, unknown>'),
-        // Carbon\CarbonImmutable::class => new TypeScriptType('{ date: string, timezone_type: number, timezone: string }'),
-        // Carbon\Carbon::class => new TypeScriptType('{ date: string, timezone_type: number, timezone: string }'),
-        // UuidInterface::class => new TypeScriptType('string'),
-      ])
+      ->defaultInlineTypeReplacements($typeReplacements)
       // file where TypeScript type definitions will be written
       ->outputFile($outputFile);
 
