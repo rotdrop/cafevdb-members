@@ -13,6 +13,7 @@
   <category>organisation</category>
   <bugs>https://github.com/rotdrop/cafevdb-members.git</bugs>
   <dependencies>
+    <php min-version="8.5"/>
     <nextcloud min-version="35" max-version="35"/>
   </dependencies>
   <navigations>
