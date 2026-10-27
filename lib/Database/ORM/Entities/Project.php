@@ -25,8 +25,8 @@ namespace OCA\CAFeVDBMembers\Database\ORM\Entities;
 use DateTimeImmutable;
 use DateTimeInterface;
 
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext as ParticipationContext;
+use OCA\CAFeVDBMembers\Database\DBAL\Types;
+use OCA\CAFeVDBMembers\Database\DBAL\Types\EnumParticipationContext as ParticipationContext;
 use OCA\CAFeVDBMembers\Database\ORM as CAFEVDB;
 use OCA\CAFeVDBMembers\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFeVDBMembers\Wrapped\Doctrine\Common\Collections\Collection;

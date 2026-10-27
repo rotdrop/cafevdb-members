@@ -34,6 +34,14 @@ class Constants extends ToolkitConstants
   public const NEW_APPLICATION_TOKEN = 'new';
   public const EMAIL_HASH_ALGORITHM = 'sha256';
 
+  /** @var string Name of the orchestra app (cafevdb) which provides the database. */
+  public const ORCHESTRA_APP_NAME = 'cafevdb';
+
+  // Names of the SQL session variables of the cloud-connector database.
+  public const SQL_PROJECT_APPLICATION_ROW_ACCESS_TOKEN = 'PROJECT_APPLICATION_ROW_ACCESS_TOKEN';
+  public const SQL_PROJECT_APPLICATION_SHARE_TOKENS = 'PROJECT_APPLICATION_SHARE_TOKENS';
+  public const SQL_PROJECT_APPLICATION_PROJECT_NAME = 'PROJECT_APPLICATION_PROJECT_NAME';
+
   /**
    * @var string
    *

@@ -25,8 +25,8 @@ namespace OCA\CAFeVDBMembers\Service;
 use Psr\Log\LoggerInterface;
 use OCP\IL10N;
 
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
+use OCA\CAFeVDBMembers\Database\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
+use OCA\CAFeVDBMembers\Database\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFeVDBMembers\Database\ORM\Entities;
 use OCA\CAFeVDBMembers\Database\ORM\EntityManager;
 

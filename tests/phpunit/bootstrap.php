@@ -42,7 +42,6 @@ define('PHPUNIT_ARTIFACTS', PHPUNIT_APPDIR . '/build/artifacts/tests/phpunit');
 $wantedApps = [
   'files',
   'files_sharing',
-  \OCA\CAFeVDBMembers\AppInfo\Application::getOrchestraAppName(),
   \PHPUNIT_NC_APP_NAME,
 ];
 

@@ -25,6 +25,9 @@ namespace OCA\CAFeVDBMembers\Service;
 use InvalidArgumentException;
 use RuntimeException;
 
+use BackedEnum;
+
+use OCP\EventDispatcher\Event;
 use OCP\Files\IRootFolder;
 use OCP\IAppConfig;
 use OCP\IGroup;
@@ -32,13 +35,9 @@ use OCP\IGroupManager;
 use OCP\IL10N;
 use Psr\Log\LoggerInterface;
 
-use OCA\CAFEVDB\Events\BeforeProjectDeletedEvent;
-use OCA\CAFEVDB\Events\PostProjectUpdatedEvent;
-use OCA\CAFEVDB\Events\ProjectCreatedEvent;
-use OCA\CAFEVDB\Service\CloudUserConnectorService;
-use OCA\CAFEVDB\Settings\ConfigConstants;
 use OCA\CAFeVDBMembers\Constants;
 use OCA\CAFeVDBMembers\Database\DBAL\Types\EnumProjectTemporalType as ProjectType;
+use OCA\CAFeVDBMembers\Settings\ConfigConstants;
 use OCA\CAFeVDBMembers\Toolkit\Service\GroupFoldersService;
 use OCA\CAFeVDBMembers\Toolkit\Service\SimpleSharingService;
 
@@ -50,6 +49,8 @@ class ProjectGroupService
   const MANAGEMENT_PERMISSIONS = GroupFoldersService::PERMISSION_ALL;
   const GROUP_LEAF_PERMISSIONS = GroupFoldersService::PERMISSION_DELETE|GroupFoldersService::PERMISSION_WRITE;
   const GROUP_PARENT_PERMISSIONS = GroupFoldersService::PERMISSION_READ;
+  // Same scheme as used by the orchestra app: "<APP_NAME>_<PROJECT_ID>".
+  const GROUP_ID_SEPARATOR = '_';
 
   private string $groupIdPrefix;
 
@@ -211,7 +212,7 @@ class ProjectGroupService
    */
   public function getProjectGroupId(int $projectId): string
   {
-    return CloudUserConnectorService::getProjectGroupId($projectId, $this->orchestraAppName);
+    return $this->orchestraAppName . self::GROUP_ID_SEPARATOR . $projectId;
   }
 
   /**
@@ -378,26 +379,39 @@ class ProjectGroupService
   }
 
   /**
-   * @param PostProjectUpdatedEvent $event
+   * Project events are emitted by the orchestra app. They are handled
+   * duck-typed in order to avoid a hard dependency on its classes.
+   *
+   * @param mixed $projectType Enum instance or its backing value.
+   *
+   * @return null|string
+   */
+  private static function projectTypeValue(mixed $projectType):?string
+  {
+    return $projectType instanceof BackedEnum ? $projectType->value : $projectType;
+  }
+
+  /**
+   * @param Event $event An event with the interface of the orchestra app's
+   * PostProjectUpdatedEvent.
    *
    * @return void
    */
-  public function handleProjectRenamed(PostProjectUpdatedEvent $event):void
+  public function handleProjectRenamed(Event $event):void
   {
     $groupId = $this->getProjectGroupId($event->getProjectId());
     $oldData = $event->getOldData();
     $newData = $event->getNewData();
-    if ($oldData['type'] == ProjectType::TEMPLATE && $newData['type'] == ProjectType::TEMPLATE) {
+    $oldType = self::projectTypeValue($oldData['type']);
+    $newType = self::projectTypeValue($newData['type']);
+    $template = ProjectType::TEMPLATE->value;
+    if ($oldType == $template && $newType == $template) {
       return;
-    } elseif ($oldData['type'] == ProjectType::TEMPLATE) {
-      $this->handleProjectCreatedEvent(new ProjectCreatedEvent(
-        $newData['id'], $newData['name'], $newData['year'], $newData['type']
-      ));
+    } elseif ($oldType == $template) {
+      $this->ensureProjectGroupFolder($newData['id'], $newData['name']);
       return;
-    } elseif ($newData['type'] == ProjectType::TEMPLATE) {
-      $this->handleProjectDeletedEvent(new BeforeProjectDeletedEvent(
-        $newData['id'], $newData['name'], $newData['year'], $newData['type']
-      ));
+    } elseif ($newType == $template) {
+      $this->deleteProjectGroupFolder($newData['name']);
       return;
     }
 
@@ -433,26 +447,48 @@ class ProjectGroupService
   }
 
   /**
-   * @param BeforeProjectDeletedEvent $event
+   * @param Event $event An event with the interface of the orchestra app's
+   * BeforeProjectDeletedEvent.
    *
    * @return void
    */
-  public function handleProjectDeletedEvent(BeforeProjectDeletedEvent $event)
+  public function handleProjectDeletedEvent(Event $event)
   {
-    // $groupId = $this->getProjectGroupId($event->getProjectId());
-    $mountPoint = $this->getProjectFolderMountPoint($event->getProjectName());
+    $this->deleteProjectGroupFolder($event->getProjectName());
+  }
+
+  /**
+   * @param string $projectName
+   *
+   * @return void
+   */
+  private function deleteProjectGroupFolder(string $projectName):void
+  {
+    $mountPoint = $this->getProjectFolderMountPoint($projectName);
     $this->groupFoldersService->deleteFolders($mountPoint);
   }
 
   /**
-   * @param ProjectCreatedEvent $event
+   * @param Event $event An event with the interface of the orchestra app's
+   * ProjectCreatedEvent.
    *
    * @return void
    */
-  public function handleProjectCreatedEvent(ProjectCreatedEvent $event)
+  public function handleProjectCreatedEvent(Event $event)
   {
-    $groupId = $this->getProjectGroupId($event->getProjectId());
-    $projectName = $event->getProjectName();
+    $this->ensureProjectGroupFolder($event->getProjectId(), $event->getProjectName());
+  }
+
+  /**
+   * @param int $projectId
+   *
+   * @param string $projectName
+   *
+   * @return void
+   */
+  private function ensureProjectGroupFolder(int $projectId, string $projectName):void
+  {
+    $groupId = $this->getProjectGroupId($projectId);
     $group = $this->groupManager->get($groupId);
     if (!empty($group)) {
       $this->ensureProjectFolder($group);

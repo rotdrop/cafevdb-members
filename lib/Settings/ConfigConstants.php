@@ -31,6 +31,14 @@ class ConfigConstants
   const USER_VIEWS_DATABASE_KEY = 'cloudUserViewsDatabase';
   const REGISTRATION_REPLY_TO_KEY = 'registrationReplyTo';
 
+  // Keys of the orchestra app (cafevdb) which are only read, never written.
+  const SHARE_OWNER_KEY = 'shareOwner';
+  const USER_GROUP_KEY = 'userGroup';
+  const ORCHESTRA_NAME_KEY = 'orchestra';
+  const ORCHESTRA_LOCALE_KEY = 'orchestraLocale';
+  const CONCERTS_CALENDAR_URI = 'concerts';
+  const REHEARSALS_CALENDAR_URI = 'rehearsals';
+
   const SETTINGS_KEYS = [
     self::FOLDER_GROUPS_KEY,
     self::MEMBER_ROOT_FOLDER_KEY,

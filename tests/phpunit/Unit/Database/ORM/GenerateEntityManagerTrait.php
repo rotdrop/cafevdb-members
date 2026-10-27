@@ -25,7 +25,6 @@ namespace OCA\CAFeVDBMembers\Tests\Unit\Database\ORM;
 use OCP\IConfig;
 use Psr\Container\ContainerInterface;
 
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\MusicianRowAccessToken;
 use OCA\CAFeVDBMembers\Database\DBAL\Logging\CloudLogger;
 use OCA\CAFeVDBMembers\Database\ORM\EntityManager;
 use OCA\CAFeVDBMembers\Service\AuthenticationService;

@@ -27,7 +27,7 @@ use ReflectionClass;
 use ReflectionProperty;
 use Exception;
 
-use OCA\CAFEVDB\Wrapped\Doctrine\ORM\Mapping as ORM;
+use OCA\CAFeVDBMembers\Wrapped\Doctrine\ORM\Mapping as ORM;
 
 /** Generic \ArrayAccess implementation for entities. */
 trait ArrayTrait

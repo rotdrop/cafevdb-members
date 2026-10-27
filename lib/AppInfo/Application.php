@@ -35,7 +35,11 @@ use OCP\IConfig;
 
 use Psr\Container\ContainerInterface;
 
-use OCA\CAFEVDB;
+use OCA\CAFeVDBMembers\Constants;
+use OCA\CAFeVDBMembers\Crypto\IEncryptionService;
+use OCA\CAFeVDBMembers\Crypto\OrchestraEncryptionService;
+use OCA\CAFeVDBMembers\L10N\IBidirectionalTranslator;
+use OCA\CAFeVDBMembers\L10N\OrchestraTranslator;
 use OCA\CAFeVDBMembers\Database\Registration as DatabaseRegistration;
 use OCA\CAFeVDBMembers\Listener\Registration as ListenerRegistration;
 use OCA\CAFeVDBMembers\Settings\ConfigConstants;
@@ -49,16 +53,17 @@ class Application extends AbstractApplication
   const DEFAULT_LOCALE_KEY = 'DefaultLocale';
   const DEFAULT_LOCALE = 'en_US';
 
-  protected static string $orchestraAppName;
+  protected static string $orchestraAppName = Constants::ORCHESTRA_APP_NAME;
 
   /**
-   * Reads off the app-name from the info.xml file.
+   * The app-name of the orchestra app which owns the database. It is a plain
+   * constant in order not to depend on the orchestra app being installed.
    *
    * @return string
    */
   public static function getOrchestraAppName(): string
   {
-    return self::$orchestraAppName ?? (self::$orchestraAppName = CAFEVDB\AppInfo\Application::getAppName());
+    return self::$orchestraAppName;
   }
 
   /** {@inheritdoc} */
@@ -66,14 +71,14 @@ class Application extends AbstractApplication
   {
     $context->injectFn(function(IInitialState $initialState, IConfig $config) {
       self::getOrchestraAppName();
-      $orchestraLocale = $config->getAppValue(self::$orchestraAppName, CAFEVDB\Settings\ConfigConstants::ORCHESTRA_LOCALE_KEY, self::DEFAULT_LOCALE);
+      $orchestraLocale = $config->getAppValue(self::$orchestraAppName, ConfigConstants::ORCHESTRA_LOCALE_KEY, self::DEFAULT_LOCALE);
       $fmt = new NumberFormatter($orchestraLocale, NumberFormatter::CURRENCY);
       $currencySymbol = $fmt->getSymbol(NumberFormatter::CURRENCY_SYMBOL);
       $currencyCode = $fmt->getTextAttribute(NumberFormatter::CURRENCY_CODE);
       self::getOrchestraAppName();
       $initialState->provideInitialState('config', [
         'orchstraAppName' => self::$orchestraAppName,
-        'orchestraName' => $config->getAppValue(self::$orchestraAppName, CAFEVDB\Settings\ConfigConstants::ORCHESTRA_NAME_KEY),
+        'orchestraName' => $config->getAppValue(self::$orchestraAppName, ConfigConstants::ORCHESTRA_NAME_KEY),
         'orchestraLocale' => $orchestraLocale,
         'currencySymbol' => $currencySymbol,
         'currencyCode' => $currencyCode,
@@ -91,12 +96,14 @@ class Application extends AbstractApplication
   {
     parent::register($context);
 
+    $context->registerServiceAlias(IEncryptionService::class, OrchestraEncryptionService::class);
+    $context->registerServiceAlias(IBidirectionalTranslator::class, OrchestraTranslator::class);
     $context->registerService('orchestraAppName', fn($c) => self::getOrchestraAppName());
     $context->registerService('appManagementGroup', function($c) {
       self::getOrchestraAppName();
       /** @var \OCP\IConfig $config */
       $config = $c->get(\OCP\IConfig::class);
-      return $config->getAppValue(self::$orchestraAppName, CAFEVDB\Settings\ConfigConstants::USER_GROUP_KEY);
+      return $config->getAppValue(self::$orchestraAppName, ConfigConstants::USER_GROUP_KEY);
     });
     $context->registerService(ConfigConstants::MEMBER_ROOT_FOLDER_KEY, function($c) {
       self::getAppName();

@@ -26,7 +26,6 @@ use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes;
 use PHPUnit\Framework\MockObject\MockObject;
 
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities\MusicianRowAccessToken;
 use OCA\CAFeVDBMembers\Database\ORM\Entities;
 use OCA\CAFeVDBMembers\Tests\MockProvider;
 use OCA\CAFeVDBMembers\Toolkit\Doctrine\ORM\EntitySerializer;
@@ -70,7 +69,7 @@ class EntityArrayAdapterTest extends TestCase
     $rowAccessTokens = $this->mockProvider->getRowAccessTokens();
     $this->assertNotNull($rowAccessTokens[MockProvider::CLOUD_USER_UID]['access_token_hash'] ?? null);
     $this->assertEquals(
-      MusicianRowAccessToken::HASH_LENGTH / 4, // hexified binary, one nibble per char.
+      128, // sha512 hexified: one nibble per char.
       strlen($rowAccessTokens[MockProvider::CLOUD_USER_UID]['access_token_hash']),
     );
     $rowAccessToken = $rowAccessTokens[MockProvider::CLOUD_USER_UID]['access_token_hash'];

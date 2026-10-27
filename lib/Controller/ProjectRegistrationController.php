@@ -53,10 +53,9 @@ use OCP\Security\PasswordContext;
 use OCP\Util;
 use Psr\Log\LoggerInterface;
 
-use OCA\CAFEVDB;
 
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
+use OCA\CAFeVDBMembers\Database\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
+use OCA\CAFeVDBMembers\Database\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
 use OCA\CAFeVDBMembers\Constants;
 use OCA\CAFeVDBMembers\Database\ORM\Entities;
 use OCA\CAFeVDBMembers\Database\ORM\EntityManager;
@@ -465,8 +464,8 @@ class ProjectRegistrationController extends AuthPublicShareController
     // Store project name and token in the PHP session in order to get access
     // to the view providing the application data.
     $this->registrationService->updateDatabaseRowAccessTokens([
-      CAFEVDB\Constants::SQL_PROJECT_APPLICATION_PROJECT_NAME => $projectName,
-      CAFEVDB\Constants::SQL_PROJECT_APPLICATION_SHARE_TOKENS => $token,
+      Constants::SQL_PROJECT_APPLICATION_PROJECT_NAME => $projectName,
+      Constants::SQL_PROJECT_APPLICATION_SHARE_TOKENS => $token,
     ]);
 
     $this->share = $this->registrationService->getApplicationShare($projectName, applicationHash: $token);
@@ -495,7 +494,7 @@ class ProjectRegistrationController extends AuthPublicShareController
     }
     $token = $remove ? null : $this->getPasswordHash();
     $this->registrationService->updateDatabaseRowAccessTokens([
-      CAFEVDB\Constants::SQL_PROJECT_APPLICATION_ROW_ACCESS_TOKEN => $token,
+      Constants::SQL_PROJECT_APPLICATION_ROW_ACCESS_TOKEN => $token,
     ]);
   }
 

@@ -25,8 +25,7 @@ namespace OCA\CAFeVDBMembers\Service;
 use Psr\Log\LoggerInterface;
 use OCP\IL10N;
 
-use OCA\CAFEVDB\Crypto\AsymmetricKeyService;
-use OCA\CAFEVDB\Exceptions\CannotDecryptException;
+use OCA\CAFeVDBMembers\Crypto\IEncryptionService;
 
 use OCA\CAFeVDBMembers\Exceptions;
 
@@ -41,7 +40,7 @@ class AuthenticationService
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(
     private ?string $userId,
-    private AsymmetricKeyService $keyService,
+    private IEncryptionService $encryptionService,
     protected LoggerInterface $logger,
     protected IL10N $l,
   ) {
@@ -67,8 +66,8 @@ class AuthenticationService
       throw new Exceptions\NotLoggedInException($this->l->t('Empty user id, no one seems to be logged in at the moment.'));
     }
     try {
-      $rowAccessToken = $this->keyService->getSharedPrivateValue($this->userId, 'rowAccessToken');
-    } catch (CannotDecryptException $e) {
+      $rowAccessToken = $this->encryptionService->getSharedPrivateValue($this->userId, 'rowAccessToken');
+    } catch (Exceptions\CannotDecryptException $e) {
       throw new Exceptions\RowAccessTokenInvalidException(
         $this->l->t(
           'The row-access token for "%s" is present but invalid, the user\'s data will be unaccessble.',

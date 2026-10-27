@@ -32,9 +32,9 @@ use OCP\IL10N;
 use OCP\IRequest;
 use Psr\Log\LoggerInterface;
 
-use OCA\CAFEVDB\Exceptions\EncryptionFailedException;
 use OCA\CAFeVDBMembers\AppInfo\Application;
 use OCA\CAFeVDBMembers\Database\ORM\Entities;
+use OCA\CAFeVDBMembers\Exceptions\EncryptionFailedException;
 use OCA\CAFeVDBMembers\Database\ORM\EntityManager;
 use OCA\CAFeVDBMembers\Service\AuthenticationService;
 use OCA\CAFeVDBMembers\Service\MemberDataService;

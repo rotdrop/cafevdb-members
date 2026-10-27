@@ -24,7 +24,7 @@ namespace OCA\CAFeVDBMembers\Database\ORM\Entities;
 
 use OCA\CAFeVDBMembers\Toolkit\Common\RationalNumber;
 use OCA\CAFeVDBMembers\Toolkit\Common\DecimalRationalP4S4 as RateNumberType;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
+use OCA\CAFeVDBMembers\Database\DBAL\Types;
 use OCA\CAFeVDBMembers\Toolkit\Doctrine\DBAL\Types\DecimalRationalP4S4Type as RateDatabaseType;
 use OCA\CAFeVDBMembers\Database\ORM as CAFEVDB;
 use OCA\CAFeVDBMembers\Wrapped\Doctrine\Common\Collections\ArrayCollection;

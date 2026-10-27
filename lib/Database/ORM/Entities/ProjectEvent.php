@@ -24,7 +24,7 @@ namespace OCA\CAFeVDBMembers\Database\ORM\Entities;
 
 use DateTimeInterface;
 
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
+use OCA\CAFeVDBMembers\Database\DBAL\Types;
 use OCA\CAFeVDBMembers\Database\ORM as CAFEVDB;
 use OCA\CAFeVDBMembers\Utils\Uuid;
 use OCA\CAFeVDBMembers\Wrapped\Doctrine\DBAL\Types\Types as DBALTypes;

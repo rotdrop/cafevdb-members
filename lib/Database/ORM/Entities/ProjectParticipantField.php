@@ -22,9 +22,9 @@
 
 namespace OCA\CAFeVDBMembers\Database\ORM\Entities;
 
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumParticipationContext as ParticipationContext;
+use OCA\CAFeVDBMembers\Database\DBAL\Types\EnumParticipantFieldDataType as FieldDataType;
+use OCA\CAFeVDBMembers\Database\DBAL\Types\EnumParticipantFieldMultiplicity as FieldMultiplicity;
+use OCA\CAFeVDBMembers\Database\DBAL\Types\EnumParticipationContext as ParticipationContext;
 use OCA\CAFeVDBMembers\Database\ORM as CAFEVDB;
 use OCA\CAFeVDBMembers\Utils\Uuid;
 use OCA\CAFeVDBMembers\Wrapped\Doctrine\Common\Collections\ArrayCollection;
