@@ -68,6 +68,7 @@ $phpToTypeScript = new PhpToTypeScript\PhpToTypeScript(
     DatabaseEntityCollector::class,
   ],
   metaDataForwarderFolder: 'Wrapped/OCA/RotDrop/Toolkit/Doctrine/ORM',
+  entityManagerFactory: fn() => \OCP\Server::get(\OCA\CAFeVDBMembers\Database\ORM\EntityManager::class),
   devScriptsFolder: __DIR__,
   excludes: $excludes,
   scopedNamespaces: $scopedNamespaces,
