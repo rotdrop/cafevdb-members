@@ -6,12 +6,12 @@ ABSSRCDIR = $(CURDIR)
 # try to parse the info.xml if we can, only then fall-back to the directory name
 #
 APP_INFO = $(SRCDIR)/appinfo/info.xml
-XPATH := $(shell which xpath 2> /dev/null)
+XPATH = $(shell which xpath 2> /dev/null)
 ifneq ($(XPATH),)
-APP_NAME := $(shell $(XPATH) -q -e '/info/id/text()' $(APP_INFO))
-APP_VERSION := $(shell $(XPATH) -q -e '/info/version/text()' $(APP_INFO))
-APP_NAMESPACE := $(shell $(XPATH) -q -e '/info/namespace/text()' $(APP_INFO))
-WRAPPER_NAMESPACE_POSTFIX := $(shell $(XPATH) -q -e '/info/scopednamespace/text()' $(APP_INFO))
+APP_NAME = $(shell $(XPATH) -q -e '/info/id/text()' $(APP_INFO))
+APP_VERSION = $(shell $(XPATH) -q -e '/info/version/text()' $(APP_INFO))
+APP_NAMESPACE = $(shell $(XPATH) -q -e '/info/namespace/text()' $(APP_INFO))
+WRAPPER_NAMESPACE_POSTFIX = $(shell $(XPATH) -q -e '/info/scopednamespace/text()' $(APP_INFO))
 else
 $(warning The xpath binary could not be found, falling back to using the CWD as app-name)
 APP_NAME = $(notdir $(CURDIR))
