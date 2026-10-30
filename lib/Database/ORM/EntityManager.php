@@ -28,7 +28,7 @@ use OCP\IConfig;
 use OCP\IL10N;
 use OCP\ISession;
 
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types;
+use OCA\CAFeVDBMembers\Database\DBAL\Types;
 use OCA\CAFeVDBMembers\Constants;
 use OCA\CAFeVDBMembers\Database\DBAL\Logging\CloudLogger;
 use OCA\CAFeVDBMembers\Database\ORM\Entities;

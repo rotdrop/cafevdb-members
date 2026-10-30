@@ -47,8 +47,6 @@ use OCP\Security\IHasher;
 use OCP\Util;
 use Psr\Log\LoggerInterface;
 
-use OCA\CAFEVDB;
-
 use OCA\CAFeVDBMembers\Constants;
 use OCA\CAFeVDBMembers\Controller\SettingsController;
 use OCA\CAFeVDBMembers\Database\ORM\Entities;
@@ -160,8 +158,8 @@ that we have to decline your application we will inform you ASAP.'));
 
     // install old and new application hash for db access
     $this->updateDatabaseRowAccessTokens([
-      CAFEVDB\Constants::SQL_PROJECT_APPLICATION_PROJECT_NAME => $projectName,
-      CAFEVDB\Constants::SQL_PROJECT_APPLICATION_SHARE_TOKENS => implode(',', array_unique([$applicationHash, $oldApplicationHash])),
+      Constants::SQL_PROJECT_APPLICATION_PROJECT_NAME => $projectName,
+      Constants::SQL_PROJECT_APPLICATION_SHARE_TOKENS => implode(',', array_unique([$applicationHash, $oldApplicationHash])),
     ]);
 
     /** @var Entities\Project */
@@ -392,7 +390,7 @@ that we have to decline your application we will inform you ASAP.'));
     }
 
     $this->updateDatabaseRowAccessTokens([
-      CAFEVDB\Constants::SQL_PROJECT_APPLICATION_ROW_ACCESS_TOKEN => $share->getPassword(),
+      Constants::SQL_PROJECT_APPLICATION_ROW_ACCESS_TOKEN => $share->getPassword(),
     ]);
 
     return $share;
@@ -412,7 +410,7 @@ that we have to decline your application we will inform you ASAP.'));
       return $deadline;
     }
 
-    $shareOwner = $this->appConfig->getValueString($this->orchestraAppName, CAFEVDB\Settings\ConfigConstants::SHARE_OWNER_KEY);
+    $shareOwner = $this->appConfig->getValueString($this->orchestraAppName, ConfigConstants::SHARE_OWNER_KEY);
     if (empty($shareOwner)) {
       return null;
     }
@@ -422,8 +420,8 @@ that we have to decline your application we will inform you ASAP.'));
     $query = $this->calendarManager->newQuery($principalUri);
     $query->addSearchProperty(ICalendarQuery::SEARCH_PROPERTY_CATEGORIES);
     $query->setSearchPattern($projectCategory);
-    $query->addSearchCalendar(CAFEVDB\Settings\ConfigConstants::REHEARSALS_CALENDAR_URI);
-    $query->addSearchCalendar(CAFEVDB\Settings\ConfigConstants::CONCERTS_CALENDAR_URI);
+    $query->addSearchCalendar(ConfigConstants::REHEARSALS_CALENDAR_URI);
+    $query->addSearchCalendar(ConfigConstants::CONCERTS_CALENDAR_URI);
 
     $calendarObjects = $this->calendarManager->searchForPrincipal($query);
 
@@ -473,7 +471,7 @@ that we have to decline your application we will inform you ASAP.'));
     $note = $share->getNote();
     $shareWith = $share->getSharedWith();
 
-    $initiatorDisplayName = $this->appConfig->getValueString($this->orchestraAppName, CAFEVDB\Settings\ConfigConstants::ORCHESTRA_NAME_KEY);
+    $initiatorDisplayName = $this->appConfig->getValueString($this->orchestraAppName, ConfigConstants::ORCHESTRA_NAME_KEY);
     $initiatorEmailAddress = $share->getSharedBy();
     $message = $this->mailer->createMessage();
 
@@ -573,7 +571,7 @@ that we have to decline your application we will inform you ASAP.'));
 
     $projectName = $projectApplication->getProject()->getName();
     $shareWith = $share->getSharedWith();
-    $initiatorDisplayName = $this->appConfig->getValueString($this->orchestraAppName, CAFEVDB\Settings\ConfigConstants::ORCHESTRA_NAME_KEY);
+    $initiatorDisplayName = $this->appConfig->getValueString($this->orchestraAppName, ConfigConstants::ORCHESTRA_NAME_KEY);
     $initiatorEmailAddress = $share->getSharedBy();
 
     $htmlBodyPart =

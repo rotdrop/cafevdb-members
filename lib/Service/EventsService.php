@@ -45,10 +45,10 @@ use OCP\IConfig as ICloudConfig;
 use OCP\IDateTimeZone;
 use OCP\IDateTimeFormatter;
 
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumVCalendarType as VCalendarType;
-use OCA\CAFEVDB\Settings\ConfigConstants;
+use OCA\CAFeVDBMembers\Database\DBAL\Types\EnumVCalendarType as VCalendarType;
 
 use OCA\CAFeVDBMembers\Constants;
+use OCA\CAFeVDBMembers\Settings\ConfigConstants;
 use OCA\CAFeVDBMembers\Database\ORM\Entities;
 use OCA\CAFeVDBMembers\Database\ORM\EntityManager;
 

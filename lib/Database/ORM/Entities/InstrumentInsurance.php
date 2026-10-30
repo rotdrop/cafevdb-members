@@ -22,7 +22,7 @@
 
 namespace OCA\CAFeVDBMembers\Database\ORM\Entities;
 
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumGeographicalScope;
+use OCA\CAFeVDBMembers\Database\DBAL\Types\EnumGeographicalScope;
 use OCA\CAFeVDBMembers\Database\ORM as CAFEVDB;
 use OCA\CAFeVDBMembers\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFeVDBMembers\Wrapped\Doctrine\Common\Collections\Collection;

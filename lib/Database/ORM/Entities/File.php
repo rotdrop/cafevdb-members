@@ -24,7 +24,7 @@ namespace OCA\CAFeVDBMembers\Database\ORM\Entities;
 
 use DateTimeInterface;
 
-use OCA\CAFEVDB\Database\Doctrine\DBAL\Types\EnumFileType;
+use OCA\CAFeVDBMembers\Database\DBAL\Types\EnumFileType;
 use OCA\CAFeVDBMembers\Database\ORM as CAFEVDB;
 use OCA\CAFeVDBMembers\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFeVDBMembers\Wrapped\Doctrine\Common\Collections\Collection;

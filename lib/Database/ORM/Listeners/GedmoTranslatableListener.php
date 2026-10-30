@@ -27,9 +27,8 @@ namespace OCA\CAFeVDBMembers\Database\ORM\Listeners;
 use OCA\CAFeVDBMembers\Wrapped\Doctrine\Persistence\ObjectManager;
 use OCA\CAFeVDBMembers\Wrapped\Gedmo\Translatable\Mapping\Event\TranslatableAdapter;
 use OCA\CAFeVDBMembers\Wrapped\Gedmo\Translatable\TranslatableListener;
-use OCA\CAFEVDB\Database\Doctrine\ORM\Entities as TranslatedEntities;
 use OCA\CAFeVDBMembers\Database\ORM\Entities;
-use OCA\CAFEVDB\Service\L10N\BiDirectionalL10N;
+use OCA\CAFeVDBMembers\L10N\IBidirectionalTranslator;
 
 /**
  * Override the default listener to use a modified event subscriber
@@ -39,11 +38,11 @@ use OCA\CAFEVDB\Service\L10N\BiDirectionalL10N;
 class GedmoTranslatableListener extends TranslatableListener
 {
   private const USE_OBJECT_CLASS = 'useObjectClass';
-  private const TRANSLATED_ENTITIES = TranslatedEntities::class;
+  private const TRANSLATED_ENTITIES = 'OCA\\CAFEVDB\\Database\\Doctrine\\ORM\\Entities';
   private const OWN_ENTITIES = Entities::class;
 
   // phpcs:ignore Squiz.Commenting.FunctionComment.Missing
-  public function __construct(private BiDirectionalL10N $musicL10n)
+  public function __construct(private IBidirectionalTranslator $musicL10n)
   {
     parent::__construct();
   }
