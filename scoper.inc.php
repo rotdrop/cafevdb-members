@@ -9,6 +9,9 @@ return [
   'prefix' => 'OCA\\CAFeVDBMembers\\Wrapped',
   'exclude-classes' => [
     'OC',
+    'SortDirection',
+    // aliased as a namespace, e.g. "use Symfony\\Component\\Console;"
+    'Symfony\\Component\\Console',
   ],
   'expose-global-classes' => false,
   'exclude-namespaces' => [
@@ -16,9 +19,20 @@ return [
     'Psr\\Clock',
     'Psr\\Log',
     'Symfony\\Component\\Console',
+    '/^Symfony\\\\Component\\\\(Console|Process)(\\\\|$)/',
+    '/^Psr\\\\Container(\\\\|$)/',
+    '/^GuzzleHttp(\\\\|$)/',
+    // Needed by the nextcloud-app-toolkit, provided by the cloud or the app itself
+    '/^(OC|OCP|NCU)(\\\\|$)/',
+    '/^OCA\\\\(GroupFolders|RotDrop\\\\DevScripts)(\\\\|$)/',
+    '/^MathPHP(\\\\|$)/',
+    '/^Spatie\\\\TypeScriptTransformer(\\\\|$)/',
     // 'OC',
     //'OCA',
     //'OCP',
+  ],
+  'exclude-files' => [
+    './symfony/polyfill-php86/Resources/stubs/SortDirection.php',
   ],
   // By default when running php-scoper add-prefix, it will prefix all relevant code found in the current working
   // directory. You can however define which files should be scoped by defining a collection of Finders in the

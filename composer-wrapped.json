@@ -29,6 +29,7 @@
     "nesbot/carbon": "^2.46",
     "ramsey/uuid": "^4",
     "ramsey/uuid-doctrine": "^2.0",
+    "rotdrop/nextcloud-app-toolkit": "dev-main",
     "symfony/cache": "^6",
     "symfony/string": "*"
   },
@@ -40,9 +41,14 @@
     "phpunit/phpunit": "*",
     "psr/clock": "*",
     "psr/log": "^3.0.0",
-    "symfony/console": "^6.0.0"
+    "symfony/console": "^6.0.0",
+    "symfony/polyfill-php86": "*"
   },
   "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/rotdrop/nextcloud-app-toolkit"
+    },
     {
       "type": "vcs",
       "url": "https://github.com/rotdrop/DoctrineExtensions.git"
@@ -58,12 +64,6 @@
   ],
   "minimum-stability": "dev",
   "prefer-stable": true,
-  "autoload-dev": {
-    "psr-4": {
-      "OCA\\CAFeVDBMembers\\DevScripts\\PhpToTypeScript\\": "dev-scripts/php-to-typescript",
-      "Spatie\\TypeScriptTransformer\\": "vendor-bin/typescript-transformer/vendor/spatie/typescript-transformer/src/"
-    }
-  },
   "extra": {
     "patches": {
       "doctrine/dbal": {

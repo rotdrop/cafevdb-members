@@ -43,9 +43,14 @@ use OCA\CAFeVDBMembers\L10N\OrchestraTranslator;
 use OCA\CAFeVDBMembers\Database\Registration as DatabaseRegistration;
 use OCA\CAFeVDBMembers\Listener\Registration as ListenerRegistration;
 use OCA\CAFeVDBMembers\Settings\ConfigConstants;
-use OCA\CAFeVDBMembers\Toolkit\AppInfo\AbstractApplication;
+use OCA\CAFeVDBMembers\Wrapped\OCA\RotDrop\Toolkit\AppInfo\AbstractApplication;
 
-include_once __DIR__ . '/../Toolkit/AppInfo/AbstractApplication.php';
+// phpcs:disable PSR1.Files.SideEffects
+// The app-toolkit lives in the wrapped vendor tree and must be autoloadable
+// before the base class can be resolved.
+include_once __DIR__ . '/../../vendor/autoload.php';
+include_once __DIR__ . '/../../vendor-wrapped/autoload.php';
+// phpcs:enable PSR1.Files.SideEffects
 
 /** Cloud application entry point. */
 class Application extends AbstractApplication

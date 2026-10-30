@@ -31,7 +31,7 @@ use OCP\App\IAppManager;
 use Psr\Container\ContainerInterface;
 
 use OCA\CAFeVDBMembers\Database\ORM\EntityManager;
-use OCA\CAFeVDBMembers\Toolkit\Doctrine\ORM\AbstractEntityManager;
+use OCA\CAFeVDBMembers\Wrapped\OCA\RotDrop\Toolkit\Doctrine\ORM\AbstractEntityManager;
 
 /** Register some utiltiy services in order to ease dependency injection. */
 class Registration

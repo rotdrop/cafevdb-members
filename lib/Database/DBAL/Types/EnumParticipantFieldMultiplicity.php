@@ -29,7 +29,7 @@ namespace OCA\CAFeVDBMembers\Database\DBAL\Types;
  */
 enum EnumParticipantFieldMultiplicity: string
 {
-  use \OCA\CAFeVDBMembers\Toolkit\Traits\TranslatableEnumTrait;
+  use \OCA\CAFeVDBMembers\Wrapped\OCA\RotDrop\Toolkit\Traits\TranslatableEnumTrait;
 
   case SIMPLE = 'simple';
   case SINGLE = 'single';

@@ -38,13 +38,13 @@ use Psr\Log\LoggerInterface;
 use OCA\CAFeVDBMembers\Constants;
 use OCA\CAFeVDBMembers\Database\DBAL\Types\EnumProjectTemporalType as ProjectType;
 use OCA\CAFeVDBMembers\Settings\ConfigConstants;
-use OCA\CAFeVDBMembers\Toolkit\Service\GroupFoldersService;
-use OCA\CAFeVDBMembers\Toolkit\Service\SimpleSharingService;
+use OCA\CAFeVDBMembers\Wrapped\OCA\RotDrop\Toolkit\Service\GroupFoldersService;
+use OCA\CAFeVDBMembers\Wrapped\OCA\RotDrop\Toolkit\Service\SimpleSharingService;
 
 /** Manage the shared project-group folders. */
 class ProjectGroupService
 {
-  use \OCA\CAFeVDBMembers\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFeVDBMembers\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   const MANAGEMENT_PERMISSIONS = GroupFoldersService::PERMISSION_ALL;
   const GROUP_LEAF_PERMISSIONS = GroupFoldersService::PERMISSION_DELETE|GroupFoldersService::PERMISSION_WRITE;

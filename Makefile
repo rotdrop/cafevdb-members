@@ -42,7 +42,7 @@ ORM_CLI=$(PHP) $(SRCDIR)/dev-scripts/orm-cmd.php
 PHP_SCOPER = $(ABSSRCDIR)/vendor-bin/php-scoper/vendor/bin/php-scoper
 TYPESCRIPT_CONVERTER = $(ABSSRCDIR)/dev-scripts/php-to-typescript.php
 TS_TYPES_DIR = $(ABSBUILDDIR)/ts-types
-TS_PHP_SOURCE_DIRS = lib
+TS_PHP_SOURCE_DIRS = lib vendor-wrapped/rotdrop/nextcloud-app-toolkit/src
 SCSS_VARIABLES_DIR = $(ABSBUILDDIR)/scss-variables
 #
 PHPUNIT=$(ABSSRCDIR)/vendor-bin/phpunit/vendor/bin/phpunit
@@ -116,7 +116,7 @@ dev-setup: dev-setup-php package-lock.json
 .PHONY: dev-setup
 
 #@private
-dev-setup-php: app-toolkit composer.lock namespace-wrapper
+dev-setup-php: composer.lock namespace-wrapper
 .PHONY: dev-setup-php
 
 include $(DEV_LIB_DIR)/makefile/composer.mk
@@ -151,19 +151,14 @@ vendor-wrapped: $(MAKEFILE_DEP) $(PHP_SCOPER) scoper.inc.php $(BUILDDIR)/vendor-
 	cp -a $(BUILDDIR)/vendor-wrapped/bin $(ABSSRCDIR)/vendor-wrapped/
 # scoper does not preserve executable bits
 	find $(ABSSRCDIR)/vendor-wrapped -name bin -a -type d -exec chmod -R gu+x {} \;
+# scoper does not rewrite the composer autoload maps, regenerate them
+	env COMPOSER="$(ABSSRCDIR)/composer-wrapped.json" $(COMPOSER) dump-autoload
 
 vendor-wrapped/autoload.php: vendor-wrapped
-	env COMPOSER="$(ABSSRCDIR)/composer-wrapped.json" $(COMPOSER) dump-autoload
 
 namespace-wrapper: php-scoper-install vendor-wrapped/autoload.php
 .PHONY: namespace-wrapper
 
-APP_TOOLKIT_DIR = $(ABSSRCDIR)/php-toolkit
-APP_TOOLKIT_DEST = $(ABSSRCDIR)/lib/Toolkit
-APP_TOOLKIT_NS = CAFeVDBMembers
-APP_WRAPPER_NS = $(WRAPPER_NAMESPACE_POSTFIX)
-
-include $(APP_TOOLKIT_DIR)/tools/scopeme.mk
 include $(DEV_LIB_DIR)/makefile/ts-app-config.mk
 include $(DEV_LIB_DIR)/makefile/ts-types-files.mk
 
@@ -257,7 +252,6 @@ distclean: clean ## Clean even more, calls clean
 	rm -rf vendor
 	rm -rf vendor-bin/**/vendor
 	rm -rf node_modules
-	rm -rf lib/Toolkit/*
 .PHONY: distclean
 
 #@@ Almost everything but downloads
@@ -351,7 +345,6 @@ $(PHPDOC_HTML)/index.html: $(APP_BUILD_HASH) $(MAKEFILE_DEP)
 	$(PHPDOC) run \
  $(PHPDOC_TEMPLATE) \
  -d $(SRCDIR)/lib \
- -d $(SRCDIR)/php-toolkit \
  -d $(SRCDIR)/tests/phpunit \
  --defaultpackagename $(APP_NAME) \
  --force \

@@ -32,7 +32,7 @@ use Psr\Log\LoggerInterface;
 /** Logger implementation for DBAL. */
 class CloudLogger implements QueryLogger
 {
-  use \OCA\CAFeVDBMembers\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFeVDBMembers\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   /** @var bool */
   private $enabled;

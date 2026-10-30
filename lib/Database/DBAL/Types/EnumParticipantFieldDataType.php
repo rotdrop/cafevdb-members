@@ -29,7 +29,7 @@ namespace OCA\CAFeVDBMembers\Database\DBAL\Types;
  */
 enum EnumParticipantFieldDataType: string
 {
-  use \OCA\CAFeVDBMembers\Toolkit\Traits\TranslatableEnumTrait;
+  use \OCA\CAFeVDBMembers\Wrapped\OCA\RotDrop\Toolkit\Traits\TranslatableEnumTrait;
 
   /** A yes/no value. */
   case BOOLEAN = 'boolean';

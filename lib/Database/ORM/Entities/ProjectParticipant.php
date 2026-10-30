@@ -37,7 +37,7 @@ class ProjectParticipant implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\TimestampableEntity;
-  use \OCA\CAFeVDBMembers\Toolkit\Traits\DateTimeTrait;
+  use \OCA\CAFeVDBMembers\Wrapped\OCA\RotDrop\Toolkit\Traits\DateTimeTrait;
   use CAFEVDB\Traits\SoftDeleteableEntity;
 
   #[ORM\ManyToOne(targetEntity: Project::class, inversedBy: 'participants', fetch: 'EXTRA_LAZY')]

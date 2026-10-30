@@ -44,7 +44,7 @@ use OCA\CAFeVDBMembers\Service\EventsService;
  */
 class ProjectEventsApiController extends ApiController
 {
-  use \OCA\CAFeVDBMembers\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFeVDBMembers\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   const INDEX_BY_PROJECT = 'byProject';
   const INDEX_BY_WEB_PAGE = 'byWebPage';

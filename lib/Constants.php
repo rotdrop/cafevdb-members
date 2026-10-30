@@ -24,7 +24,7 @@ namespace OCA\CAFeVDBMembers;
 
 use Spatie\TypeScriptTransformer\Attributes as TSAttributes;
 
-use OCA\CAFeVDBMembers\Toolkit\Constants as ToolkitConstants;
+use OCA\CAFeVDBMembers\Wrapped\OCA\RotDrop\Toolkit\Constants as ToolkitConstants;
 
 /** A couple of constants in order to avoid string literals. */
 #[TSAttributes\TypeScript]

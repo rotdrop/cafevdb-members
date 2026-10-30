@@ -62,7 +62,7 @@ use OCA\CAFeVDBMembers\Database\ORM\EntityManager;
  */
 class EventsService
 {
-  use \OCA\CAFeVDBMembers\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFeVDBMembers\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   private DateTimeZone $dateTimeZone;
 

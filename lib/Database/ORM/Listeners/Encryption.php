@@ -34,7 +34,7 @@ use OCA\CAFeVDBMembers\Wrapped\MediaMonks\Doctrine\Transformable;
 /** Implement transparent encryption/decryption of database fields. */
 class Encryption implements Transformable\Transformer\TransformerInterface
 {
-  use \OCA\CAFeVDBMembers\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFeVDBMembers\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   // phpcs:ignore Squiz.Commenting.FunctionComment.Missing
   public function __construct(

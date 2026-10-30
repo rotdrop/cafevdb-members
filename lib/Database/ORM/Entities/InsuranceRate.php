@@ -22,10 +22,10 @@
 
 namespace OCA\CAFeVDBMembers\Database\ORM\Entities;
 
-use OCA\CAFeVDBMembers\Toolkit\Common\RationalNumber;
-use OCA\CAFeVDBMembers\Toolkit\Common\DecimalRationalP4S4 as RateNumberType;
+use OCA\CAFeVDBMembers\Wrapped\OCA\RotDrop\Toolkit\Common\RationalNumber;
+use OCA\CAFeVDBMembers\Wrapped\OCA\RotDrop\Toolkit\Common\DecimalRationalP4S4 as RateNumberType;
 use OCA\CAFeVDBMembers\Database\DBAL\Types;
-use OCA\CAFeVDBMembers\Toolkit\Doctrine\DBAL\Types\DecimalRationalP4S4Type as RateDatabaseType;
+use OCA\CAFeVDBMembers\Wrapped\OCA\RotDrop\Toolkit\Doctrine\DBAL\Types\DecimalRationalP4S4Type as RateDatabaseType;
 use OCA\CAFeVDBMembers\Database\ORM as CAFEVDB;
 use OCA\CAFeVDBMembers\Wrapped\Doctrine\Common\Collections\ArrayCollection;
 use OCA\CAFeVDBMembers\Wrapped\Doctrine\Common\Collections\Collection;
@@ -40,7 +40,7 @@ use OCA\CAFeVDBMembers\Wrapped\Doctrine\ORM\Mapping as ORM;
 class InsuranceRate implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
-  use \OCA\CAFeVDBMembers\Toolkit\Traits\DateTimeTrait;
+  use \OCA\CAFeVDBMembers\Wrapped\OCA\RotDrop\Toolkit\Traits\DateTimeTrait;
 
   #[ORM\JoinColumn(referencedColumnName: 'short_name')]
   #[ORM\ManyToOne(targetEntity: InsuranceBroker::class, inversedBy: 'insuranceRates', fetch: 'EXTRA_LAZY')]
