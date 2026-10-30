@@ -38,6 +38,10 @@ jobs:
           path: server/apps/${{ env.APP_NAME }}
           submodules: recursive
 
+      - name: Install xpath
+        # the Makefile needs the xpath binary to read the app info from info.xml
+        run: sudo apt-get install -y --no-install-recommends libxml-xpath-perl
+
       - name: Install latest MariaDB ${{ env.MARIADB_MAJOR }}.x server and client
         run: |
           sudo apt-get update
@@ -82,8 +86,6 @@ jobs:
       - name: Install app PHP dependencies
         working-directory: server/apps/${{ env.APP_NAME }}
         run: |
-          # the Makefile needs xpath to read the scoped namespace from info.xml
-          sudo apt-get install -y --no-install-recommends libxml-xpath-perl
           make dev-setup-php
 
       - name: Enable app
