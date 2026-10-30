@@ -43,8 +43,8 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends curl ca-certificates apt-transport-https
           sudo install -d /etc/apt/keyrings
-          sudo curl -fsSL -o /etc/apt/keyrings/mariadb-keyring.pgp \
-            https://mariadb.org/mariadb_release_signing_key.pgp
+          sudo curl -fsSL https://mariadb.org/mariadb_release_signing_key.pgp \
+            | sudo gpg --dearmor --yes --output /etc/apt/keyrings/mariadb-keyring.gpg
           # newest series (e.g. 12.2) of the pinned major version, stable or RC
           MARIADB_VERSION="$(curl -fsSL https://downloads.mariadb.org/rest-api/mariadb/ \
             | jq -r --arg m "${MARIADB_MAJOR}." \
@@ -52,7 +52,7 @@ jobs:
           [ -n "$MARIADB_VERSION" ] && [ "$MARIADB_VERSION" != null ] || { echo "no MariaDB ${MARIADB_MAJOR}.x series found"; exit 1; }
           echo "Using MariaDB series ${MARIADB_VERSION}"
           codename="$(lsb_release -cs)"
-          echo "deb [signed-by=/etc/apt/keyrings/mariadb-keyring.pgp] https://archive.mariadb.org/mariadb-${MARIADB_VERSION}/repo/ubuntu ${codename} main" \
+          echo "deb [signed-by=/etc/apt/keyrings/mariadb-keyring.gpg] https://archive.mariadb.org/mariadb-${MARIADB_VERSION}/repo/ubuntu ${codename} main" \
             | sudo tee /etc/apt/sources.list.d/mariadb.list
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends mariadb-server mariadb-client
