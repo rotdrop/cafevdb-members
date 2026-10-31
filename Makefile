@@ -13,10 +13,7 @@ APP_VERSION = $(shell $(XPATH) -q -e '/info/version/text()' $(APP_INFO))
 APP_NAMESPACE = $(shell $(XPATH) -q -e '/info/namespace/text()' $(APP_INFO))
 WRAPPER_NAMESPACE_POSTFIX = $(shell $(XPATH) -q -e '/info/scopednamespace/text()' $(APP_INFO))
 else
-$(warning The xpath binary could not be found, falling back to using the CWD as app-name)
-APP_NAME = $(notdir $(CURDIR))
-APP_VERSION = unknown
-APP_NAMESPACE = $(shell grep -F '<namespace>' $(APP_INFO)|sed -E 's|.*<namespace>([^<]*)</namespace>.*|\\1|g')
+$(error The xpath binary could not be found, install it, e.g. libxml-xpath-perl)
 endif
 DEV_LIB_DIR = $(ABSSRCDIR)/dev-scripts/lib
 BUILDDIR = ./build
@@ -131,21 +128,21 @@ php-scoper-install: $(PHP_SCOPER)
 $(PHP_SCOPER): composer.lock
 	if ! [ -x "$@" ]; then $(COMPOSER) bin php-scoper install; else touch "$@"; fi
 
-composer-wrapped.lock: composer-wrapped.json Makefile
-	rm -f composer-wrapped.lock
-
-$(BUILDDIR)/vendor-wrapped: composer-wrapped.lock
+composer-wrapped.lock: composer-wrapped.json $(MAKEFILE_DEP)
 	mkdir -p $(BUILDDIR)
 	ln -fs ../vendor $(BUILDDIR)
-	rm -rf $(BUILDDIR)/vendor-wrapped
+	ln -sf ../composer-patches $(BUILDDIR)
+	env COMPOSER="$(ABSSRCDIR)/composer-wrapped.json" $(COMPOSER) -d$(BUILDDIR) update $(COMPOSER_OPTIONS)
+	test -f "$@" && touch "$@"
+
+$(BUILDDIR)/vendor-wrapped/autoload.php: composer-wrapped.lock
+	mkdir -p $(BUILDDIR)
+	ln -fs ../vendor $(BUILDDIR)
 	ln -sf ../composer-patches $(BUILDDIR)
 	env COMPOSER="$(ABSSRCDIR)/composer-wrapped.json" $(COMPOSER) -d$(BUILDDIR) install $(COMPOSER_OPTIONS)
-	env COMPOSER="$(ABSSRCDIR)/composer-wrapped.json" $(COMPOSER) -d$(BUILDDIR) update $(COMPOSER_OPTIONS)
+	test -f "$@" && touch "$@"
 
-$(BUILDDIR)/vendor-wrapped/autoload.php: $(BUILDDIR)/vendor-wrapped composer-wrapped.json $(MAKEFILE_DEP)
-	env COMPOSER="$(ABSSRCDIR)/composer-wrapped.json" $(COMPOSER) -d$(BUILDDIR) dump-autoload
-
-vendor-wrapped: $(MAKEFILE_DEP) $(PHP_SCOPER) scoper.inc.php $(BUILDDIR)/vendor-wrapped
+vendor-wrapped/autoload.php: $(MAKEFILE_DEP) $(PHP_SCOPER) scoper.inc.php $(BUILDDIR)/vendor-wrapped/autoload.php
 	$(PHP_SCOPER) add-prefix -d$(BUILDDIR) --config=$(ABSSRCDIR)/scoper.inc.php --output-dir=$(ABSSRCDIR)/vendor-wrapped --force
 # scoper does not handle symlinks
 	cp -a $(BUILDDIR)/vendor-wrapped/bin $(ABSSRCDIR)/vendor-wrapped/
@@ -153,11 +150,21 @@ vendor-wrapped: $(MAKEFILE_DEP) $(PHP_SCOPER) scoper.inc.php $(BUILDDIR)/vendor-
 	find $(ABSSRCDIR)/vendor-wrapped -name bin -a -type d -exec chmod -R gu+x {} \;
 # scoper does not rewrite the composer autoload maps, regenerate them
 	env COMPOSER="$(ABSSRCDIR)/composer-wrapped.json" $(COMPOSER) dump-autoload
+	test -f "$@" && touch "$@"
 
-vendor-wrapped/autoload.php: vendor-wrapped
+vendor-wrapped: vendor-wrapped/autoload.php
+.PHONY: vendor-wrapped
 
 namespace-wrapper: php-scoper-install vendor-wrapped/autoload.php
 .PHONY: namespace-wrapper
+
+APP_TOOLKIT_DIR = $(ABSBUILDDIR)/vendor-wrapped/rotdrop/nextcloud-app-toolkit
+APP_TOOLKIT_L10N_DEST = $(ABSSRCDIR)/l10n-sources/toolkit-strings.php
+
+#@@ Generate the toolkit translation catalogue before updating POT files.
+toolkit-l10n: $(BUILDDIR)/vendor-wrapped/autoload.php
+	$(MAKE) -f $(APP_TOOLKIT_DIR)/tools/l10n.mk toolkit-l10n ABSSRCDIR="$(ABSSRCDIR)" APP_TOOLKIT_DIR="$(APP_TOOLKIT_DIR)" APP_TOOLKIT_L10N_DEST="$(APP_TOOLKIT_L10N_DEST)" PHP="$(PHP)"
+.PHONY: toolkit-l10n
 
 include $(DEV_LIB_DIR)/makefile/ts-app-config.mk
 include $(DEV_LIB_DIR)/makefile/ts-types-files.mk
@@ -197,6 +204,7 @@ APPSTORE_FILES =\
  templates\
  lib\
  vendor\
+ vendor-wrapped\
  config\
  CHANGELOG.md\
  COPYING\
@@ -250,6 +258,7 @@ clean: ## Tidy up local environment
 #@@ Same as clean but also removes dependencies installed by composer, bower and npm
 distclean: clean ## Clean even more, calls clean
 	rm -rf vendor
+	rm -rf vendor-wrapped
 	rm -rf vendor-bin/**/vendor
 	rm -rf node_modules
 .PHONY: distclean

@@ -33,11 +33,40 @@ instance the members app can be installed, but it is of no use.
 
 ## Development
 
+Clone with `git clone --recurse-submodules`, or initialize the pinned build
+helpers in an existing checkout with `git submodule update --init --recursive`.
+`dev-scripts/lib` is a submodule of `rotdrop/nextcloud-app-build-system`;
+update its pinned commit in this repository when adopting upstream changes.
+
+The Makefile requires PHP, Composer, npm and `xpath` (provided by
+`libxml-xpath-perl` on Debian/Ubuntu). PHP dependencies are installed with:
+
 ```
 make dev-setup-php
 make phpunit
 ```
 
+`rotdrop/nextcloud-app-toolkit` is installed with the wrapped Composer
+dependencies and scoped into `OCA\CAFeVDBMembers\Wrapped` in `vendor-wrapped/`.
+Both `vendor/` and `vendor-wrapped/` are required at runtime and included in
+release archives. The unscoped dependencies in `build/vendor-wrapped/` are
+build inputs, not runtime files. `make distclean` removes both vendor trees.
+
+`make ts-types-files` uses `rotdrop/php-to-typescript` from its isolated
+`vendor-bin/php-to-typescript/` environment. Toolkit modules are generated
+under `build/ts-types/php-modules/Wrapped/OCA/RotDrop/Toolkit/`.
+
+Run `make toolkit-l10n` before updating POT files and commit changes to
+`l10n-sources/toolkit-strings.php`. This never-executed catalogue exposes the
+Composer toolkit's strings to the translation tool, which cannot scan vendor
+trees. It is not included in release archives.
+
 The tests run inside a Nextcloud server checkout, see
 `.github/workflows/ci.yml` for the exact setup.
 
+The build regressions can also run without Nextcloud after `make dev-setup-php`
+(PHP's `intl` extension is required):
+
+```sh
+vendor-bin/phpunit/vendor/bin/phpunit --no-configuration --no-coverage tests/phpunit/Unit/Build/ToolkitBuildTest.php
+```
