@@ -25,6 +25,7 @@ namespace OCA\CAFeVDBMembers\Tests\Unit\Database\ORM;
 use OCP\IConfig;
 use Psr\Container\ContainerInterface;
 
+use OCA\CAFeVDBMembers\Crypto\IEncryptionService;
 use OCA\CAFeVDBMembers\Database\DBAL\Logging\CloudLogger;
 use OCA\CAFeVDBMembers\Database\ORM\EntityManager;
 use OCA\CAFeVDBMembers\Service\AuthenticationService;
@@ -48,6 +49,13 @@ trait GenerateEntityManagerTrait
   private function generateEntityManager(string $token): void
   {
     $this->mockProvider = $this->mockProvider ?? MockProvider::create($this);
+
+    // Do not depend on a possibly installed orchestra app and the login session.
+    $encryptionService = $this->createStub(IEncryptionService::class);
+    $encryptionService->method('isSealedData')->willReturn(false);
+    $encryptionService->method('encrypt')->willReturnArgument(0);
+    $encryptionService->method('decrypt')->willReturnArgument(0);
+    $this->mockProvider->registerClassInstance(IEncryptionService::class, $encryptionService, true);
 
     $appContainer = $this->mockProvider->getAppContainer();
 
