@@ -295,7 +295,9 @@ phpunit: dophpunit $(PHPUNIT_JUNIT_LOG_HTML)/index.html
 phpjunit-log: $(PHPUNIT_JUNIT_LOG_HTML)/index.html
 .PHONY: phpjunit-log
 
-dophpunit: $(PHPUNIT)
+PHPUNIT_DEPS = $(PHPUNIT) vendor-wrapped/autoload.php $(TS_TYPES_AUTOLOAD)
+
+dophpunit: $(PHPUNIT_DEPS)
 	$(PHP) $(PHPCOVERAGE) $(PHPUNIT)\
  -c phpunit.xml\
  --coverage-html $(PHPUNIT_OUTPUT)/code-coverage\
@@ -304,7 +306,7 @@ dophpunit: $(PHPUNIT)
 .PHONY: dophpunit
 
 #@@ Runs the PHP tests which need a Nextcloud server (database and app container)
-phpunit-server: $(PHPUNIT)
+phpunit-server: $(PHPUNIT_DEPS)
 	$(PHP) $(PHPCOVERAGE) $(PHPUNIT) -c phpunit.server.xml --no-coverage --display-all-issues
 .PHONY: phpunit-server
 
@@ -320,7 +322,7 @@ $(PHPUNIT_JUNIT_LOG_HTML)/index.html: $(PHING_BUILD_XML) $(PHPUNIT_JUNIT_LOG) $(
 PHPUNIT_CONFIG = phpunit.xml
 
 #@@ Runs phpunit with a filter given by the PHPUNITTEST variable which should be specified on the command line. Use PHPUNIT_CONFIG=phpunit.server.xml for the tests needing a server.
-phpunitfilter:
+phpunitfilter: $(PHPUNIT_DEPS)
 	@if [ -z "$(PHPUNITTEST)" ]; then echo "Please add PHPUNITTEST=FILTER_EXPRESSION to the make command line" 1>&2; exit 1; fi
 	$(PHP) $(PHPCOVERAGE) $(PHPUNIT) -c $(PHPUNIT_CONFIG) --no-coverage --display-all-issues --filter "$(PHPUNITTEST)"
 .PHONY: phpunitfilter
