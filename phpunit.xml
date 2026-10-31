@@ -3,7 +3,7 @@
          xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/12.2/phpunit.xsd"
          beStrictAboutCoverageMetadata="true"
          beStrictAboutOutputDuringTests="true"
-         bootstrap="tests/phpunit/bootstrap.php"
+         bootstrap="tests/phpunit/bootstrap-standalone.php"
          cacheDirectory=".phpunit.cache"
          displayDetailsOnPhpunitDeprecations="true"
          displayDetailsOnTestsThatTriggerDeprecations="true"
@@ -19,8 +19,8 @@
          testdox="true"
 >
   <testsuites>
-    <testsuite name="unit">
-      <directory>tests/phpunit/Unit</directory>
+    <testsuite name="standalone">
+      <directory>tests/phpunit/Unit/Build</directory>
     </testsuite>
   </testsuites>
   <source ignoreIndirectDeprecations="true" restrictNotices="true" restrictWarnings="true">

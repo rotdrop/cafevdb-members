@@ -287,7 +287,7 @@ PHPUNIT_JUNIT_LOG=$(PHPUNIT_OUTPUT)/junit-log.xml
 PHPUNIT_JUNIT_LOG_HTML=$(PHPUNIT_OUTPUT)/junit-log
 PHING_BUILD_XML=$(PHPUNIT_OUTPUT)/phing-build.xml
 
-#@@ Runs unit tests for PHP code
+#@@ Runs the self-contained PHP tests, no Nextcloud server needed
 phpunit: dophpunit $(PHPUNIT_JUNIT_LOG_HTML)/index.html
 .PHONY: phpunit
 
@@ -301,8 +301,12 @@ dophpunit: $(PHPUNIT)
  --coverage-html $(PHPUNIT_OUTPUT)/code-coverage\
  --log-junit $(PHPUNIT_JUNIT_LOG)\
  --display-all-issues
-#	$(PHPUNIT) -c phpunit.integration.xml
 .PHONY: dophpunit
+
+#@@ Runs the PHP tests which need a Nextcloud server (database and app container)
+phpunit-server: $(PHPUNIT)
+	$(PHP) $(PHPCOVERAGE) $(PHPUNIT) -c phpunit.server.xml --no-coverage --display-all-issues
+.PHONY: phpunit-server
 
 $(PHPUNIT_JUNIT_LOG): # dophpunit
 
@@ -313,10 +317,12 @@ $(PHPUNIT_JUNIT_LOG_HTML)/index.html: $(PHING_BUILD_XML) $(PHPUNIT_JUNIT_LOG) $(
 	mkdir -p $(PHPUNIT_JUNIT_LOG_HTML)
 	$(PHING) -f $(PHING_BUILD_XML)
 
-#@@ Runs phpunit with a filter given by the PHPUNITTEST variable which should be specified on the command line.
+PHPUNIT_CONFIG = phpunit.xml
+
+#@@ Runs phpunit with a filter given by the PHPUNITTEST variable which should be specified on the command line. Use PHPUNIT_CONFIG=phpunit.server.xml for the tests needing a server.
 phpunitfilter:
 	@if [ -z "$(PHPUNITTEST)" ]; then echo "Please add PHPUNITTEST=FILTER_EXPRESSION to the make command line" 1>&2; exit 1; fi
-	$(PHP) $(PHPCOVERAGE) $(PHPUNIT) -c phpunit.xml --no-coverage --display-all-issues --filter "$(PHPUNITTEST)"
+	$(PHP) $(PHPCOVERAGE) $(PHPUNIT) -c $(PHPUNIT_CONFIG) --no-coverage --display-all-issues --filter "$(PHPUNITTEST)"
 .PHONY: phpunitfilter
 
 #@private
