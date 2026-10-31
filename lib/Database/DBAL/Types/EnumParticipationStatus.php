@@ -34,7 +34,7 @@ use OCA\RotDrop\DevScripts\PhpToTypeScript;
 #[PhpToTypeScript\Attributes\TypeScript(options: ['nativeEnums' => true])]
 enum EnumParticipationStatus: string
 {
-  use \OCA\CAFeVDBMembers\Toolkit\Traits\TranslatableEnumTrait;
+  use \OCA\CAFeVDBMembers\Wrapped\OCA\RotDrop\Toolkit\Traits\TranslatableEnumTrait;
 
   case ASSOCIATED = 'associated';
   case CONDUCTOR = 'conductor';

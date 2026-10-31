@@ -39,7 +39,7 @@ ORM_CLI=$(PHP) $(SRCDIR)/dev-scripts/orm-cmd.php
 PHP_SCOPER = $(ABSSRCDIR)/vendor-bin/php-scoper/vendor/bin/php-scoper
 TYPESCRIPT_CONVERTER = $(ABSSRCDIR)/dev-scripts/php-to-typescript.php
 TS_TYPES_DIR = $(ABSBUILDDIR)/ts-types
-TS_PHP_SOURCE_DIRS = lib
+TS_PHP_SOURCE_DIRS = lib vendor-wrapped/rotdrop/nextcloud-app-toolkit/src
 SCSS_VARIABLES_DIR = $(ABSBUILDDIR)/scss-variables
 #
 PHPUNIT=$(ABSSRCDIR)/vendor-bin/phpunit/vendor/bin/phpunit
@@ -113,7 +113,7 @@ dev-setup: dev-setup-php package-lock.json
 .PHONY: dev-setup
 
 #@private
-dev-setup-php: app-toolkit composer.lock namespace-wrapper
+dev-setup-php: composer.lock namespace-wrapper
 .PHONY: dev-setup-php
 
 include $(DEV_LIB_DIR)/makefile/composer.mk
@@ -128,39 +128,44 @@ php-scoper-install: $(PHP_SCOPER)
 $(PHP_SCOPER): composer.lock
 	if ! [ -x "$@" ]; then $(COMPOSER) bin php-scoper install; else touch "$@"; fi
 
-composer-wrapped.lock: composer-wrapped.json Makefile
-	rm -f composer-wrapped.lock
-
-$(BUILDDIR)/vendor-wrapped: composer-wrapped.lock
+composer-wrapped.lock: composer-wrapped.json $(MAKEFILE_DEP)
 	mkdir -p $(BUILDDIR)
 	ln -fs ../vendor $(BUILDDIR)
-	rm -rf $(BUILDDIR)/vendor-wrapped
+	ln -sf ../composer-patches $(BUILDDIR)
+	env COMPOSER="$(ABSSRCDIR)/composer-wrapped.json" $(COMPOSER) -d$(BUILDDIR) update $(COMPOSER_OPTIONS)
+	test -f "$@" && touch "$@"
+
+$(BUILDDIR)/vendor-wrapped/autoload.php: composer-wrapped.lock
+	mkdir -p $(BUILDDIR)
+	ln -fs ../vendor $(BUILDDIR)
 	ln -sf ../composer-patches $(BUILDDIR)
 	env COMPOSER="$(ABSSRCDIR)/composer-wrapped.json" $(COMPOSER) -d$(BUILDDIR) install $(COMPOSER_OPTIONS)
-	env COMPOSER="$(ABSSRCDIR)/composer-wrapped.json" $(COMPOSER) -d$(BUILDDIR) update $(COMPOSER_OPTIONS)
+	test -f "$@" && touch "$@"
 
-$(BUILDDIR)/vendor-wrapped/autoload.php: $(BUILDDIR)/vendor-wrapped composer-wrapped.json $(MAKEFILE_DEP)
-	env COMPOSER="$(ABSSRCDIR)/composer-wrapped.json" $(COMPOSER) -d$(BUILDDIR) dump-autoload
-
-vendor-wrapped: $(MAKEFILE_DEP) $(PHP_SCOPER) scoper.inc.php $(BUILDDIR)/vendor-wrapped
+vendor-wrapped/autoload.php: $(MAKEFILE_DEP) $(PHP_SCOPER) scoper.inc.php $(BUILDDIR)/vendor-wrapped/autoload.php
 	$(PHP_SCOPER) add-prefix -d$(BUILDDIR) --config=$(ABSSRCDIR)/scoper.inc.php --output-dir=$(ABSSRCDIR)/vendor-wrapped --force
 # scoper does not handle symlinks
 	cp -a $(BUILDDIR)/vendor-wrapped/bin $(ABSSRCDIR)/vendor-wrapped/
 # scoper does not preserve executable bits
 	find $(ABSSRCDIR)/vendor-wrapped -name bin -a -type d -exec chmod -R gu+x {} \;
-
-vendor-wrapped/autoload.php: vendor-wrapped
+# scoper does not rewrite the composer autoload maps, regenerate them
 	env COMPOSER="$(ABSSRCDIR)/composer-wrapped.json" $(COMPOSER) dump-autoload
+	test -f "$@" && touch "$@"
+
+vendor-wrapped: vendor-wrapped/autoload.php
+.PHONY: vendor-wrapped
 
 namespace-wrapper: php-scoper-install vendor-wrapped/autoload.php
 .PHONY: namespace-wrapper
 
-APP_TOOLKIT_DIR = $(ABSSRCDIR)/php-toolkit
-APP_TOOLKIT_DEST = $(ABSSRCDIR)/lib/Toolkit
-APP_TOOLKIT_NS = CAFeVDBMembers
-APP_WRAPPER_NS = $(WRAPPER_NAMESPACE_POSTFIX)
+APP_TOOLKIT_DIR = $(ABSBUILDDIR)/vendor-wrapped/rotdrop/nextcloud-app-toolkit
+APP_TOOLKIT_L10N_DEST = $(ABSSRCDIR)/l10n-sources/toolkit-strings.php
 
-include $(APP_TOOLKIT_DIR)/tools/scopeme.mk
+#@@ Generate the toolkit translation catalogue before updating POT files.
+toolkit-l10n: $(BUILDDIR)/vendor-wrapped/autoload.php
+	$(MAKE) -f $(APP_TOOLKIT_DIR)/tools/l10n.mk toolkit-l10n ABSSRCDIR="$(ABSSRCDIR)" APP_TOOLKIT_DIR="$(APP_TOOLKIT_DIR)" APP_TOOLKIT_L10N_DEST="$(APP_TOOLKIT_L10N_DEST)" PHP="$(PHP)"
+.PHONY: toolkit-l10n
+
 include $(DEV_LIB_DIR)/makefile/ts-app-config.mk
 include $(DEV_LIB_DIR)/makefile/ts-types-files.mk
 
@@ -199,6 +204,7 @@ APPSTORE_FILES =\
  templates\
  lib\
  vendor\
+ vendor-wrapped\
  config\
  CHANGELOG.md\
  COPYING\
@@ -252,9 +258,9 @@ clean: ## Tidy up local environment
 #@@ Same as clean but also removes dependencies installed by composer, bower and npm
 distclean: clean ## Clean even more, calls clean
 	rm -rf vendor
+	rm -rf vendor-wrapped
 	rm -rf vendor-bin/**/vendor
 	rm -rf node_modules
-	rm -rf lib/Toolkit/*
 .PHONY: distclean
 
 #@@ Almost everything but downloads
@@ -348,7 +354,6 @@ $(PHPDOC_HTML)/index.html: $(APP_BUILD_HASH) $(MAKEFILE_DEP)
 	$(PHPDOC) run \
  $(PHPDOC_TEMPLATE) \
  -d $(SRCDIR)/lib \
- -d $(SRCDIR)/php-toolkit \
  -d $(SRCDIR)/tests/phpunit \
  --defaultpackagename $(APP_NAME) \
  --force \

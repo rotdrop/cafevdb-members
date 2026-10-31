@@ -34,7 +34,7 @@ use OCP\IRequest;
 use OCP\IConfig;
 use OCP\IL10N;
 
-use OCA\CAFeVDBMembers\Toolkit\Service\GroupFoldersService;
+use OCA\CAFeVDBMembers\Wrapped\OCA\RotDrop\Toolkit\Service\GroupFoldersService;
 use OCA\CAFeVDBMembers\Service\ProjectGroupService;
 use OCA\CAFeVDBMembers\Settings\ConfigConstants;
 
@@ -42,9 +42,9 @@ use OCA\CAFeVDBMembers\Settings\ConfigConstants;
 #[TSAttributes\TypeScript]
 class SettingsController extends Controller
 {
-  use \OCA\CAFeVDBMembers\Toolkit\Traits\UtilTrait;
-  use \OCA\CAFeVDBMembers\Toolkit\Traits\ResponseTrait;
-  use \OCA\CAFeVDBMembers\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFeVDBMembers\Wrapped\OCA\RotDrop\Toolkit\Traits\UtilTrait;
+  use \OCA\CAFeVDBMembers\Wrapped\OCA\RotDrop\Toolkit\Traits\ResponseTrait;
+  use \OCA\CAFeVDBMembers\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   // phpcs:ignore Squiz.Commenting.FunctionComment.Missing
   public function __construct(

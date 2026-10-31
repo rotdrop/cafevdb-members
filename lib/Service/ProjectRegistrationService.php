@@ -55,7 +55,7 @@ use OCA\CAFeVDBMembers\Database\ORM\Repositories\EntityRepository;
 use OCA\CAFeVDBMembers\Exceptions;
 use OCA\CAFeVDBMembers\Model\ApplicationShare;
 use OCA\CAFeVDBMembers\Settings\ConfigConstants;
-use OCA\CAFeVDBMembers\Toolkit\Traits as ToolkitTraits;
+use OCA\CAFeVDBMembers\Wrapped\OCA\RotDrop\Toolkit\Traits as ToolkitTraits;
 
 /**
  * Service class for managing project registrations, generating shares,

@@ -37,7 +37,7 @@ use OCA\CAFeVDBMembers\Database\ORM\Repositories;
 use OCA\CAFeVDBMembers\Exceptions;
 use OCA\CAFeVDBMembers\Service\AuthenticationService;
 use OCA\CAFeVDBMembers\Settings\ConfigConstants;
-use OCA\CAFeVDBMembers\Toolkit\Doctrine\ORM\AbstractEntityManager;
+use OCA\CAFeVDBMembers\Wrapped\OCA\RotDrop\Toolkit\Doctrine\ORM\AbstractEntityManager;
 use OCA\CAFeVDBMembers\Wrapped\Carbon;
 use OCA\CAFeVDBMembers\Wrapped\DoctrineExtensions;
 use OCA\CAFeVDBMembers\Wrapped\Doctrine\Common\Annotations\AnnotationReader;
@@ -73,7 +73,7 @@ use OCA\CAFeVDBMembers\Wrapped\MediaMonks\Doctrine\Transformable;
  */
 class EntityManager extends AbstractEntityManager
 {
-  use \OCA\CAFeVDBMembers\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFeVDBMembers\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   const ENTITY_PATHS = [
     __DIR__ . "/Entities",

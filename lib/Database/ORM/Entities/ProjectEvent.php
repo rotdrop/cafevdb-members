@@ -42,7 +42,7 @@ class ProjectEvent implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
   use CAFEVDB\Traits\SoftDeleteableEntity;
-  use \OCA\CAFeVDBMembers\Toolkit\Traits\DateTimeTrait;
+  use \OCA\CAFeVDBMembers\Wrapped\OCA\RotDrop\Toolkit\Traits\DateTimeTrait;
 
   /**
    * @var int

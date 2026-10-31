@@ -29,14 +29,14 @@ use OCP\IL10N;
 use OCP\IRequest;
 use Psr\Log\LoggerInterface;
 
-use OCA\CAFeVDBMembers\Toolkit\Doctrine\ORM\EntitySerializer\EntitySerializer;
-use OCA\CAFeVDBMembers\Toolkit\Doctrine\ORM\AbstractEntityManager;
+use OCA\CAFeVDBMembers\Wrapped\OCA\RotDrop\Toolkit\Doctrine\ORM\EntitySerializer\EntitySerializer;
+use OCA\CAFeVDBMembers\Wrapped\OCA\RotDrop\Toolkit\Doctrine\ORM\AbstractEntityManager;
 
 /** Export entities to the frontend. */
 #[TSAttributes\TypeScript]
 class EntityRepositoryController extends OCSController
 {
-  use \OCA\CAFeVDBMembers\Toolkit\Controller\EntityRepositoryControllerTrait;
+  use \OCA\CAFeVDBMembers\Wrapped\OCA\RotDrop\Toolkit\Controller\EntityRepositoryControllerTrait;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(

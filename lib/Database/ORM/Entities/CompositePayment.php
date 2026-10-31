@@ -34,7 +34,7 @@ use OCA\CAFeVDBMembers\Database\DBAL\Types;
 class CompositePayment implements \ArrayAccess
 {
   use CAFEVDB\Traits\ArrayTrait;
-  use \OCA\CAFeVDBMembers\Toolkit\Traits\DateTimeTrait;
+  use \OCA\CAFeVDBMembers\Wrapped\OCA\RotDrop\Toolkit\Traits\DateTimeTrait;
   use CAFEVDB\Traits\TimestampableEntity;
 
   /**

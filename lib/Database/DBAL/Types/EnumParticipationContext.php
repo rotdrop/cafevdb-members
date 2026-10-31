@@ -26,7 +26,7 @@ namespace OCA\CAFeVDBMembers\Database\DBAL\Types;
 
 use OCA\RotDrop\DevScripts\PhpToTypeScript;
 
-use OCA\CAFeVDBMembers\Toolkit\Traits\TranslatableEnumTrait;
+use OCA\CAFeVDBMembers\Wrapped\OCA\RotDrop\Toolkit\Traits\TranslatableEnumTrait;
 
 /**
  * Display context of ProjectParticipantFields. Some may only be relevant to
@@ -38,7 +38,7 @@ use OCA\CAFeVDBMembers\Toolkit\Traits\TranslatableEnumTrait;
 #[PhpToTypeScript\Attributes\TypeScript(options: ['nativeEnums' => true])]
 enum EnumParticipationContext: string
 {
-  use \OCA\CAFeVDBMembers\Toolkit\Traits\TranslatableEnumTrait;
+  use \OCA\CAFeVDBMembers\Wrapped\OCA\RotDrop\Toolkit\Traits\TranslatableEnumTrait;
 
   case ASSOCIATES = 'associates';
   case PARTICIPANTS = 'participants';

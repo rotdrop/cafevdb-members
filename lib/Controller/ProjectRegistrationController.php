@@ -67,9 +67,9 @@ use OCA\CAFeVDBMembers\Service\ProjectRegistrationService;
 /** AJAX endpoints for a project registration form. */
 class ProjectRegistrationController extends AuthPublicShareController
 {
-  use \OCA\CAFeVDBMembers\Toolkit\Traits\ResponseTrait;
-  use \OCA\CAFeVDBMembers\Toolkit\Traits\LoggerTrait;
-  use \OCA\CAFeVDBMembers\Toolkit\Traits\DateTimeTrait;
+  use \OCA\CAFeVDBMembers\Wrapped\OCA\RotDrop\Toolkit\Traits\ResponseTrait;
+  use \OCA\CAFeVDBMembers\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFeVDBMembers\Wrapped\OCA\RotDrop\Toolkit\Traits\DateTimeTrait;
 
   /** @var ApplicationShare */
   private ?ApplicationShare $share = null;

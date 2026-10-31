@@ -25,7 +25,7 @@ namespace OCA\CAFeVDBMembers\Database\ORM\Repositories;
 use OCA\CAFeVDBMembers\Wrapped\Doctrine\ORM\EntityManagerInterface;
 
 /** Base class for all of our repositories. */
-class EntityRepository extends \OCA\CAFeVDBMembers\Toolkit\Doctrine\ORM\EntityRepository
+class EntityRepository extends \OCA\CAFeVDBMembers\Wrapped\OCA\RotDrop\Toolkit\Doctrine\ORM\EntityRepository
 {
   /**
    * Public export of parent function.

@@ -38,16 +38,16 @@ use OCA\CAFeVDBMembers\Exceptions\EncryptionFailedException;
 use OCA\CAFeVDBMembers\Database\ORM\EntityManager;
 use OCA\CAFeVDBMembers\Service\AuthenticationService;
 use OCA\CAFeVDBMembers\Service\MemberDataService;
-use OCA\CAFeVDBMembers\Toolkit\Exceptions\EnduserNotificationException;
+use OCA\CAFeVDBMembers\Wrapped\OCA\RotDrop\Toolkit\Exceptions\EnduserNotificationException;
 
 /**
  * AJAX endpoints for dealing with the personal data of the logged in user.
  */
 class MemberDataController extends Controller
 {
-  use \OCA\CAFeVDBMembers\Toolkit\Traits\UtilTrait;
-  use \OCA\CAFeVDBMembers\Toolkit\Traits\ResponseTrait;
-  use \OCA\CAFeVDBMembers\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFeVDBMembers\Wrapped\OCA\RotDrop\Toolkit\Traits\UtilTrait;
+  use \OCA\CAFeVDBMembers\Wrapped\OCA\RotDrop\Toolkit\Traits\ResponseTrait;
+  use \OCA\CAFeVDBMembers\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
 
   // phpcs:ignore Squiz.Commenting.FunctionComment.Missing
   public function __construct(

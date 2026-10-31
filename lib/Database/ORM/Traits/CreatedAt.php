@@ -27,7 +27,7 @@ use DateTimeInterface;
 /** Helper for Gedmo time-stampable entities. */
 trait CreatedAt
 {
-  use \OCA\CAFeVDBMembers\Toolkit\Traits\DateTimeTrait;
+  use \OCA\CAFeVDBMembers\Wrapped\OCA\RotDrop\Toolkit\Traits\DateTimeTrait;
 
   /**
    * @var null|DateTimeInterface

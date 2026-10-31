@@ -32,8 +32,8 @@ use Doctrine\Common\Collections\Collection;
 
 use OCA\CAFeVDBMembers\Database\ORM\Entities;
 use OCA\CAFeVDBMembers\Tests\MockProvider;
-use OCA\CAFeVDBMembers\Toolkit\Doctrine\ORM\EntitySerializer;
-use OCA\CAFeVDBMembers\Toolkit\Doctrine\ORM\EntitySerializer\EntitySerializer as TestedClass;
+use OCA\CAFeVDBMembers\Wrapped\OCA\RotDrop\Toolkit\Doctrine\ORM\EntitySerializer;
+use OCA\CAFeVDBMembers\Wrapped\OCA\RotDrop\Toolkit\Doctrine\ORM\EntitySerializer\EntitySerializer as TestedClass;
 use OCA\RotDrop\Tests\DeprecationException;
 
 /** Test aspects of the EntitySerializer. */
@@ -52,17 +52,17 @@ use OCA\RotDrop\Tests\DeprecationException;
 #[Attributes\UsesClass(\OCA\CAFeVDBMembers\L10N\OrchestraTranslator::class)]
 #[Attributes\UsesClass(\OCA\CAFeVDBMembers\Database\ORM\Listeners\GedmoTranslatableListener::class)]
 #[Attributes\UsesClass(\OCA\CAFeVDBMembers\Database\ORM\Repositories\EntityRepository::class)]
-#[Attributes\UsesClass(\OCA\CAFeVDBMembers\Toolkit\AppInfo\AbstractApplication::class)]
-#[Attributes\UsesClass(\OCA\CAFeVDBMembers\Toolkit\Doctrine\DBAL\Types\AbstractDecimalRationalType::class)]
-#[Attributes\UsesClass(\OCA\CAFeVDBMembers\Toolkit\Doctrine\DBAL\Types\ArrayType::class)]
-#[Attributes\UsesClass(\OCA\CAFeVDBMembers\Toolkit\Doctrine\DBAL\Types\DecimalRationalMonetaryType::class)]
-#[Attributes\UsesClass(\OCA\CAFeVDBMembers\Toolkit\Doctrine\DBAL\Types\UuidType::class)]
-#[Attributes\UsesClass(\OCA\CAFeVDBMembers\Toolkit\Doctrine\ORM\AbstractEntityManager::class)]
+#[Attributes\UsesClass(\OCA\CAFeVDBMembers\Wrapped\OCA\RotDrop\Toolkit\AppInfo\AbstractApplication::class)]
+#[Attributes\UsesClass(\OCA\CAFeVDBMembers\Wrapped\OCA\RotDrop\Toolkit\Doctrine\DBAL\Types\AbstractDecimalRationalType::class)]
+#[Attributes\UsesClass(\OCA\CAFeVDBMembers\Wrapped\OCA\RotDrop\Toolkit\Doctrine\DBAL\Types\ArrayType::class)]
+#[Attributes\UsesClass(\OCA\CAFeVDBMembers\Wrapped\OCA\RotDrop\Toolkit\Doctrine\DBAL\Types\DecimalRationalMonetaryType::class)]
+#[Attributes\UsesClass(\OCA\CAFeVDBMembers\Wrapped\OCA\RotDrop\Toolkit\Doctrine\DBAL\Types\UuidType::class)]
+#[Attributes\UsesClass(\OCA\CAFeVDBMembers\Wrapped\OCA\RotDrop\Toolkit\Doctrine\ORM\AbstractEntityManager::class)]
 #[Attributes\UsesTrait(\OCA\CAFeVDBMembers\Database\ORM\Traits\ArrayTrait::class)]
 #[Attributes\UsesTrait(\OCA\CAFeVDBMembers\Database\ORM\Traits\CreatedAt::class)]
 #[Attributes\UsesTrait(\OCA\CAFeVDBMembers\Database\ORM\Traits\UpdatedAt::class)]
 #[Attributes\UsesTrait(\OCA\CAFeVDBMembers\Database\ORM\Traits\UuidTrait::class)]
-#[Attributes\UsesTrait(\OCA\CAFeVDBMembers\Toolkit\Doctrine\ORM\FindLikeTrait::class)]
+#[Attributes\UsesTrait(\OCA\CAFeVDBMembers\Wrapped\OCA\RotDrop\Toolkit\Doctrine\ORM\FindLikeTrait::class)]
 class EntitySerializerTest extends TestCase
 {
   use \OCA\CAFeVDBMembers\Tests\Unit\Database\ORM\GenerateEntityManagerTrait;

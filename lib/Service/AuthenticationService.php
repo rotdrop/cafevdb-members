@@ -34,8 +34,8 @@ use OCA\CAFeVDBMembers\Exceptions;
  */
 class AuthenticationService
 {
-  use \OCA\CAFeVDBMembers\Toolkit\Traits\LoggerTrait;
-  use \OCA\CAFeVDBMembers\Toolkit\Traits\UtilTrait;
+  use \OCA\CAFeVDBMembers\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFeVDBMembers\Wrapped\OCA\RotDrop\Toolkit\Traits\UtilTrait;
 
   // phpcs:disable Squiz.Commenting.FunctionComment.Missing
   public function __construct(

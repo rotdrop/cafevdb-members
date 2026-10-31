@@ -16,7 +16,6 @@ js/**
 css/**
 lib/Database/ORM/Proxies/**
 *-build-hash
-lib/Toolkit/[A-Z]*
 build-flavour
 /vendor-bin/**/vendor/
 /vendor-bin/**/composer.lock

@@ -35,8 +35,8 @@ use OCA\CAFeVDBMembers\Database\ORM\EntityManager;
  */
 class MemberDataService
 {
-  use \OCA\CAFeVDBMembers\Toolkit\Traits\LoggerTrait;
-  use \OCA\CAFeVDBMembers\Toolkit\Traits\UtilTrait;
+  use \OCA\CAFeVDBMembers\Wrapped\OCA\RotDrop\Toolkit\Traits\LoggerTrait;
+  use \OCA\CAFeVDBMembers\Wrapped\OCA\RotDrop\Toolkit\Traits\UtilTrait;
 
   const PATH_SEP = '/';
 

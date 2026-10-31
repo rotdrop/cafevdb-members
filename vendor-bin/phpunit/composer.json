@@ -10,8 +10,7 @@
     "psr-4": {
       "OCA\\CAFeVDBMembers\\": "../../lib/",
       "OCA\\CAFeVDBMembers\\Tests\\": "../../tests/phpunit/",
-      "OCA\\RotDrop\\Tests\\": "../../tests/phpunit/lib/",
-      "OCA\\RotDrop\\Toolkit\\": "../../php-toolkit/"
+      "OCA\\RotDrop\\Tests\\": "../../tests/phpunit/lib/"
     }
   }
 }

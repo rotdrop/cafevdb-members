@@ -31,7 +31,7 @@ namespace OCA\CAFeVDBMembers\Database\DBAL\Types;
  */
 enum EnumGeographicalScope: string
 {
-  use \OCA\CAFeVDBMembers\Toolkit\Traits\TranslatableEnumTrait;
+  use \OCA\CAFeVDBMembers\Wrapped\OCA\RotDrop\Toolkit\Traits\TranslatableEnumTrait;
 
   case DOMESTIC = 'Domestic';
   case CONTINENT = 'Continent';
