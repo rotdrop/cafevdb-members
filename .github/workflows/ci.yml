@@ -92,9 +92,13 @@ jobs:
         working-directory: server
         run: php occ app:enable ${{ env.APP_NAME }}
 
-      - name: Run PHPUnit unit suite
+      - name: Run PHPUnit standalone suite
         working-directory: server/apps/${{ env.APP_NAME }}
         run: make phpunit PHPCOVERAGE='-d xdebug.mode=coverage'
+
+      - name: Run PHPUnit server suite with real database
+        working-directory: server/apps/${{ env.APP_NAME }}
+        run: make phpunit-server
 
       - name: Upload PHPUnit coverage report
         uses: actions/upload-artifact@v4
