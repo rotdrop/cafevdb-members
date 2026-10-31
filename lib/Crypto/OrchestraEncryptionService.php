@@ -109,7 +109,12 @@ class OrchestraEncryptionService implements IEncryptionService
     try {
       $this->keyService()->initEncryptionKeyPair();
     } catch (Throwable $t) {
-      throw self::translateException($t);
+      $t = self::translateException($t);
+      if (!($t instanceof Exceptions\EncryptionException)) {
+        // e.g. missing login credentials in CLI or background jobs
+        $t = new Exceptions\EncryptionException($t->getMessage(), $t->getCode(), $t);
+      }
+      throw $t;
     }
   }
 
