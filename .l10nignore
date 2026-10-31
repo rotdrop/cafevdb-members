@@ -1,4 +1,5 @@
 vendor/
+vendor-wrapped/
 build/
 doc/
 js/
